@@ -1,0 +1,5 @@
+{
+  "FLAVOR": "prod",
+  "API_BASE_URL": "https://api.lexguard.uz",
+  "USE_MOCK_DATA": false
+}
