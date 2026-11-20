@@ -63,3 +63,4 @@ __pycache__/
 env/
 venv/
 .venv/
+orchestrator/docs_extracted/

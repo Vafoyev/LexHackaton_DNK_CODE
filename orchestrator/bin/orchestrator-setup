@@ -41,18 +41,27 @@ for i in {1..8}; do
   python3 - <<PYSETTINGS
 import json, os
 p_file = "$settings_file"
-ws = "$WORKSPACE"
-data = {"model": "Claude Opus 4.6 (Thinking)", "trustedWorkspaces": [ws]}
+workspaces = [
+    "$WORKSPACE",
+    "$WORKSPACE/backend",
+    "$WORKSPACE/mobile",
+    "$WORKSPACE/front",
+    "$WORKSPACE/admin"
+]
+data = {"model": "Claude Opus 4.6 (Thinking)", "trustedWorkspaces": []}
 if os.path.exists(p_file):
     try:
         with open(p_file, "r") as f:
             data = json.load(f)
         if "trustedWorkspaces" not in data:
             data["trustedWorkspaces"] = []
-        if ws not in data["trustedWorkspaces"]:
-            data["trustedWorkspaces"].append(ws)
     except:
         pass
+
+for ws in workspaces:
+    if ws not in data["trustedWorkspaces"]:
+        data["trustedWorkspaces"].append(ws)
+
 with open(p_file, "w") as f:
     json.dump(data, f, indent=2)
 PYSETTINGS

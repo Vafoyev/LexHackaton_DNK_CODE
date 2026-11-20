@@ -71,7 +71,7 @@ prompt_content="$(cat "$prompt_file")"
 
 # Aniq chat_id va profil bilan agy ni ishga tushirish
 if [[ $# -gt 0 ]]; then
-  exec agy-profile "$prof" --conversation "$chat_id" -i "$prompt_content" "$@"
+  exec agy-profile "$prof" --conversation "$chat_id" --dangerously-skip-permissions -i "$prompt_content" "$@"
 else
-  exec agy-profile "$prof" --conversation "$chat_id" -i "$prompt_content"
+  exec agy-profile "$prof" --conversation "$chat_id" --dangerously-skip-permissions -i "$prompt_content"
 fi
