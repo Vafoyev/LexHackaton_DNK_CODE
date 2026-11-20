@@ -82,6 +82,7 @@
       "chat_id": "44444444-4444-4444-8444-444444444444",
       "working_dir": "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/front",
       "model": "Claude Opus 4.6 (Thinking)",
+      "fallback_model": "Gemini 3.8 Flash (High)",
       "effort": "high",
       "prompt_file": "orchestrator/prompts/3_front_web.md",
       "skills": [

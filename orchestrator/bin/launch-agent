@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# launch-agent: Belgilangan agentni aniq chat_id va prompt bilan ishga tushiradi
+# launch-agent: Belgilangan agentni aniq chat_id, model va prompt bilan ishga tushiradi
+# Agar asosiy modelda (Claude) kvota tugasa, avtomatik zaxira modelga (Gemini) o'tadi!
 # ==============================================================================
 set -euo pipefail
 
@@ -11,9 +12,7 @@ CONFIG_FILE="$BASE_DIR/orchestrator/config/agents.json"
 
 if [[ -z "$TARGET" ]]; then
   echo "Foydalanish: ./orchestrator/bin/launch-agent <profil_yoki_rol>"
-  echo "Masalan:     ./orchestrator/bin/launch-agent 1 (Orchestrator)"
-  echo "             ./orchestrator/bin/launch-agent 2 (Backend Go)"
-  echo "             ./orchestrator/bin/launch-agent 3 (Flutter Mobile)"
+  echo "Masalan:     ./orchestrator/bin/launch-agent 3 (Frontend WebGL & Claude)"
   exit 1
 fi
 
@@ -47,7 +46,9 @@ if not match:
             break
 
 if match:
-    print(f\"{match['profile']}|{match['chat_id']}|{match['working_dir']}|{match['prompt_file']}|{match['role']}\")
+    m = match.get('model', 'Claude Opus 4.6 (Thinking)')
+    fb = match.get('fallback_model', 'Gemini 3.8 Flash (High)')
+    print(f\"{match['profile']}|{match['chat_id']}|{match['working_dir']}|{match['prompt_file']}|{match['role']}|{m}|{fb}\")
 ")
 
 if [[ -z "$agent_data" ]]; then
@@ -55,23 +56,55 @@ if [[ -z "$agent_data" ]]; then
   exit 1
 fi
 
-IFS="|" read -r prof chat_id workdir prompt_rel role <<< "$agent_data"
+IFS="|" read -r prof chat_id workdir prompt_rel role model fallback_model <<< "$agent_data"
 prompt_file="$BASE_DIR/$prompt_rel"
+
+# Model kvotasini oldindan tekshirish (Auto-Failover Guard)
+active_model="$model"
+if [[ "$model" =~ "(Claude|claude)" ]]; then
+  check_status=$(agy-status-core.py --check "$prof" 2>/dev/null || echo "")
+  if [[ "$check_status" == OK:* ]]; then
+    claude_ok=$(echo "$check_status" | cut -d: -f4)
+    if [[ "$claude_ok" != "1" ]]; then
+      echo "⚠️  [AUTO-FAILOVER]: Profil agy${prof} da Claude kvotasi tugagan!"
+      echo "🔄 Zaxira modelga o'tilmoqda: $fallback_model"
+      active_model="$fallback_model"
+    fi
+  fi
+fi
 
 echo "================================================================================"
 echo "🚀 Agent ishga tushirilmoqda: Profil agy${prof} ($role)"
+echo "🤖 Asosiy Model:   $active_model"
+echo "🛡️  Zaxira Model:  $fallback_model (Kvota tugaganda avtomatik o'tadi)"
 echo "📁 Ishchi katalog: $workdir"
 echo "🔑 Aniq Chat ID:   $chat_id"
 echo "📄 Yo'riqnoma:     $prompt_file"
 echo "================================================================================"
 
 cd "$workdir"
-
 prompt_content="$(cat "$prompt_file")"
 
-# Aniq chat_id va profil bilan agy ni ishga tushirish
+# 1. Asosiy model bilan ishga tushirish
+set +e
 if [[ $# -gt 0 ]]; then
-  exec agy-profile "$prof" --conversation "$chat_id" --dangerously-skip-permissions -i "$prompt_content" "$@"
+  agy-profile "$prof" --conversation "$chat_id" --model "$active_model" --dangerously-skip-permissions -i "$prompt_content" "$@"
 else
-  exec agy-profile "$prof" --conversation "$chat_id" --dangerously-skip-permissions -i "$prompt_content"
+  agy-profile "$prof" --conversation "$chat_id" --model "$active_model" --dangerously-skip-permissions -i "$prompt_content"
 fi
+exit_code=$?
+set -e
+
+# 2. Agar sessiya kvota yoki xatolik tufayli to'xtasa va model Claude bo'lsa, zaxira modelga (Gemini) o'tish
+if [[ $exit_code -ne 0 && "$active_model" != "$fallback_model" ]]; then
+  echo ""
+  echo "⚠️  ================================================================================"
+  echo "⚡ Claude kvota limitiga yetildi! Suhbat konteksti to'liq saqlandi."
+  echo "🔄 Zaxira modelga o'tilmoqda: $fallback_model..."
+  echo "================================================================================"
+  echo ""
+  sleep 1
+  exec agy-profile "$prof" --conversation "$chat_id" --model "$fallback_model" --dangerously-skip-permissions -c
+fi
+
+exit $exit_code
