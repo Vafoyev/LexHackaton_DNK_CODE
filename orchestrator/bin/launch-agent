@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# launch-agent: Belgilangan agentni aniq chat_id va prompt bilan ishga tushiradi
+# ==============================================================================
+set -euo pipefail
+
+TARGET="${1:-}"
+shift || true
+BASE_DIR="/Users/baxrom/ish_full/LexHackaton_DNK_CODE"
+CONFIG_FILE="$BASE_DIR/orchestrator/config/agents.json"
+
+if [[ -z "$TARGET" ]]; then
+  echo "Foydalanish: ./orchestrator/bin/launch-agent <profil_yoki_rol>"
+  echo "Masalan:     ./orchestrator/bin/launch-agent 1 (Orchestrator)"
+  echo "             ./orchestrator/bin/launch-agent 2 (Backend Go)"
+  echo "             ./orchestrator/bin/launch-agent 3 (Flutter Mobile)"
+  exit 1
+fi
+
+agent_data=$(python3 -c "
+import json, sys
+
+query = '$TARGET'.lower().strip()
+with open('$CONFIG_FILE') as f:
+    config = json.load(f)
+
+# Priority 1: Window index if 0-7
+match = None
+if query.isdigit() and 0 <= int(query) <= 7:
+    for a in config['agents']:
+        if a['window_index'] == int(query):
+            match = a
+            break
+
+# Priority 2: Exact Name or Profile number (1-8)
+if not match:
+    for a in config['agents']:
+        if a['name'] == query or str(a['profile']) == query or str(a['id']) == query:
+            match = a
+            break
+
+# Priority 3: Substring
+if not match:
+    for a in config['agents']:
+        if a['name'] in query or query in a['name']:
+            match = a
+            break
+
+if match:
+    print(f\"{match['profile']}|{match['chat_id']}|{match['working_dir']}|{match['prompt_file']}|{match['role']}\")
+")
+
+if [[ -z "$agent_data" ]]; then
+  echo "❌ Agent topilmadi: $TARGET"
+  exit 1
+fi
+
+IFS="|" read -r prof chat_id workdir prompt_rel role <<< "$agent_data"
+prompt_file="$BASE_DIR/$prompt_rel"
+
+echo "================================================================================"
+echo "🚀 Agent ishga tushirilmoqda: Profil agy${prof} ($role)"
+echo "📁 Ishchi katalog: $workdir"
+echo "🔑 Aniq Chat ID:   $chat_id"
+echo "📄 Yo'riqnoma:     $prompt_file"
+echo "================================================================================"
+
+cd "$workdir"
+
+prompt_content="$(cat "$prompt_file")"
+
+# Aniq chat_id va profil bilan agy ni ishga tushirish
+if [[ $# -gt 0 ]]; then
+  exec agy-profile "$prof" --conversation "$chat_id" -i "$prompt_content" "$@"
+else
+  exec agy-profile "$prof" --conversation "$chat_id" -i "$prompt_content"
+fi

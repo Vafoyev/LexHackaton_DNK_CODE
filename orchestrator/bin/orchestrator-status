@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# orchestrator-status: Swarm holatini ko'rish
+# ==============================================================================
+set -euo pipefail
+
+SESSION_NAME="lexguard-swarm"
+BASE_DIR="/Users/baxrom/ish_full/LexHackaton_DNK_CODE"
+CONFIG_FILE="$BASE_DIR/orchestrator/config/agents.json"
+
+echo "╔══════════════════════════════════════════════════════════════════════════════════════════╗"
+echo "║  🛰️  LEXGUARD AI — 8 PROFIL ORCHESTRATOR STATUS                                          ║"
+echo "╚══════════════════════════════════════════════════════════════════════════════════════════╝"
+
+tmux_active="❌ Ishlamayapti"
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+  tmux_active="🟢 Faol ($SESSION_NAME)"
+fi
+echo "Tmux Klaster Holati: $tmux_active"
+echo ""
+
+python3 - <<PYSTATUS
+import json, os, subprocess
+
+with open("$CONFIG_FILE") as f:
+    config = json.load(f)
+
+print(f"{'OYNA':<4} {'PROFIL':<8} {'ROLI':<26} {'CHAT ID':<38} {'STATUS'}")
+print("─" * 90)
+
+for agent in config["agents"]:
+    idx = agent["window_index"]
+    prof = f"agy{agent['profile']}"
+    role = agent["role"][:24]
+    chat_id = agent["chat_id"]
+    
+    # Check account state via agy-status-core
+    status = "Noma'lum"
+    try:
+        res = subprocess.check_output(["agy-status-core.py", "--check", str(agent["profile"])], text=True, stderr=subprocess.DEVNULL).strip()
+        if res.startswith("OK:"):
+            status = "✅ OK"
+        elif res == "NOLOGIN":
+            status = "⚠️ Login yo'q"
+        elif res.startswith("DUPLICATE:"):
+            status = "⚠️ Dublikat"
+    except:
+        status = "—"
+
+    print(f"{idx:<4} {prof:<8} {role:<26} {chat_id:<38} {status}")
+
+print("─" * 90)
+PYSTATUS

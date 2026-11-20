@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# orchestrator-start: Tmux sessiyasini 8 ta agent bilan ishga tushirish
+# ==============================================================================
+set -euo pipefail
+
+SESSION_NAME="lexguard-swarm"
+BASE_DIR="/Users/baxrom/ish_full/LexHackaton_DNK_CODE"
+CONFIG_FILE="$BASE_DIR/orchestrator/config/agents.json"
+
+# Tmux mavjudligini tekshirish
+if ! command -v tmux >/dev/null 2>&1; then
+  echo "❌ Xatolik: tmux o'rnatilmagan! (brew install tmux)"
+  exit 1
+fi
+
+# Agar avvaldan sessiya bo'lsa
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+  echo "⚠️  Tmux sessiyasi '$SESSION_NAME' allaqachon mavjud!"
+  echo "Ulanish uchun: ./orchestrator/bin/orchestrator-attach"
+  echo "Qayta ishga tushirish uchun avval to'xtating: ./orchestrator/bin/orchestrator-stop"
+  exit 0
+fi
+
+# Oldin profillarni izolyatsiya qilishni tekshiramiz
+"$BASE_DIR/orchestrator/bin/orchestrator-setup"
+
+echo "🚀 Tmux sessiyasi ochilmoqda: '$SESSION_NAME'..."
+
+# Window 0: Orchestrator
+tmux new-session -d -s "$SESSION_NAME" -n "👑 0-ORCHESTRATOR" -c "$BASE_DIR"
+
+# Qolgan 7 ta oynani ochish
+tmux new-window -t "$SESSION_NAME:1" -n "⚙️ 1-BACKEND-GO" -c "$BASE_DIR/backend"
+tmux new-window -t "$SESSION_NAME:2" -n "📱 2-MOBILE-FLUTTER" -c "$BASE_DIR/mobile"
+tmux new-window -t "$SESSION_NAME:3" -n "🌐 3-WEB-FRONT" -c "$BASE_DIR/front"
+tmux new-window -t "$SESSION_NAME:4" -n "📊 4-ADMIN-PORTAL" -c "$BASE_DIR/admin"
+tmux new-window -t "$SESSION_NAME:5" -n "⚖️ 5-LEGAL-RAG-AI" -c "$BASE_DIR/backend"
+tmux new-window -t "$SESSION_NAME:6" -n "🛡️ 6-QA-SECURITY" -c "$BASE_DIR"
+tmux new-window -t "$SESSION_NAME:7" -n "🚀 7-DEVOPS-INFRA" -c "$BASE_DIR"
+
+# Har bir oynani tegishli launch-agent buyrug'i bilan tayyorlash
+for i in {0..7}; do
+  tmux send-keys -t "$SESSION_NAME:$i" "clear && echo '=== LexGuard AI Agent (Window $i) ===' && \"$BASE_DIR/orchestrator/bin/launch-agent\" $i" C-m
+done
+
+# Boshlang'ich oynani 0 (Orchestrator) ga qaratish
+tmux select-window -t "$SESSION_NAME:0"
+
+echo "✅ Barcha 8 ta oyna muvaffaqiyatli ishga tushirildi!"
+echo ""
+echo "📊 Sessiyaga ulanish:"
+echo "   ./orchestrator/bin/orchestrator-attach"
+echo ""
+echo "💡 Ma'lum oynaga to'g'ridan-to'g'ri o'tish:"
+echo "   ./orchestrator/bin/orchestrator-attach 0   (Boshqaruvchi - Orchestrator)"
+echo "   ./orchestrator/bin/orchestrator-attach 1   (Go Backend)"
+echo "   ./orchestrator/bin/orchestrator-attach 2   (Flutter Mobile)"
+echo "   ./orchestrator/bin/orchestrator-attach 3   (Web Frontend)"
+echo "   ./orchestrator/bin/orchestrator-attach 4   (Admin Portal)"
+echo "   ./orchestrator/bin/orchestrator-attach 5   (Legal AI / RAG)"
+echo "   ./orchestrator/bin/orchestrator-attach 6   (QA & Xavfsizlik)"
+echo "   ./orchestrator/bin/orchestrator-attach 7   (DevOps & Infra)"

@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# orchestrator-send: Istalgan agent oynasiga xabar/topshiriq yuborish
+# ==============================================================================
+set -euo pipefail
+
+SESSION_NAME="lexguard-swarm"
+TARGET="${1:-}"
+MSG="${2:-}"
+
+if [[ -z "$TARGET" || -z "$MSG" ]]; then
+  echo "Foydalanish: ./orchestrator/bin/orchestrator-send <agent_nomi_yoki_raqami> \"<xabar>\""
+  echo "Masalan:     ./orchestrator/bin/orchestrator-send backend \"Go mod faylini tekshir\""
+  echo "             ./orchestrator/bin/orchestrator-send 2 \"Flutter login ekranini ko'rib chiq\""
+  exit 1
+fi
+
+if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+  echo "❌ Xatolik: Tmux sessiyasi '$SESSION_NAME' ishlamayapti!"
+  exit 1
+fi
+
+case "$TARGET" in
+  0|orchestrator|lead) win=0 ;;
+  1|backend|go) win=1 ;;
+  2|mobile|flutter) win=2 ;;
+  3|front|web) win=3 ;;
+  4|admin) win=4 ;;
+  5|legal|rag|ai) win=5 ;;
+  6|qa|security|test) win=6 ;;
+  7|devops|infra|docker) win=7 ;;
+  *) win="$TARGET" ;;
+esac
+
+tmux send-keys -t "$SESSION_NAME:$win" "$MSG" C-m
+echo "✅ Xabar '$SESSION_NAME:$win' oynasiga yuborildi."
