@@ -30,6 +30,11 @@ echo "🚀 Tmux sessiyasi ochilmoqda: '$SESSION_NAME'..."
 # Window 0: Orchestrator
 tmux new-session -d -s "$SESSION_NAME" -n "👑 0-ORCHESTRATOR" -c "$BASE_DIR"
 
+# macOS clipboard (Cmd+C / Cmd+V / pbcopy) konfiguratsiyasini yuklash
+if [[ -f "$BASE_DIR/orchestrator/config/tmux.conf" ]]; then
+  tmux source-file "$BASE_DIR/orchestrator/config/tmux.conf"
+fi
+
 # Qolgan 7 ta oynani ochish
 tmux new-window -t "$SESSION_NAME:1" -n "⚙️ 1-BACKEND-GO" -c "$BASE_DIR/backend"
 tmux new-window -t "$SESSION_NAME:2" -n "📱 2-MOBILE-FLUTTER" -c "$BASE_DIR/mobile"
