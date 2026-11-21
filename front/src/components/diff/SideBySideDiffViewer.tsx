@@ -258,10 +258,10 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
                         <button
                           type="button"
                           onClick={() => setSelectedFindingModal(item.finding!)}
-                          className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/40 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer border border-sky-200 dark:border-sky-800/50 shrink-0"
+                          className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/40 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 text-[11px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-sky-200 dark:border-sky-800/50 shrink-0 shadow-sm"
                           title="Batafsil yuridik asos va tahlilni ko'rish"
                         >
-                          <span>Huquqiy tahlil</span>
+                          <span>ℹ️ Huquqiy Tahlil</span>
                           <ExternalLink className="w-3 h-3" />
                         </button>
                       </div>

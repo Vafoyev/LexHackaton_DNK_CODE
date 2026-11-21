@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -88,8 +89,18 @@ func BuildRouter(s *RouterServices) http.Handler {
 		fmt.Fprintf(w, "lexguard_analyses_active 4\n")
 	})
 
+	// Swagger UI & OpenAPI Specification Endpoints (Public)
+	r.Get("/docs", serveSwaggerUIDocs)
+	r.Get("/api/docs", serveSwaggerUIDocs)
+	r.Get("/api/openapi.yaml", serveOpenAPIYAML)
+	r.Get("/openapi.yaml", serveOpenAPIYAML)
+
 	// API v1 Routes
 	r.Route("/api/v1", func(api chi.Router) {
+
+		// OpenAPI Aliases inside /api/v1
+		api.Get("/docs", serveSwaggerUIDocs)
+		api.Get("/openapi.yaml", serveOpenAPIYAML)
 
 		// Integrations Status (Public / Transparent D-06)
 		api.Get("/integrations/status", func(w http.ResponseWriter, req *http.Request) {
@@ -1066,4 +1077,185 @@ func BuildRouter(s *RouterServices) http.Handler {
 	})
 
 	return r
+}
+
+const backendSwaggerUIHTML = `<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LexGuard AI 3.0 — Backend REST API Docs</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z'/></svg>" />
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+  <style>
+    html { box-sizing: border-box; overflow-y: scroll; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body {
+      margin: 0;
+      background: #0b0f19;
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .custom-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      border-bottom: 1px solid #334155;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: -0.02em;
+    }
+    .brand-badge {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid #0284c7;
+      color: #38bdf8;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+    .header-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .header-links a:hover {
+      color: #38bdf8;
+    }
+    .swagger-ui .topbar { display: none !important; }
+    .swagger-ui { color: #f1f5f9; }
+    .swagger-ui .info { margin: 25px 0; }
+    .swagger-ui .info .title { color: #38bdf8; font-weight: 800; }
+    .swagger-ui .info p, .swagger-ui .info li { color: #94a3b8; font-size: 0.95rem; }
+    .swagger-ui .info a { color: #38bdf8; }
+    .swagger-ui .scheme-container {
+      background: #111827;
+      box-shadow: none;
+      border-bottom: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+    }
+    .swagger-ui .opblock {
+      border-radius: 8px;
+      border: 1px solid #334155 !important;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+      margin-bottom: 14px;
+    }
+    .swagger-ui .opblock.opblock-get { background: rgba(14, 165, 233, 0.08); border-color: #0284c7 !important; }
+    .swagger-ui .opblock.opblock-post { background: rgba(34, 197, 94, 0.08); border-color: #16a34a !important; }
+    .swagger-ui .opblock.opblock-delete { background: rgba(239, 68, 68, 0.08); border-color: #dc2626 !important; }
+    .swagger-ui .opblock.opblock-put { background: rgba(234, 179, 8, 0.08); border-color: #ca8a04 !important; }
+    .swagger-ui .opblock-summary-method { border-radius: 6px; font-weight: 700; min-width: 75px; }
+    .swagger-ui .opblock-summary-path { color: #f8fafc !important; font-weight: 600; }
+    .swagger-ui .opblock-summary-description { color: #94a3b8 !important; }
+    .swagger-ui table thead tr td, .swagger-ui table thead tr th { color: #cbd5e1; border-bottom: 1px solid #334155; }
+    .swagger-ui .tab li button.tablinks { color: #94a3b8; }
+    .swagger-ui .tab li button.tablinks.active { color: #38bdf8; font-weight: bold; }
+    .swagger-ui select, .swagger-ui input[type=text], .swagger-ui textarea {
+      background: #1e293b !important;
+      color: #f8fafc !important;
+      border: 1px solid #475569 !important;
+      border-radius: 6px;
+    }
+    .swagger-ui .btn.execute {
+      background-color: #0284c7 !important;
+      border-color: #0284c7 !important;
+      color: #fff !important;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+    .swagger-ui section.models {
+      border: 1px solid #334155 !important;
+      background: #111827 !important;
+      border-radius: 8px;
+    }
+    .swagger-ui section.models h4 { color: #f8fafc; font-weight: 700; }
+    .swagger-ui .model-box { background: transparent; }
+    .swagger-ui .model-title { color: #38bdf8; }
+    .swagger-ui .prop-type { color: #c084fc; }
+    .swagger-ui .parameter__name { color: #e2e8f0; font-weight: 600; }
+    .swagger-ui .parameter__type { color: #c084fc; }
+    .swagger-ui .response-col_status { color: #38bdf8; font-weight: 700; }
+    .swagger-ui .responses-inner { background: #0f172a; border-radius: 6px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div class="custom-header">
+    <div class="brand">
+      <span>🛡️ LexGuard AI 3.0</span>
+      <span class="brand-badge">Modular Monolith</span>
+    </div>
+    <div class="header-links">
+      <a href="/api/openapi.yaml" target="_blank">📄 openapi.yaml</a>
+      <a href="/healthz" target="_blank">💓 /healthz</a>
+      <a href="/readyz" target="_blank">🚦 /readyz</a>
+      <a href="http://localhost:8000/docs" target="_blank">🧠 AI Engine Docs (:8000)</a>
+    </div>
+  </div>
+  <div id="swagger-ui"></div>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js" crossorigin></script>
+  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js" crossorigin></script>
+  <script>
+    window.onload = () => {
+      window.ui = SwaggerUIBundle({
+        url: '/api/openapi.yaml',
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        deepLinking: true,
+        showExtensions: true,
+        showCommonExtensions: true,
+        defaultModelsExpandDepth: 1
+      });
+    };
+  </script>
+</body>
+</html>`
+
+func serveSwaggerUIDocs(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(backendSwaggerUIHTML))
+}
+
+func serveOpenAPIYAML(w http.ResponseWriter, req *http.Request) {
+	candidates := []string{
+		"api/openapi.yaml",
+		"backend/api/openapi.yaml",
+		"../api/openapi.yaml",
+		"../../api/openapi.yaml",
+		"../../backend/api/openapi.yaml",
+	}
+
+	var data []byte
+	for _, p := range candidates {
+		if b, err := os.ReadFile(p); err == nil && len(b) > 0 {
+			data = b
+			break
+		}
+	}
+
+	if len(data) == 0 {
+		http.Error(w, "openapi.yaml topilmadi", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write(data)
 }

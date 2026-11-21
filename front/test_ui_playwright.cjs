@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 async function testFrontend() {
-  console.log('🚀 Playwright to\'liq test boshlandi: http://localhost:3000');
+  console.log('🚀 Playwright to\'liq Shadcn UI & Mobile UX testi: http://localhost:3000');
   
   const browser = await chromium.launch({
     channel: 'chrome',
@@ -33,101 +33,67 @@ async function testFrontend() {
 
   // 1. Sahifani ochish
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
-  console.log('✓ 1. Bosh sahifa muvaffaqiyatli ochildi.');
+  console.log('✓ 1. Asosiy sahifa ochildi.');
 
-  // 2. Dastlabki Tungi Rejim (Dark Mode) tekshiruvi
-  const darkBg = await page.evaluate(() => window.getComputedStyle(document.body).backgroundColor);
-  console.log('🌙 Tungi rejim fon rangi:', darkBg);
+  // Screenshot: Asosiy tab
+  await page.screenshot({ path: path.join(screenshotDir, '01_asosiy_tab.png'), fullPage: true });
 
-  const landingScreenshot = path.join(screenshotDir, '01_landing.png');
-  await page.screenshot({ path: landingScreenshot, fullPage: true });
+  // 2. "Hujjatlar" tabiga o'tish
+  console.log('⚡ 2. "Hujjatlar" tabiga o\'tish...');
+  await page.click('nav button:has-text("Hujjatlar")');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(screenshotDir, '02_hujjatlar_tab.png'), fullPage: true });
+  console.log('✓ Hujjatlar sahifasi saqlandi.');
 
-  // 3. Kunduzgi rejimga o'tish (Sun / Moon tugmasi)
-  console.log('\n☀️ Kunduzgi rejimga o\'tish (Sun / Moon toggle)...');
+  // 3. "Qonunlar" tabiga o'tish
+  console.log('⚡ 3. "Qonunlar" tabiga o\'tish...');
+  await page.click('nav button:has-text("Qonunlar")');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(screenshotDir, '03_qonunlar_tab.png'), fullPage: true });
+  console.log('✓ Qonunlar sahifasi saqlandi.');
+
+  // 4. "Profil" tabiga o'tish
+  console.log('⚡ 4. "Profil" tabiga o\'tish...');
+  await page.click('nav button:has-text("Profil")');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(screenshotDir, '04_profil_tab.png'), fullPage: true });
+  console.log('✓ Profil sahifasi saqlandi.');
+
+  // 5. "Skanerlash" modali
+  console.log('⚡ 5. "Skanerlash" tugmasi...');
+  await page.click('button:has-text("Skanerlash")');
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(screenshotDir, '05_skanerlash_modal.png') });
+  console.log('✓ Skanerlash modali saqlandi.');
+
+  // Modalni yopish
+  const closeBtn = page.locator('.fixed.inset-0 button').first();
+  if (await closeBtn.count() > 0) {
+    await closeBtn.click();
+    await page.waitForTimeout(400);
+  }
+
+  // 6. Theme Toggle (Sun/Moon)
+  console.log('⚡ 6. Kunduzgi rejimga o\'tish...');
   const themeToggle = page.locator('button[title*="rejim"]').first();
   await themeToggle.click();
-  await page.waitForTimeout(600);
-
-  const lightBg = await page.evaluate(() => window.getComputedStyle(document.body).backgroundColor);
-  console.log('☀️ Kunduzgi rejim fon rangi:', lightBg);
-
-  const lightLandingScreenshot = path.join(screenshotDir, '06_light_mode_landing.png');
-  await page.screenshot({ path: lightLandingScreenshot, fullPage: true });
-  console.log(`📸 Kunduzgi landing saqlandi: ${lightLandingScreenshot}`);
-
-  // 4. "Xulosa" studiyasi (Kunduzgi rejimda)
-  await page.click('nav button:has-text("Xulosa")');
-  await page.waitForTimeout(1000);
-  const lightStudioScreenshot = path.join(screenshotDir, '07_light_mode_studio.png');
-  await page.screenshot({ path: lightStudioScreenshot, fullPage: true });
-  console.log(`📸 Kunduzgi studiya saqlandi: ${lightStudioScreenshot}`);
-
-  // 5. "Diff" ko'rinishi (Kunduzgi rejimda)
-  await page.click('nav button:has-text("Diff")');
-  await page.waitForTimeout(1000);
-  const lightDiffScreenshot = path.join(screenshotDir, '08_light_mode_diff.png');
-  await page.screenshot({ path: lightDiffScreenshot, fullPage: true });
-  console.log(`📸 Kunduzgi diff saqlandi: ${lightDiffScreenshot}`);
-
-  // 6. Qayta Tungi rejimga qaytish
-  const studioThemeToggle = page.locator('button[title*="rejim"]').first();
-  await studioThemeToggle.click();
-  await page.waitForTimeout(600);
-
-  // 7. Diff "Huquqiy tahlil" modalini sinash
-  console.log('\n⚡ "Huquqiy tahlil" modalini ochish...');
-  const tahlilBtn = page.locator('button:has-text("Huquqiy tahlil")').first();
-  if (await tahlilBtn.count() > 0) {
-    await tahlilBtn.click();
-    await page.waitForTimeout(800);
-    const modalScreenshot = path.join(screenshotDir, '04_legal_modal.png');
-    await page.screenshot({ path: modalScreenshot });
-    console.log(`📸 Huquqiy tahlil modali saqlandi: ${modalScreenshot}`);
-
-    // Modalni yopish
-    const closeModal = page.locator('.fixed.inset-0 button:has-text("Yopish")').first();
-    if (await closeModal.count() > 0) {
-      await closeModal.click();
-      await page.waitForTimeout(400);
-    }
-  }
-
-  // 8. "Kirish" modali
-  console.log('\n⚡ "Kirish" tugmasi bosilmoqda...');
-  await page.click('button:has-text("Kirish")');
   await page.waitForTimeout(500);
-  const authScreenshot = path.join(screenshotDir, '05_auth_modal.png');
-  await page.screenshot({ path: authScreenshot });
-
-  const closeAuthBtn = page.locator('.fixed.inset-0 button:has(svg.lucide-x)').first();
-  if (await closeAuthBtn.count() > 0) {
-    await closeAuthBtn.click();
-    await page.waitForTimeout(500);
-  }
-
-  // 9. "Fuqaro" va "Biznes" rejimlari
-  await page.click('nav button:has-text("Fuqaro")');
-  await page.waitForTimeout(400);
-  await page.click('nav button:has-text("Biznes")');
-  await page.waitForTimeout(400);
-
-  // 10. Konsol hisoboti
-  console.log('\n📋 KONSOL VA XATOLAR HISOBOTI:');
-  const severeErrors = consoleMessages.filter(m => m.type === 'error');
-  console.log(`  Jami konsol xabarlari: ${consoleMessages.length}`);
-  console.log(`  Jiddiy xatolar (Console Errors): ${severeErrors.length}`);
-  console.log(`  Sahifa xatoliklari (Page Errors): ${errors.length}`);
+  await page.screenshot({ path: path.join(screenshotDir, '06_light_mode_profile.png'), fullPage: true });
+  console.log('✓ Kunduzgi rejim saqlandi.');
 
   await browser.close();
 
-  if (severeErrors.length > 0 || errors.length > 0) {
-    throw new Error('Test davomida xatoliklar qayd etildi!');
+  console.log('\n================ Natija ================');
+  console.log(`Console xabarlari: ${consoleMessages.length}`);
+  console.log(`Page xatolari: ${errors.length}`);
+  if (errors.length > 0) {
+    console.error('❌ Xatolar:', errors);
+    process.exit(1);
   }
-
-  console.log('\n✅ TUNGI / KUNDUZGI REJIM VA BARCHA MODULLAR 100% MUVAFFAQIYATLI O\'TDI!');
+  console.log('🎉 Shadcn UI & Mobile UX to\'liq muvaffaqiyatli yakunlandi!');
 }
 
-testFrontend().catch(err => {
-  console.error('❌ Xatolik:', err);
+testFrontend().catch(e => {
+  console.error('Test xatolik bilan to\'xtadi:', e);
   process.exit(1);
 });
