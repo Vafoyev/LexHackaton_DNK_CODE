@@ -86,6 +86,11 @@ MINIO_API_PORT=9000
 MINIO_CONSOLE_PORT=9001
 MINIO_BUCKET=lexguard-documents
 
+# ── AI Engine (Python 3.11+ gRPC + FastAPI) ──────────
+AI_ENGINE_PORT=8000
+AI_ENGINE_GRPC_PORT=50051
+AI_ENGINE_GRPC_ADDR=localhost:50051
+
 # ── Go Backend ──────────────────────────────────────
 JWT_SECRET=${JWT_SECRET}
 AI_PROVIDER=noop
@@ -221,35 +226,42 @@ cmd_up() {
     local COMPOSE=$(get_compose_cmd)
     local COMPOSE_CMD="${COMPOSE} -f ${COMPOSE_FILE} --env-file ${ENV_FILE}"
 
-    step "1/5" "Tarmoq va volume'lar yaratilmoqda..."
+    step "1/6" "Tarmoq va volume'lar yaratilmoqda..."
     ${COMPOSE_CMD} up -d --remove-orphans --build --wait postgres redis 2>&1 | grep -E "(Starting|Started|healthy|Error)" | head -20 || true
     log "PostgreSQL 16 + pgvector va Redis ko'tarildi."
 
-    step "2/5" "MinIO object storage ishga tushirilmoqda..."
+    step "2/6" "MinIO object storage ishga tushirilmoqda..."
     ${COMPOSE_CMD} up -d --wait minio 2>&1 | grep -E "(Starting|Started|healthy|Error)" | head -10 || true
     log "MinIO Console: http://localhost:${MINIO_CONSOLE_PORT:-9001}"
 
-    step "3/5" "Go Backend (Modular Monolith) build va ishga tushirish..."
+    step "3/6" "AI Engine (Python 3.11+ gRPC + FastAPI) build va ishga tushirish..."
+    ${COMPOSE_CMD} up -d --build --wait ai-engine 2>&1 | grep -E "(Building|Built|Starting|Started|healthy|Error)" | head -20 || true
+    wait_for_health "AI Engine" "http://localhost:${AI_ENGINE_PORT:-8000}/health" 30
+    log "AI Engine: HTTP :${AI_ENGINE_PORT:-8000} | gRPC :${AI_ENGINE_GRPC_PORT:-50051}"
+
+    step "4/6" "Go Backend (Modular Monolith) build va ishga tushirish..."
     ${COMPOSE_CMD} up -d --build --wait backend 2>&1 | grep -E "(Building|Built|Starting|Started|healthy|Error)" | head -20 || true
     wait_for_health "Go Backend" "http://localhost:${BACKEND_PORT:-8080}/healthz" 30
     log "Backend API: http://localhost:${BACKEND_PORT:-8080}"
 
-    step "4/5" "Web Frontend (React + Three.js 3D + Live Voice) build..."
+    step "5/6" "Web Frontend (React + Three.js 3D + Live Voice) build..."
     ${COMPOSE_CMD} up -d --build --wait frontend 2>&1 | grep -E "(Building|Built|Starting|Started|healthy|Error)" | head -20 || true
     log "Web Frontend: http://localhost:${FRONTEND_PORT:-3000}"
 
-    step "5/5" "Admin Portal (B2B Analytics) build..."
+    step "6/6" "Admin Portal (Platform Operator) build..."
     ${COMPOSE_CMD} up -d --build --wait admin 2>&1 | grep -E "(Building|Built|Starting|Started|healthy|Error)" | head -20 || true
     log "Admin Portal: http://localhost:${ADMIN_PORT:-4000}"
 
     echo ""
     echo -e "  ${GREEN}${BOLD}════════════════════════════════════════════════════════════${NC}"
-    echo -e "  ${GREEN}${BOLD}  🛡️  LexGuard AI 3.0 — BARCHA XIZMATLAR TAYYOR!${NC}"
+    echo -e "  ${GREEN}${BOLD}  🛡️  LexGuard AI 4.0 — BARCHA 7 TA XIZMAT TAYYOR!${NC}"
     echo -e "  ${GREEN}${BOLD}════════════════════════════════════════════════════════════${NC}"
     echo ""
     echo -e "  ${BOLD}🌐 Web Frontend${NC}     : http://localhost:${FRONTEND_PORT:-3000}"
     echo -e "  ${BOLD}🏛️  Admin Portal${NC}     : http://localhost:${ADMIN_PORT:-4000}"
     echo -e "  ${BOLD}⚙️  Go Backend API${NC}   : http://localhost:${BACKEND_PORT:-8080}"
+    echo -e "  ${BOLD}🧠 AI Engine (FastAPI)${NC}: http://localhost:${AI_ENGINE_PORT:-8000}"
+    echo -e "  ${BOLD}🔌 AI Engine (gRPC)${NC}   : localhost:${AI_ENGINE_GRPC_PORT:-50051}"
     echo -e "  ${BOLD}📊 MinIO Console${NC}    : http://localhost:${MINIO_CONSOLE_PORT:-9001}"
     echo -e "  ${BOLD}🗄️  PostgreSQL${NC}       : localhost:${POSTGRES_PORT:-5432} (lexguard/lexguard_secret_2026)"
     echo -e "  ${BOLD}🔴 Redis${NC}            : localhost:${REDIS_PORT:-6379}"
@@ -326,6 +338,7 @@ cmd_health() {
 
     check_service "Go Backend (/healthz)"    "http://localhost:${BACKEND_PORT:-8080}/healthz"
     check_service "Go Backend (/readyz)"     "http://localhost:${BACKEND_PORT:-8080}/readyz"
+    check_service "AI Engine (/health)"      "http://localhost:${AI_ENGINE_PORT:-8000}/health"
     check_service "Web Frontend"             "http://localhost:${FRONTEND_PORT:-3000}"
     check_service "Admin Portal"             "http://localhost:${ADMIN_PORT:-4000}"
     check_service "MinIO Console"            "http://localhost:${MINIO_CONSOLE_PORT:-9001}"
@@ -355,20 +368,28 @@ cmd_reset() {
 # ── TESTLAR ──────────────────────────────────────────────────
 cmd_test() {
     require_cmd go "https://go.dev/dl/"
-    step "1/3" "Go Unit & Anti-Hallucination testlari ishga tushirilmoqda..."
+    step "1/4" "Go Unit & Anti-Hallucination testlari ishga tushirilmoqda..."
     (cd "${BACKEND_DIR}" && go test -v -race -count=1 -timeout=120s ./...)
     log "Go backend testlari muvaffaqiyatli o'tdi!"
 
     if command -v npm >/dev/null 2>&1 && [ -d "${FRONT_DIR}" ]; then
-        step "2/3" "Web Frontend tahlili va TypeScript tekshiruvi..."
+        step "2/4" "Web Frontend tahlili va TypeScript tekshiruvi..."
         (cd "${FRONT_DIR}" && npx tsc --noEmit)
         log "Web Frontend TypeScript tekshiruvi muvaffaqiyatli o'tdi!"
     fi
 
     if command -v flutter >/dev/null 2>&1 && [ -d "${ROOT_DIR}/mobile" ]; then
-        step "3/3" "Flutter Mobile testlari ishga tushirilmoqda..."
+        step "3/4" "Flutter Mobile testlari ishga tushirilmoqda..."
         (cd "${ROOT_DIR}/mobile" && flutter test)
         log "Flutter mobil testlari muvaffaqiyatli o'tdi!"
+    fi
+
+    if [ -f "${ROOT_DIR}/ai-engine/app/main.py" ]; then
+        step "4/4" "AI Engine (Python 3.11+) sintaksis va import tekshiruvi..."
+        if command -v python3 >/dev/null 2>&1; then
+            python3 -m py_compile "${ROOT_DIR}/ai-engine/app/main.py"
+            log "AI Engine Python kodi muvaffaqiyatli tekshirildi!"
+        fi
     fi
 }
 

@@ -89,6 +89,6 @@
 
 ## 🚀 7. DevOps, SRE & CI/CD Lead (`agy8` — 7-DEVOPS-INFRA)
 - [x] **TASK-701**: `deploy/docker-compose.yml` va tarmoq infratuzilmasi.
-- [~] **TASK-702**: Docker Compose ga `ai-engine` (Python gRPC servisi) konteynerini qo'shish va GPU/CPU sozlamalari.
-- [~] **TASK-703**: `./scripts/run_dev.sh` ni barcha yangi xizmatlar bilan sinxronlashtirish.
+- [x] **TASK-702**: Docker Compose ga `ai-engine` (Python gRPC servisi) konteynerini qo'shish va GPU/CPU sozlamalari.
+- [x] **TASK-703**: `./scripts/run_dev.sh` ni barcha yangi xizmatlar bilan sinxronlashtirish.
 - [x] **TASK-704**: GitHub Actions 7-jobli CI pipeline.

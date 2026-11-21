@@ -30,3 +30,10 @@ LexHackathon 2026 (1-trek: Huquqiy xizmatlar) doirasida **LexGuard AI** mahsulot
   - Barcha talablar: Loyiha maqsadi, papkalar tuzilishi, gRPC protokoli, Lex.uz RAG & Legal SLM, Active Self-Correction, SSE va WebSockets real-time aloqa, Robin AI va Soliq UI/UX standartlari rasmiylashtirildi.
   - To'liq hujjat: `orchestrator/board/ARCHITECTURE_BLUEPRINT.md`.
   - Barcha 8 ta profil shu spetsifikatsiya asosida yangi fazalarga o'tadi!
+* `[12:35] ORCHESTRATOR`: **LEX.UZ QONUNLAR KORPUSI TO'LIQ YUKLANDI VA AI TA'LIMI (FINE-TUNING) BOSHLANDI! ⚡**
+  - **Yuklangan qonunlar**: 10 ta asosiy qonun va kodeks (Fuqarolik Kodeksi 1 & 2-qism, Yangi Mehnat Kodeksi, Shartnomaviy-huquqiy baza to'g'risida Qonun (670-I), Iste'molchilar huquqi, Shaxsiy ma'lumotlar, Mediatsiya, Elektron tijorat, Raqobat, Davlat xaridlari).
+  - **Jami moddalar**: 2,058 ta modda to'liq ajratilib, `ai-engine/data/uzbek_legal_corpus_unified.json` ga saqlandi.
+  - **Knowledge Graph**: 2,058 ta tugun va 2,086 ta o'zaro havolalar (cross-references) zanjiri ulandi.
+  - **AI Ta'lim Korpusi**: 3,234 ta Alpaca instruction juftliklari, 2,062 ta ShareGPT dialoglari va 1,172 ta ko'p bosqichli test keyslari yaratildi.
+  - **Gibrid Qidiruv**: 13,804 ta leksik terminli BM25 qidiruv tizimi (`vector_store.py`) ishga tushirildi.
+  - **SLM Fine-Tuning**: `train_slm.py` orqali LoRA konfiguratsiyasi tayyorlandi va tekshirildi.
