@@ -46,11 +46,11 @@ export async function exportToDocx(analysis: AnalysisResult) {
             rows: [
               new TableRow({
                 children: [
-                  new TableCell({ children: [new Paragraph({ text: "Band", bold: true })], width: { size: 10, type: WidthType.PERCENTAGE } }),
-                  new TableCell({ children: [new Paragraph({ text: "Xavf Turi", bold: true })], width: { size: 15, type: WidthType.PERCENTAGE } }),
-                  new TableCell({ children: [new Paragraph({ text: "Asl Matn", bold: true })], width: { size: 25, type: WidthType.PERCENTAGE } }),
-                  new TableCell({ children: [new Paragraph({ text: "Tavsiya Qilingan Tahrir (Redline)", bold: true })], width: { size: 30, type: WidthType.PERCENTAGE } }),
-                  new TableCell({ children: [new Paragraph({ text: "Qonuniy Asos (Lex.uz)", bold: true })], width: { size: 20, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Band", bold: true })] })], width: { size: 10, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Xavf Turi", bold: true })] })], width: { size: 15, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Asl Matn", bold: true })] })], width: { size: 25, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Tavsiya Qilingan Tahrir (Redline)", bold: true })] })], width: { size: 30, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: "Qonuniy Asos (Lex.uz)", bold: true })] })], width: { size: 20, type: WidthType.PERCENTAGE } }),
                 ],
               }),
               ...analysis.findings.map(f => (
@@ -60,21 +60,25 @@ export async function exportToDocx(analysis: AnalysisResult) {
                     new TableCell({ 
                       children: [
                         new Paragraph({ 
-                          text: `${f.risk_level === 'RED' ? '🔴 QIZIL (Huquqiy)' : f.risk_level === 'YELLOW' ? '🟡 SARIQ (Tijoriy)' : '⚪ KULRANG'}`,
-                          bold: true
+                          children: [
+                            new TextRun({ 
+                              text: `${f.risk_level === 'RED' ? '🔴 QIZIL (Huquqiy)' : f.risk_level === 'YELLOW' ? '🟡 SARIQ (Tijoriy)' : '⚪ KULRANG'}`,
+                              bold: true 
+                            })
+                          ]
                         })
                       ] 
                     }),
                     new TableCell({ children: [new Paragraph(f.original_quote)] }),
                     new TableCell({ 
                       children: [
-                        new Paragraph({ text: f.suggested_redline, bold: true }),
+                        new Paragraph({ children: [new TextRun({ text: f.suggested_redline, bold: true })] }),
                         new Paragraph({ text: `Asos: ${f.redline_reasoning}` })
                       ] 
                     }),
                     new TableCell({ 
                       children: [
-                        new Paragraph({ text: `${f.legal_basis.article}`, bold: true }),
+                        new Paragraph({ children: [new TextRun({ text: `${f.legal_basis.article}`, bold: true })] }),
                         new Paragraph({ text: `Havola: ${f.legal_basis.lex_uz_url}` })
                       ] 
                     }),

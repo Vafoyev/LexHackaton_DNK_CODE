@@ -1,4 +1,4 @@
-package platform
+package api
 
 import (
 	"context"
@@ -20,6 +20,7 @@ import (
 	"github.com/lexguard/backend/internal/documents"
 	"github.com/lexguard/backend/internal/identity"
 	"github.com/lexguard/backend/internal/legalcorpus"
+	"github.com/lexguard/backend/internal/platform"
 	"github.com/lexguard/backend/internal/privacy"
 	"github.com/lexguard/backend/internal/report"
 	"github.com/lexguard/backend/internal/rules"
@@ -28,8 +29,8 @@ import (
 
 type RouterServices struct {
 	DB          *pgxpool.Pool
-	Config      *Config
-	JWTManager  *JWTManager
+	Config      *platform.Config
+	JWTManager  *platform.JWTManager
 	IdentitySvc *identity.Service
 	DocRepo     *documents.Repository
 	CorpusRepo  *legalcorpus.Repository
@@ -47,15 +48,15 @@ func BuildRouter(s *RouterServices) http.Handler {
 	r := chi.NewRouter()
 
 	// Global Middlewares
-	r.Use(RequestIDMiddleware)
-	r.Use(LoggerMiddleware)
-	r.Use(RecovererMiddleware)
-	r.Use(CORSMiddleware)
-	r.Use(BodyLimitMiddleware(15 * 1024 * 1024)) // 15MB max
+	r.Use(platform.RequestIDMiddleware)
+	r.Use(platform.LoggerMiddleware)
+	r.Use(platform.RecovererMiddleware)
+	r.Use(platform.CORSMiddleware)
+	r.Use(platform.BodyLimitMiddleware(15 * 1024 * 1024)) // 15MB max
 
 	// System Endpoints (No Auth)
 	r.Get("/healthz", func(w http.ResponseWriter, req *http.Request) {
-		WriteJSON(w, req, http.StatusOK, map[string]string{
+		platform.WriteJSON(w, req, http.StatusOK, map[string]string{
 			"status":    "UP",
 			"timestamp": time.Now().UTC().Format(time.RFC3339),
 			"version":   "3.0.0",
@@ -66,10 +67,10 @@ func BuildRouter(s *RouterServices) http.Handler {
 		ctx, cancel := context.WithTimeout(req.Context(), 2*time.Second)
 		defer cancel()
 		if err := s.DB.Ping(ctx); err != nil {
-			WriteError(w, req, http.StatusServiceUnavailable, "DB_UNAVAILABLE", "Baza bilan aloqa yo'q", err.Error())
+			platform.WriteError(w, req, http.StatusServiceUnavailable, "DB_UNAVAILABLE", "Baza bilan aloqa yo'q", err.Error())
 			return
 		}
-		WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+		platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
 			"status":   "READY",
 			"database": "CONNECTED",
 			"storage":  "READY",
@@ -92,7 +93,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 		api.Get("/integrations/status", func(w http.ResponseWriter, req *http.Request) {
 			rows, err := s.DB.Query(req.Context(), `SELECT name, mode, is_healthy, last_checked_at FROM integrations`)
 			if err != nil {
-				WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 				return
 			}
 			defer rows.Close()
@@ -111,17 +112,17 @@ func BuildRouter(s *RouterServices) http.Handler {
 					})
 				}
 			}
-			WriteJSON(w, req, http.StatusOK, list)
+			platform.WriteJSON(w, req, http.StatusOK, list)
 		})
 
 		// Monitoring (System-wide health & risk metrics)
 		api.Get("/monitoring", func(w http.ResponseWriter, req *http.Request) {
 			ov, err := s.AdminSvc.GetOverview(req.Context())
 			if err != nil {
-				WriteError(w, req, http.StatusInternalServerError, "OVERVIEW_ERROR", err.Error(), nil)
+				platform.WriteError(w, req, http.StatusInternalServerError, "OVERVIEW_ERROR", err.Error(), nil)
 				return
 			}
-			WriteJSON(w, req, http.StatusOK, ov)
+			platform.WriteJSON(w, req, http.StatusOK, ov)
 		})
 
 		// Public Rules & Legal Sources
@@ -137,22 +138,93 @@ func BuildRouter(s *RouterServices) http.Handler {
 					"legal_source": r.LegalSource,
 				})
 			}
-			WriteJSON(w, req, http.StatusOK, summary)
+			platform.WriteJSON(w, req, http.StatusOK, summary)
 		})
 
 		api.Get("/legal-sources", func(w http.ResponseWriter, req *http.Request) {
 			list, err := s.CorpusRepo.ListAllSources(req.Context())
 			if err != nil {
-				WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 				return
 			}
-			WriteJSON(w, req, http.StatusOK, list)
+			platform.WriteJSON(w, req, http.StatusOK, list)
 		})
 
 		// Billing plans (Public)
 		api.Get("/billing/plans", func(w http.ResponseWriter, req *http.Request) {
 			plans := s.BillingSvc.GetAvailablePlans()
-			WriteJSON(w, req, http.StatusOK, plans)
+			platform.WriteJSON(w, req, http.StatusOK, plans)
+		})
+
+		// Mock sample analysis for Frontend & Mobile teams (CONTRACTS.md section 6)
+		api.Get("/mock/analysis-sample", func(w http.ResponseWriter, req *http.Request) {
+			sample := map[string]interface{}{
+				"id": "01934f2a-7b3c-7000-8000-000000000200",
+				"document": map[string]interface{}{
+					"id":            "01934f2a-7b3c-7000-8000-000000000100",
+					"filename":      "IT_Xizmat_Shartnomasi.docx",
+					"sha256":        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+					"contract_date": "2026-05-15",
+					"document_type": "B2B_SERVICE",
+				},
+				"summary": map[string]interface{}{
+					"total_clauses": 18,
+					"red_count":     2,
+					"yellow_count":  4,
+					"green_count":   11,
+					"gray_count":    1,
+					"balance_label": "Buyurtmachiga og'ir",
+					"top_risks": []string{
+						"Buyurtmachi shartnomani 0 kunlik ogohlantirishsiz bekor qilishi mumkin (FK 707)",
+						"Ijrochi zimmasiga cheksiz moddiy javobgarlik yuklangan (FK 324)",
+						"Qabul qilish dalolatnomasi bo'yicha e'tiroz muddati belgilanmagan",
+					},
+				},
+				"findings": []map[string]interface{}{
+					{
+						"id":                  "01934f2a-7b3c-7000-8000-000000000301",
+						"clause_number":       "7.3",
+						"original_quote":      "Buyurtmachi istalgan vaqtda Ijrochini oldindan ogohlantirmasdan va sarflangan xarajatlarni qoplamasdan shartnomani bir tomonlama bekor qilish huquqiga ega.",
+						"risk_level":          "RED",
+						"category":            "LEGAL",
+						"verification_status": "VERIFIED",
+						"rule_id":             "SVC_UNILATERAL_TERMINATION",
+						"issue_title":         "Asossiz bir tomonlama bekor qilish huquqi",
+						"issue_explanation":   "O‘zbekiston Respublikasi Fuqarolik Kodeksining 707-moddasiga ko‘ra, xizmat ko‘rsatish shartnomasidan bir tomonlama voz kechilganda, Buyurtmachi Ijrochiga u qilgan haqiqiy xarajatlarni to‘lashi shart.",
+						"legal_basis": map[string]interface{}{
+							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+							"article":        "707-modda (Haq evaziga xizmat ko‘rsatish shartnomasini bajarishdan bosh tortish)",
+							"lex_uz_url":     "https://lex.uz/docs/111181#111905",
+							"norm_nature":    "IMPERATIVE",
+							"effective_from": "1997-03-01",
+						},
+						"suggested_redline": "Buyurtmachi shartnomani bekor qilishdan kamida 15 kun oldin Ijrochini yozma xabardor qiladi hamda Ijrochi tomonidan amalda bajarilgan xizmatlar haqini va asoslangan xarajatlarini to‘liq qoplaydi.",
+						"redline_reasoning": "Ijrochining kutilmagan moliyaviy yo'qotishlarini oldini oladi va FK 707-moddasiga to'liq mos keladi.",
+					},
+					{
+						"id":                  "01934f2a-7b3c-7000-8000-000000000302",
+						"clause_number":       "9.1",
+						"original_quote":      "Ijrochi har bir kechiktirilgan kun uchun shartnoma umumiy summasining 1% miqdorida penya to'laydi.",
+						"risk_level":          "YELLOW",
+						"category":            "COMMERCIAL",
+						"verification_status": "VERIFIED",
+						"rule_id":             "SVC_PENALTY_FORM_RISK",
+						"issue_title":         "Nomutanosib yuqori penya miqdori",
+						"issue_explanation":   "Bozor amaliyotida penya sutkasiga 0.1% - 0.2% dan oshmasligi tavsiya etiladi. Shuningdek, FK 326-moddasi asossiz yuqori neustoykani sud orqali kamaytirish huquqini beradi.",
+						"legal_basis": map[string]interface{}{
+							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+							"article":        "326-modda (Neustoykani kamaytirish)",
+							"lex_uz_url":     "https://lex.uz/docs/111181#111520",
+							"norm_nature":    "DISPOSITIVE",
+							"effective_from": "1997-03-01",
+						},
+						"suggested_redline": "Ijrochi har bir kechiktirilgan kun uchun bajarilmagan majburiyat summasining 0.1% miqdorida, lekin umumiy shartnoma summasining 10% idan oshmagan miqdorda penya to'laydi.",
+						"redline_reasoning": "Tijoriy xavfni cheklaydi va ikki tomonlama adolatli limit o'rnatadi.",
+					},
+				},
+				"disclaimer": "Axborot-tahliliy xulosa. Rasmiy yuridik maslahat emas (O'RQ-1115).",
+			}
+			platform.WriteJSON(w, req, http.StatusOK, sample)
 		})
 
 		// ---------------- AUTH ROUTES (Public) ----------------
@@ -167,16 +239,16 @@ func BuildRouter(s *RouterServices) http.Handler {
 					ClientType string `json:"client_type"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
 					return
 				}
 				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType)
 				if err != nil {
-					WriteError(w, req, http.StatusBadRequest, "REGISTRATION_FAILED", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "REGISTRATION_FAILED", err.Error(), nil)
 					return
 				}
 				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_REGISTER", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
-				WriteJSON(w, req, http.StatusCreated, res)
+				platform.WriteJSON(w, req, http.StatusCreated, res)
 			})
 
 			auth.Post("/login", func(w http.ResponseWriter, req *http.Request) {
@@ -186,16 +258,16 @@ func BuildRouter(s *RouterServices) http.Handler {
 					ClientType string `json:"client_type"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
 					return
 				}
 				res, err := s.IdentitySvc.Login(req.Context(), body.Email, body.Password, body.ClientType, req.UserAgent(), req.RemoteAddr)
 				if err != nil {
-					WriteError(w, req, http.StatusUnauthorized, "LOGIN_FAILED", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusUnauthorized, "LOGIN_FAILED", err.Error(), nil)
 					return
 				}
 				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
-				WriteJSON(w, req, http.StatusOK, res)
+				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 
 			auth.Post("/demo-session", func(w http.ResponseWriter, req *http.Request) {
@@ -209,11 +281,11 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 				res, err := s.IdentitySvc.DemoSession(req.Context(), body.Role, body.ClientType)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DEMO_SESSION_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DEMO_SESSION_ERROR", err.Error(), nil)
 					return
 				}
 				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "DEMO_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{"role": body.Role})
-				WriteJSON(w, req, http.StatusOK, res)
+				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 
 			auth.Post("/refresh", func(w http.ResponseWriter, req *http.Request) {
@@ -222,15 +294,15 @@ func BuildRouter(s *RouterServices) http.Handler {
 					ClientType   string `json:"client_type"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.RefreshToken == "" {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "refresh_token talab qilinadi", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "refresh_token talab qilinadi", nil)
 					return
 				}
 				res, err := s.IdentitySvc.RefreshSession(req.Context(), body.RefreshToken, body.ClientType)
 				if err != nil {
-					WriteError(w, req, http.StatusUnauthorized, "REFRESH_FAILED", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusUnauthorized, "REFRESH_FAILED", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, res)
+				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 
 			auth.Post("/logout", func(w http.ResponseWriter, req *http.Request) {
@@ -241,7 +313,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 				if body.RefreshToken != "" {
 					_ = s.IdentitySvc.Logout(req.Context(), body.RefreshToken)
 				}
-				WriteJSON(w, req, http.StatusOK, map[string]bool{"logged_out": true})
+				platform.WriteJSON(w, req, http.StatusOK, map[string]bool{"logged_out": true})
 			})
 
 			// OneID Mock Endpoints
@@ -251,10 +323,10 @@ func BuildRouter(s *RouterServices) http.Handler {
 					callbackURL = "http://localhost:8080/api/v1/auth/oneid/callback"
 				}
 				code := uuid.NewString()[:8]
-				WriteJSON(w, req, http.StatusOK, map[string]string{
-					"mode":             "MOCK",
+				platform.WriteJSON(w, req, http.StatusOK, map[string]string{
+					"mode":              "MOCK",
 					"authorization_url": fmt.Sprintf("%s?code=%s&state=mock_state", callbackURL, code),
-					"message":          "VM-679 OneID Sandbox Mock rejimida",
+					"message":           "VM-679 OneID Sandbox Mock rejimida",
 				})
 			})
 
@@ -265,28 +337,28 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 				res, err := s.IdentitySvc.DemoSession(req.Context(), "lawyer", "web")
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "ONEID_CALLBACK_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "ONEID_CALLBACK_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, res)
+				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 		})
 
 		// ---------------- PROTECTED ROUTES ----------------
 		api.Group(func(pr chi.Router) {
-			pr.Use(AuthMiddleware(s.JWTManager))
-			pr.Use(TenantGuardMiddleware)
+			pr.Use(platform.AuthMiddleware(s.JWTManager))
+			pr.Use(platform.TenantGuardMiddleware)
 
 			// Current User Profile & Consents
 			pr.Get("/auth/me", func(w http.ResponseWriter, req *http.Request) {
-				userID := GetUserID(req.Context())
-				orgID := GetOrgID(req.Context())
+				userID := platform.GetUserID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				profile, err := s.IdentitySvc.GetMe(req.Context(), userID, orgID)
 				if err != nil {
-					WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Foydalanuvchi profili topilmadi", nil)
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Foydalanuvchi profili topilmadi", nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, profile)
+				platform.WriteJSON(w, req, http.StatusOK, profile)
 			})
 
 			pr.Post("/consents", func(w http.ResponseWriter, req *http.Request) {
@@ -295,17 +367,17 @@ func BuildRouter(s *RouterServices) http.Handler {
 					Granted     bool   `json:"granted"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
 					return
 				}
-				userID := GetUserID(req.Context())
-				orgID := GetOrgID(req.Context())
+				userID := platform.GetUserID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				err := s.IdentitySvc.RecordConsent(req.Context(), userID, orgID, body.ConsentType, body.Granted, req.RemoteAddr)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
 					"consent_type": body.ConsentType,
 					"granted":      body.Granted,
 				})
@@ -313,21 +385,20 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 			// Billing Quota
 			pr.Get("/billing/quota", func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				q, err := s.BillingSvc.GetQuota(req.Context(), orgID)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, q)
+				platform.WriteJSON(w, req, http.StatusOK, q)
 			})
 
 			// ---------------- DOCUMENTS & CONTRACTS ----------------
 			handleDocumentUpload := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
-				userID := GetUserID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
+				userID := platform.GetUserID(req.Context())
 
-				// Support both multipart/form-data and direct JSON text
 				contentType := req.Header.Get("Content-Type")
 
 				var filename string
@@ -337,12 +408,12 @@ func BuildRouter(s *RouterServices) http.Handler {
 				if strings.HasPrefix(contentType, "multipart/form-data") {
 					err := req.ParseMultipartForm(10 * 1024 * 1024)
 					if err != nil {
-						WriteError(w, req, http.StatusBadRequest, "MULTIPART_ERROR", "Faylni o'qishda xatolik", err.Error())
+						platform.WriteError(w, req, http.StatusBadRequest, "MULTIPART_ERROR", "Faylni o'qishda xatolik", err.Error())
 						return
 					}
 					file, header, err := req.FormFile("file")
 					if err != nil {
-						WriteError(w, req, http.StatusBadRequest, "FILE_MISSING", "file maydoni talab qilinadi", err.Error())
+						platform.WriteError(w, req, http.StatusBadRequest, "FILE_MISSING", "file maydoni talab qilinadi", err.Error())
 						return
 					}
 					defer file.Close()
@@ -350,24 +421,23 @@ func BuildRouter(s *RouterServices) http.Handler {
 					filename = header.Filename
 					buf, err := io.ReadAll(file)
 					if err != nil {
-						WriteError(w, req, http.StatusBadRequest, "READ_ERROR", "Fayl baytlarini o'qib bo'lmadi", err.Error())
+						platform.WriteError(w, req, http.StatusBadRequest, "READ_ERROR", "Fayl baytlarini o'qib bo'lmadi", err.Error())
 						return
 					}
 					fileBytes = buf
 					sniffed, err := documents.SniffMimeType(fileBytes, filename)
 					if err != nil {
-						WriteError(w, req, http.StatusUnsupportedMediaType, "UNSUPPORTED_MEDIA_TYPE", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusUnsupportedMediaType, "UNSUPPORTED_MEDIA_TYPE", err.Error(), nil)
 						return
 					}
 					mimeType = sniffed
 				} else {
-					// JSON body with direct raw text or filename
 					var body struct {
 						Filename string `json:"filename"`
 						Text     string `json:"text"`
 					}
 					if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.Text == "" {
-						WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Matn yoki fayl kiritilishi shart", nil)
+						platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Matn yoki fayl kiritilishi shart", nil)
 						return
 					}
 					filename = body.Filename
@@ -385,14 +455,14 @@ func BuildRouter(s *RouterServices) http.Handler {
 				// 2. Save to Storage
 				storagePath, err := documents.SaveFileToStorage(s.Config.StorageDir, docID, fileBytes)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "STORAGE_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "STORAGE_ERROR", err.Error(), nil)
 					return
 				}
 
 				// 3. Extract text
 				rawText, parseConfidence, err := documents.ExtractText(fileBytes, mimeType)
 				if err != nil {
-					WriteError(w, req, http.StatusUnprocessableEntity, "PARSE_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusUnprocessableEntity, "PARSE_ERROR", err.Error(), nil)
 					return
 				}
 
@@ -415,7 +485,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 
 				if err := s.DocRepo.SaveDocumentWithClauses(req.Context(), docInfo); err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 					return
 				}
 
@@ -425,11 +495,11 @@ func BuildRouter(s *RouterServices) http.Handler {
 					"clauses":  len(clauses),
 				})
 
-				WriteJSON(w, req, http.StatusCreated, docInfo)
+				platform.WriteJSON(w, req, http.StatusCreated, docInfo)
 			}
 
 			handleDocumentsList := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				limitStr := req.URL.Query().Get("limit")
 				limit := 20
 				if l, err := strconv.Atoi(limitStr); err == nil && l > 0 {
@@ -437,35 +507,35 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 				docs, err := s.DocRepo.ListDocuments(req.Context(), orgID, limit)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, docs)
+				platform.WriteJSON(w, req, http.StatusOK, docs)
 			}
 
 			handleDocumentDetail := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				id := chi.URLParam(req, "id")
 				doc, err := s.DocRepo.GetDocument(req.Context(), id, orgID)
 				if err != nil {
-					WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Hujjat topilmadi", nil)
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Hujjat topilmadi", nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, doc)
+				platform.WriteJSON(w, req, http.StatusOK, doc)
 			}
 
 			handleDocumentDelete := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				id := chi.URLParam(req, "id")
 				if err := s.DocRepo.SoftDeleteDocument(req.Context(), id, orgID); err != nil {
-					WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
 					return
 				}
-				s.AuditSvc.Log(req.Context(), orgID, GetUserID(req.Context()), "DOCUMENT_DELETE", "DOCUMENT", id, req.RemoteAddr, req.UserAgent(), nil)
-				WriteJSON(w, req, http.StatusOK, map[string]bool{"deleted": true})
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "DOCUMENT_DELETE", "DOCUMENT", id, req.RemoteAddr, req.UserAgent(), nil)
+				platform.WriteJSON(w, req, http.StatusOK, map[string]bool{"deleted": true})
 			}
 
-			// Register routes for both /documents and /contracts (contract alias)
+			// Endpoints
 			pr.Post("/documents", handleDocumentUpload)
 			pr.Get("/documents", handleDocumentsList)
 			pr.Get("/documents/{id}", handleDocumentDetail)
@@ -478,7 +548,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 			// ---------------- ANALYSES ----------------
 			handleCreateAnalysis := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				var body struct {
 					DocumentID    string `json:"document_id"`
 					ContractID    string `json:"contract_id"` // alias
@@ -487,7 +557,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 					ExecutionMode string `json:"execution_mode"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
 					return
 				}
 				docID := body.DocumentID
@@ -495,22 +565,22 @@ func BuildRouter(s *RouterServices) http.Handler {
 					docID = body.ContractID
 				}
 				if docID == "" {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "document_id yoki contract_id talab qilinadi", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "document_id yoki contract_id talab qilinadi", nil)
 					return
 				}
 
 				analysisID, err := s.AnalysisSvc.CreateAnalysis(req.Context(), orgID, docID, body.ContractDate, body.DocType, body.ExecutionMode)
 				if err != nil {
-					WriteError(w, req, http.StatusPaymentRequired, "QUOTA_OR_ANALYSIS_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusPaymentRequired, "QUOTA_OR_ANALYSIS_ERROR", err.Error(), nil)
 					return
 				}
 
-				s.AuditSvc.Log(req.Context(), orgID, GetUserID(req.Context()), "ANALYSIS_TRIGGERED", "ANALYSIS", analysisID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "ANALYSIS_TRIGGERED", "ANALYSIS", analysisID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
 					"document_id": docID,
 					"doc_type":    body.DocType,
 				})
 
-				WriteJSON(w, req, http.StatusAccepted, map[string]interface{}{
+				platform.WriteJSON(w, req, http.StatusAccepted, map[string]interface{}{
 					"analysis_id": analysisID,
 					"id":          analysisID,
 					"contract_id": docID,
@@ -520,31 +590,30 @@ func BuildRouter(s *RouterServices) http.Handler {
 			}
 
 			handleListAnalyses := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				list, err := s.AnalysisSvc.ListAnalyses(req.Context(), orgID, 20)
 				if err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, list)
+				platform.WriteJSON(w, req, http.StatusOK, list)
 			}
 
 			handleGetAnalysis := func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				id := chi.URLParam(req, "id")
 				det, err := s.AnalysisSvc.GetAnalysis(req.Context(), id, orgID)
 				if err != nil {
-					WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Tahlil natijasi topilmadi", nil)
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Tahlil natijasi topilmadi", nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, det)
+				platform.WriteJSON(w, req, http.StatusOK, det)
 			}
 
 			pr.Post("/analyses", handleCreateAnalysis)
 			pr.Get("/analyses", handleListAnalyses)
 			pr.Get("/analyses/{id}", handleGetAnalysis)
 
-			// Aliases for /analysis
 			pr.Post("/analysis", handleCreateAnalysis)
 			pr.Get("/analysis", handleListAnalyses)
 			pr.Get("/analysis/{id}", handleGetAnalysis)
@@ -585,15 +654,15 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 			})
 
-			// Report Export (DOCX / PDF / Text / JSON)
+			// Report Export
 			pr.Get("/analyses/{id}/report", func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				id := chi.URLParam(req, "id")
 				format := strings.ToLower(req.URL.Query().Get("format"))
 
 				rep, err := s.ReportSvc.GenerateReport(req.Context(), id, orgID)
 				if err != nil {
-					WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
 					return
 				}
 
@@ -606,25 +675,25 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 
-				WriteJSON(w, req, http.StatusOK, rep)
+				platform.WriteJSON(w, req, http.StatusOK, rep)
 			})
 
-			// Accept or Dismiss Finding
+			// Finding Decision
 			pr.Post("/analyses/{id}/findings/{fid}/decision", func(w http.ResponseWriter, req *http.Request) {
-				orgID := GetOrgID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
 				fid := chi.URLParam(req, "fid")
 				var body struct {
-					Decision string `json:"decision"` // ACCEPTED | DISMISSED
+					Decision string `json:"decision"`
 				}
 				_ = json.NewDecoder(req.Body).Decode(&body)
 				if body.Decision == "" {
 					body.Decision = "ACCEPTED"
 				}
 				if err := s.AnalysisSvc.RecordFindingDecision(req.Context(), fid, orgID, body.Decision); err != nil {
-					WriteError(w, req, http.StatusInternalServerError, "DECISION_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusInternalServerError, "DECISION_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
 					"finding_id": fid,
 					"decision":   body.Decision,
 				})
@@ -636,71 +705,71 @@ func BuildRouter(s *RouterServices) http.Handler {
 					DocSHA256 string `json:"doc_sha256"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.DocSHA256 == "" {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "doc_sha256 talab qilinadi", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "doc_sha256 talab qilinadi", nil)
 					return
 				}
 				ch, err := s.SigningSvc.GenerateChallenge(body.DocSHA256)
 				if err != nil {
-					WriteError(w, req, http.StatusBadRequest, "CHALLENGE_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "CHALLENGE_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, ch)
+				platform.WriteJSON(w, req, http.StatusOK, ch)
 			})
 
 			pr.Post("/signatures/verify", func(w http.ResponseWriter, req *http.Request) {
 				var reqSig signing.SignatureVerificationRequest
 				if err := json.NewDecoder(req.Body).Decode(&reqSig); err != nil {
-					WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
 					return
 				}
-				userID := GetUserID(req.Context())
+				userID := platform.GetUserID(req.Context())
 				res, err := s.SigningSvc.VerifyAndRecordSignature(req.Context(), userID, reqSig)
 				if err != nil {
-					WriteError(w, req, http.StatusBadRequest, "SIGNATURE_ERROR", err.Error(), nil)
+					platform.WriteError(w, req, http.StatusBadRequest, "SIGNATURE_ERROR", err.Error(), nil)
 					return
 				}
-				WriteJSON(w, req, http.StatusOK, res)
+				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 
-			// ---------------- ADMIN ROUTES (Protected with lawyer/admin role) ----------------
+			// ---------------- ADMIN ROUTES ----------------
 			pr.Route("/admin", func(adm chi.Router) {
-				adm.Use(RequireRole("lawyer_reviewer", "admin", "owner", "platform_admin"))
+				adm.Use(platform.RequireRole("lawyer_reviewer", "admin", "owner", "platform_admin"))
 
 				adm.Get("/overview", func(w http.ResponseWriter, req *http.Request) {
 					ov, err := s.AdminSvc.GetOverview(req.Context())
 					if err != nil {
-						WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
 						return
 					}
-					WriteJSON(w, req, http.StatusOK, ov)
+					platform.WriteJSON(w, req, http.StatusOK, ov)
 				})
 
 				adm.Get("/reviews", func(w http.ResponseWriter, req *http.Request) {
 					items, err := s.AdminSvc.GetReviewQueue(req.Context(), 50)
 					if err != nil {
-						WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
 						return
 					}
-					WriteJSON(w, req, http.StatusOK, items)
+					platform.WriteJSON(w, req, http.StatusOK, items)
 				})
 
 				adm.Post("/reviews/{fid}/approve", func(w http.ResponseWriter, req *http.Request) {
 					fid := chi.URLParam(req, "fid")
 					var body struct {
-						Status   string `json:"status"` // APPROVED | REJECTED
+						Status   string `json:"status"`
 						Comments string `json:"comments"`
 					}
 					_ = json.NewDecoder(req.Body).Decode(&body)
 					if body.Status == "" {
 						body.Status = "APPROVED"
 					}
-					reviewerID := GetUserID(req.Context())
+					reviewerID := platform.GetUserID(req.Context())
 					err := s.AdminSvc.ApproveOrRejectFinding(req.Context(), fid, reviewerID, body.Status, body.Comments)
 					if err != nil {
-						WriteError(w, req, http.StatusInternalServerError, "APPROVAL_ERROR", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusInternalServerError, "APPROVAL_ERROR", err.Error(), nil)
 						return
 					}
-					WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
 						"finding_id": fid,
 						"status":     body.Status,
 					})
@@ -712,28 +781,28 @@ func BuildRouter(s *RouterServices) http.Handler {
 						AnalysesLimit int `json:"analyses_limit"`
 					}
 					if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.AnalysesLimit <= 0 {
-						WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "analyses_limit talab qilinadi", nil)
+						platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "analyses_limit talab qilinadi", nil)
 						return
 					}
 					err := s.AdminSvc.UpdateOrgQuota(req.Context(), targetOrgID, body.AnalysesLimit)
 					if err != nil {
-						WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
 						return
 					}
-					WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
 						"organization_id": targetOrgID,
 						"analyses_limit":  body.AnalysesLimit,
 					})
 				})
 
 				adm.Get("/audit-events", func(w http.ResponseWriter, req *http.Request) {
-					orgID := GetOrgID(req.Context())
+					orgID := platform.GetOrgID(req.Context())
 					events, err := s.AuditSvc.ListEvents(req.Context(), orgID, 50)
 					if err != nil {
-						WriteError(w, req, http.StatusInternalServerError, "AUDIT_ERROR", err.Error(), nil)
+						platform.WriteError(w, req, http.StatusInternalServerError, "AUDIT_ERROR", err.Error(), nil)
 						return
 					}
-					WriteJSON(w, req, http.StatusOK, events)
+					platform.WriteJSON(w, req, http.StatusOK, events)
 				})
 			})
 		})

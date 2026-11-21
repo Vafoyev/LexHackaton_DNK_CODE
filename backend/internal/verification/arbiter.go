@@ -67,7 +67,7 @@ func (a *Arbiter) Arbitrate(
 
 		// Vector 1 & 2: Check legal citation allowlist and FK 4-modda temporal date
 		var lsvID *string
-		if rf.LegalSource.Article != "" {
+		if a.corpusRepo != nil && rf.LegalSource.Article != "" {
 			art, err := a.corpusRepo.ValidateCitation(ctx, rf.LegalSource.Code, rf.LegalSource.Article, rf.LegalSource.OfficialURL, contractDate)
 			if err != nil || art == nil {
 				// Law not in DB allowlist or outside temporal range
@@ -153,7 +153,7 @@ func (a *Arbiter) Arbitrate(
 
 			// Vector 1 & 2: Closed-World Allowlist & Temporal FK 4-modda
 			var lsvID *string
-			if llmDraft.CitedArticle != "" {
+			if a.corpusRepo != nil && llmDraft.CitedArticle != "" {
 				art, err := a.corpusRepo.ValidateCitation(ctx, llmDraft.CitedLawCode, llmDraft.CitedArticle, llmDraft.OfficialURL, contractDate)
 				if err != nil || art == nil {
 					// Fake citation! Mark as UNVERIFIED (Vector 1 violation)

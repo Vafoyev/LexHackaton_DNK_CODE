@@ -209,7 +209,7 @@ func (e *RulesEngine) initRules() {
 	})
 
 	// 3. SVC_PENALTY_FORM_RISK
-	reHighPenalty := regexp.MustCompile(`(?i)(kuniga\s+[1-9]\s*%|kuniga\s+0\.[6-9]\s*%|penya\s+[2-9][0-9]\s*%|jarima\s+50\s*%|jarima\s+100\s*%)`)
+	reHighPenalty := regexp.MustCompile(`(?i)(kun(?:iga|\s+uchun)\s+[0-9.]+\s*%|penya\s+[0-9.]+\s*%|jarima\s+[0-9.]+\s*%|[0-9.]+\s*%\s*miqdorida\s*penya)`)
 	e.rules = append(e.rules, RuleDefinition{
 		Code:     "SVC_PENALTY_FORM_RISK",
 		Category: CategoryCommercial,

@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,6 +13,7 @@ import (
 	"github.com/lexguard/backend/internal/admin"
 	"github.com/lexguard/backend/internal/ai"
 	"github.com/lexguard/backend/internal/analysis"
+	"github.com/lexguard/backend/internal/api"
 	"github.com/lexguard/backend/internal/audit"
 	"github.com/lexguard/backend/internal/billing"
 	"github.com/lexguard/backend/internal/documents"
@@ -77,7 +77,7 @@ func main() {
 	defer workerPool.Stop()
 
 	// 5. Build HTTP Router
-	routerServices := &platform.RouterServices{
+	routerServices := &api.RouterServices{
 		DB:          dbPool,
 		Config:      cfg,
 		JWTManager:  jwtManager,
@@ -93,7 +93,7 @@ func main() {
 		AdminSvc:    adminSvc,
 		Redactor:    redactor,
 	}
-	handler := platform.BuildRouter(routerServices)
+	handler := api.BuildRouter(routerServices)
 
 	// 6. Start HTTP Server
 	server := &http.Server{
@@ -106,7 +106,7 @@ func main() {
 
 	go func() {
 		log.Printf("[INFO] Server tinglamoqda -> http://127.0.0.1%s\n", cfg.HTTPAddr)
-		log.Printf("[INFO] API Docs / Readiez: http://127.0.0.1%s/readyz\n", cfg.HTTPAddr)
+		log.Printf("[INFO] API Docs / Readyz: http://127.0.0.1%s/readyz\n", cfg.HTTPAddr)
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("[FATAL] HTTP server xatosi: %v", err)
 		}

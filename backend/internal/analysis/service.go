@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"sync"
 	"time"
 
@@ -227,7 +226,10 @@ func (s *Service) GetAnalysis(ctx context.Context, analysisID, orgID string) (*A
 		JOIN documents d ON a.document_id = d.id
 		WHERE a.id = $1 AND a.organization_id = $2
 	`
-	var det AnalysisDetail
+	det := AnalysisDetail{
+		FlaggedClauses: make([]FlaggedClause, 0),
+		Findings:       make([]verification.VerifiedFinding, 0),
+	}
 	var summaryBytes, metricsBytes []byte
 	err := s.db.QueryRow(ctx, sql, analysisID, orgID).Scan(
 		&det.ID, &det.ContractID, &det.Filename, &det.SHA256, &det.Status, &det.ExecutionMode,

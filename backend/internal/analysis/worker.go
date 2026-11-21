@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lexguard/backend/internal/ai"
+	"github.com/lexguard/backend/internal/rules"
 	"github.com/lexguard/backend/internal/verification"
 )
 
@@ -271,10 +272,9 @@ func (wp *WorkerPool) executePipeline(ctx context.Context, analysisID string) er
 		if vf.VerificationStatus == verification.StatusReviewRequired {
 			summary.ReviewRequired++
 			// Auto create approval queue item for human lawyer!
-			_ = tx.QueryRow(ctx, `
+			_, _ = tx.Exec(ctx, `
 				INSERT INTO approvals (id, analysis_id, finding_id, status, created_at)
 				VALUES (gen_random_uuid(), $1, $2, 'PENDING', NOW())
-				RETURNING id
 			`, analysisID, vf.ID)
 		}
 	}
