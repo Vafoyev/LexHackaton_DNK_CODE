@@ -111,6 +111,11 @@ class _AnalysisDetailPageState extends State<AnalysisDetailPage> {
                             yellowCount: yellowCount,
                             grayCount: grayCount,
                             greenCount: greenCount,
+                            balanceLabel: AppStrings.adaptUz(
+                              analysis.overallBalanceLabel,
+                              lang,
+                              script,
+                            ),
                             lang: lang,
                             script: script,
                           ),
@@ -321,7 +326,110 @@ class _AnalysisDetailPageState extends State<AnalysisDetailPage> {
               ExportPreviewSheet.showCommentsAndProtocol(context, analysis);
             },
           ),
+          const SizedBox(height: 10),
+          _ExportOptionRow(
+            icon: CupertinoIcons.envelope_fill,
+            title: AppStrings.t(lang, 'export_letter_title', script: script),
+            onTap: () {
+              Navigator.of(ctx).pop();
+              _showPartnerLetterSheet(
+                context,
+                analysis: analysis,
+                lang: lang,
+                script: script,
+              );
+            },
+          ),
         ],
+      ),
+    );
+  }
+
+  void _showPartnerLetterSheet(
+    BuildContext context, {
+    required ContractAnalysis analysis,
+    required AppLang lang,
+    required UzbekScript script,
+  }) {
+    final c = context.lexColors;
+    final issues = analysis.findings
+        .where(
+          (f) =>
+              f.riskColor == RiskColor.red || f.riskColor == RiskColor.yellow,
+        )
+        .toList(growable: false);
+    final buf = StringBuffer()
+      ..writeln('HAMKORGA KELISHMOVCHILIKLAR XATI (LOYIHA)')
+      ..writeln('Shartnoma: ${analysis.title}')
+      ..writeln('')
+      ..writeln(
+        'Hurmatli hamkor, shartnoma loyihasini ko‘rib chiqib, quyidagi bandlarni qonunchilik va o‘zaro muvozanat asosida tahrirlashni taklif qilamiz:',
+      )
+      ..writeln('');
+    for (int i = 0; i < issues.length; i++) {
+      final f = issues[i];
+      buf.writeln('${i + 1}. Band ${f.clauseNumber} — ${f.title}');
+      buf.writeln('   Tavsiya tahrir: ${f.suggestedRevision}');
+    }
+    buf
+      ..writeln('')
+      ..writeln('Eslatma: 10 kun ichida javob berishingizni so‘raymiz.');
+    final letterText = AppStrings.adaptUz(buf.toString().trim(), lang, script);
+
+    showLexModalSheet<void>(
+      context: context,
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(ctx).height * 0.75,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                AppStrings.t(lang, 'export_letter_title', script: script),
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w900,
+                  color: c.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: c.grayBg,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: SelectableText(
+                  letterText,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    height: 1.48,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              FilledButton.icon(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: letterText));
+                  Navigator.of(ctx).pop();
+                  LexToast.show(
+                    context,
+                    AppStrings.t(lang, 'export_copied_snack', script: script),
+                    type: LexToastType.success,
+                  );
+                },
+                icon: const Icon(CupertinoIcons.doc_on_doc, size: 17),
+                label: Text(
+                  AppStrings.t(lang, 'export_copy_btn', script: script),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -336,6 +444,7 @@ class _CleanVerdictCard extends StatelessWidget {
     required this.yellowCount,
     required this.grayCount,
     required this.greenCount,
+    required this.balanceLabel,
     required this.lang,
     required this.script,
   });
@@ -345,6 +454,7 @@ class _CleanVerdictCard extends StatelessWidget {
   final int yellowCount;
   final int grayCount;
   final int greenCount;
+  final String balanceLabel;
   final AppLang lang;
   final UzbekScript script;
 
@@ -421,7 +531,11 @@ class _CleanVerdictCard extends StatelessWidget {
               _MiniDotCounter(color: c.greenText, count: greenCount),
               if (grayCount > 0) ...[
                 const SizedBox(width: 10),
-                _MiniDotCounter(color: c.grayText, count: grayCount),
+                _MiniDotCounter(
+                  color: c.textSecondary,
+                  count: grayCount,
+                  outlined: true,
+                ),
               ],
             ],
           ),
@@ -445,6 +559,29 @@ class _CleanVerdictCard extends StatelessWidget {
               color: c.textSecondary,
             ),
           ),
+          if (balanceLabel.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.slider_horizontal_3,
+                  size: 14,
+                  color: c.textSecondary,
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    '${AppStrings.t(lang, 'balance_label', script: script)}: $balanceLabel',
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                      color: c.textSecondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
           if (steps.isNotEmpty) ...[
             const SizedBox(height: 16),
             Container(
@@ -502,10 +639,15 @@ class _CleanVerdictCard extends StatelessWidget {
 }
 
 class _MiniDotCounter extends StatelessWidget {
-  const _MiniDotCounter({required this.color, required this.count});
+  const _MiniDotCounter({
+    required this.color,
+    required this.count,
+    this.outlined = false,
+  });
 
   final Color color;
   final int count;
+  final bool outlined;
 
   @override
   Widget build(BuildContext context) {
@@ -514,9 +656,13 @@ class _MiniDotCounter extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 7,
-          height: 7,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          width: 7.5,
+          height: 7.5,
+          decoration: BoxDecoration(
+            color: outlined ? Colors.transparent : color,
+            shape: BoxShape.circle,
+            border: outlined ? Border.all(color: color, width: 1.4) : null,
+          ),
         ),
         const SizedBox(width: 4),
         Text(
@@ -564,7 +710,15 @@ class _CleanClauseCard extends StatelessWidget {
               Container(
                 width: 9,
                 height: 9,
-                decoration: BoxDecoration(color: rs.fg, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: finding.riskColor == RiskColor.gray
+                      ? Colors.transparent
+                      : rs.fg,
+                  shape: BoxShape.circle,
+                  border: finding.riskColor == RiskColor.gray
+                      ? Border.all(color: c.textSecondary, width: 1.5)
+                      : null,
+                ),
               ),
               const SizedBox(width: 8),
               Text(
