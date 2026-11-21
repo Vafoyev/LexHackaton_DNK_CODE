@@ -72,7 +72,7 @@ Har javob — **30 soniyagacha**. Avval qisqa javob, keyin bitta dalil. Bilmagan
 **Aytmang:** o'tkazilmagan intervyuni “o'tkazdik” deb.
 
 ### 18. “Mijozni qanday topasiz? CAC qancha?”
-**Javob:** Asosiy kanal — buxgalteriya autsorsing firmalari: bitta firma o'nlab kichik biznesga xizmat qiladi, shuning uchun bitta shartnoma bilan ko'p mijoz. Qo'shimcha: IT Park, tadbirkorlar uyushmalari, banklarning kichik biznes portallari. CAC hali o'lchanmagan — pilotda o'lchaymiz.
+**Javob:** Vositachi yo'q: har bir kichik biznes egasi o'zi ro'yxatdan o'tadi va o'zi foydalanadi. 14 kunlik bepul sinov (10 hujjat) — birinchi tekshiruvdayoq xavfli bandni ko'radi, mahsulotning o'zi sotadi. CAC hali o'lchanmagan — pilotda o'lchaymiz.
 
 ### 19. “Adliya o'zi LexAI qilyapti. Katta o'yinchi shuni qilsa-chi?”
 **Javob:** LexAI — huquqiy chatbot, hujjat ekspertizasi rejada. Biz bitta tor vazifaga ixtisoslashganmiz: imzodan oldin B2B shartnomani bandma-band tekshirish. Raqobat emas, hamkorlik ko'ramiz — so'rovimiz Adliya tizimida pilot.
