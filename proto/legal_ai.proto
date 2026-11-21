@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package legal_ai.v1;
+option go_package = "github.com/lexguard/backend/internal/gen/legal_ai/v1;legal_aiv1";
+
+// LexGuard AI — Asosiy AI va Yurisprudensiya Servisi
+service LegalAIService {
+  // 1. Skan qilingan PDF va rasmlarni OCR qilib, bandlarga ajratish
+  rpc ProcessDocumentOCR (OCRRequest) returns (OCRResponse);
+
+  // 2. Bandlarni Lex.uz RAG va Legal SLM orqali tahlil qilish (streaming events)
+  rpc AnalyzeClauses (ClauseAnalysisRequest) returns (stream ClauseAnalysisEvent);
+
+  // 3. Verifikatsiya muvaffaqiyatsiz bo'lganda AI qayta tahlil sikli (Active Self-Correction)
+  rpc SelfCorrectFinding (SelfCorrectionRequest) returns (SelfCorrectionResponse);
+
+  // 4. Jonli ovozli brifing va savol-javob (Live Voice Assistant)
+  rpc GenerateVoiceBrief (VoiceBriefRequest) returns (VoiceBriefResponse);
+  rpc StreamVoiceQuery (stream VoiceQueryChunk) returns (stream VoiceAnswerChunk);
+}
+
+message OCRRequest {
+  string document_id = 1;
+  bytes file_bytes = 2;
+  string mime_type = 3;
+}
+
+message OCRResponse {
+  string full_text = 1;
+  repeated ExtractedClause clauses = 2;
+  float confidence_score = 3;
+}
+
+message ExtractedClause {
+  string clause_id = 1;
+  string clause_number = 2;
+  string text = 3;
+  int32 page_number = 4;
+}
+
+message ClauseAnalysisRequest {
+  string analysis_id = 1;
+  string document_type = 2; // B2B_SERVICE, SUPPLY_SALE, COMMERCIAL_LEASE, EMPLOYMENT, etc.
+  string contract_date = 3;
+  string party_role = 4;     // EXECUTOR, CUSTOMER, NEUTRAL
+  repeated ExtractedClause clauses = 5;
+  bool use_local_slm_only = 6;
+}
+
+message ClauseAnalysisEvent {
+  string event_type = 1; // "stage_changed", "partial_finding", "progress"
+  int32 progress_pct = 2;
+  string stage_name = 3;
+  RawFinding finding = 4;
+}
+
+message RawFinding {
+  string clause_id = 1;
+  string risk_level = 2;    // RED, YELLOW, GREEN, GRAY
+  string category = 3;      // LEGAL, COMMERCIAL, UNKNOWN
+  string issue_title = 4;
+  string issue_explanation = 5;
+  string cited_article = 6; // e.g. "FK 707"
+  string suggested_redline = 7;
+  string balance_label = 8; // "Muvozanatli", "Ijrochiga og'ir", "Buyurtmachiga og'ir"
+}
+
+message SelfCorrectionRequest {
+  string clause_text = 1;
+  string previous_cited_article = 2;
+  string verification_error = 3; // Nega xato bo'ldi (masalan: modda bekor bo'lgan yoki mos emas)
+  repeated string candidate_articles = 4; // RAG topgan eng yaqin haqiqiy moddalar
+}
+
+message SelfCorrectionResponse {
+  bool resolved = 1;
+  RawFinding corrected_finding = 2;
+}
+
+message VoiceBriefRequest {
+  string analysis_id = 1;
+  string summary_text = 2;
+  repeated RawFinding top_risks = 3;
+}
+
+message VoiceBriefResponse {
+  string audio_script_uz = 1;
+  string ssml = 2;
+  int32 duration_sec = 3;
+}
+
+message VoiceQueryChunk {
+  string session_id = 1;
+  string user_query_text = 2;
+  bytes audio_chunk = 3;
+}
+
+message VoiceAnswerChunk {
+  string text_chunk = 1;
+  bytes audio_chunk = 2;
+  bool is_final = 3;
+}
