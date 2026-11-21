@@ -31,3 +31,13 @@ LexHackathon 2026 (1-trek: Huquqiy xizmatlar) doirasida **LexGuard AI** mahsulot
   - **2-Mobile Flutter**: `GlanceableRiskGauge` va `MobileVoiceAssistantBar` integratsiya qilindi. Barcha 6 ta unit/widget testlar yashil o'tdi!
   - **1-Backend Go**: `/api/v1/analyses/{id}/voice-brief` va `/api/v1/analyses/{id}/voice-query` API endpointlari ulandi va testlandi!
   - **Klaster buyrug'i**: Orchestrator butun ish to'liq 100% bo'lmaguncha jarayonni to'xtatmaydi!
+* `[05:47] DEVOPS (agy8)`: **D-10 INFRA 100% BAJARILDI! ✅**
+  - `deploy/docker-compose.yml` → 6 xizmat (Postgres+pgvector, Redis, MinIO, Backend, Frontend, Admin), subnet 172.28.0.0/24, to'liq healthcheck
+  - `deploy/Dockerfile.backend` → Go distroless multi-stage (builder → tester → production:nonroot)
+  - `deploy/Dockerfile.frontend` → Node20 builder → nginx:1.27-alpine, SSE proxy, Web Speech API headers
+  - `deploy/Dockerfile.admin` → Flexible (npm yoki static HTML)
+  - `deploy/nginx.frontend.conf` → Three.js CSP, SSE buffering off, SPA fallback
+  - `scripts/run_dev.sh` → 7 rejimli idempotent skript, D-10 ASCII banner, barcha URL'lar
+  - `.github/workflows/ci.yml` → 7 jobli CI: lint+test+coverage(60%), TS+Vite build, docker multi-stage, integration smoke, Trivy scan, CI Summary
+  - `.env.example` → To'liq muhit shabloni
+  - **TASK-701, TASK-702, TASK-703** → `[x] DONE` ✅

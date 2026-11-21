@@ -261,22 +261,41 @@ func (wp *WorkerPool) executePipeline(ctx context.Context, analysisID string) er
 		switch vf.Severity {
 		case "RED":
 			summary.RedLegal++
+			summary.RedCount++
 			overallScore += 30
+			if len(summary.TopRisks) < 3 {
+				summary.TopRisks = append(summary.TopRisks, fmt.Sprintf("%s-band: %s", vf.ClauseNumber, vf.Explanation))
+			}
 		case "YELLOW":
 			summary.YellowComm++
+			summary.YellowCount++
 			overallScore += 15
+			if len(summary.TopRisks) < 3 {
+				summary.TopRisks = append(summary.TopRisks, fmt.Sprintf("%s-band: %s", vf.ClauseNumber, vf.Explanation))
+			}
 		default:
 			summary.GreenOK++
+			summary.GreenCount++
 		}
 
 		if vf.VerificationStatus == verification.StatusReviewRequired {
 			summary.ReviewRequired++
+			summary.GrayCount++
 			// Auto create approval queue item for human lawyer!
 			_, _ = tx.Exec(ctx, `
 				INSERT INTO approvals (id, analysis_id, finding_id, status, created_at)
 				VALUES (gen_random_uuid(), $1, $2, 'PENDING', NOW())
 			`, analysisID, vf.ID)
 		}
+	}
+
+	summary.TotalClauses = len(doc.Clauses)
+	if summary.RedCount > 0 {
+		summary.BalanceLabel = "Buyurtmachiga og'ir"
+	} else if summary.YellowCount > 2 {
+		summary.BalanceLabel = "Ijrochiga noqulay"
+	} else {
+		summary.BalanceLabel = "Muvozanatli"
 	}
 
 	if overallScore > 100 {

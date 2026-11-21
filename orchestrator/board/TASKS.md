@@ -102,6 +102,6 @@ Har qanday modul yoki vazifa faqat quyidagi 6 ta filtrdan o'tgandagina `DONE` de
 ## 🚀 7. DevOps, SRE & CI/CD Lead (`agy8` — 7-DEVOPS-INFRA)
 *Docker, docker-compose, CI/CD konveyeri, yagona idempotent ishga tushirish skripti.*
 
-- [x] **TASK-701 [P0]**: `docker-compose.yml` (PostgreSQL 16 + pgvector, Redis, Go backend, Web front).
-- [x] **TASK-702 [P0]**: Idempotent `./scripts/run_dev.sh` yagona start skripti.
-- [~] **TASK-703 [P1]**: GitHub Actions CI konveyeri (`.github/workflows/ci.yml`).
+- [x] **TASK-701 [P0]**: `deploy/docker-compose.yml` (PostgreSQL 16+pgvector, Redis 7, Go Backend, MinIO, Web Frontend, Admin Portal — 6 xizmat, to'liq healthcheck va 172.28.0.0/24 tarmoq).
+- [x] **TASK-702 [P0]**: Idempotent `./scripts/run_dev.sh` — 7 rejimli (up/local/down/logs/health/reset/test), renkli banner, D-10 URL'lar chiqishi, Admin placeholder yaratish.
+- [x] **TASK-703 [P1]**: `.github/workflows/ci.yml` — 7 jobli pipeline: Go lint+test+coverage(60%), TS+Vite build, Admin build, Docker multi-stage, Integration smoke test (healthz+demo-session), Trivy security scan, CI Summary.

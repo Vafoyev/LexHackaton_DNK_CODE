@@ -23,6 +23,7 @@ Thumbs.db
 
 # Go (Backend)
 /backend/bin/
+/backend/var/
 *.exe
 *.exe~
 *.dll

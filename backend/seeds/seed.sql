@@ -6,7 +6,10 @@ INSERT INTO legal_sources (id, code, title, short_name, source_type, jurisdictio
 ('11111111-0000-0000-0000-000000000002', 'ORQ-547', 'O‘zbekiston Respublikasining "Shaxsiy ma’lumotlar to‘g‘risida"gi Qonuni', 'O‘RQ-547', 'LAW', 'UZ'),
 ('11111111-0000-0000-0000-000000000003', 'ORQ-1115', 'O‘zbekiston Respublikasining "Sun’iy intellekt texnologiyalarini qo‘llash sohasidagi munosabatlarni tartibga solish to‘g‘risida"gi Qonuni', 'O‘RQ-1115', 'LAW', 'UZ'),
 ('11111111-0000-0000-0000-000000000004', 'ORQ-1125', 'O‘zbekiston Respublikasining "Shaxsiy ma’lumotlar xavfsizligi va maxfiylikni kuchaytirish to‘g‘risida"gi Qonuni', 'O‘RQ-1125', 'LAW', 'UZ'),
-('11111111-0000-0000-0000-000000000005', 'ORQ-793', 'O‘zbekiston Respublikasining "Elektron raqamli imzo to‘g‘risida"gi Qonuni', 'O‘RQ-793', 'LAW', 'UZ')
+('11111111-0000-0000-0000-000000000005', 'ORQ-793', 'O‘zbekiston Respublikasining "Elektron raqamli imzo to‘g‘risida"gi Qonuni', 'O‘RQ-793', 'LAW', 'UZ'),
+('11111111-0000-0000-0000-000000000006', 'MK-1995', 'O‘zbekiston Respublikasining Mehnat Kodeksi (1995-yil tahriri)', 'Eski Mehnat Kodeksi', 'CODE', 'UZ'),
+('11111111-0000-0000-0000-000000000007', 'MK-2022', 'O‘zbekiston Respublikasining Mehnat Kodeksi (Yangi tahrir, O‘RQ-798)', 'Yangi Mehnat Kodeksi', 'CODE', 'UZ'),
+('11111111-0000-0000-0000-000000000008', 'IPK-UZ', 'O‘zbekiston Respublikasining Iqtisodiy protsessual kodeksi', 'Iqtisodiy protsessual kodeks', 'CODE', 'UZ')
 ON CONFLICT (code) DO NOTHING;
 
 -- 2. Legal Source Versions (Temporal & Granular Articles)
@@ -169,6 +172,97 @@ INSERT INTO legal_source_versions (
     'https://lex.uz/docs/orq-1115#art6',
     'sha256_orq1115_art6',
     to_tsvector('simple', 'sun’iy intellekt AI inson nazorati yuridik ahamiyatga ega axborot tahliliy disklaymer')
+),
+(
+    '22222222-0000-0000-0000-000000000020',
+    '11111111-0000-0000-0000-000000000006',
+    '84-modda', '1', NULL,
+    'Ishga qabul qilishda dastlabki sinov (Eski MK)',
+    'Xodimning topshirilayotgan ishga layoqatliligini tekshirish maqsadida dastlabki sinov muddati uch oydan oshmasligi kerak. Homilador ayollar, uch yoshga to‘lmagan bolalari bor ayollar, o‘quv yurtlarini bitirgan shaxslar ishga qabul qilinganda dastlabki sinov belgilanmaydi.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'LABOR_AGREEMENT'],
+    '1996-04-01', '2023-04-29',
+    'https://lex.uz/docs/142859#143000',
+    'sha256_mk1995_art84',
+    to_tsvector('simple', 'dastlabki sinov muddati uch oydan oshmasligi homilador yosh bola bitiruvchi')
+),
+(
+    '22222222-0000-0000-0000-000000000030',
+    '11111111-0000-0000-0000-000000000007',
+    '5-modda', '1', NULL,
+    'Mehnat to‘g‘risidagi qonunchilik va xodimlar ahvolini yomonlashtiruvchi shartlarning haqiqiy emasligi (Yangi MK)',
+    'Mehnat shartnomalarining xodimlar ahvolini mehnat to‘g‘risidagi qonunchilikka nisbatan yomonlashtiradigan shartlari o‘z-o‘zidan haqiqiy emasdir.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'LABOR_AGREEMENT'],
+    '2023-04-30', NULL,
+    'https://lex.uz/docs/6257288#6257320',
+    'sha256_mk2022_art5',
+    to_tsvector('simple', 'mehnat to‘g‘risidagi qonunchilik xodimlar ahvolini yomonlashtiruvchi shartlar haqiqiy emas')
+),
+(
+    '22222222-0000-0000-0000-000000000032',
+    '11111111-0000-0000-0000-000000000007',
+    '130-modda', '1', NULL,
+    'Dastlabki sinov muddati va chegaralari (Yangi MK)',
+    'Dastlabki sinov muddati uch oydan, tashkilot rahbarlari, ularning o‘rinbosarlari, bosh buxgalterlar va alohida bo‘linma rahbarlari uchun esa olti oydan oshishi mumkin emas. Homilador ayollar, uch yoshga to‘lmagan bolasi bor ayollar va ta’lim muassasasi bitiruvchilari birinchi marta ishga kirayotganda sinov belgilanmaydi.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'LABOR_AGREEMENT'],
+    '2023-04-30', NULL,
+    'https://lex.uz/docs/6257288#6258020',
+    'sha256_mk2022_art130',
+    to_tsvector('simple', 'dastlabki sinov muddati uch oydan oshishi mumkin emas olti oy rahbarlar bitiruvchilar')
+),
+(
+    '22222222-0000-0000-0000-000000000036',
+    '11111111-0000-0000-0000-000000000007',
+    '404-modda', '1', NULL,
+    'Mehnat qilish erkinligi kafolatlari va no-compete taqiqlanishi (Yangi MK)',
+    'Mehnat shartnomasi bekor qilinganidan so‘ng fuqaroning boshqa ish beruvchi bilan mehnat munosabatlariga kirishishi yoki qonuniy tadbirkorlik bilan shug‘ullanishi huquqini cheklovchi har qanday bitim yoki shart o‘z-o‘zidan haqiqiy emasdir.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'LABOR_AGREEMENT'],
+    '2023-04-30', NULL,
+    'https://lex.uz/docs/6257288#6259450',
+    'sha256_mk2022_art404',
+    to_tsvector('simple', 'mehnat qilish erkinligi raqobatchi no-compete ishga kirmaslik haqiqiy emas')
+),
+(
+    '22222222-0000-0000-0000-000000000042',
+    '11111111-0000-0000-0000-000000000002',
+    '27-1-modda', '1', NULL,
+    'O‘zbekiston fuqarolarining shaxsiy ma’lumotlariga ishlov berishda mahalliylashtirish majburiyati',
+    'Mulkdor va operator O‘zbekiston fuqarolarining shaxsiy ma’lumotlariga ishlov berishda ularning jismonan O‘zbekiston hududida joylashgan texnik vositalarda saqlanishini ta’minlashi shart.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'SERVICE_AGREEMENT', 'NDA'],
+    '2021-04-15', NULL,
+    'https://lex.uz/docs/4396428#5270100',
+    'sha256_orq547_art27_1',
+    to_tsvector('simple', 'mahalliylashtirish shaxsiy ma’lumotlar o‘zbekiston hududidagi serverlar saqlash bazalar')
+),
+(
+    '22222222-0000-0000-0000-000000000060',
+    '11111111-0000-0000-0000-000000000004',
+    '18-modda', '1', NULL,
+    'Ma’lumotlar sizib chiqishi (Data Breach) holatida xabardor qilish',
+    'Operator shaxsiy yoki maxfiy ma’lumotlar xavfsizligi buzilgan, ma’lumotlar sizib chiqqan vaqtdan boshlab 24 soat ichida vakolatli organni va subyektlarni xabardor qilishi shart.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'SERVICE_AGREEMENT', 'NDA'],
+    '2026-02-01', NULL,
+    'https://lex.uz/docs/orq-1125#art18',
+    'sha256_orq1125_art18',
+    to_tsvector('simple', 'ma’lumotlar sizib chiqishi data breach 24 soat kiberxavfsizlik xabardor qilish')
+),
+(
+    '22222222-0000-0000-0000-000000000004',
+    '11111111-0000-0000-0000-000000000001',
+    '245-modda', '1', NULL,
+    'Pul majburiyatining valyutasi',
+    'O‘zbekiston Respublikasi hududida pul majburiyatlari so‘mda ifodalanishi va to‘lanishi lozim.',
+    'IMPERATIVE',
+    ARRAY['ALL', 'SERVICE_AGREEMENT', 'SUPPLY_AGREEMENT'],
+    '1997-03-01', NULL,
+    'https://lex.uz/docs/111181#111430',
+    'sha256_fk_art245',
+    to_tsvector('simple', 'pul majburiyati valyuta so‘m chet el valyutasi to‘lov taqiqlangan')
 )
 ON CONFLICT (id) DO NOTHING;
 

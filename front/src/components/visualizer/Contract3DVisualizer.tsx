@@ -1,7 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { AnalysisResult, ContractClause, RiskLevel } from '../../types/contract';
-import { RotateCw, ZoomIn, ZoomOut, Eye, Info, Sparkles, Filter, ChevronRight } from 'lucide-react';
+import { 
+  RotateCw, 
+  ZoomIn, 
+  ZoomOut, 
+  Eye, 
+  Info, 
+  Sparkles, 
+  Filter, 
+  ChevronRight,
+  Maximize2,
+  Minimize2,
+  Layers,
+  Compass
+} from 'lucide-react';
 
 interface Contract3DVisualizerProps {
   analysis: AnalysisResult;
@@ -20,6 +33,8 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
   const [autoRotate, setAutoRotate] = useState(true);
   const [filterRisk, setFilterRisk] = useState<RiskLevel | 'ALL'>('ALL');
   const [focusedClause, setFocusedClause] = useState<ContractClause | null>(null);
+  const [layoutMode, setLayoutMode] = useState<'SPHERICAL' | 'CLUSTERED' | 'HELIX'>('SPHERICAL');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Three.js instances ref
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -27,6 +42,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const nodesGroupRef = useRef<THREE.Group | null>(null);
   const coreOrbRef = useRef<THREE.Mesh | null>(null);
+  const dynamicLightRef = useRef<THREE.PointLight | null>(null);
   const animationFrameIdRef = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
   const prevMousePosRef = useRef({ x: 0, y: 0 });
@@ -46,12 +62,12 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     if (!containerRef.current) return;
     const container = containerRef.current;
     const width = container.clientWidth;
-    const height = container.clientHeight || 550;
+    const height = container.clientHeight || 580;
 
     // 1. Scene
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.fog = new THREE.FogExp2(0x060B18, 0.0025);
+    scene.fog = new THREE.FogExp2(0x060B18, 0.002);
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
@@ -64,38 +80,53 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.3;
     rendererRef.current = renderer;
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
-    // 4. Lights
+    // 4. Lights & Dynamic Cursor Light
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x38BDF8, 2.0);
-    dirLight1.position.set(20, 40, 30);
+    const dirLight1 = new THREE.DirectionalLight(0x38BDF8, 2.2);
+    dirLight1.position.set(30, 45, 30);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0x22C55E, 1.5);
-    dirLight2.position.set(-20, -30, -30);
+    const dirLight2 = new THREE.DirectionalLight(0x22C55E, 1.8);
+    dirLight2.position.set(-30, -35, -30);
     scene.add(dirLight2);
 
-    // 5. Starfield / Ambient Particles
-    const particleCount = 400;
+    // Dynamic mouse-following point light for immersion
+    const dynamicLight = new THREE.PointLight(0x38BDF8, 3.5, 90);
+    dynamicLight.position.set(0, 20, 50);
+    scene.add(dynamicLight);
+    dynamicLightRef.current = dynamicLight;
+
+    // 5. Starfield / Nebula Particles
+    const particleCount = 600;
     const particleGeometry = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
+    const particleColors = new Float32Array(particleCount * 3);
+
     for (let i = 0; i < particleCount * 3; i += 3) {
-      particlePositions[i] = (Math.random() - 0.5) * 200;
-      particlePositions[i + 1] = (Math.random() - 0.5) * 200;
-      particlePositions[i + 2] = (Math.random() - 0.5) * 200;
+      particlePositions[i] = (Math.random() - 0.5) * 250;
+      particlePositions[i + 1] = (Math.random() - 0.5) * 250;
+      particlePositions[i + 2] = (Math.random() - 0.5) * 250;
+
+      // Moviy va zumrad rangli kosmik nurlar
+      particleColors[i] = 0.2 + Math.random() * 0.3;     // R
+      particleColors[i + 1] = 0.6 + Math.random() * 0.4; // G
+      particleColors[i + 2] = 0.9;                       // B
     }
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
     const particleMaterial = new THREE.PointsMaterial({
-      color: 0x38BDF8,
-      size: 1.2,
+      size: 1.4,
+      vertexColors: true,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.5,
       blending: THREE.AdditiveBlending,
     });
     const starField = new THREE.Points(particleGeometry, particleMaterial);
@@ -106,87 +137,122 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     const coreRiskColor = analysis.summary.risk_score > 60 ? 0xDC2626 : analysis.summary.risk_score > 30 ? 0xD97706 : 0x16A34A;
     
     // Core Sphere
-    const coreGeo = new THREE.IcosahedronGeometry(7, 3);
+    const coreGeo = new THREE.IcosahedronGeometry(7.5, 3);
     const coreMat = new THREE.MeshStandardMaterial({
       color: coreRiskColor,
-      roughness: 0.2,
-      metalness: 0.8,
+      roughness: 0.15,
+      metalness: 0.85,
       emissive: coreRiskColor,
-      emissiveIntensity: 0.35,
-      wireframe: false,
+      emissiveIntensity: 0.4,
     });
     const coreOrb = new THREE.Mesh(coreGeo, coreMat);
     coreOrbRef.current = coreOrb;
     coreGroup.add(coreOrb);
 
     // Outer Wireframe Hologram
-    const wireGeo = new THREE.IcosahedronGeometry(9, 2);
+    const wireGeo = new THREE.IcosahedronGeometry(9.5, 2);
     const wireMat = new THREE.MeshBasicMaterial({
       color: 0x38BDF8,
       wireframe: true,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.28,
     });
     const wireMesh = new THREE.Mesh(wireGeo, wireMat);
     coreGroup.add(wireMesh);
 
-    // Outer Glow Ring
-    const ringGeo = new THREE.RingGeometry(11, 11.5, 48);
+    // Outer Glow Rings
+    const ringGeo = new THREE.RingGeometry(11.5, 12.2, 64);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x38BDF8,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.45,
     });
-    const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-    ringMesh.rotation.x = Math.PI / 2;
-    coreGroup.add(ringMesh);
+    const ringMesh1 = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh1.rotation.x = Math.PI / 2;
+    coreGroup.add(ringMesh1);
+
+    const ringMesh2 = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh2.rotation.y = Math.PI / 2;
+    coreGroup.add(ringMesh2);
 
     scene.add(coreGroup);
 
-    // 7. Clause Nodes (Har bir shartnoma bandi 3D tuguni)
+    // 7. Clause Nodes & Layout calculation
     const nodesGroup = new THREE.Group();
     nodesGroupRef.current = nodesGroup;
     scene.add(nodesGroup);
 
     const clauses = analysis.clauses || [];
     const totalClauses = clauses.length;
-    const radius = 28;
+    const baseRadius = 29;
 
     clauses.forEach((clause, index) => {
-      // Sferik yoki spiral koordinata taqsimoti
-      const phi = Math.acos(-1 + (2 * index) / Math.max(totalClauses, 1));
-      const theta = Math.sqrt(totalClauses * Math.PI) * phi;
+      let x = 0;
+      let y = 0;
+      let z = 0;
 
-      const x = radius * Math.cos(theta) * Math.sin(phi);
-      const y = radius * Math.sin(theta) * Math.sin(phi) * 0.7; // biroz ellips
-      const z = radius * Math.cos(phi);
+      if (layoutMode === 'SPHERICAL') {
+        const phi = Math.acos(-1 + (2 * index) / Math.max(totalClauses, 1));
+        const theta = Math.sqrt(totalClauses * Math.PI) * phi;
+        x = baseRadius * Math.cos(theta) * Math.sin(phi);
+        y = baseRadius * Math.sin(theta) * Math.sin(phi) * 0.75;
+        z = baseRadius * Math.cos(phi);
+      } else if (layoutMode === 'CLUSTERED') {
+        // Xavf darajasiga qarab 3D fazoviy klasterlash
+        let heightLayer = 0;
+        let clusterRadius = 25;
+        if (clause.risk_level === 'RED') {
+          heightLayer = 18;
+          clusterRadius = 20;
+        } else if (clause.risk_level === 'YELLOW') {
+          heightLayer = 6;
+          clusterRadius = 28;
+        } else if (clause.risk_level === 'GREEN') {
+          heightLayer = -12;
+          clusterRadius = 32;
+        } else {
+          heightLayer = -2;
+          clusterRadius = 24;
+        }
+        const angle = (index / totalClauses) * Math.PI * 2 * 2;
+        x = clusterRadius * Math.cos(angle);
+        y = heightLayer + Math.sin(index) * 2;
+        z = clusterRadius * Math.sin(angle);
+      } else {
+        // HELIX (DNK spiral tartibi)
+        const helixRadius = 24;
+        const helixAngle = (index / totalClauses) * Math.PI * 6;
+        x = helixRadius * Math.cos(helixAngle);
+        y = -20 + (index / totalClauses) * 40;
+        z = helixRadius * Math.sin(helixAngle);
+      }
 
       const nodeColor = getColorForRisk(clause.risk_level);
       const isRisky = clause.risk_level === 'RED' || clause.risk_level === 'YELLOW';
-      const nodeSize = isRisky ? 2.5 : 1.7;
+      const nodeSize = clause.risk_level === 'RED' ? 2.8 : clause.risk_level === 'YELLOW' ? 2.2 : 1.7;
 
-      const nodeGeo = new THREE.SphereGeometry(nodeSize, 24, 24);
+      const nodeGeo = new THREE.SphereGeometry(nodeSize, 28, 28);
       const nodeMat = new THREE.MeshStandardMaterial({
         color: nodeColor,
-        roughness: 0.3,
-        metalness: 0.6,
+        roughness: 0.25,
+        metalness: 0.7,
         emissive: nodeColor,
-        emissiveIntensity: isRisky ? 0.6 : 0.2,
+        emissiveIntensity: isRisky ? 0.75 : 0.25,
       });
 
       const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
       nodeMesh.position.set(x, y, z);
-      nodeMesh.userData = { clause, index };
+      nodeMesh.userData = { clause, index, originalPos: { x, y, z } };
 
-      // Tugun atrofida halo / glow xavfli bo'lsa
+      // Xavfli tugun atrofida halo / aura
       if (isRisky) {
-        const haloGeo = new THREE.SphereGeometry(nodeSize * 1.5, 16, 16);
+        const haloGeo = new THREE.SphereGeometry(nodeSize * 1.5, 18, 18);
         const haloMat = new THREE.MeshBasicMaterial({
           color: nodeColor,
           wireframe: true,
           transparent: true,
-          opacity: 0.35,
+          opacity: 0.38,
         });
         const haloMesh = new THREE.Mesh(haloGeo, haloMat);
         nodeMesh.add(haloMesh);
@@ -194,15 +260,19 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
       nodesGroup.add(nodeMesh);
 
-      // Markaziy yadro bilan bog'lovchi neon nur
-      const lineGeo = new THREE.BufferGeometry().setFromPoints([
+      // Curved Spline / Line Markaziy yadro bilan bog'lovchi nur
+      const midPoint = new THREE.Vector3(x * 0.5, y * 0.5 + (isRisky ? 4 : -2), z * 0.5);
+      const curve = new THREE.QuadraticBezierCurve3(
         new THREE.Vector3(0, 0, 0),
+        midPoint,
         new THREE.Vector3(x, y, z)
-      ]);
+      );
+      const points = curve.getPoints(20);
+      const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
       const lineMat = new THREE.LineBasicMaterial({
         color: nodeColor,
         transparent: true,
-        opacity: isRisky ? 0.45 : 0.15,
+        opacity: isRisky ? 0.5 : 0.18,
       });
       const line = new THREE.Line(lineGeo, lineMat);
       nodesGroup.add(line);
@@ -220,6 +290,12 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
       mouse.y = y;
 
       setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+
+      // Dinamik nur sichqoncha ortidan siljiydi
+      if (dynamicLightRef.current) {
+        dynamicLightRef.current.position.x = x * 40;
+        dynamicLightRef.current.position.y = y * 40;
+      }
 
       if (isDraggingRef.current) {
         const deltaX = e.clientX - prevMousePosRef.current.x;
@@ -279,7 +355,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      camera.position.z = Math.min(Math.max(camera.position.z + e.deltaY * 0.08, 30), 150);
+      camera.position.z = Math.min(Math.max(camera.position.z + e.deltaY * 0.08, 30), 160);
     };
 
     container.addEventListener('mousemove', onPointerMove);
@@ -293,22 +369,23 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     const animate = () => {
       const elapsed = clock.getElapsedTime();
 
-      // Core Orb tebranishi
+      // Core Orb nafas olish effekti
       if (coreOrbRef.current) {
-        const scale = 1 + Math.sin(elapsed * 2) * 0.05;
+        const scale = 1 + Math.sin(elapsed * 2.2) * 0.06;
         coreOrbRef.current.scale.set(scale, scale, scale);
       }
-      coreGroup.rotation.y = elapsed * 0.15;
-      wireMesh.rotation.x = elapsed * 0.1;
-      ringMesh.rotation.z = elapsed * 0.2;
+      coreGroup.rotation.y = elapsed * 0.12;
+      wireMesh.rotation.x = elapsed * 0.08;
+      ringMesh1.rotation.z = elapsed * 0.18;
+      ringMesh2.rotation.x = elapsed * 0.15;
 
       // Tugunlar guruhi avtomatik aylanishi
       if (nodesGroupRef.current && autoRotate && !isDraggingRef.current) {
-        nodesGroupRef.current.rotation.y += 0.003;
+        nodesGroupRef.current.rotation.y += 0.0025;
       }
 
-      // Zarralar siljishi
-      starField.rotation.y = elapsed * 0.02;
+      // Zarralar tebranishi
+      starField.rotation.y = elapsed * 0.015;
 
       renderer.render(scene, camera);
       animationFrameIdRef.current = requestAnimationFrame(animate);
@@ -319,7 +396,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     const resizeObserver = new ResizeObserver(() => {
       if (!containerRef.current) return;
       const w = containerRef.current.clientWidth;
-      const h = containerRef.current.clientHeight || 550;
+      const h = containerRef.current.clientHeight || 580;
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
@@ -339,7 +416,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
       resizeObserver.disconnect();
       renderer.dispose();
     };
-  }, [analysis, autoRotate]);
+  }, [analysis, autoRotate, layoutMode]);
 
   // Filtr o'zgarganda tugunlar ko'rinishini sozlash
   useEffect(() => {
@@ -367,33 +444,69 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
   const handleZoom = (delta: number) => {
     if (cameraRef.current) {
-      cameraRef.current.position.z = Math.min(Math.max(cameraRef.current.position.z + delta, 35), 130);
+      cameraRef.current.position.z = Math.min(Math.max(cameraRef.current.position.z + delta, 35), 140);
     }
   };
 
   return (
-    <div className="relative w-full h-[580px] bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 rounded-2xl border border-slate-800 shadow-2xl overflow-hidden select-none">
+    <div className={`relative w-full ${isFullscreen ? 'fixed inset-0 z-50 h-screen' : 'h-[620px] rounded-3xl'} bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border border-slate-800 shadow-2xl overflow-hidden select-none transition-all`}>
       {/* 3D WebGL Canvas */}
       <div ref={containerRef} className="w-full h-full cursor-grab" />
 
       {/* Header Info Overlay */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-1.5 pointer-events-none">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-sky-500/20 text-sky-400 border border-sky-500/30 backdrop-blur-md">
+          <div className="p-2 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 backdrop-blur-md shadow-lg shadow-sky-500/20">
             <Sparkles className="w-4 h-4 animate-spin-slow" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
-              Interaktiv 3D Shartnoma Risk Klasteri
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800/80 text-sky-400 border border-slate-700">
-                WebGL / Three.js
+            <h3 className="text-sm font-black text-white tracking-wide flex items-center gap-2">
+              <span>3D Immersion Risk Visualizer</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">
+                Three.js WebGL
               </span>
             </h3>
             <p className="text-[11px] text-slate-400">
-              Shartnomadagi {analysis.clauses.length} ta band fazoviy koordinatalarda aks ettirilgan
+              {analysis.clauses.length} ta shartnoma bandi fazoviy koordinatalarda aks ettirilgan
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Layout Mode Selector (Yuqori Markazda) */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md p-1 rounded-xl border border-slate-800 shadow-xl">
+        <button
+          onClick={() => setLayoutMode('SPHERICAL')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            layoutMode === 'SPHERICAL' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+          }`}
+          title="Sferik fazoviy joylashuv"
+        >
+          <Compass className="w-3.5 h-3.5" />
+          <span>Sferik</span>
+        </button>
+
+        <button
+          onClick={() => setLayoutMode('CLUSTERED')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            layoutMode === 'CLUSTERED' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+          }`}
+          title="Xavf darajasi bo'yicha qatlamlarga ajratish"
+        >
+          <Layers className="w-3.5 h-3.5" />
+          <span>Risk Qatlamlari</span>
+        </button>
+
+        <button
+          onClick={() => setLayoutMode('HELIX')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+            layoutMode === 'HELIX' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
+          }`}
+          title="Shartnoma DNK spirali"
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>DNK螺旋</span>
+        </button>
       </div>
 
       {/* Floating Risk Indicators (O'ng burchak) */}
@@ -478,6 +591,14 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
         >
           <Eye className="w-3.5 h-3.5 text-sky-400" />
           <span>Reset</span>
+        </button>
+
+        <button
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+          title={isFullscreen ? "Kichik ekranga qaytish" : "To'liq ekran rejimiga o'tish"}
+        >
+          {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
         </button>
       </div>
 

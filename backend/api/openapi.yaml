@@ -221,6 +221,71 @@ paths:
         '200':
           description: Evidence report
 
+  /analyses/{id}/voice-brief:
+    get:
+      summary: 30-second AI Live Voice Audio Briefing with SSML (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Natural Uzbek voice debrief with SSML and top critical risks
+
+  /analyses/{id}/glanceable-matrix:
+    get:
+      summary: Pro Glanceable UI & 3D Immersion visual coordinate matrix (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: 3D spheres, spatial clause coordinates, balance index, and ribbon heatmap
+
+  /analyses/{id}/voice-debrief/stream:
+    get:
+      summary: Server-Sent Events (SSE) streaming voice audio debrief sentences (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: SSE stream of voice sentences for live audio-wave rendering
+
+  /analyses/{id}/voice-query:
+    post:
+      summary: AI Live Voice interactive Q&A over contract clauses and Uzbek laws
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+      responses:
+        '200':
+          description: Voice answer with cited articles and actionable advice
+
   /signatures/challenge:
     post:
       summary: Generate E-IMZO SHA-256 signing challenge

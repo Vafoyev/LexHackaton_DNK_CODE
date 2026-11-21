@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { AuthModal } from './components/auth/AuthModal';
 import { ContractUploader } from './components/upload/ContractUploader';
 import { ExecutiveSummary } from './components/dashboard/ExecutiveSummary';
 import { Contract3DVisualizer } from './components/visualizer/Contract3DVisualizer';
@@ -10,12 +12,13 @@ import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
-export default function App() {
+function MainApp() {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [activeView, setActiveView] = useState<'dashboard' | 'diff' | 'visualizer3d'>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [focusedClauseId, setFocusedClauseId] = useState<string | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleAnalyze = async (file: File | null, isDemo: boolean) => {
     setIsLoading(true);
@@ -64,6 +67,7 @@ export default function App() {
         activeView={activeView}
         setActiveView={setActiveView}
         hasAnalysis={!!analysis}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -105,6 +109,20 @@ export default function App() {
       </main>
 
       <Footer />
+
+      {/* Auth Modal (Kirish / OneID / Ro'yxatdan o'tish) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
   );
 }

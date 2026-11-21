@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AnalysisResult, RiskLevel } from '../../types/contract';
 import { 
   ShieldCheck, 
@@ -6,7 +6,10 @@ import {
   Coins, 
   Activity, 
   Layers, 
-  ArrowRight
+  ArrowRight,
+  TrendingDown,
+  Calculator,
+  Scale
 } from 'lucide-react';
 
 interface ContractHealthGaugeProps {
@@ -23,6 +26,17 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
   const { summary, clauses } = analysis;
   const score = Math.max(0, Math.min(100, 100 - summary.risk_score)); // 100 = mukammal xavfsiz, 0 = xavfli
 
+  // Moliyaviy Simulyator holati
+  const [contractAmount, setContractAmount] = useState<number>(100000000); // 100 mln so'm
+  const [delayDays, setDelayDays] = useState<number>(15); // 15 kun kechikish
+
+  // Amaldagi noqonuniy shart (kuniga 1% penya, cap yo'q)
+  const currentRiskPenalty = Math.round(contractAmount * 0.01 * delayDays);
+  // LexGuard tavsiya qilgan qonuniy redline (kuniga 0.1% penya, max 10%)
+  const legalRedlinePenalty = Math.round(Math.min(contractAmount * 0.001 * delayDays, contractAmount * 0.10));
+  // Tejalgan mablag'
+  const savedAmount = Math.max(0, currentRiskPenalty - legalRedlinePenalty);
+
   // Rang hisoblash
   const getScoreColor = () => {
     if (score >= 75) return { stroke: '#10B981', text: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/30', label: 'YUQORI XAVFSIZLIK' };
@@ -35,16 +49,21 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
+  };
+
   return (
-    <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+    <div className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 shadow-2xl relative overflow-hidden backdrop-blur-xl space-y-6">
       {/* Orqa fon nur effekti */}
       <div 
         className="absolute -top-24 -right-24 w-72 h-72 rounded-full opacity-20 blur-3xl pointer-events-none"
         style={{ backgroundColor: status.stroke }}
       />
 
+      {/* 1. Asosiy Gauge va Metrikalar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* 1. KATTA VISUAL GAUGE (0-100 Radiali) */}
+        {/* KATTA VISUAL GAUGE (0-100 Radiali) */}
         <div className="lg:col-span-4 flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 relative">
           <div className="relative w-44 h-44 flex items-center justify-center">
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
@@ -88,8 +107,8 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
           </div>
         </div>
 
-        {/* 2. GLANCEABLE METRIKALAR & MOLIYAVIY XAVF (Yozuvsiz, ko'rgandayoq tushunarli) */}
-        <div className="lg:col-span-8 space-y-5">
+        {/* GLANCEABLE METRIKALAR & 4-RANGLI HISOB */}
+        <div className="lg:col-span-8 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Qizil Bandlar */}
             <div className="p-3.5 rounded-2xl bg-rose-950/30 border border-rose-900/50 flex items-center gap-3">
@@ -136,7 +155,7 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
             </div>
           </div>
 
-          {/* 3. DNA SHARTNOMA ISSIQLIK XARITASI (HEATMAP STRIP) */}
+          {/* DNA SHARTNOMA ISSIQLIK XARITASI (HEATMAP STRIP) */}
           <div className="p-4 rounded-2xl bg-slate-950/50 border border-slate-800/80 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-300 flex items-center gap-1.5">
@@ -175,23 +194,101 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
               })}
             </div>
 
-            {/* Moliyaviy Xavf Barometri */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-1 text-xs">
-              <div className="flex items-center gap-2 text-rose-400 font-bold">
-                <Coins className="w-4 h-4 shrink-0 text-amber-400" />
-                <span>Moliyaviy Asimmetriya: Kechikkan har kun uchun 0.5% (Max: 50% jami qiymat)</span>
-              </div>
+            <div className="flex items-center justify-between text-[10px] text-slate-500 px-1">
+              <span>1.1 (Muqaddima)</span>
+              <span className="text-sky-400 font-semibold">{summary.balance_label}</span>
+              <span>{clauses[clauses.length - 1]?.clause_number || '18.1'} (Yakuniy)</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {onOpen3D && (
-                <button
-                  onClick={onOpen3D}
-                  className="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-semibold border border-sky-500/40 flex items-center gap-1.5 transition-all self-end sm:self-auto"
-                >
-                  <Layers className="w-3.5 h-3.5" />
-                  <span>3D Sferada Ko‘rish</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
-              )}
+      {/* 2. INTERAKTIV MOLIYAVIY XATAR KALKULYATORI (FINANCIAL EXPOSURE SIMULATOR) */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-amber-900/40 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
+              <Calculator className="w-4 h-4" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                <span>Interaktiv Moliyaviy Xatar Simulyatori</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">FK 326 / FK 707</span>
+              </h4>
+              <p className="text-[11px] text-slate-400">
+                Shartnomadagi kunlik 1% penya va asossiz bekor qilishning moliyaviy oqibati
+              </p>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <span className="text-[10px] uppercase font-bold text-slate-400">Tejaladigan Mablag':</span>
+            <div className="text-base font-black text-emerald-400 flex items-center gap-1">
+              <TrendingDown className="w-4 h-4" />
+              <span>{formatCurrency(savedAmount)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Slayderlar va Hisob-kitob */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          {/* Shartnoma summasi tanlash */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-medium">
+              <span className="text-slate-400">Shartnoma Umumiy Qiymati:</span>
+              <span className="text-white font-mono font-bold">{formatCurrency(contractAmount)}</span>
+            </div>
+            <input 
+              type="range"
+              min={10000000}
+              max={500000000}
+              step={5000000}
+              value={contractAmount}
+              onChange={(e) => setContractAmount(Number(e.target.value))}
+              className="w-full accent-sky-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-500">
+              <span>10 mln</span>
+              <span>100 mln</span>
+              <span>500 mln so'm</span>
+            </div>
+          </div>
+
+          {/* Kechikish kunlari */}
+          <div className="space-y-1.5">
+            <div className="flex justify-between text-xs font-medium">
+              <span className="text-slate-400">Faraziy Kechikish:</span>
+              <span className="text-amber-400 font-mono font-bold">{delayDays} kun</span>
+            </div>
+            <input 
+              type="range"
+              min={1}
+              max={60}
+              step={1}
+              value={delayDays}
+              onChange={(e) => setDelayDays(Number(e.target.value))}
+              className="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-slate-500">
+              <span>1 kun</span>
+              <span>15 kun</span>
+              <span>60 kun</span>
+            </div>
+          </div>
+
+          {/* Natija taqqoslash */}
+          <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-1.5">
+            <div className="flex justify-between text-slate-400">
+              <span>Hozirgi shartda (1%/kun):</span>
+              <span className="text-rose-400 font-mono font-bold">{formatCurrency(currentRiskPenalty)}</span>
+            </div>
+            <div className="flex justify-between text-slate-400">
+              <span>Redline taklifi bilan:</span>
+              <span className="text-emerald-400 font-mono font-bold">{formatCurrency(legalRedlinePenalty)}</span>
+            </div>
+            <div className="pt-1 border-t border-slate-800 flex justify-between text-[11px] font-bold text-sky-400">
+              <span>Yuridik Xavf Qisqarishi:</span>
+              <span>-{Math.round((savedAmount / Math.max(currentRiskPenalty, 1)) * 100)}%</span>
             </div>
           </div>
         </div>
