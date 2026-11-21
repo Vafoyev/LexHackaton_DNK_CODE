@@ -23,6 +23,7 @@ interface NavbarProps {
   setActiveView: (view: 'dashboard' | 'diff' | 'visualizer3d') => void;
   hasAnalysis: boolean;
   onOpenAuth: () => void;
+  onOpen3D?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -31,6 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveView,
   hasAnalysis,
   onOpenAuth,
+  onOpen3D,
 }) => {
   const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -74,17 +76,31 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Lex.uz Rasmiy Integratsiya Nishoni */}
-          <a
-            href="https://lex.uz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-slate-800/90 hover:border-sky-500/40 transition-all group shadow-sm"
-            title="O‘zbekiston Respublikasi Qonunchilik ma’lumotlari milliy bazasi (Lex.uz)"
-          >
-            <span className="text-[10px] text-slate-400 group-hover:text-slate-200 font-mono font-medium">Baza:</span>
-            <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
-          </a>
+          {/* Lex.uz Rasmiy Integratsiya & 3D Ko'rish */}
+          <div className="hidden md:flex items-center gap-2">
+            <a
+              href="https://lex.uz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-slate-800/90 hover:border-sky-500/40 transition-all group shadow-sm"
+              title="O‘zbekiston Respublikasi Qonunchilik ma’lumotlari milliy bazasi (Lex.uz)"
+            >
+              <span className="text-[10px] text-slate-400 group-hover:text-slate-200 font-mono font-medium">Baza:</span>
+              <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
+            </a>
+
+            {onOpen3D && (
+              <button
+                type="button"
+                onClick={onOpen3D}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-sky-500/10 hover:scale-105"
+                title="3D Lex.uz GLTF modelini ko'rish"
+              >
+                <Cpu className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
+                <span>3D Lex.uz</span>
+              </button>
+            )}
+          </div>
 
           {/* MARKAZIY SHAXS TURINI ALMASHTIRGICH (JISMONIY / YURIDIK) */}
           <div className="flex items-center p-1 bg-slate-900/90 rounded-2xl border border-slate-800 shadow-inner">

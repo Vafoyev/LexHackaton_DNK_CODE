@@ -6,6 +6,7 @@ import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
 import { ContractUploader } from './components/upload/ContractUploader';
 import { ContractStudio } from './components/studio/ContractStudio';
+import { ThreeDModal } from './components/studio/ThreeDModal';
 import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
@@ -15,6 +16,7 @@ function MainApp() {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [is3DModalOpen, setIs3DModalOpen] = useState(false);
 
   const handleAnalyze = async (file: File | null, isDemo: boolean) => {
     setIsLoading(true);
@@ -65,6 +67,7 @@ function MainApp() {
             setActiveView={() => {}}
             hasAnalysis={false}
             onOpenAuth={() => setIsAuthModalOpen(true)}
+            onOpen3D={() => setIs3DModalOpen(true)}
           />
 
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col justify-center">
@@ -83,6 +86,14 @@ function MainApp() {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      {/* Standalone 3D Modal (3D Lex.uz GLTF, Muvozanat Tarozisi, Sfera) */}
+      <ThreeDModal
+        isOpen={is3DModalOpen}
+        onClose={() => setIs3DModalOpen(false)}
+        analysis={analysis || SAMPLE_IT_SERVICE_CONTRACT}
+        onSelectClause={() => {}}
       />
     </div>
   );

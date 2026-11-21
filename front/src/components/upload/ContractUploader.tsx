@@ -17,6 +17,7 @@ import {
 import { calculateSHA256, formatBytes } from '../../utils/crypto';
 import { ProgressEvent } from '../../types/contract';
 import { useAuth } from '../../context/AuthContext';
+import { LexUz3DLogo } from '../3d/LexUz3DLogo';
 
 interface ContractUploaderProps {
   onAnalyze: (file: File | null, isDemo: boolean) => void;
@@ -113,34 +114,53 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         </span>
       </div>
 
-      {/* Lex.uz Rasmiy Qonunchilik Bazasiga Integratsiya Banneri */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-950/30 via-slate-900 to-slate-900 border border-sky-500/25 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shrink-0">
-            <img src="/lex_uz.svg" alt="Lex.uz Logo" className="h-5 w-auto object-contain brightness-110" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white">Lex.uz Milliy Qonunchilik Bazasi Bilan 100% Integratsiya</span>
-              <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 uppercase">
-                Rasmiy Manba
-              </span>
+      {/* 3D Lex.uz Rasmiy Interaktiv WebGL Maydoni */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900/80 to-sky-950/40 border border-sky-500/30 p-5 sm:p-6 shadow-2xl backdrop-blur-xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+          {/* Matn qismi */}
+          <div className="lg:col-span-6 space-y-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[10px] font-mono font-bold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>O‘ZBEKISTON RESPUBLIKASI LEX.UZ MILLIY BAZASI</span>
             </div>
-            <p className="text-[11px] text-slate-400">
-              O‘zR Fuqarolik, Mehnat va Soliq kodekslarining amaldagi barcha moddalari bo‘yicha avtomatik tekshiruv.
+
+            <h2 className="text-lg sm:text-xl font-black text-white tracking-tight leading-snug">
+              Rasmiy Qonunchilik Bilan Sinxronlangan <span className="bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-500 bg-clip-text text-transparent">3D Huquqiy Tahlil</span>
+            </h2>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              O‘ng tomonda — Lex.uz rasmiy brendining WebGL asosidagi haqiqiy <strong className="text-sky-300">3D metallik modeli</strong>. Kursorni ustiga olib borib, 360° tomosha qilishingiz mumkin.
             </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-slate-400">
+              <span className="flex items-center gap-1.5 text-emerald-400">
+                <ShieldCheck className="w-4 h-4" /> 100% Qonuniy asos
+              </span>
+              <span>·</span>
+              <span className="text-sky-300">
+                O‘RQ-547 PII Himoyasi
+              </span>
+              <span>·</span>
+              <a 
+                href="https://lex.uz" 
+                target="_blank" 
+                rel="noreferrer"
+                className="text-sky-400 hover:text-sky-300 underline font-semibold flex items-center gap-1"
+              >
+                <span>lex.uz portali</span>
+                <ArrowRight className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+
+          {/* 3D Interaktiv Lex.uz WebGL Viewer */}
+          <div className="lg:col-span-6 flex flex-col items-center justify-center">
+            <LexUz3DLogo size="md" className="w-full h-52 sm:h-56" autoRotate={true} interactive={true} />
+            <span className="text-[10px] text-slate-400 font-mono mt-2">
+              👆 Lex.uz 3D Emblemasi (Three.js PBR Shader + GLTF)
+            </span>
           </div>
         </div>
-
-        <a
-          href="https://lex.uz"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 text-[11px] font-bold text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-sky-500/40"
-        >
-          <span>lex.uz portali</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </a>
       </div>
 
       {/* Asosiy Yuklash Maydoni */}
