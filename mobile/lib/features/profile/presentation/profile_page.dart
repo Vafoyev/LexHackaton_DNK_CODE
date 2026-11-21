@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
+import '../../../core/widgets/language_picker_sheet.dart';
+import '../../../core/widgets/theme_reveal_scope.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
+import 'plans_modal_sheet.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -18,6 +22,13 @@ class ProfilePage extends StatelessWidget {
     final session = context.watch<SessionCubit>().state;
     final cubit = context.read<SessionCubit>();
     final lang = session.lang;
+    final script = session.uzbekScript;
+    final isBusiness = session.segment == AccountSegment.business;
+    final isDark = session.themeMode == ThemeMode.dark;
+
+    final initials = _initialsFor(
+      isBusiness ? session.organizationName : session.userName,
+    );
 
     return SafeArea(
       bottom: false,
@@ -25,42 +36,192 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 114),
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 2, bottom: 12),
+            padding: const EdgeInsets.only(left: 2, bottom: 14),
             child: Text(
-              AppStrings.t(lang, 'profile_title'),
+              AppStrings.t(lang, 'nav_profile', script: script),
               style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -0.7,
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.8,
                 color: c.textPrimary,
               ),
             ),
           ),
 
-          // Dual-Role Executive Identity Card + Instant Color Theme Swap
+          // 1. MyGov.uz-style Executive Passport Identity Card
+          ClipRRect(
+            borderRadius: BorderRadius.circular(26),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(26),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [c.roleGradientStart, c.roleGradientEnd],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: c.roleGlow,
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -28,
+                    top: -28,
+                    child: Container(
+                      width: 136,
+                      height: 136,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: (isBusiness
+                                ? const Color(0xFFFBBF24)
+                                : const Color(0xFF7DD3FC))
+                            .withValues(alpha: 0.16),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 58,
+                              height: 58,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white.withValues(alpha: 0.18),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.45),
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Text(
+                                initials,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppStrings.adaptUz(
+                                      isBusiness
+                                          ? session.organizationName
+                                          : session.userName,
+                                      lang,
+                                      script,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: -0.4,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        CupertinoIcons.checkmark_seal_fill,
+                                        size: 14,
+                                        color: Color(0xFF86EFAC),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
+                                          AppStrings.t(
+                                            lang,
+                                            'verified_id',
+                                            script: script,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 12.5,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            _PassportChip(
+                              icon: isBusiness
+                                  ? CupertinoIcons.building_2_fill
+                                  : CupertinoIcons.person_fill,
+                              text: isBusiness
+                                  ? AppStrings.t(
+                                      lang,
+                                      'business_b2b',
+                                      script: script,
+                                    )
+                                  : AppStrings.t(
+                                      lang,
+                                      'individual_b2c',
+                                      script: script,
+                                    ),
+                            ),
+                            const SizedBox(width: 8),
+                            _PassportChip(
+                              icon: CupertinoIcons.shield_lefthalf_fill,
+                              text: isBusiness ? 'E-IMZO' : 'OneID',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // 2. Interactive Subscription & Plan Card
           GlassCard(
             radius: 24,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   children: [
                     Container(
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        gradient: LinearGradient(
-                          colors: [c.roleGradientStart, c.roleGradientEnd],
-                        ),
+                        color: c.rolePrimary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(13),
                       ),
                       child: Icon(
-                        session.segment == AccountSegment.business
-                            ? CupertinoIcons.building_2_fill
-                            : CupertinoIcons.person_crop_circle_fill,
-                        color: Colors.white,
-                        size: 26,
+                        CupertinoIcons.sparkles,
+                        color: c.rolePrimary,
+                        size: 20,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -69,241 +230,272 @@ class ProfilePage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            session.organizationName,
+                            AppStrings.t(
+                              lang,
+                              'subscription_title',
+                              script: script,
+                            ),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 15.5,
                               fontWeight: FontWeight.w800,
                               color: c.textPrimary,
                             ),
                           ),
+                          const SizedBox(height: 2),
                           Text(
-                            '${session.userName} · ${session.authProviderLabel}',
+                            AppStrings.adaptUz(
+                              session.quota.planName,
+                              lang,
+                              script,
+                            ),
                             style: TextStyle(
-                              fontSize: 12,
-                              color: c.textSecondary,
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w700,
+                              color: c.rolePrimary,
                             ),
                           ),
                         ],
                       ),
                     ),
+                    Text(
+                      '${session.quota.remainingTotal}/${session.quota.totalLimit}',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
+                        color: c.textPrimary,
+                      ),
+                    ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  isBusiness
+                      ? AppStrings.t(lang, 'business_quota_sub', script: script)
+                      : AppStrings.t(lang, 'citizen_quota_sub', script: script),
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: c.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(999),
+                  child: LinearProgressIndicator(
+                    value: session.quota.totalLimit == 0
+                        ? 0
+                        : session.quota.totalUsed / session.quota.totalLimit,
+                    minHeight: 6,
+                    backgroundColor: c.rolePrimary.withValues(alpha: 0.14),
+                    color: c.rolePrimary,
+                  ),
                 ),
                 const SizedBox(height: 14),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _RolePaletteBtn(
-                        title: 'Jismoniy shaxs',
-                        colorLabel: 'Sapphire #0066FF',
-                        swatch: const Color(0xFF0066FF),
-                        selected: session.segment == AccountSegment.individual,
-                        onTap: () => cubit.setSegment(AccountSegment.individual),
+                SizedBox(
+                  height: 48,
+                  child: FilledButton(
+                    onPressed: () => PlansModalSheet.show(context),
+                    child: Text(
+                      AppStrings.t(lang, 'choose_plan', script: script),
+                      style: const TextStyle(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _RolePaletteBtn(
-                        title: 'Yuridik (B2B)',
-                        colorLabel: 'Emerald #047857',
-                        swatch: const Color(0xFF047857),
-                        selected: session.segment == AccountSegment.business,
-                        onTap: () => cubit.setSegment(AccountSegment.business),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  onPressed: () {
-                    cubit.returnToRoleSelect();
-                    context.go('/role-select');
-                  },
-                  icon: const Icon(CupertinoIcons.arrow_2_circlepath, size: 16),
-                  label: const Text('Rol tanlash ekraniga o‘tish'),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 14),
-
-          // Mock OneID / E-IMZO
-          GlassCard(
-            radius: 22,
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Davlat identifikatsiyasi (MVPda Mock Adapter)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: c.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'OneID paroli yoki E-IMZO .pfx kaliti hech qachon ilova/serverga kiritilmaydi.',
-                  style: TextStyle(fontSize: 12, color: c.textSecondary),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          cubit.signInMockProvider('OneID (MOCK)');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('OneID MOCK sessiyasi faollashtirildi.'),
-                            ),
-                          );
-                        },
-                        child: const Text('OneID (Mock)'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          cubit.signInMockProvider('E-IMZO (MOCK)');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'E-IMZO kalitsiz MOCK sessiyasi faollashtirildi.',
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text('E-IMZO (Mock)'),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
-          // 3.2 Tariffs
+          // 3. Appearance & Language (MyGov-style grouped settings)
           GlassCard(
-            radius: 22,
-            padding: const EdgeInsets.all(14),
+            radius: 24,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '3.2 Tariflar (Cheksiz tarif yo‘q)',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: c.textPrimary,
+                Builder(
+                  builder: (btnCtx) => InkWell(
+                    onTap: () => ThemeRevealScope.toggleFromContext(btnCtx),
+                    borderRadius: BorderRadius.circular(14),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color: c.rolePrimary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              isDark
+                                  ? CupertinoIcons.moon_stars_fill
+                                  : CupertinoIcons.sun_max_fill,
+                              size: 19,
+                              color: c.rolePrimary,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  isDark
+                                      ? AppStrings.t(
+                                          lang,
+                                          'theme_dark',
+                                          script: script,
+                                        )
+                                      : AppStrings.t(
+                                          lang,
+                                          'theme_light',
+                                          script: script,
+                                        ),
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: c.textPrimary,
+                                  ),
+                                ),
+                                Text(
+                                  AppStrings.t(
+                                    lang,
+                                    'theme_dark_sub',
+                                    script: script,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: c.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          CupertinoSwitch(
+                            activeTrackColor: c.rolePrimary,
+                            value: isDark,
+                            onChanged: (_) =>
+                                ThemeRevealScope.toggleFromContext(btnCtx),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                _PlanRow(
-                  title: 'Sinov (Joriy)',
-                  price: '0 so‘m',
-                  detail: '14 kun · kuniga 3 ta, jami 10 ta · 7 kun saqlash',
-                  active: true,
-                ),
-                const Divider(),
-                _PlanRow(
-                  title: 'B2B Business',
-                  price: '199 000 so‘m/oy',
-                  detail: '30 tahlil/oy · qo‘shimcha 9 900 so‘m · 30 kun saqlash',
-                ),
-                const Divider(),
-                _PlanRow(
-                  title: 'B2B Pro',
-                  price: '399 000 so‘m/oy',
-                  detail: '80 tahlil/oy · rollar, audit · bank/e-faktura',
-                ),
-                const Divider(),
-                _PlanRow(
-                  title: 'B2C (Keyingi bosqich)',
-                  price: '19 900 so‘m/hujjat',
-                  detail: 'Payme / Click orqali bir martalik tahlil',
+                const Divider(height: 1),
+                InkWell(
+                  onTap: () => LanguagePickerSheet.show(context),
+                  borderRadius: BorderRadius.circular(14),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: c.rolePrimary.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            CupertinoIcons.globe,
+                            size: 19,
+                            color: c.rolePrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            AppStrings.t(lang, 'lang_label', script: script),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: c.textPrimary,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: c.rolePrimary.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            switch (lang) {
+                              AppLang.uz => 'Özbekça',
+                              AppLang.ru => 'Русский',
+                              AppLang.en => 'English',
+                            },
+                            style: TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w700,
+                              color: c.rolePrimary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Icon(
+                          CupertinoIcons.chevron_forward,
+                          size: 15,
+                          color: c.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
-          // iOS Security Controls
+          // 4. Privacy & Security Card
           GlassCard(
-            radius: 22,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            radius: 24,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             child: Column(
               children: [
                 _CupertinoSettingRow(
-                  title: 'Skrinshotdan himoya (FLAG_SECURE)',
-                  subtitle: 'Androidda shartnomalarni skrinshotdan bloklaydi',
+                  title: AppStrings.t(lang, 'sec_flag_title', script: script),
+                  subtitle: AppStrings.t(lang, 'sec_flag_sub', script: script),
                   value: session.flagSecureEnabled,
                   onChanged: cubit.setFlagSecure,
                 ),
                 const Divider(height: 1),
                 _CupertinoSettingRow(
-                  title: 'App Switcher Privacy Curtain',
-                  subtitle: 'Ilovadan chiqqanda oynani xiralashtirib yashiradi',
+                  title:
+                      AppStrings.t(lang, 'sec_curtain_title', script: script),
+                  subtitle:
+                      AppStrings.t(lang, 'sec_curtain_sub', script: script),
                   value: session.privacyCurtainEnabled,
                   onChanged: cubit.setPrivacyCurtain,
                 ),
                 const Divider(height: 1),
                 _CupertinoSettingRow(
-                  title: 'Biometrik qulf (Demo sozlama)',
-                  subtitle: 'FaceID / Barmoq izi himoyasi',
+                  title: AppStrings.t(lang, 'sec_bio_title', script: script),
+                  subtitle: AppStrings.t(lang, 'sec_bio_sub', script: script),
                   value: session.biometricLockEnabled,
                   onChanged: cubit.setBiometricLock,
-                ),
-                const Divider(height: 1),
-                _CupertinoSettingRow(
-                  title: 'Tungi rejim (Dark Mode)',
-                  subtitle: 'Chuqur obsidian oynali interfeys',
-                  value: session.themeMode == ThemeMode.dark,
-                  onChanged: (_) => cubit.toggleThemeMode(),
-                ),
-                const Divider(height: 1),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Interfeys tili',
-                          style: TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w600,
-                            color: c.textPrimary,
-                          ),
-                        ),
-                      ),
-                      CupertinoSlidingSegmentedControl<AppLang>(
-                        groupValue: session.lang,
-                        children: const {
-                          AppLang.uz: Text('UZ', style: TextStyle(fontSize: 12)),
-                          AppLang.ru: Text('RU', style: TextStyle(fontSize: 12)),
-                          AppLang.en: Text('EN', style: TextStyle(fontSize: 12)),
-                        },
-                        onValueChanged: (v) {
-                          if (v != null) cubit.setLang(v);
-                        },
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 14),
+
+          const SizedBox(height: 16),
+
+          // 5. Sign Out
           GlassCard(
-            radius: 18,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            radius: 20,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
             onTap: () {
+              HapticFeedback.lightImpact();
               cubit.logout();
               context.go('/role-select');
             },
@@ -317,10 +509,10 @@ class ProfilePage extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Chiqish / Kirish ekraniga qaytish',
+                  AppStrings.t(lang, 'logout_btn', script: script),
                   style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w800,
                     color: c.redText,
                   ),
                 ),
@@ -331,69 +523,44 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
+
+  String _initialsFor(String raw) {
+    final parts = raw.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty || parts.first.isEmpty) return 'LG';
+    if (parts.length == 1) return parts.first.substring(0, 1).toUpperCase();
+    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+  }
 }
 
-class _RolePaletteBtn extends StatelessWidget {
-  const _RolePaletteBtn({
-    required this.title,
-    required this.colorLabel,
-    required this.swatch,
-    required this.selected,
-    required this.onTap,
-  });
+class _PassportChip extends StatelessWidget {
+  const _PassportChip({required this.icon, required this.text});
 
-  final String title;
-  final String colorLabel;
-  final Color swatch;
-  final bool selected;
-  final VoidCallback onTap;
+  final IconData icon;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.lexColors;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: selected ? swatch.withValues(alpha: 0.13) : c.grayBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selected ? swatch : c.cardBorder,
-            width: selected ? 1.6 : 1.0,
-          ),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(radius: 10, backgroundColor: swatch),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: c.textPrimary,
-                    ),
-                  ),
-                  Text(
-                    colorLabel,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 10, color: c.textSecondary),
-                  ),
-                ],
-              ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: Colors.white),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -416,7 +583,7 @@ class _CupertinoSettingRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.lexColors;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
           Expanded(
@@ -426,14 +593,15 @@ class _CupertinoSettingRow extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
                     color: c.textPrimary,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: TextStyle(fontSize: 11.5, color: c.textSecondary),
+                  style: TextStyle(fontSize: 12, color: c.textSecondary),
                 ),
               ],
             ),
@@ -443,59 +611,6 @@ class _CupertinoSettingRow extends StatelessWidget {
             activeTrackColor: c.rolePrimary,
             value: value,
             onChanged: onChanged,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PlanRow extends StatelessWidget {
-  const _PlanRow({
-    required this.title,
-    required this.price,
-    required this.detail,
-    this.active = false,
-  });
-
-  final String title;
-  final String price;
-  final String detail;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.lexColors;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                    color: active ? c.rolePrimaryDark : c.textPrimary,
-                  ),
-                ),
-                Text(
-                  detail,
-                  style: TextStyle(fontSize: 11.5, color: c.textSecondary),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            price,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: active ? c.greenText : c.rolePrimary,
-            ),
           ),
         ],
       ),

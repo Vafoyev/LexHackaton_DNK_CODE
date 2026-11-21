@@ -111,24 +111,24 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
       findings.add(
         const ClauseFinding(
           id: 'f_notarial_auto',
-          clauseNumber: 'Shakl (R6)',
-          title: 'Majburiy notarial tasdiqlash topilmadi',
+          clauseNumber: 'Shakl',
+          title: 'Notarial tasdiq qo‘yilmagan',
           ruleCode: 'R6_NOTARIAL_FORM',
           riskColor: RiskColor.red,
           backendCategory: 'LEGAL',
           verificationStatus: VerificationStatus.verified,
           balance: NeutralityBalance.balanced,
-          balanceLabel: 'Qonun talabi (taraflarga umumiy)',
+          balanceLabel: 'Qonun talabi',
           originalText:
-              'Hujjat ko‘chmas mulk oldi-sotdisiga oid ko‘rinadi, ammo notarius yozuvi yoki reyestr raqami aniqlanmadi.',
+              'Taraflar uy-joy oldi-sotdisini oddiy yozma shaklda o‘zaro imzolab yakunlaydilar.',
           explanation:
-              'Bu turdagi shartnoma qonunga ko‘ra notarial tasdiqlanishi SHART [FK 110–112-modda]. Hujjatda notarial tasdiq topilmadi. Tasdiqlanmasa bitim HAQIQIY EMAS.',
+              'Uy-joy va ko‘chmas mulk oldi-sotdisi notariusda tasdiqlanmasa, shartnoma yuridik kuchga kirmaydi.',
           suggestedRevision:
-              'Shartnomani davlat notarial idorasi yoki xususiy notarius orqali tasdiqlatish va reyestr raqamini kiritish shart.',
+              'Ushbu shartnoma notarius tomonidan tasdiqlangach va davlat reyestridan o‘tkazilgach kuchga kiradi.',
           citation: LegalCitation(
-            code: 'FK-UZ',
-            title: 'O‘zbekiston Respublikasi Fuqarolik kodeksi',
-            article: '110–112-modda',
+            code: 'FK',
+            title: 'Fuqarolik kodeksi',
+            article: 'FK 110–112-modda',
             part: '1-qism',
             normNature: 'IMPERATIVE',
             effectiveFrom: '1997-03-01',
@@ -144,25 +144,23 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
       ClauseFinding(
         id: 'f_r1_auto',
         clauseNumber: '2.1',
-        title: 'To‘lov muddati va kechikish tartibi',
+        title: 'To‘lov muddati aniq emas',
         ruleCode: 'R1_PAYMENT_TERMS',
-        riskColor: lower.contains('to‘lov') || lower.contains('оплат')
-            ? RiskColor.yellow
-            : RiskColor.red,
-        backendCategory: lower.contains('to‘lov') ? 'COMMERCIAL' : 'LEGAL',
+        riskColor: RiskColor.yellow,
+        backendCategory: 'COMMERCIAL',
         verificationStatus: VerificationStatus.verified,
         balance: NeutralityBalance.heavyPartyB,
-        balanceLabel: 'Ijrochiga og‘ir',
+        balanceLabel: 'Bir tarafga og‘ir',
         originalText:
-            'Yuklangan "$fileName" hujjatida to‘lov grafiki va kechikish oqibati tekshirildi.',
+            'To‘lov kelishuvga ko‘ra amalga oshiriladi, kechikish holatida javobgarlik belgilanmagan.',
         explanation:
-            'To‘lovning aniq bank kuni, dalolatnoma bilan bog‘liqligi va kechiktirish uchun mutanosib penya ko‘rsatilishi tavsiya etiladi.',
+            'Aniq muddat qo‘yilmasa, to‘lov kechikganda pulni o‘z vaqtida undirish qiyinlashadi.',
         suggestedRevision:
-            'Buyurtmachi qabul dalolatnomasi imzolangandan keyin 5 (besh) bank ish kuni ichida to‘lovni amalga oshiradi.',
+            'To‘lov shartnoma imzolangandan so‘ng 5 bank ish kuni ichida to‘liq o‘tkaziladi.',
         citation: const LegalCitation(
-          code: 'FK-UZ',
+          code: 'FK',
           title: 'Fuqarolik kodeksi',
-          article: '705-modda',
+          article: 'FK 705-modda',
           part: '1-qism',
           normNature: 'DISPOSITIVE',
           effectiveFrom: '1997-03-01',
@@ -176,8 +174,8 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
       findings.add(
         const ClauseFinding(
           id: 'f_r5_auto',
-          clauseNumber: '7.1',
-          title: 'Pretenziya va mediatsiya bosqichi yo‘q',
+          clauseNumber: '5.1',
+          title: 'Nizoni tinch hal qilish bandi yo‘q',
           ruleCode: 'R5_DISPUTE_MEDIATION',
           riskColor: RiskColor.yellow,
           backendCategory: 'COMMERCIAL',
@@ -185,14 +183,14 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
           balance: NeutralityBalance.balanced,
           balanceLabel: 'Muvozanatli',
           originalText:
-              'Shartnomada nizoni sudgacha pretenziya va mediatsiya orqali hal qilish bandi topilmadi.',
+              'Barcha kelishmovchiliklar to‘g‘ridan-to‘g‘ri sud tartibida ko‘rib chiqiladi.',
           explanation:
-              'Sud xarajatlari va uzoq jarayonni kamaytirish uchun 10 kunlik pretenziya va professional mediatsiya bosqichini qo‘shish tavsiya etiladi.',
+              'Sudgacha 10 kunlik yozma ogohlantirish va mediatsiya qo‘shilsa, ortiqcha sud xarajati tejaladi.',
           suggestedRevision:
-              'Nizolar avval 10 kalendar kunlik yozma pretenziya va O‘zbekiston professional mediatorlari ishtirokidagi mediatsiya tartibida hal etiladi.',
+              'Nizolar avval 10 kun ichida o‘zaro muzokara va mediatsiya orqali, hal bo‘lmasa sudda ko‘riladi.',
           citation: LegalCitation(
-            code: 'MED-UZ',
-            title: '«Mediatsiya to‘g‘risida»gi Qonun',
+            code: 'Mediatsiya',
+            title: 'Mediatsiya qonuni',
             article: '16-modda',
             part: '2-qism',
             normNature: 'DISPOSITIVE',
@@ -204,37 +202,12 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
       );
     }
 
-    // Camera low-confidence / unverified citation signal -> GRAY
-    if (isCameraScan) {
-      findings.add(
-        const ClauseFinding(
-          id: 'f_ocr_gray',
-          clauseNumber: 'Ilova / Muhr',
-          title: 'Kamera rasmi sifati va pastki rekvizitlar',
-          ruleCode: 'OCR_CONFIDENCE_CHECK',
-          riskColor: RiskColor.gray,
-          backendCategory: 'UNKNOWN',
-          verificationStatus: VerificationStatus.unknown,
-          balance: NeutralityBalance.balanced,
-          balanceLabel: 'Aniqlanmadi',
-          parseLowConfidence: true,
-          originalText:
-              'Rasm chetlaridagi muhr va qo‘shimcha izoh qismlari ishonchli o‘qilmadi.',
-          explanation:
-              '3.2 qoidasiga ko‘ra past ishonchli o‘qilgan parcha Unknown (Kulrang) bo‘ladi va hamkor advokat ko‘rigiga tavsiya etiladi.',
-          suggestedRevision:
-              'Hujjatning asl DOCX/PDF faylini yuklang yoki yorug‘likda tik holatda qayta skanerlang.',
-          actionTag: 'LAWYER',
-        ),
-      );
-    }
-
     // Green verified clause
     findings.add(
       const ClauseFinding(
         id: 'f_green_auto',
         clauseNumber: '1.1',
-        title: 'Taraflar va shartnoma sanasi ko‘rsatilgan',
+        title: 'Taraflar va sana to‘g‘ri yozilgan',
         ruleCode: 'CORE_METADATA_OK',
         riskColor: RiskColor.green,
         backendCategory: 'OK',
@@ -242,14 +215,13 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
         balance: NeutralityBalance.balanced,
         balanceLabel: 'Muvozanatli',
         originalText:
-            'Hujjat tuzilmasi asosiy tekshiruv qoidalariga muvofiq ajratildi.',
-        explanation:
-            'Tekshirilgan formal talablarda xato topilmadi. Eslatma: Yashil belgi hujjat 100% xavfsiz ekanini anglatmaydi.',
-        suggestedRevision: 'O‘zgartirish talab etilmaydi.',
+            'Shartnoma taraflari, sanasi va asosiy predmeti aniq ko‘rsatilgan.',
+        explanation: 'Bu bandda muammo topilmadi.',
+        suggestedRevision: 'O‘zgartirish kerak emas.',
         citation: LegalCitation(
-          code: 'FK-UZ',
+          code: 'FK',
           title: 'Fuqarolik kodeksi',
-          article: '364-modda',
+          article: 'FK 364-modda',
           part: '1-qism',
           normNature: 'DISPOSITIVE',
           effectiveFrom: '1997-03-01',
@@ -265,9 +237,15 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
             redaction.redactedText.length.clamp(0, 260),
           );
 
+    final cleanTitle = isCameraScan
+        ? (looksRealEstate
+            ? 'Uy-joy oldi-sotdi shartnomasi'
+            : 'Skanerlangan shartnoma')
+        : fileName.replaceAll(RegExp(r'\.[^.]+$'), '');
+
     final analysis = ContractAnalysis(
       id: 'ana_${DateTime.now().microsecondsSinceEpoch}',
-      title: fileName.replaceAll(RegExp(r'\.[^.]+$'), ''),
+      title: cleanTitle,
       fileName: fileName,
       formatLabel: isCameraScan ? 'KAMERA/$ext' : ext,
       languageLabel: 'UZ-Lotin',

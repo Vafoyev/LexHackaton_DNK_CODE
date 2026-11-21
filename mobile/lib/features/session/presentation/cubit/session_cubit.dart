@@ -16,8 +16,9 @@ class SessionState extends Equatable {
     this.hasCompletedOnboarding = false,
     this.hasSelectedRole = false,
     this.isAuthenticated = false,
+    this.activePlanId = 'b2b_trial',
     this.quota = const QuotaState(
-      planName: 'Sinov (14 kun)',
+      planName: 'Biznes sinov · 14 kun',
       trialDaysRemaining: 14,
       totalUsed: 2,
       totalLimit: 10,
@@ -41,6 +42,7 @@ class SessionState extends Equatable {
   final bool hasCompletedOnboarding;
   final bool hasSelectedRole;
   final bool isAuthenticated;
+  final String activePlanId;
   final QuotaState quota;
   final String organizationName;
   final String userName;
@@ -59,6 +61,7 @@ class SessionState extends Equatable {
     bool? hasCompletedOnboarding,
     bool? hasSelectedRole,
     bool? isAuthenticated,
+    String? activePlanId,
     QuotaState? quota,
     String? organizationName,
     String? userName,
@@ -78,6 +81,7 @@ class SessionState extends Equatable {
           hasCompletedOnboarding ?? this.hasCompletedOnboarding,
       hasSelectedRole: hasSelectedRole ?? this.hasSelectedRole,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      activePlanId: activePlanId ?? this.activePlanId,
       quota: quota ?? this.quota,
       organizationName: organizationName ?? this.organizationName,
       userName: userName ?? this.userName,
@@ -100,6 +104,7 @@ class SessionState extends Equatable {
         hasCompletedOnboarding,
         hasSelectedRole,
         isAuthenticated,
+        activePlanId,
         quota,
         organizationName,
         userName,
@@ -157,18 +162,132 @@ class SessionCubit extends Cubit<SessionState> {
   }
 
   void selectRole(AccountSegment segment) {
+    final isBusiness = segment == AccountSegment.business;
     emit(
       state.copyWith(
         segment: segment,
         hasSelectedRole: true,
-        organizationName: segment == AccountSegment.business
-            ? 'DNK Tech MChJ'
-            : 'Vafoyev Isobek · Shaxsiy',
-        authProviderLabel: segment == AccountSegment.business
-            ? 'E-IMZO (Mock · Yuridik)'
-            : 'OneID (Mock · Jismoniy)',
+        activePlanId: isBusiness ? 'b2b_trial' : 'b2c_free',
+        organizationName:
+            isBusiness ? 'DNK Tech MChJ' : 'Vafoyev Isobek',
+        authProviderLabel: isBusiness ? 'E-IMZO · B2B' : 'OneID',
+        quota: isBusiness
+            ? const QuotaState(
+                planName: 'Biznes sinov · 14 kun',
+                trialDaysRemaining: 14,
+                totalUsed: 2,
+                totalLimit: 10,
+                todayUsed: 1,
+                todayLimit: 3,
+              )
+            : const QuotaState(
+                planName: 'Fuqaro · Bepul (3/oy)',
+                trialDaysRemaining: 30,
+                totalUsed: 1,
+                totalLimit: 3,
+                todayUsed: 1,
+                todayLimit: 3,
+              ),
       ),
     );
+  }
+
+  /// Selects a tariff strictly within the user's current segment (B2C vs B2B).
+  void selectPlan(String planId) {
+    final isBusiness = state.segment == AccountSegment.business;
+    if (!isBusiness) {
+      switch (planId) {
+        case 'b2c_free':
+          emit(
+            state.copyWith(
+              activePlanId: 'b2c_free',
+              quota: QuotaState(
+                planName: 'Fuqaro · Bepul (3/oy)',
+                trialDaysRemaining: 30,
+                totalUsed: state.quota.totalUsed.clamp(0, 3),
+                totalLimit: 3,
+                todayUsed: state.quota.todayUsed.clamp(0, 3),
+                todayLimit: 3,
+              ),
+            ),
+          );
+          return;
+        case 'b2c_once':
+          emit(
+            state.copyWith(
+              activePlanId: 'b2c_once',
+              quota: QuotaState(
+                planName: 'Fuqaro · Bir martalik',
+                trialDaysRemaining: 30,
+                totalUsed: state.quota.totalUsed,
+                totalLimit: state.quota.totalLimit + 1,
+                todayUsed: state.quota.todayUsed,
+                todayLimit: state.quota.todayLimit + 1,
+              ),
+            ),
+          );
+          return;
+      }
+      return;
+    }
+
+    switch (planId) {
+      case 'b2b_trial':
+        emit(
+          state.copyWith(
+            activePlanId: 'b2b_trial',
+            quota: QuotaState(
+              planName: 'Biznes sinov · 14 kun',
+              trialDaysRemaining: 14,
+              totalUsed: state.quota.totalUsed.clamp(0, 10),
+              totalLimit: 10,
+              todayUsed: state.quota.todayUsed.clamp(0, 3),
+              todayLimit: 3,
+            ),
+          ),
+        );
+      case 'b2b_business':
+        emit(
+          state.copyWith(
+            activePlanId: 'b2b_business',
+            quota: QuotaState(
+              planName: 'Business · 30/oy',
+              trialDaysRemaining: 30,
+              totalUsed: state.quota.totalUsed.clamp(0, 30),
+              totalLimit: 30,
+              todayUsed: state.quota.todayUsed,
+              todayLimit: 30,
+            ),
+          ),
+        );
+      case 'b2b_pro':
+        emit(
+          state.copyWith(
+            activePlanId: 'b2b_pro',
+            quota: QuotaState(
+              planName: 'Pro · 80/oy',
+              trialDaysRemaining: 30,
+              totalUsed: state.quota.totalUsed.clamp(0, 80),
+              totalLimit: 80,
+              todayUsed: state.quota.todayUsed,
+              todayLimit: 80,
+            ),
+          ),
+        );
+      case 'b2b_extra':
+        emit(
+          state.copyWith(
+            quota: QuotaState(
+              planName: state.quota.planName,
+              trialDaysRemaining: state.quota.trialDaysRemaining,
+              totalUsed: state.quota.totalUsed,
+              totalLimit: state.quota.totalLimit + 1,
+              todayUsed: state.quota.todayUsed,
+              todayLimit: state.quota.todayLimit + 1,
+            ),
+          ),
+        );
+    }
   }
 
   void completeLogin({

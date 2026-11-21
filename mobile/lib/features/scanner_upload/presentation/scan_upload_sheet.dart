@@ -25,6 +25,7 @@ class ScanUploadSheet extends StatefulWidget {
   }) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
@@ -469,49 +470,55 @@ class _ActionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Ink(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          gradient: highlighted
-              ? LinearGradient(
-                  colors: [c.roleGradientStart, c.roleGradientEnd],
-                )
-              : null,
-          color: highlighted ? null : c.grayBg,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: highlighted ? c.rolePrimary : c.glassBorder,
-          ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: highlighted
+            ? LinearGradient(
+                colors: [c.roleGradientStart, c.roleGradientEnd],
+              )
+            : null,
+        color: highlighted ? null : c.grayBg,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: highlighted ? c.rolePrimary : c.glassBorder,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: highlighted ? Colors.white : c.rolePrimary,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  icon,
+                  size: 24,
+                  color: highlighted ? Colors.white : c.rolePrimary,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: highlighted ? Colors.white : c.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: highlighted ? Colors.white70 : c.textSecondary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 13.5,
-                fontWeight: FontWeight.w700,
-                color: highlighted ? Colors.white : c.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: highlighted ? Colors.white70 : c.textSecondary,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

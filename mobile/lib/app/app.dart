@@ -11,6 +11,7 @@ import '../core/router/app_router.dart';
 import '../core/security/privacy_curtain.dart';
 import '../core/security/screen_security.dart';
 import '../core/theme/app_theme.dart';
+import '../core/widgets/theme_reveal_scope.dart';
 import '../features/contracts/data/local_demo_lexguard_repository.dart';
 import '../features/contracts/data/remote_lexguard_repository.dart';
 import '../features/contracts/domain/entities/lex_models.dart';
@@ -61,37 +62,43 @@ class _LexGuardAppState extends State<LexGuardApp> {
       ],
       child: BlocBuilder<SessionCubit, SessionState>(
         builder: (context, session) {
-          return MaterialApp.router(
-            title: 'LexGuard AI',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.build(
-              segment: session.segment,
-              brightness: Brightness.light,
-            ),
-            darkTheme: AppTheme.build(
-              segment: session.segment,
-              brightness: Brightness.dark,
-            ),
-            themeMode: session.themeMode,
-            routerConfig: _router,
-            builder: (context, child) {
-              final secured = PrivacyCurtainScope(
-                enabled: session.privacyCurtainEnabled,
-                child: child ?? const SizedBox.shrink(),
-              );
-              final width = MediaQuery.sizeOf(context).width;
-              if (width >= 840 && session.phoneFrameOnDesktop) {
-                return _IphoneDesktopPreviewWrapper(
-                  segment: session.segment,
-                  lang: session.lang,
-                  script: session.uzbekScript,
-                  onToggleFrame: () =>
-                      context.read<SessionCubit>().toggleDesktopFrame(),
-                  child: secured,
+          return ThemeRevealScope(
+            isDark: session.themeMode == ThemeMode.dark,
+            onToggleTheme: () =>
+                context.read<SessionCubit>().toggleThemeMode(),
+            child: MaterialApp.router(
+              title: 'LexGuard AI',
+              debugShowCheckedModeBanner: false,
+              themeAnimationDuration: const Duration(milliseconds: 140),
+              theme: AppTheme.build(
+                segment: session.segment,
+                brightness: Brightness.light,
+              ),
+              darkTheme: AppTheme.build(
+                segment: session.segment,
+                brightness: Brightness.dark,
+              ),
+              themeMode: session.themeMode,
+              routerConfig: _router,
+              builder: (context, child) {
+                final secured = PrivacyCurtainScope(
+                  enabled: session.privacyCurtainEnabled,
+                  child: child ?? const SizedBox.shrink(),
                 );
-              }
-              return secured;
-            },
+                final width = MediaQuery.sizeOf(context).width;
+                if (width >= 840 && session.phoneFrameOnDesktop) {
+                  return _IphoneDesktopPreviewWrapper(
+                    segment: session.segment,
+                    lang: session.lang,
+                    script: session.uzbekScript,
+                    onToggleFrame: () =>
+                        context.read<SessionCubit>().toggleDesktopFrame(),
+                    child: secured,
+                  );
+                }
+                return secured;
+              },
+            ),
           );
         },
       ),

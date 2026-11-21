@@ -1,7 +1,9 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +12,7 @@ import '../core/l10n/uzbek_alphabet.dart';
 import '../core/theme/app_theme.dart';
 import '../core/widgets/glass_surface.dart';
 import '../features/contracts/domain/entities/lex_models.dart';
+import '../features/scanner_upload/presentation/direct_scan_launcher.dart';
 import '../features/scanner_upload/presentation/scan_upload_sheet.dart';
 import '../features/session/presentation/cubit/session_cubit.dart';
 
@@ -23,32 +26,42 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   bool _scanMenuOpen = false;
   late final AnimationController _scanAnim;
+  late final AnimationController _pulseAnim;
 
   @override
   void initState() {
     super.initState();
     _scanAnim = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 260),
-      reverseDuration: const Duration(milliseconds: 190),
+      duration: const Duration(milliseconds: 420),
+      reverseDuration: const Duration(milliseconds: 240),
+    );
+    _pulseAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1900),
     );
   }
 
   @override
   void dispose() {
+    _pulseAnim.dispose();
     _scanAnim.dispose();
     super.dispose();
   }
 
   void _toggleScanMenu() {
+    HapticFeedback.mediumImpact();
     setState(() => _scanMenuOpen = !_scanMenuOpen);
     if (_scanMenuOpen) {
       _scanAnim.forward();
+      _pulseAnim.repeat(reverse: true);
     } else {
       _scanAnim.reverse();
+      _pulseAnim.stop();
+      _pulseAnim.reset();
     }
   }
 
@@ -56,6 +69,8 @@ class _AppShellState extends State<AppShell>
     if (!_scanMenuOpen) return;
     setState(() => _scanMenuOpen = false);
     _scanAnim.reverse();
+    _pulseAnim.stop();
+    _pulseAnim.reset();
   }
 
   void _go(int idx) {
@@ -67,8 +82,13 @@ class _AppShellState extends State<AppShell>
   }
 
   void _openQuickScan({required bool focusCamera}) {
+    HapticFeedback.lightImpact();
     _closeScanMenu();
-    ScanUploadSheet.show(context, focusCamera: focusCamera);
+    if (focusCamera) {
+      DirectScanLauncher.captureCameraAndAnalyze(context);
+    } else {
+      DirectScanLauncher.pickFileAndAnalyze(context);
+    }
   }
 
   @override
@@ -126,34 +146,64 @@ class _AppShellState extends State<AppShell>
               children: [
                 widget.navigationShell,
                 AnimatedBuilder(
-                  animation: _scanAnim,
+                  animation: Listenable.merge([_scanAnim, _pulseAnim]),
                   builder: (context, _) {
-                    if (!_scanMenuOpen && _scanAnim.value == 0.0) {
+                    final rawT = _scanAnim.value;
+                    if (!_scanMenuOpen && rawT == 0.0) {
                       return const SizedBox.shrink();
                     }
 
-                    final scrimOpacity = CurvedAnimation(
-                      parent: _scanAnim,
+                    final scrimT = Curves.easeOut.transform(rawT);
+                    final leftProgress = const Interval(
+                      0.0,
+                      0.86,
+                      curve: Curves.easeOutBack,
+                    ).transform(rawT);
+                    final leftFade = const Interval(
+                      0.0,
+                      0.55,
                       curve: Curves.easeOut,
-                    );
+                    ).transform(rawT);
 
-                    final uploadCurve = CurvedAnimation(
-                      parent: _scanAnim,
-                      curve: const Interval(0.0, 0.84, curve: Curves.easeOutCubic),
-                    );
-                    final uploadBack = CurvedAnimation(
-                      parent: _scanAnim,
-                      curve: const Interval(0.0, 0.84, curve: Curves.easeOutBack),
-                    );
+                    final rightProgress = const Interval(
+                      0.14,
+                      1.0,
+                      curve: Curves.easeOutBack,
+                    ).transform(rawT);
+                    final rightFade = const Interval(
+                      0.14,
+                      0.70,
+                      curve: Curves.easeOut,
+                    ).transform(rawT);
 
-                    final cameraCurve = CurvedAnimation(
-                      parent: _scanAnim,
-                      curve: const Interval(0.10, 1.0, curve: Curves.easeOutCubic),
-                    );
-                    final cameraBack = CurvedAnimation(
-                      parent: _scanAnim,
-                      curve: const Interval(0.10, 1.0, curve: Curves.easeOutBack),
-                    );
+                    final rippleT = const Interval(
+                      0.0,
+                      0.75,
+                      curve: Curves.easeOutCubic,
+                    ).transform(rawT);
+
+                    final pulseWave = math.sin(_pulseAnim.value * math.pi);
+                    final floatOffset =
+                        _scanMenuOpen ? (pulseWave * 3.5) : 0.0;
+                    final glowBoost =
+                        _scanMenuOpen ? (0.85 + 0.30 * pulseWave) : 1.0;
+
+                    final centerX = constraints.maxWidth / 2;
+                    final originBottom = bottomPad + 16.0;
+                    const orbSize = 66.0;
+                    const slotWidth = 96.0;
+                    const spreadX = 62.0;
+                    const liftY = 86.0;
+
+                    final leftArcX = -spreadX * leftProgress;
+                    final leftArcY = liftY * leftProgress +
+                        math.sin(leftProgress.clamp(0.0, 1.0) * math.pi) * 10 +
+                        floatOffset;
+
+                    final rightArcX = spreadX * rightProgress;
+                    final rightArcY = liftY * rightProgress +
+                        math.sin(rightProgress.clamp(0.0, 1.0) * math.pi) * 10 -
+                        floatOffset;
 
                     return Stack(
                       fit: StackFit.expand,
@@ -164,95 +214,109 @@ class _AppShellState extends State<AppShell>
                             key: const Key('scan_menu_scrim'),
                             behavior: HitTestBehavior.opaque,
                             onTap: _closeScanMenu,
-                            child: FadeTransition(
-                              opacity: scrimOpacity,
-                              child: ColoredBox(
-                                color: Colors.black.withValues(alpha: 0.24),
+                            child: scrimT > 0.01
+                                ? BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 5.0 * scrimT,
+                                      sigmaY: 5.0 * scrimT,
+                                    ),
+                                    child: ColoredBox(
+                                      color: Colors.black.withValues(
+                                        alpha: (isDark ? 0.52 : 0.34) * scrimT,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.expand(),
+                          ),
+                        ),
+                        // Expanding ripple ring radiating from the center scan orb
+                        if (rippleT > 0.01 && rippleT < 0.99)
+                          Positioned(
+                            left: centerX - (26 + 58 * rippleT),
+                            bottom: originBottom + 26 - (26 + 58 * rippleT),
+                            child: IgnorePointer(
+                              child: Opacity(
+                                opacity: (1.0 - rippleT) * 0.45,
+                                child: Container(
+                                  width: (26 + 58 * rippleT) * 2,
+                                  height: (26 + 58 * rippleT) * 2,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: c.rolePrimary,
+                                      width: 2.0 * (1.0 - rippleT) + 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        // Left Radial Orb: Upload / File (Sapphire Blue glow)
+                        Positioned(
+                          left: centerX + leftArcX - slotWidth / 2,
+                          bottom: originBottom + leftArcY,
+                          width: slotWidth,
+                          child: IgnorePointer(
+                            ignoring: !_scanMenuOpen,
+                            child: Opacity(
+                              opacity: leftFade.clamp(0.0, 1.0),
+                              child: Transform.scale(
+                                scale:
+                                    (0.32 + 0.68 * leftProgress).clamp(0.2, 1.15),
+                                child: Transform.rotate(
+                                  angle: -0.35 * (1.0 - leftProgress.clamp(0.0, 1.0)),
+                                  child: _RadialScanOrb(
+                                    key: const Key('scan_quick_upload'),
+                                    size: orbSize,
+                                    icon: CupertinoIcons.photo,
+                                    label: AppStrings.t(
+                                      lang,
+                                      'quick_upload',
+                                      script: script,
+                                    ),
+                                    accentColor: const Color(0xFF3B82F6),
+                                    isDark: isDark,
+                                    glowBoost: glowBoost,
+                                    onTap: () => _openQuickScan(
+                                      focusCamera: false,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
+                        // Right Radial Orb: Camera Scan (Emerald Green glow)
                         Positioned(
-                          left: 20,
-                          right: 20,
-                          bottom: bottomPad + 94,
+                          left: centerX + rightArcX - slotWidth / 2,
+                          bottom: originBottom + rightArcY,
+                          width: slotWidth,
                           child: IgnorePointer(
                             ignoring: !_scanMenuOpen,
-                            child: Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 340),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: FadeTransition(
-                                        opacity: uploadCurve,
-                                        child: SlideTransition(
-                                          position: Tween<Offset>(
-                                            begin: const Offset(0, 0.35),
-                                            end: Offset.zero,
-                                          ).animate(uploadBack),
-                                          child: ScaleTransition(
-                                            scale: Tween<double>(
-                                              begin: 0.85,
-                                              end: 1.0,
-                                            ).animate(uploadBack),
-                                            child: _ScanQuickActionCard(
-                                              key: const Key('scan_quick_upload'),
-                                              icon: CupertinoIcons.arrow_up_doc_fill,
-                                              title: AppStrings.t(
-                                                lang,
-                                                'quick_upload',
-                                                script: script,
-                                              ),
-                                              subtitle: AppStrings.t(
-                                                lang,
-                                                'quick_upload_sub',
-                                                script: script,
-                                              ),
-                                              onTap: () => _openQuickScan(
-                                                focusCamera: false,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                            child: Opacity(
+                              opacity: rightFade.clamp(0.0, 1.0),
+                              child: Transform.scale(
+                                scale: (0.32 + 0.68 * rightProgress)
+                                    .clamp(0.2, 1.15),
+                                child: Transform.rotate(
+                                  angle: 0.35 *
+                                      (1.0 - rightProgress.clamp(0.0, 1.0)),
+                                  child: _RadialScanOrb(
+                                    key: const Key('scan_quick_camera'),
+                                    size: orbSize,
+                                    icon: CupertinoIcons.camera,
+                                    label: AppStrings.t(
+                                      lang,
+                                      'quick_camera',
+                                      script: script,
                                     ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: FadeTransition(
-                                        opacity: cameraCurve,
-                                        child: SlideTransition(
-                                          position: Tween<Offset>(
-                                            begin: const Offset(0, 0.35),
-                                            end: Offset.zero,
-                                          ).animate(cameraBack),
-                                          child: ScaleTransition(
-                                            scale: Tween<double>(
-                                              begin: 0.85,
-                                              end: 1.0,
-                                            ).animate(cameraBack),
-                                            child: _ScanQuickActionCard(
-                                              key: const Key('scan_quick_camera'),
-                                              icon: CupertinoIcons.camera_viewfinder,
-                                              title: AppStrings.t(
-                                                lang,
-                                                'quick_camera',
-                                                script: script,
-                                              ),
-                                              subtitle: AppStrings.t(
-                                                lang,
-                                                'quick_camera_sub',
-                                                script: script,
-                                              ),
-                                              onTap: () => _openQuickScan(
-                                                focusCamera: true,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                    accentColor: const Color(0xFF10B981),
+                                    isDark: isDark,
+                                    glowBoost: glowBoost,
+                                    onTap: () => _openQuickScan(
+                                      focusCamera: true,
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -290,77 +354,129 @@ class _AppShellState extends State<AppShell>
   }
 }
 
-class _ScanQuickActionCard extends StatelessWidget {
-  const _ScanQuickActionCard({
+class _RadialScanOrb extends StatefulWidget {
+  const _RadialScanOrb({
     super.key,
+    required this.size,
     required this.icon,
-    required this.title,
-    required this.subtitle,
+    required this.label,
+    required this.accentColor,
+    required this.isDark,
+    required this.glowBoost,
     required this.onTap,
   });
 
+  final double size;
   final IconData icon;
-  final String title;
-  final String subtitle;
+  final String label;
+  final Color accentColor;
+  final bool isDark;
+  final double glowBoost;
   final VoidCallback onTap;
 
   @override
+  State<_RadialScanOrb> createState() => _RadialScanOrbState();
+}
+
+class _RadialScanOrbState extends State<_RadialScanOrb> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    final c = context.lexColors;
-    return GlassCard(
-      radius: 22,
-      blurSigma: 26,
-      tintColor: c.glassFillStrong,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [c.roleGradientStart, c.roleGradientEnd],
+    final fill = widget.isDark
+        ? const Color(0xE01A2234)
+        : const Color(0xECFFFFFF);
+    final border = widget.isDark
+        ? widget.accentColor.withValues(alpha: 0.36)
+        : widget.accentColor.withValues(alpha: 0.28);
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) {
+        setState(() => _pressed = false);
+        widget.onTap();
+      },
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.86 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOutCubic,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: widget.size,
+              height: widget.size,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.accentColor.withValues(
+                      alpha: (widget.isDark ? 0.42 : 0.32) * widget.glowBoost,
+                    ),
+                    blurRadius: 24 * widget.glowBoost,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(
+                      alpha: widget.isDark ? 0.36 : 0.12,
+                    ),
+                    blurRadius: 14,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: c.roleGlow,
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+              child: ClipOval(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: fill,
+                      gradient: RadialGradient(
+                        center: const Alignment(-0.25, -0.35),
+                        radius: 1.05,
+                        colors: [
+                          widget.accentColor.withValues(
+                            alpha: widget.isDark ? 0.22 : 0.12,
+                          ),
+                          fill,
+                        ],
+                      ),
+                      border: Border.all(color: border, width: 1.3),
+                    ),
+                    child: Icon(
+                      widget.icon,
+                      color: widget.accentColor,
+                      size: 28,
+                    ),
+                  ),
                 ),
-              ],
+              ),
             ),
-            child: Icon(icon, color: Colors.white, size: 22),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 13.5,
-              fontWeight: FontWeight.w800,
-              color: c.textPrimary,
+            const SizedBox(height: 6),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.48),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                widget.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.1,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            subtitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: c.textSecondary,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

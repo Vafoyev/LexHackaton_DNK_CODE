@@ -13,6 +13,7 @@ class RiskStyle {
     required this.border,
     required this.icon,
     required this.label,
+    required this.shortLabel,
   });
 
   final Color fg;
@@ -20,8 +21,14 @@ class RiskStyle {
   final Color border;
   final IconData icon;
   final String label;
+  final String shortLabel;
 }
 
+/// Maps findings to the official LexGuard status system (LexGuard-AI-Loyiha.docx §4):
+/// - Qizil (Red): Qonun xavfi (verified citation, incl. R6 notarial rule)
+/// - Sariq (Yellow): E’tibor kerak («Agar qilmasangiz → oqibat»)
+/// - Yashil (Green): Muammo topilmadi («xavfsiz» degani emas)
+/// - Rangsiz (Gray): Tekshirilmadi («0» xulosa, hamkor advokatga yo‘naltiriladi)
 RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
   final c = context.lexColors;
   final session = context.watch<SessionCubit>().state;
@@ -35,6 +42,7 @@ RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
         border: c.redBorder,
         icon: CupertinoIcons.exclamationmark_shield_fill,
         label: AppStrings.t(lang, 'red_full', script: script),
+        shortLabel: AppStrings.t(lang, 'red_label', script: script),
       ),
     RiskColor.yellow => RiskStyle(
         fg: c.yellowText,
@@ -42,6 +50,7 @@ RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
         border: c.yellowBorder,
         icon: CupertinoIcons.exclamationmark_triangle_fill,
         label: AppStrings.t(lang, 'yellow_full', script: script),
+        shortLabel: AppStrings.t(lang, 'yellow_label', script: script),
       ),
     RiskColor.gray => RiskStyle(
         fg: c.grayText,
@@ -49,6 +58,7 @@ RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
         border: c.grayBorder,
         icon: CupertinoIcons.question_circle_fill,
         label: AppStrings.t(lang, 'gray_full', script: script),
+        shortLabel: AppStrings.t(lang, 'gray_label', script: script),
       ),
     RiskColor.green => RiskStyle(
         fg: c.greenText,
@@ -56,6 +66,7 @@ RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
         border: c.greenBorder,
         icon: CupertinoIcons.checkmark_seal_fill,
         label: AppStrings.t(lang, 'green_full', script: script),
+        shortLabel: AppStrings.t(lang, 'green_label', script: script),
       ),
   };
 }
@@ -77,9 +88,14 @@ class RiskColorSummaryRow extends StatelessWidget {
     final lang = session.lang;
     final script = session.uzbekScript;
 
+    final redCount = analysis.countByColor(RiskColor.red);
+    final yellowCount = analysis.countByColor(RiskColor.yellow);
+    final greenCount = analysis.countByColor(RiskColor.green);
+    final grayCount = analysis.countByColor(RiskColor.gray);
+
     final entries = [
       (
-        count: analysis.countByColor(RiskColor.red),
+        count: redCount,
         label: AppStrings.t(lang, 'red_label', script: script),
         fg: c.redText,
         bg: c.redBg,
@@ -87,7 +103,7 @@ class RiskColorSummaryRow extends StatelessWidget {
         icon: CupertinoIcons.exclamationmark_shield_fill,
       ),
       (
-        count: analysis.countByColor(RiskColor.yellow),
+        count: yellowCount,
         label: AppStrings.t(lang, 'yellow_label', script: script),
         fg: c.yellowText,
         bg: c.yellowBg,
@@ -95,21 +111,22 @@ class RiskColorSummaryRow extends StatelessWidget {
         icon: CupertinoIcons.exclamationmark_triangle_fill,
       ),
       (
-        count: analysis.countByColor(RiskColor.gray),
-        label: AppStrings.t(lang, 'gray_label', script: script),
-        fg: c.grayText,
-        bg: c.grayBg,
-        border: c.grayBorder,
-        icon: CupertinoIcons.question_circle_fill,
-      ),
-      (
-        count: analysis.countByColor(RiskColor.green),
+        count: greenCount,
         label: AppStrings.t(lang, 'green_label', script: script),
         fg: c.greenText,
         bg: c.greenBg,
         border: c.greenBorder,
         icon: CupertinoIcons.checkmark_seal_fill,
       ),
+      if (grayCount > 0)
+        (
+          count: grayCount,
+          label: AppStrings.t(lang, 'gray_label', script: script),
+          fg: c.grayText,
+          bg: c.grayBg,
+          border: c.grayBorder,
+          icon: CupertinoIcons.question_circle_fill,
+        ),
     ];
 
     final visible = compact
@@ -155,7 +172,7 @@ class _CountPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(999),
@@ -164,7 +181,7 @@ class _CountPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: fg),
+          Icon(icon, size: 12.5, color: fg),
           const SizedBox(width: 4),
           Flexible(
             child: Text(
@@ -173,8 +190,8 @@ class _CountPill extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: fg,
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ),
@@ -205,8 +222,8 @@ class VerificationBadge extends StatelessWidget {
         ),
       VerificationStatus.unverified => (
           AppStrings.t(lang, 'verif_unverified', script: script),
-          c.yellowText,
-          c.yellowBg,
+          c.grayText,
+          c.grayBg,
           CupertinoIcons.exclamationmark_circle_fill,
         ),
       VerificationStatus.reviewRequired => (
@@ -224,7 +241,7 @@ class VerificationBadge extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(999),
@@ -242,7 +259,7 @@ class VerificationBadge extends StatelessWidget {
               style: TextStyle(
                 color: fg,
                 fontSize: 11,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

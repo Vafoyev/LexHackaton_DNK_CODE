@@ -16,38 +16,28 @@ class AmbientGlassBackdrop extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.lexColors;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAlpha = isDark ? 0.28 : 0.42;
-    final secondaryAlpha = isDark ? 0.22 : 0.34;
+    final primaryAlpha = isDark ? 0.16 : 0.14;
+    final secondaryAlpha = isDark ? 0.10 : 0.08;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeOutCubic,
+    return Container(
       color: c.canvasBg,
       child: Stack(
         fit: StackFit.expand,
         children: [
           Positioned(
-            top: -110,
-            right: -70,
+            top: -140,
+            right: -90,
             child: _AmbientOrb(
-              size: 320,
+              size: 340,
               color: c.ambientOrbA.withValues(alpha: primaryAlpha),
             ),
           ),
           Positioned(
-            top: 210,
-            left: -120,
+            bottom: -140,
+            left: -100,
             child: _AmbientOrb(
-              size: 290,
+              size: 300,
               color: c.ambientOrbB.withValues(alpha: secondaryAlpha),
-            ),
-          ),
-          Positioned(
-            bottom: -90,
-            right: -40,
-            child: _AmbientOrb(
-              size: 270,
-              color: c.ambientOrbA.withValues(alpha: secondaryAlpha),
             ),
           ),
           child,
@@ -66,8 +56,7 @@ class _AmbientOrb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IgnorePointer(
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 380),
+      child: Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
@@ -114,8 +103,7 @@ class GlassCard extends StatelessWidget {
 
     Widget content = BackdropFilter(
       filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 280),
+      child: Container(
         padding: padding,
         decoration: BoxDecoration(
           gradient: LinearGradient(
