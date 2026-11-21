@@ -5,11 +5,13 @@
 #  Stage 2: production (gcr.io/distroless/static-debian12)
 # ============================================================
 
-ARG GO_VERSION=1.24
+ARG GO_VERSION=1.25
 ARG APP_VERSION=1.0.0
 
 # ── Stage 1: Dependencies & Build ────────────────────────────
 FROM golang:${GO_VERSION}-alpine AS builder
+
+ENV GOTOOLCHAIN=auto
 
 ARG APP_VERSION
 ARG TARGETOS
