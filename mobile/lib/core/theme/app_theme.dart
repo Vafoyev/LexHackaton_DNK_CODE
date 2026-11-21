@@ -372,7 +372,7 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: tokens.rolePrimaryDark,
+          foregroundColor: tokens.rolePrimary,
           side: BorderSide(color: tokens.rolePrimary.withValues(alpha: 0.35)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

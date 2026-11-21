@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/config/app_env.dart';
+import '../core/l10n/app_strings.dart';
+import '../core/l10n/uzbek_alphabet.dart';
 import '../core/network/api_client.dart';
 import '../core/router/app_router.dart';
 import '../core/security/privacy_curtain.dart';
@@ -17,9 +19,14 @@ import '../features/contracts/presentation/cubit/contracts_cubit.dart';
 import '../features/session/presentation/cubit/session_cubit.dart';
 
 class LexGuardApp extends StatefulWidget {
-  const LexGuardApp({super.key, this.repository});
+  const LexGuardApp({
+    super.key,
+    this.repository,
+    this.splashDelay = const Duration(milliseconds: 1600),
+  });
 
   final LexGuardRepository? repository;
+  final Duration splashDelay;
 
   @override
   State<LexGuardApp> createState() => _LexGuardAppState();
@@ -33,7 +40,7 @@ class _LexGuardAppState extends State<LexGuardApp> {
   @override
   void initState() {
     super.initState();
-    _router = createAppRouter();
+    _router = createAppRouter(splashDelay: widget.splashDelay);
     _screenSecurity = ScreenSecurityService();
     if (widget.repository != null) {
       _repo = widget.repository!;
@@ -76,6 +83,8 @@ class _LexGuardAppState extends State<LexGuardApp> {
               if (width >= 840 && session.phoneFrameOnDesktop) {
                 return _IphoneDesktopPreviewWrapper(
                   segment: session.segment,
+                  lang: session.lang,
+                  script: session.uzbekScript,
                   onToggleFrame: () =>
                       context.read<SessionCubit>().toggleDesktopFrame(),
                   child: secured,
@@ -93,19 +102,23 @@ class _LexGuardAppState extends State<LexGuardApp> {
 class _IphoneDesktopPreviewWrapper extends StatelessWidget {
   const _IphoneDesktopPreviewWrapper({
     required this.segment,
+    required this.lang,
+    required this.script,
     required this.onToggleFrame,
     required this.child,
   });
 
   final AccountSegment segment;
+  final AppLang lang;
+  final UzbekScript script;
   final VoidCallback onToggleFrame;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     final roleLabel = segment == AccountSegment.business
-        ? 'Yuridik (Emerald)'
-        : 'Jismoniy (Sapphire)';
+        ? AppStrings.t(lang, 'business_b2b', script: script)
+        : AppStrings.t(lang, 'individual_b2c', script: script);
 
     return Scaffold(
       backgroundColor: const Color(0xFF080D18),
@@ -125,7 +138,7 @@ class _IphoneDesktopPreviewWrapper extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'LexGuard AI · iOS Glassmorphism Preview · Faol rol: $roleLabel',
+                    'LexGuard AI · $roleLabel',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -142,9 +155,9 @@ class _IphoneDesktopPreviewWrapper extends StatelessWidget {
                     color: Color(0xFF38BDF8),
                     size: 15,
                   ),
-                  label: const Text(
-                    'Keng ekran',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                  label: Text(
+                    AppStrings.t(lang, 'desktop_wide_view', script: script),
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
               ],

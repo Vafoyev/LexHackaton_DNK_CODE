@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 /// Soft iOS mesh gradient backdrop with role-aware ambient orbs.
-/// Frosted GlassCards above this backdrop visibly refract Sapphire (Jismoniy)
-/// or Deep Emerald (Yuridik) light.
+/// Frosted GlassCards above this backdrop gently refract Sapphire (Jismoniy)
+/// or Deep Emerald (Yuridik) light without visual noise.
 class AmbientGlassBackdrop extends StatelessWidget {
   const AmbientGlassBackdrop({super.key, required this.child});
 
@@ -15,6 +15,10 @@ class AmbientGlassBackdrop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryAlpha = isDark ? 0.28 : 0.42;
+    final secondaryAlpha = isDark ? 0.22 : 0.34;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeOutCubic,
@@ -25,14 +29,17 @@ class AmbientGlassBackdrop extends StatelessWidget {
           Positioned(
             top: -110,
             right: -70,
-            child: _AmbientOrb(size: 320, color: c.ambientOrbA),
+            child: _AmbientOrb(
+              size: 320,
+              color: c.ambientOrbA.withValues(alpha: primaryAlpha),
+            ),
           ),
           Positioned(
             top: 210,
             left: -120,
             child: _AmbientOrb(
               size: 290,
-              color: c.ambientOrbB.withValues(alpha: 0.65),
+              color: c.ambientOrbB.withValues(alpha: secondaryAlpha),
             ),
           ),
           Positioned(
@@ -40,7 +47,7 @@ class AmbientGlassBackdrop extends StatelessWidget {
             right: -40,
             child: _AmbientOrb(
               size: 270,
-              color: c.ambientOrbA.withValues(alpha: 0.55),
+              color: c.ambientOrbA.withValues(alpha: secondaryAlpha),
             ),
           ),
           child,
@@ -67,7 +74,7 @@ class _AmbientOrb extends StatelessWidget {
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              color.withValues(alpha: 0.85),
+              color,
               color.withValues(alpha: 0.0),
             ],
           ),
@@ -101,6 +108,7 @@ class GlassCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final fill = tintColor ?? c.glassFill;
     final border = borderColor ?? c.glassBorder;
 
@@ -142,7 +150,7 @@ class GlassCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.05),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
