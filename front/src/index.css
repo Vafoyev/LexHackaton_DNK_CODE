@@ -154,7 +154,64 @@
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
   }
 
-  /* 6. Active Glass Glow Hover */
+  /* 6. Liquid Glass Semantic Status Glass (Danger, Warning, Success, Accent) */
+  .liquid-glass-danger {
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+  html.dark .liquid-glass-danger {
+    background: rgba(76, 5, 25, 0.25);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+  }
+  html.light .liquid-glass-danger {
+    background: rgba(255, 241, 242, 0.92);
+    border: 1px solid rgba(253, 164, 175, 0.85);
+    color: #881337;
+  }
+
+  .liquid-glass-warning {
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+  html.dark .liquid-glass-warning {
+    background: rgba(120, 53, 15, 0.25);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+  }
+  html.light .liquid-glass-warning {
+    background: rgba(254, 252, 232, 0.92);
+    border: 1px solid rgba(252, 211, 77, 0.85);
+    color: #78350f;
+  }
+
+  .liquid-glass-success {
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+  html.dark .liquid-glass-success {
+    background: rgba(6, 78, 59, 0.25);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+  html.light .liquid-glass-success {
+    background: rgba(240, 253, 244, 0.92);
+    border: 1px solid rgba(110, 231, 183, 0.85);
+    color: #064e3b;
+  }
+
+  .liquid-glass-accent {
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+  }
+  html.dark .liquid-glass-accent {
+    background: rgba(14, 165, 233, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+  }
+  html.light .liquid-glass-accent {
+    background: rgba(240, 249, 255, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.6);
+    color: #0369a1;
+  }
+
+  /* 7. Active Glass Glow Hover */
   .liquid-hover-glow {
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }

@@ -10,10 +10,15 @@ import {
   User,
   Building2,
   Sun,
-  Moon
+  Moon,
+  Download,
+  Upload,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { AnalysisResult } from '../../types/contract';
+import { exportToDocx, exportToPDF } from '../../utils/export';
 
 export interface NavbarProps {
   onReset: () => void;
@@ -23,6 +28,8 @@ export interface NavbarProps {
   onOpenAuth: () => void;
   onOpen3D?: () => void;
   onLoadDemo?: () => void;
+  analysis?: AnalysisResult | null;
+  appliedCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -33,6 +40,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onOpen3D,
   onLoadDemo,
+  analysis,
+  appliedCount = 0,
 }) => {
   const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -51,50 +60,60 @@ export const Navbar: React.FC<NavbarProps> = ({
     setActiveView(view);
   };
 
+  // Dinamik xavfsizlik bali
+  const score = analysis 
+    ? Math.min(100, (100 - analysis.summary.risk_score) + appliedCount * 12)
+    : 85;
+
   return (
-    <header className="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl transition-all duration-300">
+    <header className="fixed top-2 sm:top-3 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl transition-all duration-300">
       {/* Floating Stadium Capsule Navbar */}
-      <div className={`liquid-glass-pill rounded-full px-4 sm:px-6 py-2.5 transition-all duration-300 ${
+      <div className={`liquid-glass-pill rounded-full px-4 sm:px-6 py-2 transition-all duration-300 ${
         isIndividual ? 'border-sky-500/25 shadow-sky-950/40' : 'border-emerald-500/25 shadow-emerald-950/40'
       }`}>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* 1. Brand Logo */}
           <div 
             onClick={onReset}
-            className="flex items-center gap-2.5 cursor-pointer group shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0"
             title="Bosh sahifaga qaytish"
           >
-            <div className={`relative h-9.5 px-2.5 rounded-2xl p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
+            <div className={`relative h-8 px-2 rounded-full p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
               isIndividual
                 ? 'bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-300 shadow-sky-500/30'
                 : 'bg-gradient-to-tr from-emerald-400 via-teal-500 to-green-300 shadow-emerald-500/30'
             }`}>
-              <div className="w-full h-full bg-slate-950/90 rounded-[14px] px-2 flex items-center justify-center backdrop-blur-md">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
+              <div className="w-full h-full bg-slate-950/85 rounded-full px-1.5 flex items-center justify-center backdrop-blur-md">
+                <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-4 w-auto object-contain brightness-125" />
               </div>
             </div>
 
-            <div className="flex flex-col justify-center">
-              <div className="flex items-center gap-1.5 leading-none mb-0.5">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-3 w-auto object-contain brightness-125" />
-                <span className={`text-[10px] font-black tracking-widest uppercase font-mono ${
-                  isIndividual ? 'text-sky-500 dark:text-sky-400' : 'text-emerald-500 dark:text-emerald-400'
-                }`}>
-                  Lex.uz
-                </span>
-              </div>
-              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+            <div className="flex items-center gap-1.5">
+              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
                 LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
               </span>
             </div>
+
+            {/* Dinamik xavfsizlik bali (agar shartnoma yuklangan bo'lsa) */}
+            {hasAnalysis && (
+              <span className={`hidden xl:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
+                score >= 80 
+                  ? 'bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 border-emerald-500/30'
+                  : score >= 50
+                  ? 'bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30'
+                  : 'bg-rose-500/15 text-rose-500 dark:text-rose-400 border-rose-500/30'
+              }`}>
+                {score}% Xavfsiz
+              </span>
+            )}
           </div>
 
-          {/* 2. Center Glass Capsule Menu — Minimalist Single-Word Labels */}
+          {/* 2. Center Glass Capsule Menu — 6 ta Minimalist Yagona So'zli Tugma */}
           <nav className="flex items-center gap-1 p-1 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
             {/* Fuqaro (B2C Mode) */}
             <button
               onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 isIndividual
                   ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
@@ -108,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Biznes (B2B Mode) */}
             <button
               onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 !isIndividual
                   ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
@@ -122,7 +141,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Xulosa */}
             <button
               onClick={() => handleSelectView('xulosa')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
                   ? isIndividual
                     ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
@@ -138,7 +157,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Diff */}
             <button
               onClick={() => handleSelectView('diff')}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeView === 'diff'
                   ? isIndividual
                     ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
@@ -154,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* 3D */}
             <button
               onClick={() => handleSelectView('3D')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-500 dark:text-sky-300 hover:text-sky-600 dark:hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-sky-500 dark:text-sky-300 hover:text-sky-600 dark:hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
               title="Three.js 3D Risk Xaritasi"
             >
               <Box className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
@@ -162,18 +181,50 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </nav>
 
-          {/* 3. Right Action: Tungi/Kunduzgi Rejim & Kirish */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* 3. Right Actions: Eksport, Tungi/Kunduzgi Rejim, Kirish */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Eksport DOCX / PDF (agar shartnoma mavjud bo'lsa) */}
+            {hasAnalysis && analysis && (
+              <div className="hidden md:flex items-center gap-1 p-0.5 rounded-full bg-slate-200/50 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-[11px] font-bold">
+                <button
+                  onClick={() => exportToDocx(analysis)}
+                  className="px-2 py-0.5 rounded-full text-sky-600 dark:text-sky-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Word (.docx) yuklab olish"
+                >
+                  DOCX
+                </button>
+                <button
+                  onClick={() => exportToPDF(analysis)}
+                  className="px-2 py-0.5 rounded-full text-emerald-600 dark:text-emerald-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Audit PDF yuklab olish"
+                >
+                  PDF
+                </button>
+              </div>
+            )}
+
+            {/* Yangi shartnoma yuklash tugmasi */}
+            {hasAnalysis && (
+              <button
+                onClick={onReset}
+                className="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 transition-all cursor-pointer"
+                title="Boshqa shartnoma yuklash"
+              >
+                <Upload className="w-3 h-3 text-sky-500" />
+                <span>Yuklash</span>
+              </button>
+            )}
+
             {/* Tungi / Kunduzgi Rejim Tugmasi */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full transition-all cursor-pointer hover:scale-105 border bg-slate-200/60 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border-slate-300 dark:border-white/15 text-slate-700 dark:text-amber-400 shadow-sm"
-              title={isDark ? "Kunduzgi rejimga o'tish (Light Mode)" : "Tungi rejimga o'tish (Dark Mode)"}
+              className="p-1.5 rounded-full transition-all cursor-pointer hover:scale-105 border bg-slate-200/60 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border-slate-300 dark:border-white/15 text-slate-700 dark:text-amber-400 shadow-sm"
+              title={isDark ? "Kunduzgi rejim (Light Mode)" : "Tungi rejim (Dark Mode)"}
             >
               {isDark ? (
-                <Sun className="w-4 h-4 text-amber-400" />
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
               ) : (
-                <Moon className="w-4 h-4 text-indigo-600" />
+                <Moon className="w-3.5 h-3.5 text-indigo-600" />
               )}
             </button>
 
@@ -182,14 +233,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 py-1 pl-2.5 pr-2 rounded-full bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-xs text-slate-800 dark:text-white transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 py-1 pl-2 pr-1.5 rounded-full bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-xs text-slate-800 dark:text-white transition-all cursor-pointer"
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${
                     isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
                   }`}>
                     {user?.full_name?.charAt(0) || 'U'}
                   </div>
-                  <span className="max-w-[85px] sm:max-w-[110px] truncate font-medium">
+                  <span className="max-w-[70px] truncate font-medium">
                     {user?.full_name?.split(' ')[0]}
                   </span>
                   <ChevronDown className="w-3 h-3 text-slate-400" />
@@ -222,7 +273,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-300 dark:border-white/15 transition-all cursor-pointer hover:scale-105"
+                className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-300 dark:border-white/15 transition-all cursor-pointer hover:scale-105"
                 title="Tizimga kirish yoki ro'yxatdan o'tish"
               >
                 <LogIn className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />

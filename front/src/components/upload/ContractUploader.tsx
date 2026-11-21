@@ -115,38 +115,38 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           {/* Matn qismi */}
           <div className="lg:col-span-7 space-y-3.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-[10px] font-mono font-bold tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/40 dark:bg-white/10 border border-slate-300 dark:border-white/20 text-slate-800 dark:text-white text-[10px] font-mono font-bold tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
               <span>O‘ZBEKISTON RESPUBLIKASI LEX.UZ BAZASI BILAN SINXRON</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
               Shartnomangizni <span className={`bg-clip-text text-transparent ${
                 isIndividual 
-                  ? 'bg-gradient-to-r from-sky-400 via-cyan-300 to-blue-400' 
-                  : 'bg-gradient-to-r from-emerald-300 via-teal-200 to-green-400'
+                  ? 'bg-gradient-to-r from-sky-600 via-cyan-600 to-blue-600 dark:from-sky-400 dark:via-cyan-300 dark:to-blue-400' 
+                  : 'bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 dark:from-emerald-300 dark:via-teal-200 dark:to-green-400'
               }`}>
                 Imzolashdan Oldin
               </span> 3D Tekshiring
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
               {isIndividual 
                 ? 'Fuqarolik shartnomalari (Ijara, Oldi-sotdi, Avto, Mehnat) dagi yashirin xavflar, asimmetriyalar va noqonuniy jarimalarni Lex.uz moddalari bo‘yicha tahlil qiling.'
                 : 'B2B korporativ bitimlari (Yetkazib berish, IT xizmat, Tijoriy ijara) bo‘yicha O‘zbekiston qonunchiligiga to‘liq muvofiqlik auditi va 2 xil DOCX eksport.'}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2 text-[11px] font-mono text-slate-300">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
+            <div className="flex flex-wrap items-center gap-3 pt-2 text-[11px] font-mono text-slate-700 dark:text-slate-300">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
                 <span className="w-2 h-2 rounded-full bg-rose-500" />
                 <span>Qizil: Qonun xavfi</span>
               </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
                 <span>Sariq: Tijoriy risk</span>
               </div>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>Yashil: Topilma yo‘q</span>
               </div>
             </div>

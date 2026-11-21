@@ -83,14 +83,14 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
   return (
     <div className="space-y-6">
       {/* Control Bar (Filtrlar va Qidiruv) */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 bg-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-800 shadow-xl">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 liquid-glass rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           <button
             onClick={() => setFilter('RISKS_ONLY')}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               filter === 'RISKS_ONLY'
                 ? 'bg-gradient-to-r from-red-600 to-amber-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -102,7 +102,7 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
               filter === 'ALL'
                 ? 'bg-sky-600 text-white shadow-md shadow-sky-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             Barchasi ({analysis.clauses.length})
@@ -113,10 +113,10 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               filter === 'RED'
                 ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-red-400"></span>
+            <span className="w-2 h-2 rounded-full bg-red-500"></span>
             <span>Qizil ({analysis.summary.red_count})</span>
           </button>
 
@@ -125,10 +125,10 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               filter === 'YELLOW'
                 ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
             <span>Sariq ({analysis.summary.yellow_count})</span>
           </button>
 
@@ -137,10 +137,10 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
               filter === 'GREEN'
                 ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span>Yashil ({analysis.summary.green_count})</span>
           </button>
         </div>
@@ -153,7 +153,7 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
             placeholder="Band matni yoki modda qidirish..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 bg-slate-950/80 border border-slate-700/80 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all"
+            className="w-full pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all"
           />
         </div>
       </div>

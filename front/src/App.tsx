@@ -19,6 +19,7 @@ function MainApp() {
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [is3DModalOpen, setIs3DModalOpen] = useState(false);
+  const [appliedCount, setAppliedCount] = useState(0);
 
   const handleAnalyze = async (file: File | null, isDemo: boolean) => {
     setIsLoading(true);
@@ -95,6 +96,8 @@ function MainApp() {
           setActiveView(view);
         }}
         hasAnalysis={!!analysis}
+        analysis={currentAnalysis}
+        appliedCount={appliedCount}
         onOpenAuth={() => setIsAuthModalOpen(true)}
         onOpen3D={() => setIs3DModalOpen(true)}
         onLoadDemo={handleLoadDemo}
@@ -109,6 +112,7 @@ function MainApp() {
               analysis={currentAnalysis}
               onReset={handleReset}
               initialView={activeView === 'diff' ? 'diff' : 'reader'}
+              onAppliedCountChange={setAppliedCount}
             />
           </div>
         ) : (
