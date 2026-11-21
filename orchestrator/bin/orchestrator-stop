@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# orchestrator-stop: Tmux sessiyasini to'xtatish
+# ==============================================================================
+set -euo pipefail
+
+SESSION_NAME="lexguard-swarm"
+
+if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+  tmux kill-session -t "$SESSION_NAME"
+  echo "🛑 Tmux sessiyasi '$SESSION_NAME' to'xtatildi."
+else
+  echo "ℹ️  Tmux sessiyasi '$SESSION_NAME' ishlamayapti."
+fi

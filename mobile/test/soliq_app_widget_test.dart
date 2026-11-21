@@ -77,7 +77,7 @@ void main() {
     // 5. Switch role to Jismoniy shaxs -> Sapphire (#0066FF)
     await tester.tap(find.byKey(const Key('role_switch_pill')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Jismoniy shaxs (Sapphire Ko‘k)'));
+    await tester.tap(find.byKey(const Key('quick_switch_individual')));
     await tester.pumpAndSettle();
 
     final homeCtx = tester.element(find.text('Vafoyev Isobek · Shaxsiy'));
@@ -85,6 +85,8 @@ void main() {
 
     // 6. Open Floating Scan Orb -> Run B2B Service Demo -> Analysis Detail
     await tester.tap(find.byKey(const Key('center_scan_fab')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('scan_quick_upload')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('demo_sample_service')));
     await tester.pump(const Duration(seconds: 2));

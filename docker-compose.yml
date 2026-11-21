@@ -1,0 +1,7 @@
+# ============================================================
+#  LexGuard AI 3.0 — Root Docker Compose Entrypoint
+#  Includes production-grade microservices from deploy/
+# ============================================================
+
+include:
+  - path: deploy/docker-compose.yml

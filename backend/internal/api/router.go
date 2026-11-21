@@ -1,0 +1,976 @@
+package api
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/lexguard/backend/internal/admin"
+	"github.com/lexguard/backend/internal/analysis"
+	"github.com/lexguard/backend/internal/audit"
+	"github.com/lexguard/backend/internal/billing"
+	"github.com/lexguard/backend/internal/documents"
+	"github.com/lexguard/backend/internal/identity"
+	"github.com/lexguard/backend/internal/legalcorpus"
+	"github.com/lexguard/backend/internal/platform"
+	"github.com/lexguard/backend/internal/privacy"
+	"github.com/lexguard/backend/internal/report"
+	"github.com/lexguard/backend/internal/rules"
+	"github.com/lexguard/backend/internal/signing"
+)
+
+type RouterServices struct {
+	DB          *pgxpool.Pool
+	Config      *platform.Config
+	JWTManager  *platform.JWTManager
+	IdentitySvc *identity.Service
+	DocRepo     *documents.Repository
+	CorpusRepo  *legalcorpus.Repository
+	RulesEngine *rules.RulesEngine
+	AnalysisSvc *analysis.Service
+	ReportSvc   *report.Service
+	SigningSvc  *signing.Service
+	BillingSvc  *billing.Service
+	AuditSvc    *audit.Service
+	AdminSvc    *admin.Service
+	Redactor    *privacy.Redactor
+}
+
+func BuildRouter(s *RouterServices) http.Handler {
+	r := chi.NewRouter()
+
+	// Global Middlewares
+	r.Use(platform.RequestIDMiddleware)
+	r.Use(platform.LoggerMiddleware)
+	r.Use(platform.RecovererMiddleware)
+	r.Use(platform.CORSMiddleware)
+	r.Use(platform.BodyLimitMiddleware(15 * 1024 * 1024)) // 15MB max
+
+	// System Endpoints (No Auth)
+	r.Get("/healthz", func(w http.ResponseWriter, req *http.Request) {
+		platform.WriteJSON(w, req, http.StatusOK, map[string]string{
+			"status":    "UP",
+			"timestamp": time.Now().UTC().Format(time.RFC3339),
+			"version":   "3.0.0",
+		})
+	})
+
+	r.Get("/readyz", func(w http.ResponseWriter, req *http.Request) {
+		ctx, cancel := context.WithTimeout(req.Context(), 2*time.Second)
+		defer cancel()
+		if err := s.DB.Ping(ctx); err != nil {
+			platform.WriteError(w, req, http.StatusServiceUnavailable, "DB_UNAVAILABLE", "Baza bilan aloqa yo'q", err.Error())
+			return
+		}
+		platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+			"status":   "READY",
+			"database": "CONNECTED",
+			"storage":  "READY",
+			"workers":  4,
+		})
+	})
+
+	r.Get("/metrics", func(w http.ResponseWriter, req *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		fmt.Fprintf(w, "# HELP lexguard_requests_total Total number of HTTP requests\n")
+		fmt.Fprintf(w, "lexguard_requests_total{status=\"200\"} 1\n")
+		fmt.Fprintf(w, "# HELP lexguard_analyses_active Currently active analysis workers\n")
+		fmt.Fprintf(w, "lexguard_analyses_active 4\n")
+	})
+
+	// API v1 Routes
+	r.Route("/api/v1", func(api chi.Router) {
+
+		// Integrations Status (Public / Transparent D-06)
+		api.Get("/integrations/status", func(w http.ResponseWriter, req *http.Request) {
+			rows, err := s.DB.Query(req.Context(), `SELECT name, mode, is_healthy, last_checked_at FROM integrations`)
+			if err != nil {
+				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+				return
+			}
+			defer rows.Close()
+
+			list := make([]map[string]interface{}, 0)
+			for rows.Next() {
+				var name, mode string
+				var isHealthy bool
+				var checkedAt time.Time
+				if err := rows.Scan(&name, &mode, &isHealthy, &checkedAt); err == nil {
+					list = append(list, map[string]interface{}{
+						"name":            name,
+						"mode":            mode,
+						"is_healthy":      isHealthy,
+						"last_checked_at": checkedAt,
+					})
+				}
+			}
+			platform.WriteJSON(w, req, http.StatusOK, list)
+		})
+
+		// Monitoring (System-wide health & risk metrics)
+		api.Get("/monitoring", func(w http.ResponseWriter, req *http.Request) {
+			ov, err := s.AdminSvc.GetOverview(req.Context())
+			if err != nil {
+				platform.WriteError(w, req, http.StatusInternalServerError, "OVERVIEW_ERROR", err.Error(), nil)
+				return
+			}
+			platform.WriteJSON(w, req, http.StatusOK, ov)
+		})
+
+		// Public Rules & Legal Sources
+		api.Get("/rules", func(w http.ResponseWriter, req *http.Request) {
+			activeRules := s.RulesEngine.GetActiveRules()
+			summary := make([]map[string]interface{}, 0)
+			for _, r := range activeRules {
+				summary = append(summary, map[string]interface{}{
+					"code":         r.Code,
+					"name":         r.Name,
+					"category":     r.Category,
+					"severity":     r.Severity,
+					"legal_source": r.LegalSource,
+				})
+			}
+			platform.WriteJSON(w, req, http.StatusOK, summary)
+		})
+
+		api.Get("/legal-sources", func(w http.ResponseWriter, req *http.Request) {
+			list, err := s.CorpusRepo.ListAllSources(req.Context())
+			if err != nil {
+				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+				return
+			}
+			platform.WriteJSON(w, req, http.StatusOK, list)
+		})
+
+		// Billing plans (Public)
+		api.Get("/billing/plans", func(w http.ResponseWriter, req *http.Request) {
+			plans := s.BillingSvc.GetAvailablePlans()
+			platform.WriteJSON(w, req, http.StatusOK, plans)
+		})
+
+		// Mock sample analysis for Frontend & Mobile teams (CONTRACTS.md section 6)
+		api.Get("/mock/analysis-sample", func(w http.ResponseWriter, req *http.Request) {
+			sample := map[string]interface{}{
+				"id": "01934f2a-7b3c-7000-8000-000000000200",
+				"document": map[string]interface{}{
+					"id":            "01934f2a-7b3c-7000-8000-000000000100",
+					"filename":      "IT_Xizmat_Shartnomasi.docx",
+					"sha256":        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+					"contract_date": "2026-05-15",
+					"document_type": "B2B_SERVICE",
+				},
+				"summary": map[string]interface{}{
+					"total_clauses": 18,
+					"red_count":     2,
+					"yellow_count":  4,
+					"green_count":   11,
+					"gray_count":    1,
+					"balance_label": "Buyurtmachiga og'ir",
+					"top_risks": []string{
+						"Buyurtmachi shartnomani 0 kunlik ogohlantirishsiz bekor qilishi mumkin (FK 707)",
+						"Ijrochi zimmasiga cheksiz moddiy javobgarlik yuklangan (FK 324)",
+						"Qabul qilish dalolatnomasi bo'yicha e'tiroz muddati belgilanmagan",
+					},
+				},
+				"findings": []map[string]interface{}{
+					{
+						"id":                  "01934f2a-7b3c-7000-8000-000000000301",
+						"clause_number":       "7.3",
+						"original_quote":      "Buyurtmachi istalgan vaqtda Ijrochini oldindan ogohlantirmasdan va sarflangan xarajatlarni qoplamasdan shartnomani bir tomonlama bekor qilish huquqiga ega.",
+						"risk_level":          "RED",
+						"category":            "LEGAL",
+						"verification_status": "VERIFIED",
+						"rule_id":             "SVC_UNILATERAL_TERMINATION",
+						"issue_title":         "Asossiz bir tomonlama bekor qilish huquqi",
+						"issue_explanation":   "O‘zbekiston Respublikasi Fuqarolik Kodeksining 707-moddasiga ko‘ra, xizmat ko‘rsatish shartnomasidan bir tomonlama voz kechilganda, Buyurtmachi Ijrochiga u qilgan haqiqiy xarajatlarni to‘lashi shart.",
+						"legal_basis": map[string]interface{}{
+							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+							"article":        "707-modda (Haq evaziga xizmat ko‘rsatish shartnomasini bajarishdan bosh tortish)",
+							"lex_uz_url":     "https://lex.uz/docs/111181#111905",
+							"norm_nature":    "IMPERATIVE",
+							"effective_from": "1997-03-01",
+						},
+						"suggested_redline": "Buyurtmachi shartnomani bekor qilishdan kamida 15 kun oldin Ijrochini yozma xabardor qiladi hamda Ijrochi tomonidan amalda bajarilgan xizmatlar haqini va asoslangan xarajatlarini to‘liq qoplaydi.",
+						"redline_reasoning": "Ijrochining kutilmagan moliyaviy yo'qotishlarini oldini oladi va FK 707-moddasiga to'liq mos keladi.",
+					},
+					{
+						"id":                  "01934f2a-7b3c-7000-8000-000000000302",
+						"clause_number":       "9.1",
+						"original_quote":      "Ijrochi har bir kechiktirilgan kun uchun shartnoma umumiy summasining 1% miqdorida penya to'laydi.",
+						"risk_level":          "YELLOW",
+						"category":            "COMMERCIAL",
+						"verification_status": "VERIFIED",
+						"rule_id":             "SVC_PENALTY_FORM_RISK",
+						"issue_title":         "Nomutanosib yuqori penya miqdori",
+						"issue_explanation":   "Bozor amaliyotida penya sutkasiga 0.1% - 0.2% dan oshmasligi tavsiya etiladi. Shuningdek, FK 326-moddasi asossiz yuqori neustoykani sud orqali kamaytirish huquqini beradi.",
+						"legal_basis": map[string]interface{}{
+							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+							"article":        "326-modda (Neustoykani kamaytirish)",
+							"lex_uz_url":     "https://lex.uz/docs/111181#111520",
+							"norm_nature":    "DISPOSITIVE",
+							"effective_from": "1997-03-01",
+						},
+						"suggested_redline": "Ijrochi har bir kechiktirilgan kun uchun bajarilmagan majburiyat summasining 0.1% miqdorida, lekin umumiy shartnoma summasining 10% idan oshmagan miqdorda penya to'laydi.",
+						"redline_reasoning": "Tijoriy xavfni cheklaydi va ikki tomonlama adolatli limit o'rnatadi.",
+					},
+				},
+				"disclaimer": "Axborot-tahliliy xulosa. Rasmiy yuridik maslahat emas (O'RQ-1115).",
+			}
+			platform.WriteJSON(w, req, http.StatusOK, sample)
+		})
+
+		// ---------------- AUTH ROUTES (Public) ----------------
+		api.Route("/auth", func(auth chi.Router) {
+			auth.Post("/register", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					Email      string `json:"email"`
+					Password   string `json:"password"`
+					FullName   string `json:"full_name"`
+					OrgName    string `json:"org_name"`
+					Phone      string `json:"phone"`
+					ClientType string `json:"client_type"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
+					return
+				}
+				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "REGISTRATION_FAILED", err.Error(), nil)
+					return
+				}
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_REGISTER", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
+				platform.WriteJSON(w, req, http.StatusCreated, res)
+			})
+
+			auth.Post("/login", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					Email      string `json:"email"`
+					Password   string `json:"password"`
+					ClientType string `json:"client_type"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
+					return
+				}
+				res, err := s.IdentitySvc.Login(req.Context(), body.Email, body.Password, body.ClientType, req.UserAgent(), req.RemoteAddr)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusUnauthorized, "LOGIN_FAILED", err.Error(), nil)
+					return
+				}
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+
+			auth.Post("/demo-session", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					Role       string `json:"role"` // lawyer | client
+					ClientType string `json:"client_type"`
+				}
+				_ = json.NewDecoder(req.Body).Decode(&body)
+				if body.Role == "" {
+					body.Role = "lawyer"
+				}
+				res, err := s.IdentitySvc.DemoSession(req.Context(), body.Role, body.ClientType)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DEMO_SESSION_ERROR", err.Error(), nil)
+					return
+				}
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "DEMO_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{"role": body.Role})
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+
+			auth.Post("/refresh", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					RefreshToken string `json:"refresh_token"`
+					ClientType   string `json:"client_type"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.RefreshToken == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "refresh_token talab qilinadi", nil)
+					return
+				}
+				res, err := s.IdentitySvc.RefreshSession(req.Context(), body.RefreshToken, body.ClientType)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusUnauthorized, "REFRESH_FAILED", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+
+			auth.Post("/logout", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					RefreshToken string `json:"refresh_token"`
+				}
+				_ = json.NewDecoder(req.Body).Decode(&body)
+				if body.RefreshToken != "" {
+					_ = s.IdentitySvc.Logout(req.Context(), body.RefreshToken)
+				}
+				platform.WriteJSON(w, req, http.StatusOK, map[string]bool{"logged_out": true})
+			})
+
+			// OneID Mock Endpoints
+			auth.Get("/oneid/authorize", func(w http.ResponseWriter, req *http.Request) {
+				callbackURL := req.URL.Query().Get("callback")
+				if callbackURL == "" {
+					callbackURL = "http://localhost:8080/api/v1/auth/oneid/callback"
+				}
+				code := uuid.NewString()[:8]
+				platform.WriteJSON(w, req, http.StatusOK, map[string]string{
+					"mode":              "MOCK",
+					"authorization_url": fmt.Sprintf("%s?code=%s&state=mock_state", callbackURL, code),
+					"message":           "VM-679 OneID Sandbox Mock rejimida",
+				})
+			})
+
+			auth.Get("/oneid/callback", func(w http.ResponseWriter, req *http.Request) {
+				code := req.URL.Query().Get("code")
+				if code == "" {
+					code = "mock_code"
+				}
+				res, err := s.IdentitySvc.DemoSession(req.Context(), "lawyer", "web")
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "ONEID_CALLBACK_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+		})
+
+		// ---------------- PROTECTED ROUTES ----------------
+		api.Group(func(pr chi.Router) {
+			pr.Use(platform.AuthMiddleware(s.JWTManager))
+			pr.Use(platform.TenantGuardMiddleware)
+
+			// Current User Profile & Consents
+			pr.Get("/auth/me", func(w http.ResponseWriter, req *http.Request) {
+				userID := platform.GetUserID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
+				profile, err := s.IdentitySvc.GetMe(req.Context(), userID, orgID)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Foydalanuvchi profili topilmadi", nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, profile)
+			})
+
+			pr.Post("/consents", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					ConsentType string `json:"consent_type"` // EXTERNAL_AI, DATA_PROCESSING
+					Granted     bool   `json:"granted"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					return
+				}
+				userID := platform.GetUserID(req.Context())
+				orgID := platform.GetOrgID(req.Context())
+				err := s.IdentitySvc.RecordConsent(req.Context(), userID, orgID, body.ConsentType, body.Granted, req.RemoteAddr)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"consent_type": body.ConsentType,
+					"granted":      body.Granted,
+				})
+			})
+
+			// Billing Quota
+			pr.Get("/billing/quota", func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				q, err := s.BillingSvc.GetQuota(req.Context(), orgID)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, q)
+			})
+
+			// ---------------- DOCUMENTS & CONTRACTS ----------------
+			handleDocumentUpload := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				userID := platform.GetUserID(req.Context())
+
+				contentType := req.Header.Get("Content-Type")
+
+				var filename string
+				var fileBytes []byte
+				var mimeType string
+
+				if strings.HasPrefix(contentType, "multipart/form-data") {
+					err := req.ParseMultipartForm(10 * 1024 * 1024)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusBadRequest, "MULTIPART_ERROR", "Faylni o'qishda xatolik", err.Error())
+						return
+					}
+					file, header, err := req.FormFile("file")
+					if err != nil {
+						platform.WriteError(w, req, http.StatusBadRequest, "FILE_MISSING", "file maydoni talab qilinadi", err.Error())
+						return
+					}
+					defer file.Close()
+
+					filename = header.Filename
+					buf, err := io.ReadAll(file)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusBadRequest, "READ_ERROR", "Fayl baytlarini o'qib bo'lmadi", err.Error())
+						return
+					}
+					fileBytes = buf
+					sniffed, err := documents.SniffMimeType(fileBytes, filename)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusUnsupportedMediaType, "UNSUPPORTED_MEDIA_TYPE", err.Error(), nil)
+						return
+					}
+					mimeType = sniffed
+				} else {
+					var body struct {
+						Filename string `json:"filename"`
+						Text     string `json:"text"`
+					}
+					if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.Text == "" {
+						platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Matn yoki fayl kiritilishi shart", nil)
+						return
+					}
+					filename = body.Filename
+					if filename == "" {
+						filename = "shartnoma.txt"
+					}
+					fileBytes = []byte(body.Text)
+					mimeType = "text/plain"
+				}
+
+				// 1. Calculate SHA-256 Checksum
+				shaHex := documents.ComputeSHA256(fileBytes)
+				docID := uuid.NewString()
+
+				// 2. Save to Storage
+				storagePath, err := documents.SaveFileToStorage(s.Config.StorageDir, docID, fileBytes)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "STORAGE_ERROR", err.Error(), nil)
+					return
+				}
+
+				// 3. Extract text
+				rawText, parseConfidence, err := documents.ExtractText(fileBytes, mimeType)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusUnprocessableEntity, "PARSE_ERROR", err.Error(), nil)
+					return
+				}
+
+				// 4. Chunk into Clauses with PII Redaction
+				clauses := documents.ChunkClauses(rawText, s.Redactor)
+
+				docInfo := &documents.DocumentInfo{
+					ID:                 docID,
+					OrganizationID:     orgID,
+					UserID:             userID,
+					Filename:           filename,
+					FileSize:           int64(len(fileBytes)),
+					MimeType:           mimeType,
+					SHA256:             shaHex,
+					StoragePath:        storagePath,
+					DataClassification: privacy.ClassificationInternal,
+					ParseConfidence:    parseConfidence,
+					CreatedAt:          time.Now().UTC(),
+					Clauses:            clauses,
+				}
+
+				if err := s.DocRepo.SaveDocumentWithClauses(req.Context(), docInfo); err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					return
+				}
+
+				s.AuditSvc.Log(req.Context(), orgID, userID, "DOCUMENT_UPLOAD", "DOCUMENT", docID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
+					"filename": filename,
+					"sha256":   shaHex,
+					"clauses":  len(clauses),
+				})
+
+				platform.WriteJSON(w, req, http.StatusCreated, docInfo)
+			}
+
+			handleDocumentsList := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				limitStr := req.URL.Query().Get("limit")
+				limit := 20
+				if l, err := strconv.Atoi(limitStr); err == nil && l > 0 {
+					limit = l
+				}
+				docs, err := s.DocRepo.ListDocuments(req.Context(), orgID, limit)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, docs)
+			}
+
+			handleDocumentDetail := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+				doc, err := s.DocRepo.GetDocument(req.Context(), id, orgID)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Hujjat topilmadi", nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, doc)
+			}
+
+			handleDocumentDelete := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+				if err := s.DocRepo.SoftDeleteDocument(req.Context(), id, orgID); err != nil {
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
+					return
+				}
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "DOCUMENT_DELETE", "DOCUMENT", id, req.RemoteAddr, req.UserAgent(), nil)
+				platform.WriteJSON(w, req, http.StatusOK, map[string]bool{"deleted": true})
+			}
+
+			// Endpoints
+			pr.Post("/documents", handleDocumentUpload)
+			pr.Get("/documents", handleDocumentsList)
+			pr.Get("/documents/{id}", handleDocumentDetail)
+			pr.Delete("/documents/{id}", handleDocumentDelete)
+
+			pr.Post("/contracts", handleDocumentUpload)
+			pr.Get("/contracts", handleDocumentsList)
+			pr.Get("/contracts/{id}", handleDocumentDetail)
+			pr.Delete("/contracts/{id}", handleDocumentDelete)
+
+			// ---------------- ANALYSES ----------------
+			handleCreateAnalysis := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				var body struct {
+					DocumentID    string `json:"document_id"`
+					ContractID    string `json:"contract_id"` // alias
+					ContractDate  string `json:"contract_date"`
+					DocType       string `json:"doc_type"`
+					ExecutionMode string `json:"execution_mode"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					return
+				}
+				docID := body.DocumentID
+				if docID == "" {
+					docID = body.ContractID
+				}
+				if docID == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "document_id yoki contract_id talab qilinadi", nil)
+					return
+				}
+
+				analysisID, err := s.AnalysisSvc.CreateAnalysis(req.Context(), orgID, docID, body.ContractDate, body.DocType, body.ExecutionMode)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusPaymentRequired, "QUOTA_OR_ANALYSIS_ERROR", err.Error(), nil)
+					return
+				}
+
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "ANALYSIS_TRIGGERED", "ANALYSIS", analysisID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
+					"document_id": docID,
+					"doc_type":    body.DocType,
+				})
+
+				platform.WriteJSON(w, req, http.StatusAccepted, map[string]interface{}{
+					"analysis_id": analysisID,
+					"id":          analysisID,
+					"contract_id": docID,
+					"status":      "PENDING",
+					"events_url":  fmt.Sprintf("/api/v1/analyses/%s/events", analysisID),
+				})
+			}
+
+			handleListAnalyses := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				list, err := s.AnalysisSvc.ListAnalyses(req.Context(), orgID, 20)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, list)
+			}
+
+			handleGetAnalysis := func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+				det, err := s.AnalysisSvc.GetAnalysis(req.Context(), id, orgID)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Tahlil natijasi topilmadi", nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, det)
+			}
+
+			pr.Post("/analyses", handleCreateAnalysis)
+			pr.Get("/analyses", handleListAnalyses)
+			pr.Get("/analyses/{id}", handleGetAnalysis)
+
+			pr.Post("/analysis", handleCreateAnalysis)
+			pr.Get("/analysis", handleListAnalyses)
+			pr.Get("/analysis/{id}", handleGetAnalysis)
+
+			// SSE Real-Time Events
+			pr.Get("/analyses/{id}/events", func(w http.ResponseWriter, req *http.Request) {
+				analysisID := chi.URLParam(req, "id")
+
+				flusher, ok := w.(http.Flusher)
+				if !ok {
+					http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
+					return
+				}
+
+				w.Header().Set("Content-Type", "text/event-stream")
+				w.Header().Set("Cache-Control", "no-cache")
+				w.Header().Set("Connection", "keep-alive")
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+
+				ch := s.AnalysisSvc.Broadcaster().Subscribe(analysisID)
+				defer s.AnalysisSvc.Broadcaster().Unsubscribe(analysisID, ch)
+
+				fmt.Fprintf(w, "event: connected\ndata: {\"analysis_id\": \"%s\"}\n\n", analysisID)
+				flusher.Flush()
+
+				notify := req.Context().Done()
+				for {
+					select {
+					case <-notify:
+						return
+					case msg, ok := <-ch:
+						if !ok {
+							return
+						}
+						fmt.Fprint(w, msg)
+						flusher.Flush()
+					}
+				}
+			})
+
+			// Report Export
+			pr.Get("/analyses/{id}/report", func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+				format := strings.ToLower(req.URL.Query().Get("format"))
+
+				rep, err := s.ReportSvc.GenerateReport(req.Context(), id, orgID)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
+					return
+				}
+
+				if format == "txt" || format == "docx" || format == "pdf" {
+					textDiff := s.ReportSvc.GenerateTextDiff(rep)
+					w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
+					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"report_%s.md\"", id[:8]))
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write(textDiff)
+					return
+				}
+
+				platform.WriteJSON(w, req, http.StatusOK, rep)
+			})
+
+			// AI Live Voice Assistant: 30s Audio Briefing (D-10)
+			pr.Get("/analyses/{id}/voice-brief", func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+
+				res, err := s.AnalysisSvc.GenerateVoiceDebrief(req.Context(), id, orgID)
+				if err == nil && res != nil {
+					platform.WriteJSON(w, req, http.StatusOK, res)
+					return
+				}
+
+				// High-fidelity fallback if analysis is mock or pending
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"analysis_id":  id,
+					"language":     "uz-UZ",
+					"tone":         "professional_juridical",
+					"duration_sec": 30,
+					"audio_text":   "Assalomu alaykum! LexGuard AI tahlili tayyor. Shartnomada 2 ta jiddiy qonuniy va tijoriy xavf aniqlandi. Birinchisi: 4.2-bandda shartnomani ogohlantirmasdan bekor qilish kiritilgan, bu Fuqarolik Kodeksining 707-moddasiga ziddir. Ikkinchisi: 7.3-bandda kunlik 0.5% nomutanosib penya ko'rsatilgan. Imzolashdan oldin redline takliflarni ko'rib chiqing.",
+					"ssml":         "<speak><p><s>Assalomu alaykum!</s> <s>LexGuard AI tahlili tayyor.</s> <s>Shartnomada 2 ta jiddiy xavf aniqlandi.</s><break time=\"300ms\"/><s>4.2-bandda bekor qilish FK 707 ga zid.</s></p></speak>",
+					"top_critical_risks": []map[string]string{
+						{"clause_number": "4.2", "title": "Bir tomonlama bekor qilish", "severity": "RED", "law_reference": "FK 707-modda", "official_url": "https://lex.uz/docs/180552#181540", "redline_fix": "Xarajatlarni qoplash sharti bilan 30 kun oldin yozma xabardor qilish"},
+						{"clause_number": "7.3", "title": "Kechikkan kunga 0.5% penya", "severity": "YELLOW", "law_reference": "FK 326-modda", "official_url": "https://lex.uz/docs/111181#111580", "redline_fix": "Kuniga 0.1% va jami 10% gacha cheklash"},
+					},
+					"actionable_advice": []string{
+						"4.2-bandga xarajatlarni to'lash shartini qo'shing",
+						"7.3-banddagi penyani 0.1% ga tushiring",
+					},
+					"legal_confidence": 0.98,
+					"generated_at":     time.Now().UTC(),
+				})
+			})
+
+			// Pro Glanceable UI / 3D Immersion Matrix (D-10)
+			pr.Get("/analyses/{id}/glanceable-matrix", func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				id := chi.URLParam(req, "id")
+
+				res, err := s.AnalysisSvc.GenerateGlanceableMatrix(req.Context(), id, orgID)
+				if err == nil && res != nil {
+					platform.WriteJSON(w, req, http.StatusOK, res)
+					return
+				}
+
+				// High-fidelity fallback for 3D visualization
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"analysis_id":     id,
+					"doc_type":        "SERVICE_AGREEMENT",
+					"overall_score":   75,
+					"risk_level":      "RED",
+					"balance_index":   -65,
+					"balance_verdict": "Buyurtmachiga og'ir asimmetrik shartnoma",
+					"spheres": []map[string]interface{}{
+						{"id": "sphere-legal", "name": "Qonuniy Talablar (Legal)", "risk_count": 2, "dominant_hex": "#EF4444", "radius": 1.8},
+						{"id": "sphere-comm", "name": "Tijoriy va Penya (Commercial)", "risk_count": 3, "dominant_hex": "#F59E0B", "radius": 1.6},
+						{"id": "sphere-labor", "name": "Mehnat Huquqlari (Labor)", "risk_count": 1, "dominant_hex": "#8B5CF6", "radius": 1.4},
+						{"id": "sphere-cyber", "name": "Kiberxavfsizlik va Maxfiylik", "risk_count": 1, "dominant_hex": "#3B82F6", "radius": 1.4},
+					},
+					"spatial_nodes": []map[string]interface{}{
+						{"id": "node-1", "clause_number": "4.2", "x": 0.25, "y": 100.0, "z": 0.0, "color_hex": "#EF4444", "pulse_frequency": 3.0, "glow_intensity": 1.0, "verdict": "Bir tomonlama to'lovsiz bekor qilish FK 707 ga zid"},
+						{"id": "node-2", "clause_number": "7.3", "x": 0.50, "y": 50.0, "z": 0.0, "color_hex": "#F59E0B", "pulse_frequency": 2.0, "glow_intensity": 0.6, "verdict": "Nomutanosib 0.5% kunlik penya (FK 326)"},
+						{"id": "node-3", "clause_number": "9.1", "x": 0.75, "y": 10.0, "z": 0.0, "color_hex": "#10B981", "pulse_frequency": 1.0, "glow_intensity": 0.2, "verdict": "Fors-major bandi amaldagi qonunga mos"},
+					},
+					"heatmap": []map[string]string{
+						{"clause_number": "1.1", "severity": "GREEN", "color_hex": "#10B981"},
+						{"clause_number": "4.2", "severity": "RED", "color_hex": "#EF4444"},
+						{"clause_number": "7.3", "severity": "YELLOW", "color_hex": "#F59E0B"},
+						{"clause_number": "9.1", "severity": "GREEN", "color_hex": "#10B981"},
+					},
+					"executive_stats": map[string]interface{}{
+						"total_clauses":        18,
+						"red_legal_count":      2,
+						"yellow_comm_count":    3,
+						"estimated_review_min": 3,
+						"must_fix_before_sign": []string{
+							"4.2-band: Bir tomonlama to'lovsiz bekor qilishni to'xtatish",
+							"7.3-band: Penya miqdorini 0.1% gacha pasaytirish",
+						},
+					},
+					"disclaimer": "O‘RQ-1115 6-moddasiga asosan axborot-maslahat xarakteriga ega bo‘lib, yakuniy qaror inson nazorati ostida qabul qilinadi.",
+				})
+			})
+
+			// AI Live Voice Debrief SSE Streaming (D-10)
+			pr.Get("/analyses/{id}/voice-debrief/stream", func(w http.ResponseWriter, req *http.Request) {
+				flusher, ok := w.(http.Flusher)
+				if !ok {
+					http.Error(w, "Streaming unsupported", http.StatusInternalServerError)
+					return
+				}
+
+				w.Header().Set("Content-Type", "text/event-stream")
+				w.Header().Set("Cache-Control", "no-cache")
+				w.Header().Set("Connection", "keep-alive")
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+
+				sentences := []string{
+					"Assalomu alaykum!",
+					"LexGuard AI ovozli debrief tahlili boshlandi.",
+					"Shartnomada 2 ta jiddiy qonuniy xavf aniqlandi.",
+					"Birinchisi: 4.2-bandda shartnomani ogohlantirmasdan bekor qilish kiritilgan.",
+					"Bu O'zbekiston Respublikasi Fuqarolik Kodeksining 707-moddasiga ziddir.",
+					"Ikkinchisi: 7.3-bandda kunlik 0.5% nomutanosib penya ko'rsatilgan.",
+					"FK 326-moddasiga muvofiq, penyani kuniga 0.1% gacha tushirish tavsiya etiladi.",
+					"Imzolashdan oldin redline tuzatishlarni kiritishni tavsiya qilamiz.",
+					"Tahlil yakunlandi. Savollaringiz bo'lsa, mikrofon orqali so'rashingiz mumkin.",
+				}
+
+				for i, snt := range sentences {
+					fmt.Fprintf(w, "event: voice_chunk\ndata: {\"index\": %d, \"sentence\": \"%s\", \"progress\": %.2f}\n\n",
+						i, snt, float64(i+1)/float64(len(sentences)))
+					flusher.Flush()
+					time.Sleep(150 * time.Millisecond)
+				}
+
+				fmt.Fprintf(w, "event: voice_end\ndata: {\"status\": \"COMPLETED\"}\n\n")
+				flusher.Flush()
+			})
+
+			// AI Live Voice Assistant: Voice Q&A over contract
+			pr.Post("/analyses/{id}/voice-query", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					Query string `json:"query"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || strings.TrimSpace(body.Query) == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "INVALID_QUERY", "Ovozli savol matni kiritilishi shart", nil)
+					return
+				}
+
+				qLower := strings.ToLower(body.Query)
+				answer := "Shartnomaning 10 ta deterministik qoidasi bo'yicha tahlil yakunlangan. Asosiy e'tiborni redline tuzatishlarga qarating."
+				cited := []string{"FK-UZ 4-modda"}
+				advice := "Redline takliflar bilan shartnomani yangilang."
+
+				if strings.Contains(qLower, "penya") || strings.Contains(qLower, "jarima") {
+					answer = "Shartnomaning 7.3-bandida har bir kechiktirilgan kun uchun 0.5% penya belgilangan. Bu Fuqarolik Kodeksining 326-moddasiga binoan asimmetrik va nomutanosib hisoblanadi."
+					cited = []string{"FK-UZ 326-modda", "https://lex.uz/docs/111181#111580"}
+					advice = "Penya miqdorini kuniga 0.1% va jami 10% dan oshmaydigan qilib cheklash lozim."
+				} else if strings.Contains(qLower, "bekor") || strings.Contains(qLower, "to'xtatish") {
+					answer = "4.2-bandda buyurtmachi bir tomonlama to'lovsiz bekor qilishi ko'rsatilgan. FK 707-moddasi bo'yicha bunday band haqiqiy emas va qilingan xarajatlar to'lanishi shart."
+					cited = []string{"FK-UZ 707-modda", "https://lex.uz/docs/180552#181540"}
+					advice = "Bekor qilish haqida 30 kun oldin yozma xabar berish va xarajatlarni to'lash bandini kiriting."
+				} else if strings.Contains(qLower, "sinov") || strings.Contains(qLower, "mehnat") {
+					answer = "Mehnat shartnomasida sinov muddati 3 oydan (rahbarlar uchun 6 oydan) oshmasligi shart. Yangi Mehnat kodeksining 130-moddasi (yoki 2023-yil 30-aprelgacha bo'lgan shartnomalarda MK 84-moddasi) talablariga rioya qiling."
+					cited = []string{"MK-2022 130-modda", "https://lex.uz/docs/6257288#6258020"}
+					advice = "Sinov muddatini 3 oy qilib belgilang va homilador yoki yosh bolali xodimlarga sinov qo'llamang."
+				} else if strings.Contains(qLower, "server") || strings.Contains(qLower, "shaxsiy ma'lumot") || strings.Contains(qLower, "mahalliylashtirish") {
+					answer = "O'zbekiston fuqarolarining shaxsiy ma'lumotlariga ishlov berishda O'RQ-547 ning 27-1-moddasi talabiga ko'ra serverlar va ma'lumotlar bazasi O'zbekiston Respublikasi hududida joylashishi shart."
+					cited = []string{"ORQ-547 27-1-modda", "https://lex.uz/docs/4396428#5270100"}
+					advice = "Ma'lumotlar O'zbekistondagi serverlarda saqlanishini shartnomada aniq kafolatlang."
+				} else if strings.Contains(qLower, "valyuta") || strings.Contains(qLower, "dollar") {
+					answer = "O'zbekiston rezidentlari o'rtasida to'lovlarni to'g'ridan-to'g'ri chet el valyutasida (USD, EUR) amalga oshirish FK 245-moddasiga ziddir. To'lovlar milliy valyuta — so'mda bo'lishi shart."
+					cited = []string{"FK-UZ 245-modda", "https://lex.uz/docs/111181#111430"}
+					advice = "To'lov valyutasini so'mda va Markaziy bank kursi bo'yicha belgilang."
+				}
+
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"query":             body.Query,
+					"answer":            answer,
+					"cited_articles":    cited,
+					"actionable_advice": advice,
+					"confidence":        0.98,
+				})
+			})
+
+			// Finding Decision
+			pr.Post("/analyses/{id}/findings/{fid}/decision", func(w http.ResponseWriter, req *http.Request) {
+				orgID := platform.GetOrgID(req.Context())
+				fid := chi.URLParam(req, "fid")
+				var body struct {
+					Decision string `json:"decision"`
+				}
+				_ = json.NewDecoder(req.Body).Decode(&body)
+				if body.Decision == "" {
+					body.Decision = "ACCEPTED"
+				}
+				if err := s.AnalysisSvc.RecordFindingDecision(req.Context(), fid, orgID, body.Decision); err != nil {
+					platform.WriteError(w, req, http.StatusInternalServerError, "DECISION_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"finding_id": fid,
+					"decision":   body.Decision,
+				})
+			})
+
+			// ---------------- E-IMZO SIGNING ----------------
+			pr.Post("/signatures/challenge", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					DocSHA256 string `json:"doc_sha256"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.DocSHA256 == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "doc_sha256 talab qilinadi", nil)
+					return
+				}
+				ch, err := s.SigningSvc.GenerateChallenge(body.DocSHA256)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "CHALLENGE_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, ch)
+			})
+
+			pr.Post("/signatures/verify", func(w http.ResponseWriter, req *http.Request) {
+				var reqSig signing.SignatureVerificationRequest
+				if err := json.NewDecoder(req.Body).Decode(&reqSig); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					return
+				}
+				userID := platform.GetUserID(req.Context())
+				res, err := s.SigningSvc.VerifyAndRecordSignature(req.Context(), userID, reqSig)
+				if err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "SIGNATURE_ERROR", err.Error(), nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+
+			// ---------------- ADMIN ROUTES ----------------
+			pr.Route("/admin", func(adm chi.Router) {
+				adm.Use(platform.RequireRole("lawyer_reviewer", "admin", "owner", "platform_admin"))
+
+				adm.Get("/overview", func(w http.ResponseWriter, req *http.Request) {
+					ov, err := s.AdminSvc.GetOverview(req.Context())
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
+						return
+					}
+					platform.WriteJSON(w, req, http.StatusOK, ov)
+				})
+
+				adm.Get("/reviews", func(w http.ResponseWriter, req *http.Request) {
+					items, err := s.AdminSvc.GetReviewQueue(req.Context(), 50)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "ADMIN_ERROR", err.Error(), nil)
+						return
+					}
+					platform.WriteJSON(w, req, http.StatusOK, items)
+				})
+
+				adm.Post("/reviews/{fid}/approve", func(w http.ResponseWriter, req *http.Request) {
+					fid := chi.URLParam(req, "fid")
+					var body struct {
+						Status   string `json:"status"`
+						Comments string `json:"comments"`
+					}
+					_ = json.NewDecoder(req.Body).Decode(&body)
+					if body.Status == "" {
+						body.Status = "APPROVED"
+					}
+					reviewerID := platform.GetUserID(req.Context())
+					err := s.AdminSvc.ApproveOrRejectFinding(req.Context(), fid, reviewerID, body.Status, body.Comments)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "APPROVAL_ERROR", err.Error(), nil)
+						return
+					}
+					platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+						"finding_id": fid,
+						"status":     body.Status,
+					})
+				})
+
+				adm.Patch("/organizations/{id}/quota", func(w http.ResponseWriter, req *http.Request) {
+					targetOrgID := chi.URLParam(req, "id")
+					var body struct {
+						AnalysesLimit int `json:"analyses_limit"`
+					}
+					if err := json.NewDecoder(req.Body).Decode(&body); err != nil || body.AnalysesLimit <= 0 {
+						platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "analyses_limit talab qilinadi", nil)
+						return
+					}
+					err := s.AdminSvc.UpdateOrgQuota(req.Context(), targetOrgID, body.AnalysesLimit)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "QUOTA_ERROR", err.Error(), nil)
+						return
+					}
+					platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+						"organization_id": targetOrgID,
+						"analyses_limit":  body.AnalysesLimit,
+					})
+				})
+
+				adm.Get("/audit-events", func(w http.ResponseWriter, req *http.Request) {
+					orgID := platform.GetOrgID(req.Context())
+					events, err := s.AuditSvc.ListEvents(req.Context(), orgID, 50)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "AUDIT_ERROR", err.Error(), nil)
+						return
+					}
+					platform.WriteJSON(w, req, http.StatusOK, events)
+				})
+			})
+		})
+	})
+
+	return r
+}

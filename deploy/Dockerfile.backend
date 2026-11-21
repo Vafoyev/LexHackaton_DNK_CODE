@@ -1,0 +1,80 @@
+# ============================================================
+#  LexGuard AI — Go Backend Multi-Stage Dockerfile
+#  D-10 Directive: Secure distroless production image
+#  Stage 1: builder (Go 1.23 + CGO_ENABLED=0)
+#  Stage 2: production (gcr.io/distroless/static-debian12)
+# ============================================================
+
+ARG GO_VERSION=1.23
+ARG APP_VERSION=1.0.0
+
+# ── Stage 1: Dependencies & Build ────────────────────────────
+FROM golang:${GO_VERSION}-alpine AS builder
+
+ARG APP_VERSION
+ARG TARGETOS
+ARG TARGETARCH
+
+# Install required tools (git for VCS stamping, ca-certs for TLS)
+RUN apk add --no-cache git ca-certificates tzdata
+
+WORKDIR /build
+
+# Cache dependencies separately (layer-cache efficiency)
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+
+# Copy source code
+COPY . .
+
+# Build both binaries with security flags (supports multi-arch amd64/arm64)
+# -trimpath: remove local path info from binary
+# -ldflags: strip debug info, inject version
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build \
+    -trimpath \
+    -ldflags="-s -w -X main.Version=${APP_VERSION} -X main.BuildTime=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    -o /dist/lexguard-api ./cmd/server
+
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build \
+    -trimpath \
+    -ldflags="-s -w" \
+    -o /dist/migrate ./cmd/migrate
+
+# ── Stage 2: Tests (optional, runs in CI) ────────────────────
+FROM builder AS tester
+RUN CGO_ENABLED=0 go test -race -count=1 -timeout=120s ./...
+
+# ── Stage 3: Production (distroless — no shell, minimal attack surface) ──
+FROM gcr.io/distroless/static-debian12:nonroot AS production
+
+ARG APP_VERSION
+
+# Copy timezone data and CA certs from builder
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+# Copy compiled binaries
+COPY --from=builder /dist/lexguard-api /app/lexguard-api
+COPY --from=builder /dist/migrate      /app/migrate
+
+# Non-root user (distroless default: uid=65532/nonroot)
+USER nonroot:nonroot
+
+# Upload directory (mounted as volume in compose)
+WORKDIR /app
+
+# Health: exposed port
+EXPOSE 8080
+
+# Metadata labels
+LABEL org.opencontainers.image.title="LexGuard AI Backend" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.description="Go Modular Monolith — Temporal RAG, Anti-Hallucination, D-10" \
+      org.opencontainers.image.vendor="LexGuard Team"
+
+# Container internal healthcheck (distroless-compatible, no shell required)
+HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=5 \
+    CMD ["/app/lexguard-api", "healthcheck"]
+
+# Entrypoint: run the API server
+ENTRYPOINT ["/app/lexguard-api"]

@@ -1,0 +1,335 @@
+openapi: 3.1.0
+info:
+  title: LexGuard AI 3.0 Modular Monolith API
+  description: High-performance, secure legal contract analysis and compliance backend conforming to O'RQ-547, O'RQ-1115, and O'RQ-1125.
+  version: 3.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Development Server
+
+paths:
+  /readyz:
+    get:
+      summary: Liveness and Readiness probe
+      responses:
+        '200':
+          description: System ready
+
+  /integrations/status:
+    get:
+      summary: Integration states (MOCK, SANDBOX, PROD)
+      responses:
+        '200':
+          description: List of registered integration states
+
+  /monitoring:
+    get:
+      summary: System overview and contract security metrics
+      responses:
+        '200':
+          description: Global metrics, risk distribution, active workers
+
+  /auth/demo-session:
+    post:
+      summary: Instant demo authentication for testing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  enum: [lawyer, client]
+                client_type:
+                  type: string
+                  enum: [web, mobile, admin]
+      responses:
+        '200':
+          description: Demo tokens and user profile
+
+  /auth/register:
+    post:
+      summary: Register new organization and owner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, full_name]
+              properties:
+                email: { type: string }
+                password: { type: string }
+                full_name: { type: string }
+                org_name: { type: string }
+                phone: { type: string }
+                client_type: { type: string }
+      responses:
+        '201':
+          description: Registered successfully
+
+  /auth/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+                client_type: { type: string }
+      responses:
+        '200':
+          description: Tokens and profile
+
+  /auth/refresh:
+    post:
+      summary: Rotate session refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+                client_type: { type: string }
+      responses:
+        '200':
+          description: New token pair
+
+  /contracts:
+    post:
+      summary: Upload contract file (PDF, DOCX, TXT)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+          application/json:
+            schema:
+              type: object
+              properties:
+                filename: { type: string }
+                text: { type: string }
+      responses:
+        '201':
+          description: Contract processed and chunked with PII redaction
+    get:
+      summary: List uploaded contracts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of documents
+
+  /contracts/{id}:
+    get:
+      summary: Get contract details and clauses
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Contract details
+
+  /analyses:
+    post:
+      summary: Trigger contract analysis (async)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [contract_id]
+              properties:
+                contract_id: { type: string, format: uuid }
+                contract_date: { type: string, format: date }
+                doc_type: { type: string, default: SERVICE_AGREEMENT }
+                execution_mode: { type: string, enum: [RULE_ONLY, HYBRID_AI] }
+      responses:
+        '202':
+          description: Analysis accepted, queued in PostgreSQL SKIP LOCKED pool
+
+  /analyses/{id}:
+    get:
+      summary: Get analysis results
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Analysis result with 10-vector verified findings
+
+  /analyses/{id}/events:
+    get:
+      summary: Server-Sent Events (SSE) real-time analysis stream
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: SSE event stream (stage_changed, partial_rule_finding, completed, error)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /analyses/{id}/report:
+    get:
+      summary: Export audit report in DOCX/PDF/Text/JSON
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: format
+          in: query
+          schema: { type: string, enum: [json, txt, docx, pdf] }
+      responses:
+        '200':
+          description: Evidence report
+
+  /analyses/{id}/voice-brief:
+    get:
+      summary: 30-second AI Live Voice Audio Briefing with SSML (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Natural Uzbek voice debrief with SSML and top critical risks
+
+  /analyses/{id}/glanceable-matrix:
+    get:
+      summary: Pro Glanceable UI & 3D Immersion visual coordinate matrix (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: 3D spheres, spatial clause coordinates, balance index, and ribbon heatmap
+
+  /analyses/{id}/voice-debrief/stream:
+    get:
+      summary: Server-Sent Events (SSE) streaming voice audio debrief sentences (D-10)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: SSE stream of voice sentences for live audio-wave rendering
+
+  /analyses/{id}/voice-query:
+    post:
+      summary: AI Live Voice interactive Q&A over contract clauses and Uzbek laws
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: { type: string }
+      responses:
+        '200':
+          description: Voice answer with cited articles and actionable advice
+
+  /signatures/challenge:
+    post:
+      summary: Generate E-IMZO SHA-256 signing challenge
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [doc_sha256]
+              properties:
+                doc_sha256: { type: string }
+      responses:
+        '200':
+          description: Nonce challenge
+
+  /signatures/verify:
+    post:
+      summary: Verify detached digital signature
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [document_id, doc_sha256, signature_hex]
+              properties:
+                document_id: { type: string, format: uuid }
+                doc_sha256: { type: string }
+                signature_hex: { type: string }
+                cert_serial: { type: string }
+                signer_inn: { type: string }
+                signer_name: { type: string }
+      responses:
+        '200':
+          description: Signature verified and recorded
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

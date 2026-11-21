@@ -23,6 +23,7 @@ Thumbs.db
 
 # Go (Backend)
 /backend/bin/
+/backend/var/
 *.exe
 *.exe~
 *.dll
@@ -53,6 +54,9 @@ dist/
 build/
 .next/
 .cache/
+.vite/
+front/.vite/
+admin/.vite/
 
 # Python (if used for AI/RAG scripts)
 __pycache__/
@@ -63,3 +67,4 @@ __pycache__/
 env/
 venv/
 .venv/
+orchestrator/docs_extracted/

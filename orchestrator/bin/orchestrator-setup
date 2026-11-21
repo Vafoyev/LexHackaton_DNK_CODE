@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# orchestrator-setup: Har bir profilni izolyatsiya qilish va chat ID larni ajratish
+# ==============================================================================
+set -euo pipefail
+
+PROFILES_DIR="$HOME/.agy-profiles"
+WORKSPACE="/Users/baxrom/ish_full/LexHackaton_DNK_CODE"
+
+echo "🔧 LexGuard AI Swarm: 8 ta profilni to'liq sozlash va izolyatsiya qilish..."
+
+for i in {1..8}; do
+  prof_dir="$PROFILES_DIR/$i/.gemini/antigravity-cli"
+  mkdir -p "$prof_dir"
+
+  # 1. Chat tarixi va conversation_summaries.db ni har bir profil uchun xususiy (izolyatsiya) qilish:
+  # Agar symlink bo'lsa, uni uzamiz va har bir profil uchun alohida katalog qilamiz.
+  if [[ -L "$prof_dir/conversations" ]]; then
+    rm -f "$prof_dir/conversations"
+    mkdir -p "$prof_dir/conversations"
+    echo "  [Profil $i] 'conversations' symlink uzildi -> Shaxsiy katalogga aylantirildi."
+  elif [[ ! -d "$prof_dir/conversations" ]]; then
+    mkdir -p "$prof_dir/conversations"
+  fi
+
+  if [[ -L "$prof_dir/conversation_summaries.db" ]]; then
+    rm -f "$prof_dir/conversation_summaries.db"
+    echo "  [Profil $i] 'conversation_summaries.db' symlink uzildi -> Xususiy DB ajratildi."
+  fi
+
+  if [[ -L "$prof_dir/brain" ]]; then
+    rm -f "$prof_dir/brain"
+    mkdir -p "$prof_dir/brain"
+    echo "  [Profil $i] 'brain' symlink uzildi -> Shaxsiy transkriptlar izolyatsiya qilindi."
+  elif [[ ! -d "$prof_dir/brain" ]]; then
+    mkdir -p "$prof_dir/brain"
+  fi
+
+  # 2. Trusted Workspaces sozlash
+  settings_file="$prof_dir/settings.json"
+  python3 - <<PYSETTINGS
+import json, os
+p_file = "$settings_file"
+workspaces = [
+    "$WORKSPACE",
+    "$WORKSPACE/backend",
+    "$WORKSPACE/mobile",
+    "$WORKSPACE/front",
+    "$WORKSPACE/admin"
+]
+data = {"model": "Claude Opus 4.6 (Thinking)", "trustedWorkspaces": []}
+if os.path.exists(p_file):
+    try:
+        with open(p_file, "r") as f:
+            data = json.load(f)
+        if "trustedWorkspaces" not in data:
+            data["trustedWorkspaces"] = []
+    except:
+        pass
+
+for ws in workspaces:
+    if ws not in data["trustedWorkspaces"]:
+        data["trustedWorkspaces"].append(ws)
+
+with open(p_file, "w") as f:
+    json.dump(data, f, indent=2)
+PYSETTINGS
+
+  # 3. Skills papkasini tekshirish
+  skills_dir="$PROFILES_DIR/$i/.gemini/config/skills"
+  mkdir -p "$PROFILES_DIR/$i/.gemini/config"
+  if [[ ! -e "$skills_dir" && -d "$HOME/.gemini/config/skills" ]]; then
+    ln -sfn "$HOME/.gemini/config/skills" "$skills_dir"
+  fi
+
+  echo "  ✅ Profil $i muvaffaqiyatli izolyatsiya qilindi."
+done
+
+echo "🎉 Barcha 8 ta profil izolyatsiyasi va xavfsizligi 100% ta'minlandi!"
