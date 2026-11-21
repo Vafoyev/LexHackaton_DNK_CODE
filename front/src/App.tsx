@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
+import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
@@ -10,8 +11,9 @@ import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
-export function MainApp() {
+function MainApp() {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
+  const [activeView, setActiveView] = useState<'xulosa' | 'diff' | '3D' | 'dashboard'>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -28,6 +30,7 @@ export function MainApp() {
         isDemo
       );
       setAnalysis(result);
+      setActiveView('xulosa');
 
       // Tahlil muvaffaqiyatli tugagach bayramona animatsiya
       confetti({
@@ -40,14 +43,22 @@ export function MainApp() {
       console.error(err);
       // Fallback
       setAnalysis(SAMPLE_IT_SERVICE_CONTRACT);
+      setActiveView('xulosa');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleLoadDemo = () => {
+    setAnalysis(SAMPLE_IT_SERVICE_CONTRACT);
+  };
+
   const handleReset = () => {
     setAnalysis(null);
+    setActiveView('dashboard');
   };
+
+  const currentAnalysis = analysis || SAMPLE_IT_SERVICE_CONTRACT;
 
   return (
     <div className="relative min-h-screen flex flex-col bg-[#030712] text-slate-100 selection:bg-sky-500 selection:text-white overflow-x-hidden">
@@ -68,38 +79,52 @@ export function MainApp() {
         <div className="absolute top-[20%] right-[30%] w-[380px] h-[380px] rounded-full bg-cyan-400/10 blur-[90px] liquid-orb-1" />
       </div>
 
-      {analysis ? (
-        /* 1. KONTRAKT STUDIYASI (Robin AI / Google Docs uslubidagi haqiqiy ish maydoni) */
-        <div className="relative z-10 flex-1 flex flex-col">
-          <ContractStudio
-            analysis={analysis}
-            onReset={handleReset}
-          />
-        </div>
-      ) : (
-        /* 2. BOSHLANG'ICH TOPQIR YUKLASH SAHIFASI (Liquid Glass Home) */
-        <div className="relative z-10 flex-1 flex flex-col">
-          {/* Floating Stadium Capsule Navbar */}
-          <Navbar
-            onReset={handleReset}
-            activeView="dashboard"
-            setActiveView={() => {}}
-            hasAnalysis={false}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
-            onOpen3D={() => setIs3DModalOpen(true)}
-          />
+      {/* Floating Stadium Capsule Navbar (Minimalist Single-Word Labels: Fuqaro, Biznes, Xulosa, 3D, Diff, Kirish) */}
+      <Navbar
+        onReset={handleReset}
+        activeView={activeView}
+        setActiveView={(view) => {
+          if (view === '3D') {
+            setIs3DModalOpen(true);
+            return;
+          }
+          if (!analysis) {
+            setAnalysis(SAMPLE_IT_SERVICE_CONTRACT);
+          }
+          setActiveView(view);
+        }}
+        hasAnalysis={!!analysis}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpen3D={() => setIs3DModalOpen(true)}
+        onLoadDemo={handleLoadDemo}
+      />
 
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 flex flex-col justify-center">
-            <ContractUploader
-              onAnalyze={handleAnalyze}
-              isLoading={isLoading}
-              progress={progress}
+      {/* Main Content Area */}
+      <div className="relative z-10 flex-1 flex flex-col pt-20">
+        {analysis || activeView === 'xulosa' || activeView === 'diff' ? (
+          /* 1. KONTRAKT STUDIYASI (Robin AI / Google Docs uslubidagi haqiqiy ish maydoni) */
+          <div className="flex-1 flex flex-col">
+            <ContractStudio
+              analysis={currentAnalysis}
+              onReset={handleReset}
+              initialView={activeView === 'diff' ? 'diff' : 'reader'}
             />
-          </main>
+          </div>
+        ) : (
+          /* 2. BOSHLANG'ICH TOPQIR YUKLASH SAHIFASI (Liquid Glass Home) */
+          <div className="flex-1 flex flex-col">
+            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-center">
+              <ContractUploader
+                onAnalyze={handleAnalyze}
+                isLoading={isLoading}
+                progress={progress}
+              />
+            </main>
 
-          <Footer />
-        </div>
-      )}
+            <Footer />
+          </div>
+        )}
+      </div>
 
       {/* Auth Modal (Kirish / Ro'yxatdan o'tish) */}
       <AuthModal
@@ -111,11 +136,19 @@ export function MainApp() {
       <ThreeDModal
         isOpen={is3DModalOpen}
         onClose={() => setIs3DModalOpen(false)}
-        analysis={analysis || SAMPLE_IT_SERVICE_CONTRACT}
+        analysis={currentAnalysis}
         onSelectClause={() => {}}
       />
     </div>
   );
 }
 
-export default MainApp;
+export function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}
+
+export default App;

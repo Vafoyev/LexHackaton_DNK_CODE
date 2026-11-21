@@ -22,6 +22,17 @@ export const ThreeDModal: React.FC<ThreeDModalProps> = ({
 }) => {
   const [active3DTab, setActive3DTab] = useState<'SPHERE' | 'LEXUZ_GLTF' | 'SCALES'>('LEXUZ_GLTF');
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const riskyCount = analysis.clauses.filter(
@@ -29,7 +40,10 @@ export const ThreeDModal: React.FC<ThreeDModalProps> = ({
   ).length;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-2xl animate-in fade-in duration-200">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-2xl animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div 
         className="relative w-full max-w-6xl h-[88vh] rounded-3xl liquid-glass-card flex flex-col overflow-hidden border border-white/15 shadow-2xl"
         onClick={(e) => e.stopPropagation()}

@@ -4,18 +4,22 @@ import {
   LogOut, 
   ChevronDown,
   Box,
+  ShieldCheck,
+  FileText,
+  GitCompare,
   User,
-  ShieldCheck
+  Building2
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-interface NavbarProps {
+export interface NavbarProps {
   onReset: () => void;
-  activeView: 'dashboard' | 'diff' | 'visualizer3d';
-  setActiveView: (view: 'dashboard' | 'diff' | 'visualizer3d') => void;
+  activeView: 'xulosa' | 'diff' | '3D' | 'dashboard';
+  setActiveView: (view: 'xulosa' | 'diff' | '3D' | 'dashboard') => void;
   hasAnalysis: boolean;
   onOpenAuth: () => void;
   onOpen3D?: () => void;
+  onLoadDemo?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -25,11 +29,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   hasAnalysis,
   onOpenAuth,
   onOpen3D,
+  onLoadDemo,
 }) => {
   const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const isIndividual = (user?.entity_type || activeEntityType) === 'INDIVIDUAL';
+
+  const handleSelectView = (view: 'xulosa' | 'diff' | '3D') => {
+    if (view === '3D') {
+      if (onOpen3D) onOpen3D();
+      return;
+    }
+    if (!hasAnalysis && onLoadDemo) {
+      onLoadDemo();
+    }
+    setActiveView(view);
+  };
 
   return (
     <header className="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl transition-all duration-300">
@@ -42,6 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div 
             onClick={onReset}
             className="flex items-center gap-3 cursor-pointer group shrink-0"
+            title="Bosh sahifaga qaytish"
           >
             <div className={`relative h-9 px-2.5 rounded-full p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
               isIndividual
@@ -57,94 +74,84 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-base sm:text-lg font-black tracking-tight text-white">
                 LexGuard<span className={isIndividual ? "text-sky-400" : "text-emerald-400"}>.AI</span>
               </span>
-              <span className={`text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full border ${
-                isIndividual
-                  ? 'bg-sky-500/15 text-sky-300 border-sky-500/30'
-                  : 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-              }`}>
-                {isIndividual ? 'B2C' : 'B2B'}
-              </span>
             </div>
           </div>
 
-          {/* 2. Center Glass Capsule Menu */}
-          <nav className="hidden md:flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl">
-            {/* Tahlil */}
+          {/* 2. Center Glass Capsule Menu — Minimalist Single-Word Labels */}
+          <nav className="flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+            {/* Fuqaro (B2C Mode) */}
             <button
-              onClick={onReset}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                !hasAnalysis
-                  ? isIndividual
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
+              onClick={() => switchEntityType('INDIVIDUAL')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                isIndividual
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/10'
               }`}
+              title="Fuqaro (B2C) — Jismoniy shaxs shartnomalari"
             >
-              Tahlil
+              <User className="w-3.5 h-3.5" />
+              <span>Fuqaro</span>
             </button>
 
-            {/* Hujjatlar */}
+            {/* Biznes (B2B Mode) */}
             <button
-              onClick={() => {
-                if (hasAnalysis) {
-                  setActiveView('diff');
-                } else {
-                  onReset();
-                }
-              }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                hasAnalysis && activeView === 'diff'
-                  ? isIndividual
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
+              onClick={() => switchEntityType('LEGAL_ENTITY')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                !isIndividual
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
                   : 'text-slate-300 hover:text-white hover:bg-white/10'
               }`}
+              title="Biznes (B2B) — Korporativ shartnomalar"
             >
-              Hujjatlar
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Biznes</span>
             </button>
 
-            {/* 3D Lex.uz Launch Button */}
-            {onOpen3D && (
-              <button
-                onClick={onOpen3D}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-300 hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
-              >
-                <Box className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
-                <span>3D Lex.uz</span>
-              </button>
-            )}
+            {/* Xulosa */}
+            <button
+              onClick={() => handleSelectView('xulosa')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
+                  ? isIndividual
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
+              title="Shartnoma Huquqiy Xulosasi"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Xulosa</span>
+            </button>
+
+            {/* Diff */}
+            <button
+              onClick={() => handleSelectView('diff')}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                activeView === 'diff'
+                  ? isIndividual
+                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
+              title="Yonma-yon Qizil / Yashil Redline Diff"
+            >
+              <GitCompare className="w-3.5 h-3.5" />
+              <span>Diff</span>
+            </button>
+
+            {/* 3D */}
+            <button
+              onClick={() => handleSelectView('3D')}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-300 hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
+              title="Three.js 3D Risk Xaritasi"
+            >
+              <Box className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+              <span>3D</span>
+            </button>
           </nav>
 
-          {/* 3. Right Actions: Dual-Role Switcher & Auth */}
+          {/* 3. Right Action: Kirish (Single Word Minimalist) */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Quick Dual-Role Switcher (Liquid Glass Pill) */}
-            <div className="flex items-center p-0.5 rounded-full bg-black/40 border border-white/10 text-[11px] font-bold">
-              <button
-                onClick={() => switchEntityType('INDIVIDUAL')}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
-                  isIndividual
-                    ? 'bg-sky-500 text-white shadow-md shadow-sky-500/30 font-extrabold'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="Fuqaro (JShShIR) rejimi — Shaxsiy shartnomalar"
-              >
-                Jismoniy
-              </button>
-
-              <button
-                onClick={() => switchEntityType('LEGAL_ENTITY')}
-                className={`px-2.5 py-1 rounded-full transition-all cursor-pointer ${
-                  !isIndividual
-                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 font-extrabold'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-                title="Kompaniya (STIR) rejimi — B2B shartnomalar"
-              >
-                Yuridik (B2B)
-              </button>
-            </div>
-
-            {/* User Profile / Login */}
             {isAuthenticated ? (
               <div className="relative">
                 <button
@@ -190,6 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={onOpenAuth}
                 className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all cursor-pointer hover:scale-105"
+                title="Tizimga kirish yoki ro'yxatdan o'tish"
               >
                 <LogIn className="w-3.5 h-3.5 text-sky-400" />
                 <span>Kirish</span>

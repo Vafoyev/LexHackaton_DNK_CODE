@@ -11,13 +11,21 @@ import { Sparkles, Check, Wand2 } from 'lucide-react';
 interface ContractStudioProps {
   analysis: AnalysisResult;
   onReset: () => void;
+  initialView?: 'reader' | 'diff';
 }
 
 export const ContractStudio: React.FC<ContractStudioProps> = ({
   analysis,
   onReset,
+  initialView = 'reader',
 }) => {
-  const [activeView, setActiveView] = useState<'reader' | 'diff'>('reader');
+  const [activeView, setActiveView] = useState<'reader' | 'diff'>(initialView);
+
+  React.useEffect(() => {
+    if (initialView) {
+      setActiveView(initialView);
+    }
+  }, [initialView]);
   const [selectedClauseId, setSelectedClauseId] = useState<string | null>(() => {
     // Dastlab birinchi qizil yoki sariq xavfli bandni avtomatik tanlash
     const firstRisky = analysis.clauses.find((c) => c.risk_level === 'RED' || c.risk_level === 'YELLOW');
