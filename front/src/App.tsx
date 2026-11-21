@@ -5,19 +5,15 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
 import { ContractUploader } from './components/upload/ContractUploader';
-import { ExecutiveSummary } from './components/dashboard/ExecutiveSummary';
-import { Contract3DVisualizer } from './components/visualizer/Contract3DVisualizer';
-import { SideBySideDiffViewer } from './components/diff/SideBySideDiffViewer';
+import { ContractStudio } from './components/studio/ContractStudio';
 import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
 function MainApp() {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-  const [activeView, setActiveView] = useState<'dashboard' | 'diff' | 'visualizer3d'>('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
-  const [focusedClauseId, setFocusedClauseId] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleAnalyze = async (file: File | null, isDemo: boolean) => {
@@ -31,7 +27,6 @@ function MainApp() {
         isDemo
       );
       setAnalysis(result);
-      setActiveView('dashboard');
 
       // Tahlil muvaffaqiyatli tugagach bayramona animatsiya
       confetti({
@@ -51,66 +46,40 @@ function MainApp() {
 
   const handleReset = () => {
     setAnalysis(null);
-    setActiveView('dashboard');
-    setFocusedClauseId(null);
-  };
-
-  const handleSelectClauseFrom3D = (clauseId: string) => {
-    setFocusedClauseId(clauseId);
-    setActiveView('diff');
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
-      <Navbar
-        onReset={handleReset}
-        activeView={activeView}
-        setActiveView={setActiveView}
-        hasAnalysis={!!analysis}
-        onOpenAuth={() => setIsAuthModalOpen(true)}
-      />
-
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!analysis ? (
-          <ContractUploader
-            onAnalyze={handleAnalyze}
-            isLoading={isLoading}
-            progress={progress}
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+      {analysis ? (
+        /* 1. KONTRAKT STUDIYASI (Robin AI / Google Docs uslubidagi haqiqiy ish maydoni) */
+        <ContractStudio
+          analysis={analysis}
+          onReset={handleReset}
+        />
+      ) : (
+        /* 2. BOSHLANG'ICH TOPQIR YUKLASH SAHIFASI (Clean & Minimalist Home) */
+        <>
+          <Navbar
+            onReset={handleReset}
+            activeView="dashboard"
+            setActiveView={() => {}}
+            hasAnalysis={false}
+            onOpenAuth={() => setIsAuthModalOpen(true)}
           />
-        ) : (
-          <div className="space-y-8 animate-in fade-in duration-300">
-            {activeView === 'dashboard' && (
-              <ExecutiveSummary
-                analysis={analysis}
-                onOpen3D={() => setActiveView('visualizer3d')}
-                onOpenDiff={() => setActiveView('diff')}
-                onSelectClause={handleSelectClauseFrom3D}
-              />
-            )}
 
-            {activeView === 'visualizer3d' && (
-              <div className="space-y-4">
-                <Contract3DVisualizer
-                  analysis={analysis}
-                  selectedClauseId={focusedClauseId}
-                  onSelectClause={handleSelectClauseFrom3D}
-                />
-              </div>
-            )}
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col justify-center">
+            <ContractUploader
+              onAnalyze={handleAnalyze}
+              isLoading={isLoading}
+              progress={progress}
+            />
+          </main>
 
-            {activeView === 'diff' && (
-              <SideBySideDiffViewer
-                analysis={analysis}
-                focusedClauseId={focusedClauseId}
-              />
-            )}
-          </div>
-        )}
-      </main>
+          <Footer />
+        </>
+      )}
 
-      <Footer />
-
-      {/* Auth Modal (Kirish / OneID / Ro'yxatdan o'tish) */}
+      {/* Auth Modal (Kirish / Ro'yxatdan o'tish) */}
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
