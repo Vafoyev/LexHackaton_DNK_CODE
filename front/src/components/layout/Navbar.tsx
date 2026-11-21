@@ -1,276 +1,199 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   LogIn, 
   LogOut, 
-  ChevronDown,
-  Box,
-  ShieldCheck,
-  FileText,
-  GitCompare,
-  User,
-  Building2,
-  Sun,
-  Moon,
-  Download,
-  Upload,
-  Sparkles
+  Sun, 
+  Moon, 
+  FileText, 
+  BookOpen, 
+  User, 
+  Home, 
+  QrCode
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { AnalysisResult } from '../../types/contract';
-import { exportToDocx, exportToPDF } from '../../utils/export';
+import { Button } from '../ui/button';
+
+export type MainNavTab = 'home' | 'documents' | 'laws' | 'profile';
 
 export interface NavbarProps {
-  onReset: () => void;
-  activeView: 'xulosa' | 'diff' | '3D' | 'dashboard';
-  setActiveView: (view: 'xulosa' | 'diff' | '3D' | 'dashboard') => void;
-  hasAnalysis: boolean;
+  activeTab: MainNavTab;
+  setActiveTab: (tab: MainNavTab) => void;
+  onOpenScan: () => void;
   onOpenAuth: () => void;
-  onOpen3D?: () => void;
-  onLoadDemo?: () => void;
-  analysis?: AnalysisResult | null;
-  appliedCount?: number;
+  segment: 'b2c' | 'b2b';
+  onSegmentChange: (segment: 'b2c' | 'b2b') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  onReset,
-  activeView,
-  setActiveView,
-  hasAnalysis,
+  activeTab,
+  setActiveTab,
+  onOpenScan,
   onOpenAuth,
-  onOpen3D,
-  onLoadDemo,
-  analysis,
-  appliedCount = 0,
+  segment,
+  onSegmentChange,
 }) => {
-  const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const [showDropdown, setShowDropdown] = useState(false);
 
-  const isIndividual = (user?.entity_type || activeEntityType) === 'INDIVIDUAL';
-
-  const handleSelectView = (view: 'xulosa' | 'diff' | '3D') => {
-    if (view === '3D') {
-      if (onOpen3D) onOpen3D();
-      return;
-    }
-    if (!hasAnalysis && onLoadDemo) {
-      onLoadDemo();
-    }
-    setActiveView(view);
-  };
-
-  // Dinamik xavfsizlik bali
-  const score = analysis 
-    ? Math.min(100, (100 - analysis.summary.risk_score) + appliedCount * 12)
-    : 85;
+  const isB2B = segment === 'b2b';
 
   return (
     <header className="fixed top-2 sm:top-3 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl transition-all duration-300">
-      {/* Floating Stadium Capsule Navbar */}
-      <div className={`liquid-glass-pill rounded-full px-4 sm:px-6 py-2 transition-all duration-300 ${
-        isIndividual ? 'border-sky-500/25 shadow-sky-950/40' : 'border-emerald-500/25 shadow-emerald-950/40'
-      }`}>
+      <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 shadow-lg backdrop-blur-xl px-3 sm:px-6 py-2 transition-all duration-300">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
-          {/* 1. Brand Logo */}
-          <div 
-            onClick={onReset}
-            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0"
-            title="Bosh sahifaga qaytish"
-          >
-            <div className={`relative h-8 px-2 rounded-full p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
-              isIndividual
-                ? 'bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-300 shadow-sky-500/30'
-                : 'bg-gradient-to-tr from-emerald-400 via-teal-500 to-green-300 shadow-emerald-500/30'
-            }`}>
-              <div className="w-full h-full bg-slate-950/85 rounded-full px-1.5 flex items-center justify-center backdrop-blur-md">
-                <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-4 w-auto object-contain brightness-125" />
+          
+          {/* 1. Brand Logo + Segment Switcher */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <button 
+              onClick={() => setActiveTab('home')}
+              className="flex items-center gap-2 group text-left"
+              title="Bosh sahifa"
+            >
+              <div className="h-8 sm:h-9 px-1.5 rounded-lg bg-slate-950 flex items-center justify-center border border-slate-800 shadow-sm">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 sm:h-4.5 w-auto object-contain brightness-125" />
               </div>
-            </div>
+              <div className="flex flex-col">
+                <span className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+                  LexGuard<span className={isB2B ? "text-emerald-500" : "text-sky-500"}>.AI</span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">Lex.uz Sinxron</span>
+              </div>
+            </button>
 
-            <div className="flex items-center gap-1.5">
-              <span className="text-base sm:text-xl font-black tracking-tight text-slate-900 dark:text-white">
-                LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
-              </span>
+            {/* B2C / B2B Segment Pill */}
+            <div className="hidden md:flex items-center rounded-lg bg-slate-100 dark:bg-slate-800/80 p-0.5 border border-slate-200 dark:border-slate-700/60 text-xs font-semibold">
+              <button
+                type="button"
+                onClick={() => onSegmentChange('b2c')}
+                className={`px-3 py-1 rounded-md transition-all ${
+                  !isB2B
+                    ? 'bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+              >
+                Fuqaro
+              </button>
+              <button
+                type="button"
+                onClick={() => onSegmentChange('b2b')}
+                className={`px-3 py-1 rounded-md transition-all ${
+                  isB2B
+                    ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+              >
+                Biznes
+              </button>
             </div>
           </div>
 
-          {/* 2. Center Glass Capsule Menu — Katta va Aniq Navigatsiya */}
-          <nav className="flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
-            {/* Fuqaro (B2C Mode) */}
+          {/* 2. Main Navigation Tabs (Mobildagidek: Asosiy, Hujjatlar, Qonunlar, Profil) */}
+          <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/40">
             <button
-              onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
-                isIndividual
-                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              onClick={() => setActiveTab('home')}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                activeTab === 'home'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
-              title="Fuqaro (B2C) — Jismoniy shaxs shartnomalari"
             >
-              <User className="w-4 h-4" />
-              <span>Fuqaro</span>
+              <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-500" />
+              <span>Asosiy</span>
             </button>
 
-            {/* Biznes (B2B Mode) */}
             <button
-              onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
-                !isIndividual
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              onClick={() => setActiveTab('documents')}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                activeTab === 'documents'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
-              title="Biznes (B2B) — Korporativ shartnomalar"
             >
-              <Building2 className="w-4 h-4" />
-              <span>Biznes</span>
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
+              <span>Hujjatlar</span>
             </button>
 
-            {/* Xulosa */}
             <button
-              onClick={() => handleSelectView('xulosa')}
-              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
-                activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
-                  ? isIndividual
-                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
-                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              onClick={() => setActiveTab('laws')}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                activeTab === 'laws'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
-              title="Shartnoma Huquqiy Xulosasi"
             >
-              <FileText className="w-4 h-4" />
-              <span>Xulosa</span>
+              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
+              <span>Qonunlar</span>
             </button>
 
-            {/* Diff */}
             <button
-              onClick={() => handleSelectView('diff')}
-              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
-                activeView === 'diff'
-                  ? isIndividual
-                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
-                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              onClick={() => setActiveTab('profile')}
+              className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                activeTab === 'profile'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
-              title="Yonma-yon Qizil / Yashil Redline Diff"
             >
-              <GitCompare className="w-4 h-4" />
-              <span>Diff</span>
-            </button>
-            {/* 3D */}
-            <button
-              onClick={() => handleSelectView('3D')}
-              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
-                activeView === '3D'
-                  ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
-              }`}
-              title="Three.js 3D Risk Xaritasi"
-            >
-              <Box className="w-4 h-4 text-cyan-400" />
-              <span>3D</span>
+              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500" />
+              <span>Profil</span>
             </button>
           </nav>
 
-          {/* 3. Right Actions: Eksport, Tungi/Kunduzgi Rejim, Kirish */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Eksport DOCX / PDF (agar shartnoma mavjud bo'lsa) */}
-            {hasAnalysis && analysis && (
-              <div className="hidden md:flex items-center gap-1 p-0.5 rounded-full bg-slate-200/50 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-[11px] font-bold">
-                <button
-                  onClick={() => exportToDocx(analysis)}
-                  className="px-2 py-0.5 rounded-full text-sky-600 dark:text-sky-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
-                  title="Word (.docx) yuklab olish"
-                >
-                  DOCX
-                </button>
-                <button
-                  onClick={() => exportToPDF(analysis)}
-                  className="px-2 py-0.5 rounded-full text-emerald-600 dark:text-emerald-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
-                  title="Audit PDF yuklab olish"
-                >
-                  PDF
-                </button>
-              </div>
-            )}
+          {/* 3. Action Skanerlash Button + Theme Toggle + ONE ID Auth */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Skanerlash Action (Prominent Button) */}
+            <Button
+              onClick={onOpenScan}
+              size="sm"
+              className={`gap-1.5 font-bold shadow-xs ${
+                isB2B
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-sky-600 hover:bg-sky-700 text-white'
+              }`}
+            >
+              <QrCode className="w-4 h-4" />
+              <span className="hidden sm:inline">Skanerlash</span>
+            </Button>
 
-            {/* Yangi shartnoma yuklash tugmasi */}
-            {hasAnalysis && (
-              <button
-                onClick={onReset}
-                className="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 transition-all cursor-pointer"
-                title="Boshqa shartnoma yuklash"
-              >
-                <Upload className="w-3 h-3 text-sky-500" />
-                <span>Yuklash</span>
-              </button>
-            )}
-
-            {/* Tungi / Kunduzgi Rejim Tugmasi */}
-            <button
+            {/* Theme Toggle (Sun/Moon) */}
+            <Button
+              variant="outline"
+              size="icon"
               onClick={toggleTheme}
-              className="p-1.5 rounded-full transition-all cursor-pointer hover:scale-105 border bg-slate-200/60 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border-slate-300 dark:border-white/15 text-slate-700 dark:text-amber-400 shadow-sm"
-              title={isDark ? "Kunduzgi rejim (Light Mode)" : "Tungi rejim (Dark Mode)"}
+              className="h-8 w-8 rounded-lg"
+              title={isDark ? "Kunduzgi rejim" : "Tungi rejim"}
             >
               {isDark ? (
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <Sun className="h-4 w-4 text-amber-400" />
               ) : (
-                <Moon className="w-3.5 h-3.5 text-indigo-600" />
+                <Moon className="h-4 w-4 text-slate-700" />
               )}
-            </button>
+            </Button>
 
-            {/* User Profile / Kirish */}
+            {/* ONE ID Auth */}
             {isAuthenticated ? (
-              <div className="relative">
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-1.5 py-1 pl-2 pr-1.5 rounded-full bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-xs text-slate-800 dark:text-white transition-all cursor-pointer"
-                >
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${
-                    isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
-                  }`}>
-                    {user?.full_name?.charAt(0) || 'U'}
-                  </div>
-                  <span className="max-w-[70px] truncate font-medium">
-                    {user?.full_name?.split(' ')[0]}
-                  </span>
-                  <ChevronDown className="w-3 h-3 text-slate-400" />
-                </button>
-
-                {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-64 liquid-glass-card rounded-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <div className="p-3 border-b border-slate-200 dark:border-white/10 mb-1">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user?.full_name}</p>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{user?.email || 'Foydalanuvchi'}</p>
-                      <div className="flex items-center gap-1.5 mt-2 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">
-                        <ShieldCheck className="w-3 h-3" />
-                        <span>OneID / E-IMZO tasdiqlangan</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        logout();
-                        setShowDropdown(false);
-                      }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer"
-                    >
-                      <LogOut className="w-3.5 h-3.5" />
-                      <span>Chiqish</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-300 dark:border-white/20 transition-all cursor-pointer hover:scale-105 shadow-sm"
-                title="Tizimga kirish yoki ro'yxatdan o'tish"
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={logout}
+                className="gap-1.5 text-xs text-red-600 dark:text-red-400"
               >
-                <LogIn className="w-4 h-4 text-sky-500 dark:text-sky-400" />
-                <span>Kirish</span>
-              </button>
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Chiqish</span>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onOpenAuth}
+                className="gap-1.5 text-xs border-slate-300 dark:border-slate-700"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Kirish</span>
+              </Button>
             )}
           </div>
+
         </div>
       </div>
     </header>

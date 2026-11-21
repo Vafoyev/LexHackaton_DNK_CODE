@@ -179,3 +179,45 @@ func TestAPI_D10_VoiceAndGlanceableEndpoints(t *testing.T) {
 		t.Errorf("Expected 400 Bad Request for non-upgrade websocket request, got %d", rrWS.Code)
 	}
 }
+
+func TestAPI_SwaggerAndDocsEndpoints(t *testing.T) {
+	router, _ := setupTestRouter()
+
+	// 1. /docs Swagger UI
+	req, _ := http.NewRequest("GET", "/docs", nil)
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected 200 for /docs, got %d", rr.Code)
+	}
+	if !bytes.Contains(rr.Body.Bytes(), []byte("swagger-ui")) {
+		t.Errorf("Expected swagger-ui in /docs body")
+	}
+
+	// 2. /api/docs Swagger UI alias
+	req, _ = http.NewRequest("GET", "/api/docs", nil)
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected 200 for /api/docs, got %d", rr.Code)
+	}
+
+	// 3. /api/openapi.yaml
+	req, _ = http.NewRequest("GET", "/api/openapi.yaml", nil)
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected 200 for /api/openapi.yaml, got %d", rr.Code)
+	}
+	if !bytes.Contains(rr.Body.Bytes(), []byte("LexGuard AI")) {
+		t.Errorf("Expected 'LexGuard AI' in /api/openapi.yaml")
+	}
+
+	// 4. /openapi.yaml alias
+	req, _ = http.NewRequest("GET", "/openapi.yaml", nil)
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected 200 for /openapi.yaml, got %d", rr.Code)
+	}
+}

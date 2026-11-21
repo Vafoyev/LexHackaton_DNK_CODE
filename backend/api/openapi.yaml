@@ -1,37 +1,215 @@
 openapi: 3.1.0
 info:
   title: LexGuard AI 3.0 Modular Monolith API
-  description: High-performance, secure legal contract analysis and compliance backend conforming to O'RQ-547, O'RQ-1115, and O'RQ-1125.
+  description: >
+    High-performance, secure legal contract analysis and compliance backend
+    conforming to O'RQ-547 (Data Privacy), O'RQ-1115 (AI Transparency), and O'RQ-1125.
+    Features 10-vector contract risk verification, hybrid AI analysis, Lex.uz cross-referencing,
+    E-IMZO digital signatures, real-time SSE streaming, 3D visual coordinates, and live voice debriefing.
   version: 3.0.0
+  contact:
+    name: LexGuard AI Engineering Team
+    url: https://lexguard.uz
+    email: dev@lexguard.uz
+  license:
+    name: Proprietary / LexHackathon 2026
+
 servers:
+  - url: http://localhost:8080
+    description: Local Development Backend Server (Root)
   - url: http://localhost:8080/api/v1
-    description: Local Development Server
+    description: Local Development API v1 Endpoints
+
+tags:
+  - name: System
+    description: Liveness, readiness probes, and metrics
+  - name: Documentation
+    description: Swagger UI and OpenAPI specifications
+  - name: Authentication
+    description: User registration, login, demo sessions, and JWT tokens
+  - name: Contracts & Documents
+    description: Document upload, PII sanitization (O'RQ-547), and clause extraction
+  - name: Legal Analysis
+    description: 10-vector legal risk analysis, multi-hop statutory checks, and expert human review
+  - name: Live Voice & 3D Immersion
+    description: D-10 Spatial clause coordinates, Uzbek voice debriefing, and interactive voice Q&A
+  - name: Digital Signatures
+    description: E-IMZO SHA-256 challenge generation and signature verification
+  - name: Legal Rules & Corpus
+    description: Active deterministic rules, statutory sources, and mock sample data
+  - name: Billing & Quotas
+    description: Subscription tiers, quota checks, and token consumption
+  - name: Admin & Platform
+    description: Security audit logs, integration toggles, and system telemetry
 
 paths:
-  /readyz:
+  # ── SYSTEM ENDPOINTS ──────────────────────────────────────────────────────────
+  /healthz:
     get:
-      summary: Liveness and Readiness probe
+      tags: [System]
+      summary: Liveness probe
+      description: Returns HTTP 200 and basic version metadata if server process is running.
       responses:
         '200':
-          description: System ready
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "UP" }
+                  timestamp: { type: string, format: date-time }
+                  version: { type: string, example: "3.0.0" }
 
-  /integrations/status:
+  /readyz:
     get:
-      summary: Integration states (MOCK, SANDBOX, PROD)
+      tags: [System]
+      summary: Readiness probe
+      description: Verifies PostgreSQL connection, object storage readiness, and background workers.
+      responses:
+        '200':
+          description: System is ready to accept traffic
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "READY" }
+                  database: { type: string, example: "CONNECTED" }
+                  storage: { type: string, example: "READY" }
+                  workers: { type: integer, example: 4 }
+        '503':
+          description: Database or required subsystem unavailable
+
+  /metrics:
+    get:
+      tags: [System]
+      summary: Prometheus metrics
+      description: Exposes Prometheus-compatible metric counters and gauges.
+      responses:
+        '200':
+          description: Plain text Prometheus metrics
+          content:
+            text/plain:
+              schema: { type: string }
+
+  /docs:
+    get:
+      tags: [Documentation]
+      summary: Swagger UI HTML Documentation
+      description: Interactive standalone Swagger UI rendering the complete backend OpenAPI specification.
+      responses:
+        '200':
+          description: HTML page with Swagger UI
+          content:
+            text/html:
+              schema: { type: string }
+
+  /api/openapi.yaml:
+    get:
+      tags: [Documentation]
+      summary: Raw OpenAPI 3.1 YAML Specification
+      description: Returns the full OpenAPI specification file in YAML format.
+      responses:
+        '200':
+          description: OpenAPI YAML document
+          content:
+            application/yaml:
+              schema: { type: string }
+
+  # ── PUBLIC & INTEGRATION ENDPOINTS ───────────────────────────────────────────
+  /api/v1/integrations/status:
+    get:
+      tags: [Admin & Platform]
+      summary: Status of third-party integrations (MOCK / SANDBOX / PROD)
+      description: Transparent monitoring of external connections (Lex.uz, Soliq, E-IMZO, OneID).
       responses:
         '200':
           description: List of registered integration states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name: { type: string, example: "LEX_UZ" }
+                    mode: { type: string, example: "SANDBOX" }
+                    is_healthy: { type: boolean, example: true }
+                    last_checked_at: { type: string, format: date-time }
 
-  /monitoring:
+  /api/v1/monitoring:
     get:
-      summary: System overview and contract security metrics
+      tags: [Admin & Platform]
+      summary: Global system overview and security risk metrics
+      description: Real-time telemetry, risk distribution (RED/YELLOW/GREEN), and worker health.
       responses:
         '200':
-          description: Global metrics, risk distribution, active workers
+          description: Global metrics overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_contracts: { type: integer, example: 42 }
+                  total_analyses: { type: integer, example: 78 }
+                  red_findings_count: { type: integer, example: 12 }
+                  yellow_findings_count: { type: integer, example: 34 }
 
-  /auth/demo-session:
+  /api/v1/rules:
+    get:
+      tags: [Legal Rules & Corpus]
+      summary: List active deterministic legal rules
+      description: Returns all active statutory rules implemented in the Go rules engine.
+      responses:
+        '200':
+          description: List of active rules
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code: { type: string, example: "SVC_UNILATERAL_TERMINATION" }
+                    name: { type: string, example: "Asossiz bir tomonlama bekor qilish" }
+                    category: { type: string, example: "LEGAL" }
+                    severity: { type: string, example: "RED" }
+                    legal_source: { type: string, example: "O'zbekiston Respublikasi Fuqarolik Kodeksi 707-modda" }
+
+  /api/v1/legal-sources:
+    get:
+      tags: [Legal Rules & Corpus]
+      summary: List legal corpus sources and legislation databases
+      description: Returns indexed codes and statutes in the local legal repository.
+      responses:
+        '200':
+          description: List of statutory sources
+
+  /api/v1/billing/plans:
+    get:
+      tags: [Billing & Quotas]
+      summary: Available subscription billing plans
+      description: Lists commercial subscription tiers, quotas, and pricing.
+      responses:
+        '200':
+          description: Array of billing plans
+
+  /api/v1/mock/analysis-sample:
+    get:
+      tags: [Legal Rules & Corpus]
+      summary: Pre-configured contract analysis sample
+      description: Instant sample analysis payload for frontend and mobile UI testing.
+      responses:
+        '200':
+          description: Full sample contract analysis with findings, redlines, and legal citations
+
+  # ── AUTHENTICATION ────────────────────────────────────────────────────────────
+  /api/v1/auth/demo-session:
     post:
-      summary: Instant demo authentication for testing
+      tags: [Authentication]
+      summary: Instant demo session authentication
+      description: Issues short-lived JWT tokens without requiring manual credentials.
       requestBody:
         required: true
         content:
@@ -42,16 +220,34 @@ paths:
                 role:
                   type: string
                   enum: [lawyer, client]
+                  default: lawyer
                 client_type:
                   type: string
                   enum: [web, mobile, admin]
+                  default: web
       responses:
         '200':
           description: Demo tokens and user profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  refresh_token: { type: string }
+                  token_type: { type: string, example: "Bearer" }
+                  user:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      email: { type: string }
+                      full_name: { type: string }
+                      role: { type: string }
 
-  /auth/register:
+  /api/v1/auth/register:
     post:
-      summary: Register new organization and owner
+      tags: [Authentication]
+      summary: Register new organization and primary user
       requestBody:
         required: true
         content:
@@ -60,18 +256,19 @@ paths:
               type: object
               required: [email, password, full_name]
               properties:
-                email: { type: string }
-                password: { type: string }
-                full_name: { type: string }
-                org_name: { type: string }
-                phone: { type: string }
-                client_type: { type: string }
+                email: { type: string, format: email, example: "lawyer@lexguard.uz" }
+                password: { type: string, format: password, example: "Password123!" }
+                full_name: { type: string, example: "Alisher Navoiy" }
+                org_name: { type: string, example: "Adolat Yuridik Firmasi" }
+                phone: { type: string, example: "+998901234567" }
+                client_type: { type: string, example: "web" }
       responses:
         '201':
-          description: Registered successfully
+          description: Organization and user registered successfully
 
-  /auth/login:
+  /api/v1/auth/login:
     post:
+      tags: [Authentication]
       summary: User login
       requestBody:
         required: true
@@ -81,15 +278,16 @@ paths:
               type: object
               required: [email, password]
               properties:
-                email: { type: string }
-                password: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, format: password }
                 client_type: { type: string }
       responses:
         '200':
-          description: Tokens and profile
+          description: Access and refresh tokens with user profile
 
-  /auth/refresh:
+  /api/v1/auth/refresh:
     post:
+      tags: [Authentication]
       summary: Rotate session refresh token
       requestBody:
         required: true
@@ -105,9 +303,51 @@ paths:
         '200':
           description: New token pair
 
-  /contracts:
+  /api/v1/auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current authenticated user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user profile and organization details
+
+  /api/v1/consents:
     post:
-      summary: Upload contract file (PDF, DOCX, TXT)
+      tags: [Authentication]
+      summary: Record user privacy consent under O'RQ-547
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [consent_type, granted]
+              properties:
+                consent_type: { type: string, example: "PII_PROCESSING" }
+                granted: { type: boolean, example: true }
+      responses:
+        '200':
+          description: Consent recorded in audit log
+
+  /api/v1/billing/quota:
+    get:
+      tags: [Billing & Quotas]
+      summary: Get organization quota and remaining tokens
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Quota details, active plan, and monthly usage
+
+  # ── CONTRACTS & DOCUMENTS ─────────────────────────────────────────────────────
+  /api/v1/contracts:
+    post:
+      tags: [Contracts & Documents]
+      summary: Upload contract file (PDF, DOCX, TXT) or raw text
       security:
         - BearerAuth: []
       requestBody:
@@ -120,26 +360,29 @@ paths:
                 file:
                   type: string
                   format: binary
+                  description: Document file (PDF, DOCX, TXT max 15MB)
           application/json:
             schema:
               type: object
               properties:
-                filename: { type: string }
-                text: { type: string }
+                filename: { type: string, example: "Xizmat_shartnomasi.docx" }
+                text: { type: string, example: "1. Shartnoma predmeti..." }
       responses:
         '201':
-          description: Contract processed and chunked with PII redaction
+          description: Contract processed and chunked with automated PII redaction
     get:
-      summary: List uploaded contracts
+      tags: [Contracts & Documents]
+      summary: List uploaded contracts for current organization
       security:
         - BearerAuth: []
       responses:
         '200':
-          description: List of documents
+          description: Array of contracts with metadata and status
 
-  /contracts/{id}:
+  /api/v1/contracts/{id}:
     get:
-      summary: Get contract details and clauses
+      tags: [Contracts & Documents]
+      summary: Get contract details and extracted clauses
       security:
         - BearerAuth: []
       parameters:
@@ -149,11 +392,46 @@ paths:
           schema: { type: string, format: uuid }
       responses:
         '200':
-          description: Contract details
+          description: Contract metadata, SHA-256 hash, and clause array
 
-  /analyses:
+  /api/v1/documents:
     post:
-      summary: Trigger contract analysis (async)
+      tags: [Contracts & Documents]
+      summary: Upload document (Alias for /api/v1/contracts)
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Document uploaded
+    get:
+      tags: [Contracts & Documents]
+      summary: List documents (Alias for /api/v1/contracts)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of documents
+
+  /api/v1/documents/{id}:
+    get:
+      tags: [Contracts & Documents]
+      summary: Get document details (Alias for /api/v1/contracts/{id})
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Document details
+
+  # ── LEGAL ANALYSIS ────────────────────────────────────────────────────────────
+  /api/v1/analyses:
+    post:
+      tags: [Legal Analysis]
+      summary: Trigger async contract legal analysis
       security:
         - BearerAuth: []
       requestBody:
@@ -165,16 +443,29 @@ paths:
               required: [contract_id]
               properties:
                 contract_id: { type: string, format: uuid }
-                contract_date: { type: string, format: date }
-                doc_type: { type: string, default: SERVICE_AGREEMENT }
-                execution_mode: { type: string, enum: [RULE_ONLY, HYBRID_AI] }
+                contract_date: { type: string, format: date, example: "2026-05-15" }
+                doc_type: { type: string, default: "SERVICE_AGREEMENT" }
+                execution_mode:
+                  type: string
+                  enum: [RULE_ONLY, HYBRID_AI]
+                  default: HYBRID_AI
       responses:
         '202':
-          description: Analysis accepted, queued in PostgreSQL SKIP LOCKED pool
-
-  /analyses/{id}:
+          description: Analysis accepted and queued for worker execution
     get:
-      summary: Get analysis results
+      tags: [Legal Analysis]
+      summary: List all analyses for current organization
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: List of analyses
+
+  /api/v1/analyses/{id}:
+    get:
+      tags: [Legal Analysis]
+      summary: Get comprehensive analysis results
+      description: Returns verified findings, legal citations, risk breakdown, balance score, and redlines.
       security:
         - BearerAuth: []
       parameters:
@@ -184,10 +475,11 @@ paths:
           schema: { type: string, format: uuid }
       responses:
         '200':
-          description: Analysis result with 10-vector verified findings
+          description: Full analysis report with findings and statutory bases
 
-  /analyses/{id}/events:
+  /api/v1/analyses/{id}/events:
     get:
+      tags: [Legal Analysis]
       summary: Server-Sent Events (SSE) real-time analysis stream
       security:
         - BearerAuth: []
@@ -201,29 +493,67 @@ paths:
           description: SSE event stream (stage_changed, partial_rule_finding, completed, error)
           content:
             text/event-stream:
-              schema:
-                type: string
+              schema: { type: string }
 
-  /analyses/{id}/report:
+  /api/v1/analyses/{id}/report:
     get:
-      summary: Export audit report in DOCX/PDF/Text/JSON
+      tags: [Legal Analysis]
+      summary: Export legal audit report (DOCX, PDF, TXT, JSON)
       security:
         - BearerAuth: []
       parameters:
         - name: id
           in: path
           required: true
-          schema: { type: string }
+          schema: { type: string, format: uuid }
         - name: format
           in: query
-          schema: { type: string, enum: [json, txt, docx, pdf] }
+          required: false
+          schema:
+            type: string
+            enum: [json, txt, docx, pdf]
+            default: json
       responses:
         '200':
-          description: Evidence report
+          description: Exported audit report file
 
-  /analyses/{id}/voice-brief:
+  /api/v1/analyses/{id}/findings/{fid}/decision:
+    post:
+      tags: [Legal Analysis]
+      summary: Human-in-the-loop lawyer decision on finding (Accept / Reject / Edit)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: fid
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision:
+                  type: string
+                  enum: [ACCEPTED, REJECTED, MODIFIED]
+                custom_redline: { type: string }
+                comment: { type: string }
+      responses:
+        '200':
+          description: Decision recorded in audit log
+
+  # ── LIVE VOICE & 3D IMMERSION ─────────────────────────────────────────────────
+  /api/v1/analyses/{id}/voice-brief:
     get:
-      summary: 30-second AI Live Voice Audio Briefing with SSML (D-10)
+      tags: [Live Voice & 3D Immersion]
+      summary: 30-second AI Live Voice Audio Briefing with SSML (Directive D-10)
       security:
         - BearerAuth: []
       parameters:
@@ -235,9 +565,10 @@ paths:
         '200':
           description: Natural Uzbek voice debrief with SSML and top critical risks
 
-  /analyses/{id}/glanceable-matrix:
+  /api/v1/analyses/{id}/glanceable-matrix:
     get:
-      summary: Pro Glanceable UI & 3D Immersion visual coordinate matrix (D-10)
+      tags: [Live Voice & 3D Immersion]
+      summary: Pro Glanceable UI & 3D Immersion visual coordinate matrix (Directive D-10)
       security:
         - BearerAuth: []
       parameters:
@@ -249,9 +580,10 @@ paths:
         '200':
           description: 3D spheres, spatial clause coordinates, balance index, and ribbon heatmap
 
-  /analyses/{id}/voice-debrief/stream:
+  /api/v1/analyses/{id}/voice-debrief/stream:
     get:
-      summary: Server-Sent Events (SSE) streaming voice audio debrief sentences (D-10)
+      tags: [Live Voice & 3D Immersion]
+      summary: Server-Sent Events (SSE) streaming voice audio debrief sentences (Directive D-10)
       security:
         - BearerAuth: []
       parameters:
@@ -262,9 +594,13 @@ paths:
       responses:
         '200':
           description: SSE stream of voice sentences for live audio-wave rendering
+          content:
+            text/event-stream:
+              schema: { type: string }
 
-  /analyses/{id}/voice-query:
+  /api/v1/analyses/{id}/voice-query:
     post:
+      tags: [Live Voice & 3D Immersion]
       summary: AI Live Voice interactive Q&A over contract clauses and Uzbek laws
       security:
         - BearerAuth: []
@@ -281,14 +617,18 @@ paths:
               type: object
               required: [query]
               properties:
-                query: { type: string }
+                query:
+                  type: string
+                  example: "Nega ushbu shartnoma ijrochiga nomutanosib og'ir deb topildi?"
       responses:
         '200':
           description: Voice answer with cited articles and actionable advice
 
-  /signatures/challenge:
+  # ── DIGITAL SIGNATURES ────────────────────────────────────────────────────────
+  /api/v1/signatures/challenge:
     post:
-      summary: Generate E-IMZO SHA-256 signing challenge
+      tags: [Digital Signatures]
+      summary: Generate E-IMZO SHA-256 signing challenge nonce
       security:
         - BearerAuth: []
       requestBody:
@@ -299,14 +639,15 @@ paths:
               type: object
               required: [doc_sha256]
               properties:
-                doc_sha256: { type: string }
+                doc_sha256: { type: string, example: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" }
       responses:
         '200':
-          description: Nonce challenge
+          description: Nonce challenge and document hash verification
 
-  /signatures/verify:
+  /api/v1/signatures/verify:
     post:
-      summary: Verify detached digital signature
+      tags: [Digital Signatures]
+      summary: Verify detached digital signature (PKCS#7 / E-IMZO)
       security:
         - BearerAuth: []
       requestBody:
@@ -321,11 +662,69 @@ paths:
                 doc_sha256: { type: string }
                 signature_hex: { type: string }
                 cert_serial: { type: string }
-                signer_inn: { type: string }
-                signer_name: { type: string }
+                signer_inn: { type: string, example: "123456789" }
+                signer_name: { type: string, example: "Yuriy Komilov" }
       responses:
         '200':
-          description: Signature verified and recorded
+          description: Signature verified and recorded in audit log
+
+  # ── ADMIN & PLATFORM ──────────────────────────────────────────────────────────
+  /api/v1/admin/overview:
+    get:
+      tags: [Admin & Platform]
+      summary: Platform administrator telemetry and metrics
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Full administrative system overview
+
+  /api/v1/admin/audit-logs:
+    get:
+      tags: [Admin & Platform]
+      summary: Query immutable audit logs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 50 }
+        - name: action
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Audit log entries
+
+  /api/v1/admin/integrations/toggle:
+    post:
+      tags: [Admin & Platform]
+      summary: Switch integration mode (MOCK / SANDBOX / PROD)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, mode]
+              properties:
+                name: { type: string, example: "LEX_UZ" }
+                mode: { type: string, enum: [MOCK, SANDBOX, PROD] }
+      responses:
+        '200':
+          description: Integration mode switched
+
+  /api/v1/admin/system/status:
+    get:
+      tags: [Admin & Platform]
+      summary: Deep infrastructure health report
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Database, redis, minio, and AI engine status
 
 components:
   securitySchemes:
@@ -333,3 +732,4 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Enter JWT bearer token obtained from /api/v1/auth/login or /api/v1/auth/demo-session
