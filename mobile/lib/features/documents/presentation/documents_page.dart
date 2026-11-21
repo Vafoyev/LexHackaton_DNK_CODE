@@ -11,6 +11,8 @@ import '../../../core/widgets/lex_toast.dart';
 import '../../../core/widgets/risk_badges.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
+import '../../monitoring/domain/law_monitoring_models.dart';
+import '../../monitoring/presentation/monitoring_sheets.dart';
 import '../../scanner_upload/presentation/direct_scan_launcher.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
@@ -23,7 +25,9 @@ class DocumentsPage extends StatelessWidget {
     final session = context.watch<SessionCubit>().state;
     final lang = session.lang;
     final script = session.uzbekScript;
+    final isBusiness = session.segment == AccountSegment.business;
     final state = context.watch<ContractsCubit>().state;
+    final monitoring = context.watch<MonitoringCubit>().state;
     final items = state.filteredAnalyses;
 
     return SafeArea(
@@ -103,6 +107,15 @@ class DocumentsPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 _FilterGlassChip(
+                  label: AppStrings.t(lang, 'filter_lease', script: script),
+                  selected:
+                      state.typeFilter == ContractType.nonResidentialLease,
+                  onTap: () => context
+                      .read<ContractsCubit>()
+                      .setTypeFilter(ContractType.nonResidentialLease),
+                ),
+                const SizedBox(width: 6),
+                _FilterGlassChip(
                   label: AppStrings.t(lang, 'filter_supply', script: script),
                   selected: state.typeFilter == ContractType.supply,
                   onTap: () => context
@@ -166,6 +179,9 @@ class DocumentsPage extends StatelessWidget {
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       final item = items[index];
+                      final monAlert = isBusiness
+                          ? monitoring.alertForContract(item.id)
+                          : null;
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: GlassCard(
@@ -240,6 +256,50 @@ class DocumentsPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
+                              if (monAlert != null) ...[
+                                const SizedBox(height: 8),
+                                InkWell(
+                                  onTap: () => MonitoringAlertDetailSheet.show(
+                                    context,
+                                    alert: monAlert,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 7,
+                                          height: 7,
+                                          decoration: BoxDecoration(
+                                            color: c.yellowText,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 7),
+                                        Expanded(
+                                          child: Text(
+                                            '${AppStrings.t(lang, 'b2b_monitoring_affected_pill', script: script)} · ${AppStrings.adaptUz(monAlert.affectedClause, lang, script)}',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700,
+                                              color: c.yellowText,
+                                            ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          CupertinoIcons.chevron_forward,
+                                          size: 12,
+                                          color: c.yellowText,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                               const SizedBox(height: 10),
                               RiskColorSummaryRow(analysis: item),
                             ],

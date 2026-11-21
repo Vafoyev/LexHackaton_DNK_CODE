@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,8 +9,11 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
 import '../../../core/widgets/language_picker_sheet.dart';
+import '../../../core/widgets/lex_toast.dart';
 import '../../../core/widgets/theme_reveal_scope.dart';
 import '../../contracts/domain/entities/lex_models.dart';
+import '../../monitoring/domain/law_monitoring_models.dart';
+import '../../monitoring/presentation/monitoring_sheets.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 import 'plans_modal_sheet.dart';
 
@@ -20,6 +24,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.lexColors;
     final session = context.watch<SessionCubit>().state;
+    final monitoring = context.watch<MonitoringCubit>().state;
     final cubit = context.read<SessionCubit>();
     final lang = session.lang;
     final script = session.uzbekScript;
@@ -167,7 +172,9 @@ class ProfilePage extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
                           children: [
                             _PassportChip(
                               icon: isBusiness
@@ -185,11 +192,19 @@ class ProfilePage extends StatelessWidget {
                                       script: script,
                                     ),
                             ),
-                            const SizedBox(width: 8),
                             _PassportChip(
                               icon: CupertinoIcons.shield_lefthalf_fill,
                               text: isBusiness ? 'E-IMZO' : 'OneID',
                             ),
+                            if (isBusiness)
+                              _PassportChip(
+                                icon: CupertinoIcons.number_square_fill,
+                                text: AppStrings.t(
+                                  lang,
+                                  'b2b_stir_label',
+                                  script: script,
+                                ),
+                              ),
                           ],
                         ),
                       ],
@@ -201,6 +216,229 @@ class ProfilePage extends StatelessWidget {
           ),
 
           const SizedBox(height: 16),
+
+          // 1b. B2B Company Documents Vault (Upload & Live Law Monitoring)
+          if (isBusiness) ...[
+            GlassCard(
+              radius: 24,
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: c.rolePrimary.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: Icon(
+                          CupertinoIcons.folder_fill,
+                          color: c.rolePrimary,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.t(
+                                lang,
+                                'company_docs_title',
+                                script: script,
+                              ),
+                              style: TextStyle(
+                                fontSize: 15.5,
+                                fontWeight: FontWeight.w800,
+                                color: c.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              AppStrings.t(
+                                lang,
+                                'company_docs_sub',
+                                script: script,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: c.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  if (monitoring.companyDocs.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Text(
+                        AppStrings.t(
+                          lang,
+                          'company_docs_empty',
+                          script: script,
+                        ),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                    )
+                  else ...[
+                    for (int i = 0; i < monitoring.companyDocs.length; i++) ...[
+                      Builder(
+                        builder: (context) {
+                          final doc = monitoring.companyDocs[i];
+                          final alert = monitoring.alertById(doc.alertId);
+                          final hasAlert = alert != null && !alert.isResolved;
+                          return InkWell(
+                            onTap: hasAlert
+                                ? () => MonitoringAlertDetailSheet.show(
+                                      context,
+                                      alert: alert,
+                                    )
+                                : null,
+                            borderRadius: BorderRadius.circular(14),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: c.grayBg,
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          hasAlert ? c.yellowText : c.greenText,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppStrings.adaptUz(
+                                            doc.title,
+                                            lang,
+                                            script,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 13.5,
+                                            fontWeight: FontWeight.w700,
+                                            color: c.textPrimary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          hasAlert
+                                              ? '${AppStrings.t(lang, 'b2b_monitoring_affected_pill', script: script)} · ${AppStrings.adaptUz(alert.affectedClause, lang, script)}'
+                                              : AppStrings.t(
+                                                  lang,
+                                                  'b2b_monitoring_active_pill',
+                                                  script: script,
+                                                ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w700,
+                                            color: hasAlert
+                                                ? c.yellowText
+                                                : c.greenText,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (hasAlert)
+                                    Icon(
+                                      CupertinoIcons.chevron_forward,
+                                      size: 14,
+                                      color: c.yellowText,
+                                    )
+                                  else
+                                    IconButton(
+                                      visualDensity: VisualDensity.compact,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 30,
+                                        minHeight: 30,
+                                      ),
+                                      icon: Icon(
+                                        CupertinoIcons.trash,
+                                        size: 15,
+                                        color: c.textSecondary,
+                                      ),
+                                      onPressed: () {
+                                        context
+                                            .read<MonitoringCubit>()
+                                            .removeCompanyDoc(doc.id);
+                                        LexToast.show(
+                                          context,
+                                          AppStrings.t(
+                                            lang,
+                                            'toast_deleted',
+                                            script: script,
+                                          ),
+                                          type: LexToastType.info,
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                    const SizedBox(height: 4),
+                  ],
+                  SizedBox(
+                    height: 46,
+                    child: OutlinedButton.icon(
+                      onPressed: () => _uploadCompanyDocument(context),
+                      icon: const Icon(
+                        CupertinoIcons.cloud_upload_fill,
+                        size: 17,
+                      ),
+                      label: Text(
+                        AppStrings.t(
+                          lang,
+                          'company_docs_upload_btn',
+                          script: script,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
 
           // 2. Interactive Subscription & Plan Card
           GlassCard(
@@ -521,6 +759,31 @@ class ProfilePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _uploadCompanyDocument(BuildContext context) async {
+    final session = context.read<SessionCubit>().state;
+    final lang = session.lang;
+    final script = session.uzbekScript;
+    final file = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: const ['docx', 'pdf', 'txt', 'jpg', 'jpeg', 'png'],
+    );
+    if (!context.mounted || file == null) return;
+    final cleanTitle = file.name
+        .replaceAll(RegExp(r'\.[^.]+$'), '')
+        .replaceAll('_', ' ')
+        .trim();
+    context.read<MonitoringCubit>().addCompanyDoc(
+          title: cleanTitle.isEmpty ? 'Firma hujjati' : cleanTitle,
+          category: 'Ichki hujjat',
+          fileName: file.name,
+        );
+    LexToast.show(
+      context,
+      AppStrings.t(lang, 'b2b_mon_toast_added', script: script),
+      type: LexToastType.success,
     );
   }
 

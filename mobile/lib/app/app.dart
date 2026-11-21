@@ -17,6 +17,7 @@ import '../features/contracts/data/remote_lexguard_repository.dart';
 import '../features/contracts/domain/entities/lex_models.dart';
 import '../features/contracts/domain/repositories/lexguard_repository.dart';
 import '../features/contracts/presentation/cubit/contracts_cubit.dart';
+import '../features/monitoring/domain/law_monitoring_models.dart';
 import '../features/session/presentation/cubit/session_cubit.dart';
 
 class LexGuardApp extends StatefulWidget {
@@ -59,6 +60,7 @@ class _LexGuardAppState extends State<LexGuardApp> {
       providers: [
         BlocProvider(create: (_) => SessionCubit(_screenSecurity)),
         BlocProvider(create: (_) => ContractsCubit(_repo)..bootstrap()),
+        BlocProvider(create: (_) => MonitoringCubit()),
       ],
       child: BlocBuilder<SessionCubit, SessionState>(
         builder: (context, session) {

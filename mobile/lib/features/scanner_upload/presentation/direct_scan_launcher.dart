@@ -12,6 +12,7 @@ import '../../../core/widgets/glass_surface.dart';
 import '../../../core/widgets/lex_toast.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
+import '../../profile/presentation/plans_modal_sheet.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
 class DirectScanLauncher {
@@ -139,9 +140,16 @@ class DirectScanLauncher {
     required bool isCameraScan,
   }) async {
     final session = context.read<SessionCubit>();
+    if (session.state.quota.remainingTotal <= 0) {
+      await PlansModalSheet.show(context);
+      return;
+    }
     final contracts = context.read<ContractsCubit>();
     final router = GoRouter.of(context);
     final navigator = Navigator.of(context, rootNavigator: true);
+    final lang = session.state.lang;
+    final script = session.state.uzbekScript;
+    final isBusiness = session.state.segment == AccountSegment.business;
 
     showDialog<void>(
       context: context,
@@ -152,7 +160,7 @@ class DirectScanLauncher {
 
     ContractAnalysis? result;
     try {
-      final isIndividual = session.state.segment == AccountSegment.individual;
+      final isIndividual = !isBusiness;
       result = await contracts.runFileAnalysis(
         fileName: fileName,
         bytes: bytes,
@@ -171,6 +179,13 @@ class DirectScanLauncher {
     if (result != null) {
       session.consumeQuota();
       router.push('/analysis/${result.id}');
+      if (isBusiness && context.mounted) {
+        LexToast.show(
+          context,
+          AppStrings.t(lang, 'b2b_mon_toast_added', script: script),
+          type: LexToastType.success,
+        );
+      }
     }
   }
 }
