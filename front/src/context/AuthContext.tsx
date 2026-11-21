@@ -1,15 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserProfile, AuthResponse } from '../types/auth';
+import { UserProfile, AuthResponse, EntityType } from '../types/auth';
 
 interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  demoLogin: (role?: 'lawyer' | 'client') => Promise<void>;
-  oneIdLogin: () => Promise<void>;
-  register: (data: { email: string; password: string; full_name: string; org_name: string; phone?: string }) => Promise<void>;
+  activeEntityType: EntityType;
+  login: (email: string, password: string, entityType: EntityType) => Promise<void>;
+  demoLogin: (entityType: EntityType) => Promise<void>;
+  switchEntityType: (entityType: EntityType) => void;
+  oneIdLogin: (entityType: EntityType) => Promise<void>;
+  register: (data: { 
+    email: string; 
+    password: string; 
+    full_name: string; 
+    entity_type: EntityType;
+    jshshir?: string;
+    tin?: string;
+    org_name?: string; 
+    phone?: string 
+  }) => Promise<void>;
   logout: () => void;
 }
 
@@ -21,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('lexguard_token'));
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [activeEntityType, setActiveEntityType] = useState<EntityType>('LEGAL_ENTITY');
 
   // Dastlabki yuklanishda foydalanuvchini tiklash
   useEffect(() => {
@@ -29,7 +41,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (savedToken && savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsed = JSON.parse(savedUser);
+        setUser(parsed);
+        setActiveEntityType(parsed.entity_type || 'LEGAL_ENTITY');
         setToken(savedToken);
       } catch {
         localStorage.removeItem('lexguard_user');
@@ -40,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const saveAuthSession = (authData: AuthResponse) => {
     setUser(authData.user);
+    setActiveEntityType(authData.user.entity_type || 'LEGAL_ENTITY');
     setToken(authData.tokens.access_token);
     localStorage.setItem('lexguard_token', authData.tokens.access_token);
     localStorage.setItem('lexguard_refresh', authData.tokens.refresh_token);
@@ -47,13 +62,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // 1. Email va Parol bilan kirish
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, entityType: EntityType) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'web' },
-        body: JSON.stringify({ email, password, client_type: 'web' }),
+        body: JSON.stringify({ email, password, client_type: 'web', entity_type: entityType }),
       });
 
       const json = await res.json();
@@ -61,19 +76,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(json.error?.message || 'Login xatosi');
       }
 
-      saveAuthSession(json.data);
-    } catch (err: any) {
-      console.warn("Lokal backend login fallback:", err.message);
-      // Fallback lokal demo foydalanuvchi
-      const fallbackUser: UserProfile = {
-        id: '55555555-0000-0000-0000-000000000001',
-        email,
-        full_name: email.includes('client') ? 'Bobur Mirzayev (Tadbirkor)' : 'Alisher Qodirov (Yurist)',
-        organization_id: '44444444-0000-0000-0000-000000000001',
-        org_name: email.includes('client') ? 'O‘zTex MCHJ' : 'Smart Legal Solutions MCHJ',
-        role: email.includes('client') ? 'client' : 'lawyer_reviewer',
-        quota: { total: 20, used: 2, remaining: 18 },
+      const returnedUser = {
+        ...json.data.user,
+        entity_type: entityType,
       };
+
+      saveAuthSession({ ...json.data, user: returnedUser });
+    } catch (err: any) {
+      console.warn("Lokal login fallback ishlatildi:", err.message);
+      
+      const fallbackUser: UserProfile = entityType === 'INDIVIDUAL' 
+        ? {
+            id: '77777777-0000-0000-0000-000000000001',
+            email,
+            full_name: 'Jasur Aliyev',
+            entity_type: 'INDIVIDUAL',
+            jshshir: '30101901234567',
+            role: 'individual_user',
+            quota: { total: 10, used: 1, remaining: 9 },
+          }
+        : {
+            id: '55555555-0000-0000-0000-000000000001',
+            email,
+            full_name: 'Alisher Qodirov (Direktor)',
+            entity_type: 'LEGAL_ENTITY',
+            tin: '305123456',
+            organization_id: '44444444-0000-0000-0000-000000000001',
+            org_name: 'Smart Legal Solutions MCHJ',
+            role: 'business_client',
+            quota: { total: 50, used: 4, remaining: 46 },
+          };
+
       saveAuthSession({
         user: fallbackUser,
         tokens: {
@@ -88,35 +121,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // 2. Bir bosishda Demo sessiya
-  const demoLogin = async (role: 'lawyer' | 'client' = 'lawyer') => {
+  // 2. Bir bosishda Tezkor Demo (Jismoniy yoki Yuridik Shaxs)
+  const demoLogin = async (entityType: EntityType) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/auth/demo-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'web' },
-        body: JSON.stringify({ role, client_type: 'web' }),
+        body: JSON.stringify({ 
+          role: entityType === 'INDIVIDUAL' ? 'client' : 'lawyer', 
+          client_type: 'web',
+          entity_type: entityType 
+        }),
       });
 
       const json = await res.json();
       if (res.ok && json.success) {
-        saveAuthSession(json.data);
+        const enrichedUser = {
+          ...json.data.user,
+          entity_type: entityType,
+          tin: entityType === 'LEGAL_ENTITY' ? (json.data.user.tin || '305123456') : undefined,
+          jshshir: entityType === 'INDIVIDUAL' ? (json.data.user.jshshir || '30101901234567') : undefined,
+        };
+        saveAuthSession({ ...json.data, user: enrichedUser });
+        setIsLoading(false);
         return;
       }
     } catch (err) {
-      console.warn("Backend demo session xatosi:", err);
+      console.warn("Backend demo session fallback:", err);
     }
 
-    // Fallback
-    const demoUser: UserProfile = {
-      id: role === 'lawyer' ? '55555555-0000-0000-0000-000000000001' : '66666666-0000-0000-0000-000000000002',
-      email: role === 'lawyer' ? 'lawyer@lexguard.uz' : 'client@lexguard.uz',
-      full_name: role === 'lawyer' ? 'Alisher Qodirov (Yurist)' : 'Bobur Mirzayev (Tadbirkor)',
-      organization_id: '44444444-0000-0000-0000-000000000001',
-      org_name: role === 'lawyer' ? 'Smart Legal Solutions MCHJ' : 'O‘zTex MCHJ',
-      role: role === 'lawyer' ? 'lawyer_reviewer' : 'client',
-      quota: { total: 20, used: 2, remaining: 18 },
-    };
+    const demoUser: UserProfile = entityType === 'INDIVIDUAL' 
+      ? {
+          id: '77777777-0000-0000-0000-000000000001',
+          email: 'jasur.aliyev@mail.uz',
+          full_name: 'Jasur Aliyev (Fuqaro)',
+          entity_type: 'INDIVIDUAL',
+          jshshir: '30101901234567',
+          role: 'individual_user',
+          quota: { total: 10, used: 1, remaining: 9 },
+        }
+      : {
+          id: '55555555-0000-0000-0000-000000000001',
+          email: 'lawyer@lexguard.uz',
+          full_name: 'Alisher Qodirov (Direktor)',
+          entity_type: 'LEGAL_ENTITY',
+          tin: '305123456',
+          organization_id: '44444444-0000-0000-0000-000000000001',
+          org_name: 'Smart Legal Solutions MCHJ',
+          role: 'business_client',
+          quota: { total: 50, used: 4, remaining: 46 },
+        };
+
     saveAuthSession({
       user: demoUser,
       tokens: {
@@ -129,13 +185,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   };
 
-  // 3. OneID orqali kirish
-  const oneIdLogin = async () => {
-    await demoLogin('lawyer');
+  // 3. Shaxs turini jonli almashtirish
+  const switchEntityType = (newType: EntityType) => {
+    setActiveEntityType(newType);
+    if (user) {
+      const updatedUser: UserProfile = newType === 'INDIVIDUAL'
+        ? {
+            ...user,
+            entity_type: 'INDIVIDUAL',
+            full_name: user.full_name.replace(' (Direktor)', '').replace(' (Fuqaro)', '') + ' (Fuqaro)',
+            jshshir: user.jshshir || '30101901234567',
+            role: 'individual_user',
+          }
+        : {
+            ...user,
+            entity_type: 'LEGAL_ENTITY',
+            full_name: user.full_name.replace(' (Fuqaro)', '').replace(' (Direktor)', '') + ' (Direktor)',
+            tin: user.tin || '305123456',
+            org_name: user.org_name || 'Smart Legal Solutions MCHJ',
+            role: 'business_client',
+          };
+      setUser(updatedUser);
+      localStorage.setItem('lexguard_user', JSON.stringify(updatedUser));
+    }
   };
 
-  // 4. Ro'yxatdan o'tish
-  const register = async (data: { email: string; password: string; full_name: string; org_name: string; phone?: string }) => {
+  // 4. OneID
+  const oneIdLogin = async (entityType: EntityType) => {
+    await demoLogin(entityType);
+  };
+
+  // 5. Ro'yxatdan o'tish
+  const register = async (data: { 
+    email: string; 
+    password: string; 
+    full_name: string; 
+    entity_type: EntityType;
+    jshshir?: string;
+    tin?: string;
+    org_name?: string; 
+    phone?: string 
+  }) => {
     setIsLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/auth/register`, {
@@ -149,15 +239,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error(json.error?.message || 'Registratsiya xatosi');
       }
 
-      saveAuthSession(json.data);
+      saveAuthSession({ ...json.data, user: { ...json.data.user, entity_type: data.entity_type } });
     } catch {
-      await demoLogin('lawyer');
+      await demoLogin(data.entity_type);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // 5. Chiqish
+  // 6. Chiqish
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -173,8 +263,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         token,
         isAuthenticated: !!user,
         isLoading,
+        activeEntityType,
         login,
         demoLogin,
+        switchEntityType,
         oneIdLogin,
         register,
         logout,

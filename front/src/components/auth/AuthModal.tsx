@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { EntityType } from '../../types/auth';
 import { 
   X, 
   ShieldCheck, 
@@ -10,7 +11,9 @@ import {
   ArrowRight, 
   Zap, 
   CheckCircle2, 
-  AlertCircle 
+  AlertCircle,
+  FileBadge,
+  CreditCard
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -21,24 +24,29 @@ interface AuthModalProps {
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login, demoLogin, register, isLoading } = useAuth();
 
+  // Asosiy tanlov: Jismoniy shaxs yoki Yuridik shaxs
+  const [selectedEntity, setSelectedEntity] = useState<EntityType>('LEGAL_ENTITY');
   const [mode, setMode] = useState<'login' | 'register'>('login');
+
+  // Forma maydonlari
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [jshshir, setJshshir] = useState('');
+  const [tin, setTin] = useState('');
   const [orgName, setOrgName] = useState('');
   const [agreeConsent, setAgreeConsent] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const handleQuickFill = (type: 'lawyer' | 'client') => {
-    if (type === 'lawyer') {
-      setEmail('lawyer@lexguard.uz');
-      setPassword('Password123!');
-    } else {
-      setEmail('client@lexguard.uz');
-      setPassword('Password123!');
-    }
+  const isIndividual = selectedEntity === 'INDIVIDUAL';
+
+  // Tezkor demo ma'lumotlarini to'ldirish
+  const handleQuickDemo = async (type: EntityType) => {
+    setSelectedEntity(type);
+    await demoLogin(type);
+    onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,22 +59,39 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         return;
       }
       try {
-        await login(email, password);
+        await login(email, password, selectedEntity);
         onClose();
       } catch (err: any) {
         setErrorMsg(err.message || 'Kirishda xatolik yuz berdi');
       }
     } else {
-      if (!fullName || !email || !password || !orgName) {
-        setErrorMsg('Barcha maydonlarni to‘ldiring');
+      if (!fullName || !email || !password) {
+        setErrorMsg('F.I.Sh., email va parolni kiriting');
+        return;
+      }
+      if (isIndividual && jshshir.length !== 14) {
+        setErrorMsg('JShShIR aniq 14 ta raqamdan iborat bo‘lishi lozim');
+        return;
+      }
+      if (!isIndividual && (!orgName || tin.length !== 9)) {
+        setErrorMsg('Tashkilot nomi va 9 xonali STIR (INN) kiritilishi shart');
         return;
       }
       if (!agreeConsent) {
         setErrorMsg('O‘RQ-547 bo‘yicha shaxsiy ma’lumotlarni qayta ishlashga rozilik shart');
         return;
       }
+
       try {
-        await register({ email, password, full_name: fullName, org_name: orgName });
+        await register({
+          email,
+          password,
+          full_name: fullName,
+          entity_type: selectedEntity,
+          jshshir: isIndividual ? jshshir : undefined,
+          tin: !isIndividual ? tin : undefined,
+          org_name: !isIndividual ? orgName : undefined,
+        });
         onClose();
       } catch (err: any) {
         setErrorMsg(err.message || 'Ro‘yxatdan o‘tishda xatolik');
@@ -74,15 +99,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleInstantDemo = async (role: 'lawyer' | 'client') => {
-    await demoLogin(role);
-    onClose();
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-md rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 overflow-hidden"
+        className="relative w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Yopish tugmasi */}
@@ -94,7 +114,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         </button>
 
         {/* Logo & Sarlavha */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-5">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 p-[2px] shadow-lg shadow-sky-500/20">
             <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
               <ShieldCheck className="w-6 h-6 text-sky-400" />
@@ -102,44 +122,89 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
           <div>
             <h3 className="text-lg font-bold text-white tracking-tight">
-              {mode === 'login' ? 'LexGuard AI Tizimiga Kirish' : 'B2B Tashkilotni Ro‘yxatdan O‘tkazish'}
+              LexGuard AI — Kirish va Ro‘yxatdan O‘tish
             </h3>
             <p className="text-xs text-slate-400 font-mono">
-              Lex.uz Integratsiyalashgan Yuridik Kabinet
+              O‘zbekiston Respublikasi Qonunchilik Standartlari
             </p>
           </div>
         </div>
 
-        {/* 1-Bosishda OneID / Tezkor Demo Qatlam */}
-        <div className="mb-5 space-y-2">
-          <button
-            onClick={() => handleInstantDemo('lawyer')}
-            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-brand-600 hover:from-sky-500 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-sky-600/30 flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01]"
-          >
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 fill-current text-amber-300" />
-              <span>1-bosishda Demo Yurist sifatida kirish</span>
-            </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/20 text-sky-200">
-              Alisher Qodirov
-            </span>
-          </button>
-
-          <div className="flex items-center gap-2">
+        {/* 🎯 JISMONIY SHAXS / YURIDIK SHAXS TANLOV TUGMALARI (Soliq.uz uslubi) */}
+        <div className="mb-5">
+          <label className="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 font-bold">
+            Shaxs turini tanlang:
+          </label>
+          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-2xl border border-slate-800">
+            {/* Jismoniy Shaxs Tugmasi */}
             <button
-              onClick={() => handleInstantDemo('client')}
-              className="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              type="button"
+              onClick={() => { setSelectedEntity('INDIVIDUAL'); setErrorMsg(null); }}
+              className={`py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                isIndividual
+                  ? 'bg-gradient-to-b from-sky-500/20 to-sky-600/30 text-sky-300 border border-sky-500/50 shadow-md shadow-sky-500/10'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+              }`}
             >
-              <span>🏢 Tadbirkor (Klient) Demo</span>
+              <div className="flex items-center gap-2">
+                <User className={`w-4 h-4 ${isIndividual ? 'text-sky-400' : 'text-slate-500'}`} />
+                <span className="text-xs font-bold">Jismoniy shaxs</span>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">
+                Fuqaro · JShShIR (PINFL)
+              </span>
             </button>
 
+            {/* Yuridik Shaxs Tugmasi */}
             <button
-              onClick={() => handleInstantDemo('lawyer')}
-              className="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+              type="button"
+              onClick={() => { setSelectedEntity('LEGAL_ENTITY'); setErrorMsg(null); }}
+              className={`py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                !isIndividual
+                  ? 'bg-gradient-to-b from-emerald-500/20 to-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-md shadow-emerald-500/10'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+              }`}
             >
-              <span>🇺🇿 OneID Sandbox</span>
+              <div className="flex items-center gap-2">
+                <Building className={`w-4 h-4 ${!isIndividual ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <span className="text-xs font-bold">Yuridik shaxs</span>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">
+                Kompaniya · STIR (INN)
+              </span>
             </button>
           </div>
+        </div>
+
+        {/* ⚡ 1-Bosishda Tezkor Kirish (Tanlangan shaxsga mos ravishda) */}
+        <div className="mb-4">
+          {isIndividual ? (
+            <button
+              onClick={() => handleQuickDemo('INDIVIDUAL')}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-brand-600 hover:from-sky-500 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-sky-600/30 flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 fill-current text-sky-200" />
+                <span>👤 Jismoniy shaxs sifatida tezkor kirish</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 text-sky-200">
+                Jasur Aliyev (JShShIR)
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={() => handleQuickDemo('LEGAL_ENTITY')}
+              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01]"
+            >
+              <div className="flex items-center gap-2">
+                <Building className="w-4 h-4 text-emerald-200" />
+                <span>🏢 Yuridik shaxs sifatida tezkor kirish</span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 text-emerald-200">
+                Smart Legal MCHJ (STIR)
+              </span>
+            </button>
+          )}
         </div>
 
         <div className="relative my-4">
@@ -147,7 +212,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <div className="w-full border-t border-slate-800"></div>
           </div>
           <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-widest">
-            <span className="bg-slate-900 px-3 text-slate-500">yoki email orqali</span>
+            <span className="bg-slate-900 px-3 text-slate-500">yoki maxsus hisob bilan</span>
           </div>
         </div>
 
@@ -159,58 +224,93 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
         )}
 
-        {/* Forma */}
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        {/* FORMA (Jismoniy / Yuridik shaxsga moslashuvchan) */}
+        <form onSubmit={handleSubmit} className="space-y-3">
           {mode === 'register' && (
             <>
               <div>
-                <label className="block text-[11px] font-medium text-slate-400 mb-1">F.I.Sh.</label>
+                <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                  {isIndividual ? 'F.I.Sh. (Fuqaro)' : 'Rahbar F.I.Sh.'}
+                </label>
                 <div className="relative">
                   <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Masalan: Aziz Rahimov"
+                    placeholder={isIndividual ? "Masalan: Jasur Aliyev" : "Masalan: Alisher Qodirov"}
                     className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[11px] font-medium text-slate-400 mb-1">Tashkilot nomi (yoki YaTT)</label>
-                <div className="relative">
-                  <Building className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    value={orgName}
-                    onChange={(e) => setOrgName(e.target.value)}
-                    placeholder="Masalan: Digital Solutions MCHJ"
-                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
-                  />
+              {/* Jismoniy shaxs uchun JShShIR */}
+              {isIndividual ? (
+                <div>
+                  <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                    JShShIR (14 xonali PINFL)
+                  </label>
+                  <div className="relative">
+                    <CreditCard className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                    <input
+                      type="text"
+                      maxLength={14}
+                      value={jshshir}
+                      onChange={(e) => setJshshir(e.target.value.replace(/\D/g, ''))}
+                      placeholder="30101901234567"
+                      className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-sky-500 transition-colors"
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : (
+                /* Yuridik shaxs uchun Tashkilot & STIR */
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div>
+                    <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                      Tashkilot nomi
+                    </label>
+                    <div className="relative">
+                      <Building className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                      <input
+                        type="text"
+                        value={orgName}
+                        onChange={(e) => setOrgName(e.target.value)}
+                        placeholder="Smart Solutions MCHJ"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                      STIR / INN (9 xonali)
+                    </label>
+                    <div className="relative">
+                      <FileBadge className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
+                      <input
+                        type="text"
+                        maxLength={9}
+                        value={tin}
+                        onChange={(e) => setTin(e.target.value.replace(/\D/g, ''))}
+                        placeholder="305123456"
+                        className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-emerald-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </>
           )}
 
           <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-[11px] font-medium text-slate-400">Elektron pochta</label>
-              {mode === 'login' && (
-                <div className="flex gap-1.5 text-[10px] text-sky-400">
-                  <button type="button" onClick={() => handleQuickFill('lawyer')} className="hover:underline">Yurist</button>
-                  <span>·</span>
-                  <button type="button" onClick={() => handleQuickFill('client')} className="hover:underline">Klient</button>
-                </div>
-              )}
-            </div>
+            <label className="block text-[11px] font-medium text-slate-400 mb-1">Elektron pochta</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nomi@kompaniya.uz"
+                placeholder={isIndividual ? "jasur@mail.uz" : "director@kompaniya.uz"}
                 className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
               />
             </div>
@@ -239,7 +339,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 className="mt-0.5 rounded border-slate-800 bg-slate-950 text-sky-500"
               />
               <span>
-                O‘zbekiston Respublikasi O‘RQ-547 qonuniga binoan shaxsiy ma’lumotlarni anonim qayta ishlashga roziman.
+                O‘RQ-547 qonuni bo‘yicha {isIndividual ? 'JShShIR va shaxsiy ma’lumotlarni' : 'korxona tijoriy ma’lumotlarini'} anonimlashtirib tekshirishga roziman.
               </span>
             </label>
           )}
@@ -247,13 +347,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-white text-slate-900 text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer mt-2"
+            className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer mt-2 ${
+              isIndividual
+                ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-sky-500/20'
+                : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-emerald-500/20'
+            }`}
           >
             {isLoading ? (
               <span>Tekshirilmoqda...</span>
             ) : mode === 'login' ? (
               <>
-                <span>Kirish</span>
+                <span>{isIndividual ? 'Jismoniy Shaxs sifatida Kirish' : 'Yuridik Shaxs sifatida Kirish'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </>
             ) : (
@@ -272,9 +376,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               Hisobingiz yo‘qmi?{' '}
               <button 
                 onClick={() => { setMode('register'); setErrorMsg(null); }}
-                className="text-sky-400 font-bold hover:underline"
+                className={`${isIndividual ? 'text-sky-400' : 'text-emerald-400'} font-bold hover:underline`}
               >
-                Yangi hisob yaratish
+                Yangi hisob ochish
               </button>
             </span>
           ) : (
@@ -282,7 +386,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               Akkauntingiz bormi?{' '}
               <button 
                 onClick={() => { setMode('login'); setErrorMsg(null); }}
-                className="text-sky-400 font-bold hover:underline"
+                className={`${isIndividual ? 'text-sky-400' : 'text-emerald-400'} font-bold hover:underline`}
               >
                 Kirish sahifasi
               </button>
