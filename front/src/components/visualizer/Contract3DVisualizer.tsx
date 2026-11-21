@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '../ui/button';
 import * as THREE from 'three';
 import { AnalysisResult, ContractClause, RiskLevel } from '../../types/contract';
 import { 
@@ -496,13 +497,13 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
       {/* Header Info Overlay */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-1.5 pointer-events-none">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-sky-500/20 text-sky-400 border border-sky-500/30 backdrop-blur-md shadow-lg shadow-sky-500/20">
+          <div className="p-2 rounded-xl bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 backdrop-blur-md shadow-lg shadow-zinc-500/20">
             <Sparkles className="w-4 h-4 animate-spin-slow" />
           </div>
           <div>
             <h3 className="text-sm font-black text-white tracking-wide flex items-center gap-2">
               <span>3D Immersion Risk Visualizer</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-400 border border-zinc-500/30">
                 Three.js WebGL
               </span>
             </h3>
@@ -515,38 +516,44 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
       {/* Layout Mode Selector (Yuqori Markazda) */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md p-1 rounded-xl border border-slate-800 shadow-xl">
-        <button
+        <Button
+          type="button"
+          size="sm"
+          variant={layoutMode === 'SPHERICAL' ? 'default' : 'ghost'}
+          aria-pressed={layoutMode === 'SPHERICAL'}
           onClick={() => setLayoutMode('SPHERICAL')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-            layoutMode === 'SPHERICAL' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
-          }`}
           title="Sferik fazoviy joylashuv"
+          className={`h-8 gap-1.5 text-xs font-semibold ${layoutMode === 'SPHERICAL' ? '' : 'text-slate-300 hover:text-white'}`}
         >
-          <Compass className="w-3.5 h-3.5" />
-          <span>Sferik</span>
-        </button>
+          <Compass className="h-3.5 w-3.5" aria-hidden="true" />
+          Sferik
+        </Button>
 
-        <button
+        <Button
+          type="button"
+          size="sm"
+          variant={layoutMode === 'CLUSTERED' ? 'default' : 'ghost'}
+          aria-pressed={layoutMode === 'CLUSTERED'}
           onClick={() => setLayoutMode('CLUSTERED')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-            layoutMode === 'CLUSTERED' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
-          }`}
           title="Xavf darajasi bo'yicha qatlamlarga ajratish"
+          className={`h-8 gap-1.5 text-xs font-semibold ${layoutMode === 'CLUSTERED' ? '' : 'text-slate-300 hover:text-white'}`}
         >
-          <Layers className="w-3.5 h-3.5" />
-          <span>Risk Qatlamlari</span>
-        </button>
+          <Layers className="h-3.5 w-3.5" aria-hidden="true" />
+          Risk qatlamlari
+        </Button>
 
-        <button
+        <Button
+          type="button"
+          size="sm"
+          variant={layoutMode === 'HELIX' ? 'default' : 'ghost'}
+          aria-pressed={layoutMode === 'HELIX'}
           onClick={() => setLayoutMode('HELIX')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-            layoutMode === 'HELIX' ? 'bg-sky-600 text-white shadow-md' : 'text-slate-400 hover:text-white'
-          }`}
           title="Shartnoma DNK spirali"
+          className={`h-8 gap-1.5 text-xs font-semibold ${layoutMode === 'HELIX' ? '' : 'text-slate-300 hover:text-white'}`}
         >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>DNK Spiral</span>
-        </button>
+          <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+          DNK spiral
+        </Button>
       </div>
 
       {/* Floating Risk Indicators (O'ng burchak) */}
@@ -566,86 +573,113 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
         {/* 4-Rangli Filterlar */}
         <div className="flex items-center gap-1 bg-slate-900/80 backdrop-blur-md p-1 rounded-lg border border-slate-800/80">
-          <button
+          <Button
+            type="button"
+            size="sm"
+            variant={filterRisk === 'ALL' ? 'secondary' : 'ghost'}
+            aria-pressed={filterRisk === 'ALL'}
             onClick={() => setFilterRisk('ALL')}
-            className={`px-2 py-1 rounded text-[11px] font-semibold transition-all ${filterRisk === 'ALL' ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'text-slate-400 hover:text-white'}`}
+            className="h-7 gap-1 px-2 text-[11px] font-semibold"
           >
             Barchasi ({analysis.clauses.length})
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={filterRisk === 'RED' ? 'secondary' : 'ghost'}
+            aria-pressed={filterRisk === 'RED'}
             onClick={() => setFilterRisk('RED')}
-            className={`px-2 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-all ${filterRisk === 'RED' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'text-slate-400 hover:text-white'}`}
+            className="h-7 gap-1 px-2 text-[11px] font-semibold"
           >
-            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+            <span className="h-2 w-2 rounded-full bg-red-500" aria-hidden="true" />
             Qizil ({analysis.summary.red_count})
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={filterRisk === 'YELLOW' ? 'secondary' : 'ghost'}
+            aria-pressed={filterRisk === 'YELLOW'}
             onClick={() => setFilterRisk('YELLOW')}
-            className={`px-2 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-all ${filterRisk === 'YELLOW' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : 'text-slate-400 hover:text-white'}`}
+            className="h-7 gap-1 px-2 text-[11px] font-semibold"
           >
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden="true" />
             Sariq ({analysis.summary.yellow_count})
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant={filterRisk === 'GREEN' ? 'secondary' : 'ghost'}
+            aria-pressed={filterRisk === 'GREEN'}
             onClick={() => setFilterRisk('GREEN')}
-            className={`px-2 py-1 rounded text-[11px] font-semibold flex items-center gap-1 transition-all ${filterRisk === 'GREEN' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'text-slate-400 hover:text-white'}`}
+            className="h-7 gap-1 px-2 text-[11px] font-semibold"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500" aria-hidden="true" />
             Yashil ({analysis.summary.green_count})
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Control Buttons (Pastki chap) */}
       <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-800 shadow-xl">
-        <button
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          aria-pressed={autoRotate}
           onClick={() => setAutoRotate(!autoRotate)}
-          className={`p-2 rounded-lg text-xs font-medium transition-all ${
-            autoRotate ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'text-slate-400 hover:text-white hover:bg-slate-800'
-          }`}
           title={autoRotate ? "Avtomatik aylanishni to'xtatish" : "Avtomatik aylanishni yoqish"}
+          aria-label={autoRotate ? "Avtomatik aylanishni to'xtatish" : "Avtomatik aylanishni yoqish"}
+          className="h-8 w-8 text-slate-300 hover:text-white {autoRotate ? 'bg-slate-800 text-zinc-400' : ''}"
         >
-          <RotateCw className={`w-4 h-4 ${autoRotate ? 'animate-spin-slow' : ''}`} />
-        </button>
+          <RotateCw className={`h-4 w-4 ${autoRotate ? 'animate-spin-slow' : ''}`} aria-hidden="true" />
+        </Button>
 
-        <button
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
           onClick={() => handleZoom(-15)}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
           title="Yaqinlashtirish"
+          aria-label="Yaqinlashtirish"
+          className="h-8 w-8 text-slate-300 hover:text-white "
         >
-          <ZoomIn className="w-4 h-4" />
-        </button>
+          <ZoomIn className="h-4 w-4" aria-hidden="true" />
+        </Button>
 
-        <button
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
           onClick={() => handleZoom(15)}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
           title="Uzoqlashtirish"
+          aria-label="Uzoqlashtirish"
+          className="h-8 w-8 text-slate-300 hover:text-white "
         >
-          <ZoomOut className="w-4 h-4" />
-        </button>
+          <ZoomOut className="h-4 w-4" aria-hidden="true" />
+        </Button>
 
-        <button
-          onClick={handleResetCamera}
-          className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1"
-          title="Kamera holatini tiklash"
-        >
-          <Eye className="w-3.5 h-3.5 text-sky-400" />
-          <span>Reset</span>
-        </button>
+        <Button type="button" size="sm" variant="ghost" onClick={handleResetCamera} title="Kamera holatini tiklash" className="h-8 gap-1 px-2.5 text-xs font-medium text-slate-300 hover:text-white">
+          <Eye className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
+          Reset
+        </Button>
 
-        <button
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
           onClick={() => setIsFullscreen(!isFullscreen)}
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
           title={isFullscreen ? "Kichik ekranga qaytish" : "To'liq ekran rejimiga o'tish"}
+          aria-label={isFullscreen ? "Kichik ekranga qaytish" : "To'liq ekran rejimiga o'tish"}
+          className="h-8 w-8 text-slate-300 hover:text-white "
         >
-          {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-        </button>
+          {isFullscreen ? <Minimize2 className="h-4 w-4" aria-hidden="true" /> : <Maximize2 className="h-4 w-4" aria-hidden="true" />}
+        </Button>
       </div>
 
       {/* Pastki o'ngdagi mini qo'llanma */}
       <div className="absolute bottom-4 right-4 z-20 pointer-events-none hidden sm:block">
         <div className="bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
-          <Info className="w-3.5 h-3.5 text-sky-400" />
+          <Info className="w-3.5 h-3.5 text-zinc-400" />
           <span>Sichqoncha bilan aylantiring · Tugun ustiga bosing</span>
         </div>
       </div>
@@ -680,7 +714,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
             <p className="text-[11px] text-slate-300 line-clamp-3 italic mb-2">
               "{hoveredClause.original_text}"
             </p>
-            <div className="text-[10px] text-sky-400 font-medium flex items-center gap-1">
+            <div className="text-[10px] text-zinc-400 font-medium flex items-center gap-1">
               <span>Batafsil ko'rish uchun bosing</span>
               <ChevronRight className="w-3 h-3" />
             </div>
@@ -690,34 +724,32 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
 
       {/* Tanlangan band haqida dialog/modal ko'rinishi */}
       {focusedClause && (
-        <div className="absolute top-16 left-4 z-30 max-w-sm p-4 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-sky-500/40 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute top-16 left-4 z-30 max-w-sm p-4 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-zinc-500/40 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
           <div className="flex items-start justify-between gap-2 mb-2">
             <div>
-              <span className="text-[10px] uppercase font-bold text-sky-400 tracking-wider">3D Fokuslangan Band</span>
+              <span className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">3D Fokuslangan Band</span>
               <h4 className="text-sm font-bold text-white">
                 {focusedClause.clause_number}-band · {focusedClause.title}
               </h4>
             </div>
-            <button
-              onClick={() => setFocusedClause(null)}
-              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800"
-            >
+            <Button type="button" variant="ghost" size="icon" onClick={() => setFocusedClause(null)} className="h-7 w-7 text-slate-400 hover:text-white" aria-label="Yopish">
               ✕
-            </button>
+            </Button>
           </div>
           <p className="text-xs text-slate-300 mb-3 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/80">
             "{focusedClause.original_text}"
           </p>
-          <button
+          <Button
+            type="button"
             onClick={() => {
               onSelectClause(focusedClause.id);
               setFocusedClause(null);
             }}
-            className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-sky-600 to-brand-600 hover:from-sky-500 hover:to-brand-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/20 transition-all"
+            className="w-full gap-1.5 text-xs font-semibold"
           >
-            <span>Diff Viewer-da taqqoslash</span>
-            <ChevronRight className="w-4 h-4" />
-          </button>
+            Diff Viewer-da taqqoslash
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </Button>
         </div>
       )}
     </div>

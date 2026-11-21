@@ -128,7 +128,7 @@ export const LawsView: React.FC = () => {
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Qonunlar
             </h1>
-            <Badge variant="outline" className="border-sky-500/30 text-sky-600 dark:text-sky-400 gap-1">
+            <Badge variant="outline" className="border-zinc-500/30 text-zinc-600 dark:text-zinc-400 gap-1">
               <Scale className="w-3 h-3" />
               Lex.uz Sinxron
             </Badge>
@@ -185,15 +185,15 @@ export const LawsView: React.FC = () => {
       {/* Norms Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredNorms.map((norm) => (
-          <Card key={norm.id} className="hover:border-sky-500/40 transition-all duration-200">
+          <Card key={norm.id} className="hover:border-zinc-500/40 transition-all duration-200">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
+                  <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 text-zinc-600 dark:text-zinc-400">
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-sky-600 dark:text-sky-400">
+                    <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">
                       {norm.code} {norm.article}
                     </span>
                     <CardTitle className="text-base line-clamp-1">
@@ -202,7 +202,7 @@ export const LawsView: React.FC = () => {
                   </div>
                 </div>
                 {norm.nature === 'IMPERATIVE' ? (
-                  <Badge variant="risk-red" className="shrink-0 text-[10px]">
+                  <Badge variant="danger" className="shrink-0 text-[10px]">
                     IMPERATIV (Majburiy)
                   </Badge>
                 ) : (
@@ -230,7 +230,7 @@ export const LawsView: React.FC = () => {
                   href={norm.lexUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   Lex.uz da to'liq moddani ko'rish

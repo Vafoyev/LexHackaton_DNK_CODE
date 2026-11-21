@@ -10,8 +10,6 @@ import {
   Lock, 
   Download, 
   Zap,
-  Building2,
-  User,
   ExternalLink,
   ChevronRight,
   Upload,
@@ -20,14 +18,19 @@ import {
 import { ProgressEvent } from '../../types/contract';
 import { useAuth } from '../../context/AuthContext';
 import { calculateSHA256, formatBytes } from '../../utils/crypto';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card } from '../ui/card';
+import { Progress } from '../ui/progress';
 
 interface LandingViewProps {
   onAnalyze: (file: File | null, isDemo: boolean) => void;
   isLoading: boolean;
   progress: ProgressEvent | null;
   onOpenAuth: () => void;
-  segment: 'b2c' | 'b2b';
-  onSegmentChange: (segment: 'b2c' | 'b2b') => void;
+  segment?: 'b2c' | 'b2b';
+  onSegmentChange?: (segment: 'b2c' | 'b2b') => void;
 }
 
 export const LandingView: React.FC<LandingViewProps> = ({
@@ -35,10 +38,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
   isLoading,
   progress,
   onOpenAuth,
-  segment,
-  onSegmentChange,
 }) => {
-  const isB2B = segment === 'b2b';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -105,7 +105,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         {/* Bosh Sarlavha */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
           Shartnomangizni Imzolashdan Oldin{' '}
-          <span className={isB2B ? "text-emerald-600 dark:text-emerald-400" : "text-sky-600 dark:text-sky-400"}>
+          <span className="text-muted-foreground">
             Qonuniy Himoya Qiling
           </span>
         </h1>
@@ -113,32 +113,22 @@ export const LandingView: React.FC<LandingViewProps> = ({
         {/* Mazmunli Izoh */}
         <p className="max-w-3xl mx-auto text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
           <strong>LexGuard AI</strong> — O‘zR Fuqarolik Kodeksi va 2,058 ta qonun normalari asosida 
-          tadbirkorlar va fuqarolar shartnomalaridagi yashirin jarimalar, asimmetrik majburiyatlar va 
+          shartnomalardagi yashirin jarimalar, asimmetrik majburiyatlar va 
           noqonuniy bandlarni soniyalar ichida aniqlab, 1-bosishda rasmiy <strong>Redline tahrir</strong> beruvchi huquqiy sun'iy intellekt tizimi.
         </p>
 
         {/* Boshqaruv Tugmalari (CTA) */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-          <button
-            onClick={startDemoAnalysis}
-            className={`px-6 py-3 rounded-xl font-bold text-sm text-white shadow-lg transition-all cursor-pointer flex items-center gap-2 hover:scale-[1.02] ${
-              isB2B 
-                ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/25' 
-                : 'bg-sky-600 hover:bg-sky-500 shadow-sky-600/25'
-            }`}
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>Namunaviy IT Shartnomani Sinash</span>
-            <ArrowRight className="w-4 h-4 ml-1" />
-          </button>
+          <Button size="lg" onClick={startDemoAnalysis} className="gap-2 px-6 font-semibold">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            Namunaviy IT shartnomani sinash
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Button>
 
-          <button
-            onClick={onOpenAuth}
-            className="px-6 py-3 rounded-xl font-semibold text-sm text-slate-800 dark:text-white bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer flex items-center gap-2"
-          >
-            <Lock className="w-4 h-4 text-slate-500" />
-            <span>OneID / E-IMZO bilan Kirish</span>
-          </button>
+          <Button size="lg" variant="secondary" onClick={onOpenAuth} className="gap-2 px-6 font-semibold">
+            <Lock className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            OneID / E-IMZO bilan kirish
+          </Button>
         </div>
 
         {/* Ishonch va Xavfsizlik ko'rsatkichlari */}
@@ -209,7 +199,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
           {/* 3-xavf */}
           <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400">
+            <div className="w-10 h-10 rounded-xl bg-zinc-500/10 border border-zinc-500/20 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <Scale className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -218,7 +208,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               Javobgarlik chegarasi (Cap of Liability) belgilanmaydi. Kichik xato uchun butun korxona hisob raqamlari va aktivlari xavf ostida qoladi.
             </p>
-            <div className="pt-2 text-[11px] font-mono text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1">
+            <div className="pt-2 text-[11px] font-mono text-zinc-600 dark:text-zinc-400 font-bold flex items-center gap-1">
               <span>⚠️ Korxona aktivlariga to‘g‘ridan-to‘g‘ri tahdid</span>
             </div>
           </div>
@@ -244,7 +234,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {/* 1-afzallik */}
           <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+            <div className="w-9 h-9 rounded-lg bg-zinc-500/15 border border-zinc-500/30 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <Zap className="w-4 h-4" />
             </div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">Avtonom Audit</h4>
@@ -266,7 +256,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
           {/* 3-afzallik */}
           <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <div className="w-9 h-9 rounded-lg bg-zinc-500/15 border border-zinc-500/30 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <ExternalLink className="w-4 h-4" />
             </div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">Lex.uz Havolalari</h4>
@@ -277,7 +267,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
           {/* 4-afzallik */}
           <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-600 dark:text-teal-400">
+            <div className="w-9 h-9 rounded-lg bg-zinc-500/15 border border-zinc-500/30 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
               <Download className="w-4 h-4" />
             </div>
             <h4 className="text-sm font-bold text-slate-900 dark:text-white">DOCX & PDF Eksport</h4>
@@ -292,32 +282,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
           4. INTERAKTIV SHARTNOMA AUDITI MAYDONI (UPLOAD DROPZONE)
           ============================================================ */}
       <section id="sinash" className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-8 space-y-2">
-          <div className="inline-flex items-center gap-2 p-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60">
-            <button
-              onClick={() => onSegmentChange('b2c')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                !isB2B 
-                  ? 'bg-white dark:bg-slate-900 text-sky-600 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Fuqaro Shartnomalari (B2C)
-            </button>
-            <button
-              onClick={() => onSegmentChange('b2b')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                isB2B 
-                  ? 'bg-white dark:bg-slate-900 text-emerald-600 shadow-sm' 
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Biznes Bitimlari (B2B)
-            </button>
+        <div className="text-center mb-8 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>O‘RQ-547 Standarti: Shaxsiy ma'lumotlar avtomatik anonimlashtiriladi</span>
           </div>
 
           <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-            {isB2B ? "B2B Korporativ Shartnomani Yuklang" : "Fuqarolik Shartnomasini Yuklang"}
+            Shartnomani Tekshirish Uchun Yuklang
           </h3>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
             Word (.docx), PDF (.pdf) yoki matn (.txt) formatida, 25MB gacha
@@ -325,16 +297,16 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
 
         {/* Upload Card */}
-        <div
+        <Card
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={handleDrop}
-          className={`rounded-3xl border-2 border-dashed p-8 sm:p-12 text-center transition-all bg-white dark:bg-slate-900 ${
-            dragOver 
-              ? 'border-sky-500 bg-sky-50 dark:bg-sky-950/20' 
-              : selectedFile 
-              ? 'border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20' 
-              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+          className={`rounded-3xl border-2 border-dashed p-8 text-center shadow-none transition-all sm:p-12 ${
+            dragOver
+              ? 'border-primary bg-primary/5'
+              : selectedFile
+              ? 'border-emerald-500 bg-emerald-50/20 dark:bg-emerald-950/20'
+              : 'hover:border-primary/50'
           }`}
         >
           <input
@@ -353,16 +325,11 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 <h4 className="text-base font-bold text-slate-900 dark:text-white">
                   Shartnoma Huquqiy Tahlildan O'tmoqda...
                 </h4>
-                <p className="text-xs text-sky-600 dark:text-sky-400 font-mono font-semibold">
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono font-semibold">
                   Bosqich: {progress?.stage || 'O‘RQ-547 PII MASKALASH'} ({progress?.progress_pct ?? 45}%)
                 </p>
               </div>
-              <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-300"
-                  style={{ width: `${progress?.progress_pct ?? 45}%` }}
-                />
-              </div>
+              <Progress value={progress?.progress_pct ?? 45} aria-label="Tahlil jarayoni" />
             </div>
           ) : selectedFile ? (
             /* File Selected State */
@@ -377,20 +344,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </p>
               </div>
               <div className="flex items-center justify-center gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={startAnalysis}
-                  className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
-                >
-                  Tahlilni Boshlash
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedFile(null)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-semibold text-xs transition-all cursor-pointer"
-                >
+                <Button type="button" onClick={startAnalysis}>
+                  Tahlilni boshlash
+                </Button>
+                <Button type="button" variant="secondary" onClick={() => setSelectedFile(null)}>
                   Bekor qilish
-                </button>
+                </Button>
               </div>
             </div>
           ) : (
@@ -408,82 +367,49 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs transition-all cursor-pointer shadow-sm"
-                >
-                  Kompyuterdan Tanlash
-                </button>
-                <span className="text-xs text-slate-400 font-mono">yoki</span>
-                <button
-                  type="button"
-                  onClick={startDemoAnalysis}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
-                >
-                  Namunaviy B2B IT Shartnomani Sinash
-                </button>
+                <Button type="button" onClick={() => fileInputRef.current?.click()} className="w-full sm:w-auto">
+                  Kompyuterdan tanlash
+                </Button>
+                <span className="text-xs text-muted-foreground">yoki</span>
+                <Button type="button" variant="outline" onClick={startDemoAnalysis} className="w-full sm:w-auto">
+                  Namunaviy B2B IT shartnomani sinash
+                </Button>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-xl text-xs text-red-600 dark:text-red-400 flex items-center justify-center gap-2 max-w-md mx-auto">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
-            </div>
+            <Alert variant="destructive" role="alert" className="mx-auto mt-4 max-w-md text-left">
+              <AlertCircle className="h-4 w-4" aria-hidden="true" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
-        </div>
+        </Card>
 
-        {/* Namuna Shartnomalar Kartochkalari */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
-          <div 
-            onClick={startDemoAnalysis}
-            className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition-all group"
-          >
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
-                B2B SERVICE
+        {/* Namuna shartnomalar */}
+        <div className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-3">
+          {[
+            { tag: 'B2B SERVICE', variant: 'success' as const, title: "IT xizmat ko'rsatish shartnomasi", text: 'FK 707 (bir tomonlama bekor qilish), cheksiz javobgarlik va kunlik 0,5% penya asimmetriyasi.' },
+            { tag: 'COMMERCIAL LEASE', variant: 'warning' as const, title: 'Tijoriy bino ijarasi shartnomasi', text: 'Bir tomonlama ijara haqini oshirish va garov depozitini qaytarmaslik asimmetriyalari.' },
+            { tag: 'SUPPLY SALE', variant: 'outline' as const, title: 'Uskunalar yetkazib berish', text: "Kafolat muddati, qabul qilish dalolatnomasi va to'lov kechikishi sanktsiyalari." },
+          ].map((c) => (
+            <Button
+              key={c.tag}
+              type="button"
+              variant="outline"
+              onClick={startDemoAnalysis}
+              className="group h-auto flex-col items-stretch gap-1.5 whitespace-normal p-4 text-left font-normal"
+            >
+              <span className="flex items-center justify-between">
+                <Badge variant={c.variant} className="font-mono text-[10px]">
+                  {c.tag}
+                </Badge>
+                <ChevronRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" aria-hidden="true" />
               </span>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </div>
-            <h4 className="text-xs font-bold text-slate-900 dark:text-white">IT Xizmat Ko'rsatish Shartnomasi</h4>
-            <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
-              FK 707 (Bir tomonlama bekor qilish), Cheksiz javobgarlik va kunlik 0.5% penya asimmetriyasi.
-            </p>
-          </div>
-
-          <div 
-            onClick={startDemoAnalysis}
-            className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition-all group"
-          >
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
-                COMMERCIAL LEASE
-              </span>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </div>
-            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Tijoriy Bino Ijarasi Shartnomasi</h4>
-            <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
-              Bir tomonlama ijara haqini oshirish va garov depozitini qaytarmaslik asimmetriyalari.
-            </p>
-          </div>
-
-          <div 
-            onClick={startDemoAnalysis}
-            className="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 cursor-pointer transition-all group"
-          >
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold">
-                SUPPLY SALE
-              </span>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </div>
-            <h4 className="text-xs font-bold text-slate-900 dark:text-white">Uskunalar Yetkazib Berish</h4>
-            <p className="text-[11px] text-slate-500 line-clamp-2 mt-1">
-              Kafolat muddati, qabul qilish dalolatnomasi va to'lov kechikishi sanktsiyalari.
-            </p>
-          </div>
+              <span className="text-xs font-bold">{c.title}</span>
+              <span className="line-clamp-2 text-[11px] text-muted-foreground">{c.text}</span>
+            </Button>
+          ))}
         </div>
       </section>
 

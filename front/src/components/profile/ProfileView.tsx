@@ -49,12 +49,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       </div>
 
       {/* ONE ID / Executive Identity Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-sky-500/30 bg-gradient-to-br from-slate-900 via-slate-850 to-sky-950 text-white p-6 shadow-xl">
-        <div className="absolute right-0 top-0 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-2xl border border-zinc-500/30 bg-gradient-to-br from-slate-900 via-slate-850 to-zinc-950 text-white p-6 shadow-xl">
+        <div className="absolute right-0 top-0 w-80 h-80 bg-zinc-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg border border-white/20">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-zinc-500 to-zinc-600 flex items-center justify-center text-white font-bold text-2xl shadow-lg border border-white/20">
               {isBusiness ? 'DN' : 'AV'}
             </div>
             <div className="space-y-1">
@@ -67,7 +67,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
                   ONE ID Tasdiqlangan
                 </Badge>
               </div>
-              <p className="text-xs text-sky-200/80">
+              <p className="text-xs text-zinc-200/80">
                 {isBusiness ? 'STIR (INN): 308 192 481 · E-Imzo: Faol' : 'JShShIR: 32405910240012 · Fuqaro'}
               </p>
             </div>
@@ -75,7 +75,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
           <div className="flex items-center gap-2">
             <div className="text-right sm:block hidden">
-              <span className="text-[10px] uppercase tracking-wider text-sky-300 font-semibold block">Hozirgi Rejim</span>
+              <span className="text-[10px] uppercase tracking-wider text-zinc-300 font-semibold block">Hozirgi Rejim</span>
               <span className="text-sm font-bold text-white">{isBusiness ? 'Yuridik Shaxs (B2B)' : 'Jismoniy Shaxs (B2C)'}</span>
             </div>
             <Button
@@ -96,10 +96,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-base flex items-center gap-2">
-                <Award className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                <Award className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
                 Obuna va Imkoniyatlar
               </CardTitle>
-              <Badge variant="default" className="bg-sky-600 text-white text-[10px]">
+              <Badge variant="default" className="bg-zinc-600 text-white text-[10px]">
                 LexHackathon Pro
               </Badge>
             </div>

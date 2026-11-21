@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { displayName } from '../lib/utils';
 import { UserProfile, AuthResponse, EntityType } from '../types/auth';
 
 interface AuthContextType {
@@ -42,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedToken && savedUser) {
       try {
         const parsed = JSON.parse(savedUser);
+        parsed.full_name = displayName(parsed.full_name);
         setUser(parsed);
         setActiveEntityType(parsed.entity_type || 'LEGAL_ENTITY');
         setToken(savedToken);
@@ -52,7 +54,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(false);
   }, []);
 
-  const saveAuthSession = (authData: AuthResponse) => {
+  const saveAuthSession = (rawAuth: AuthResponse) => {
+    // Ismdagi rol belgisi ("(Yurist)") ko'rsatilmaydi: yuridik shaxs hisobi yurist degani emas
+    const authData: AuthResponse = { ...rawAuth, user: { ...rawAuth.user, full_name: displayName(rawAuth.user.full_name) } };
     setUser(authData.user);
     setActiveEntityType(authData.user.entity_type || 'LEGAL_ENTITY');
     setToken(authData.tokens.access_token);
@@ -98,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         : {
             id: '55555555-0000-0000-0000-000000000001',
             email,
-            full_name: 'Alisher Qodirov (Direktor)',
+            full_name: 'Alisher Qodirov',
             entity_type: 'LEGAL_ENTITY',
             tin: '305123456',
             organization_id: '44444444-0000-0000-0000-000000000001',
@@ -155,7 +159,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ? {
           id: '77777777-0000-0000-0000-000000000001',
           email: 'jasur.aliyev@mail.uz',
-          full_name: 'Jasur Aliyev (Fuqaro)',
+          full_name: 'Jasur Aliyev',
           entity_type: 'INDIVIDUAL',
           jshshir: '30101901234567',
           role: 'individual_user',
@@ -164,7 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       : {
           id: '55555555-0000-0000-0000-000000000001',
           email: 'lawyer@lexguard.uz',
-          full_name: 'Alisher Qodirov (Direktor)',
+          full_name: 'Alisher Qodirov',
           entity_type: 'LEGAL_ENTITY',
           tin: '305123456',
           organization_id: '44444444-0000-0000-0000-000000000001',
@@ -193,14 +197,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         ? {
             ...user,
             entity_type: 'INDIVIDUAL',
-            full_name: user.full_name.replace(' (Direktor)', '').replace(' (Fuqaro)', '') + ' (Fuqaro)',
+            full_name: displayName(user.full_name),
             jshshir: user.jshshir || '30101901234567',
             role: 'individual_user',
           }
         : {
             ...user,
             entity_type: 'LEGAL_ENTITY',
-            full_name: user.full_name.replace(' (Fuqaro)', '').replace(' (Direktor)', '') + ' (Direktor)',
+            full_name: displayName(user.full_name),
             tin: user.tin || '305123456',
             org_name: user.org_name || 'Smart Legal Solutions MCHJ',
             role: 'business_client',
@@ -231,7 +235,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await fetch(`${BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Client-Type': 'web' },
-        body: JSON.stringify({ ...data, client_type: 'web' }),
+        body: JSON.stringify({ ...data, client_type: 'web', data_processing_consent: true, external_ai_consent: false }),
       });
 
       const json = await res.json();
@@ -240,8 +244,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       saveAuthSession({ ...json.data, user: { ...json.data.user, entity_type: data.entity_type } });
-    } catch {
-      await demoLogin(data.entity_type);
     } finally {
       setIsLoading(false);
     }

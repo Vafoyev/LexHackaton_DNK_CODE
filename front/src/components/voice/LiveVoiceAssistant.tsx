@@ -16,6 +16,10 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface LiveVoiceAssistantProps {
   analysis: AnalysisResult;
@@ -233,210 +237,166 @@ Tavsiyamiz: Ushbu bandlarni imzolashdan oldin biz tayyorlagan redline takliflar 
   };
 
   return (
-    <div className="rounded-3xl bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-brand-950/40 border border-sky-500/30 p-5 shadow-2xl relative overflow-hidden backdrop-blur-xl">
-      {/* Yuqori qism: Sarlavha & Status */}
-      <div className="flex items-center justify-between gap-3 mb-4">
+    <Card className="overflow-hidden">
+      <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 space-y-0 pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 shadow-sm shadow-sky-500/30">
-            <Bot className="w-5 h-5 animate-pulse" />
-          </div>
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Bot className="h-5 w-5" aria-hidden="true" />
+          </span>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white tracking-tight">
-                LexGuard Live Voice Yurist
-              </h3>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                AI OVOZLI LIVE
+              <CardTitle className="text-sm">Ovozli yordamchi</CardTitle>
+              <Badge variant="outline" className="gap-1 text-[10px]">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                Jonli
+              </Badge>
+            </div>
+            <CardDescription className="text-[11px]" aria-live="polite">
+              {isPlayingBrief
+                ? 'AI tahlilni ovozda tushuntirmoqda…'
+                : isListening
+                ? 'Sizni tinglamoqda… savolingizni ayting'
+                : 'Audio brifing yoki ovozli savol-javob'}
+            </CardDescription>
+          </div>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'brief' | 'qa')}>
+          <TabsList>
+            <TabsTrigger value="brief" className="text-xs">Audio brifing</TabsTrigger>
+            <TabsTrigger value="qa" className="gap-1 text-xs">
+              <Mic className="h-3 w-3" aria-hidden="true" /> Ovozli savol
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        {/* Jonli audio to'lqin */}
+        <div className="relative flex h-16 w-full items-center justify-center overflow-hidden rounded-2xl border bg-slate-950">
+          <canvas ref={canvasRef} width={600} height={64} className="h-full w-full object-cover" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            {isListening && (
+              <span className="flex animate-pulse items-center gap-1.5 rounded-full border border-rose-500/40 bg-rose-500/20 px-3 py-1 text-xs font-bold text-rose-400">
+                <span className="h-2 w-2 rounded-full bg-rose-500" aria-hidden="true" />
+                Tinglamoqda…
               </span>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              {isPlayingBrief ? "AI tahlilni ovozda tushuntirmoqda..." : isListening ? "Sizni tinglamoqda... Savolingizni ayting" : "30 soniyalik audio brifing yoki ovozli savol-javob"}
-            </p>
-          </div>
-        </div>
-
-        {/* Tablar */}
-        <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs font-semibold">
-          <button
-            onClick={() => setActiveTab('brief')}
-            className={`px-3 py-1 rounded-lg transition-all ${
-              activeTab === 'brief' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Audio Brifing
-          </button>
-          <button
-            onClick={() => setActiveTab('qa')}
-            className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1 ${
-              activeTab === 'qa' ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Mic className="w-3 h-3" />
-            <span>Ovozli Q&A</span>
-          </button>
-        </div>
-      </div>
-
-      {/* JONLI AUDIO TO'LQIN KANVASI (Waveform Visualizer) */}
-      <div className="relative w-full h-16 rounded-2xl bg-slate-950/80 border border-slate-800/80 overflow-hidden flex items-center justify-center mb-4">
-        <canvas
-          ref={canvasRef}
-          width={600}
-          height={64}
-          className="w-full h-full object-cover"
-        />
-        {/* Markazdagi mikrofon / status ko'rsatkichi */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          {isListening && (
-            <div className="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-400 text-xs font-bold animate-pulse flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
-              TINGLAMOQDA... SAVOLINGIZNI AYTING
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* KONTROLLAR & ASOSIY INTERFEYS */}
-      {activeTab === 'brief' ? (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-2xl bg-slate-950/50 border border-slate-800/80">
-          <div className="flex items-center gap-2">
-            {!isPlayingBrief ? (
-              <button
-                onClick={() => speakText(generateDebriefText())}
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-brand-600 hover:from-sky-400 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-sky-500/20 flex items-center gap-2 transition-all cursor-pointer hover:scale-105"
-              >
-                <Play className="w-4 h-4 fill-current" />
-                <span>Brifingni Eshitish (30s)</span>
-              </button>
-            ) : (
-              <button
-                onClick={stopSpeaking}
-                className="px-4 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/40 text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
-              >
-                <Pause className="w-4 h-4 fill-current" />
-                <span>To‘xtatish</span>
-              </button>
             )}
-
-            <button
-              onClick={() => {
-                stopSpeaking();
-                speakText(generateDebriefText());
-              }}
-              title="Qayta tinglash"
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700 cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Tezlik tanlash */}
-          <div className="flex items-center gap-1 text-[11px] font-mono text-slate-400">
-            <span>Tezlik:</span>
-            {[1.0, 1.25, 1.5].map((rate) => (
-              <button
-                key={rate}
-                onClick={() => {
-                  setSpeechRate(rate);
-                  if (isPlayingBrief) {
-                    stopSpeaking();
-                    speakText(generateDebriefText());
-                  }
-                }}
-                className={`px-2 py-0.5 rounded-md border cursor-pointer ${
-                  speechRate === rate 
-                    ? 'bg-sky-500/20 border-sky-500/40 text-sky-300 font-bold' 
-                    : 'bg-slate-900 border-slate-800 text-slate-500 hover:text-slate-300'
-                }`}
-              >
-                {rate}x
-              </button>
-            ))}
           </div>
         </div>
-      ) : (
-        /* OVOZLI Q&A REJIMI */
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleListening}
-              className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                isListening 
-                  ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40 animate-pulse' 
-                  : 'bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40'
-              }`}
-            >
-              {isListening ? (
-                <>
-                  <MicOff className="w-4 h-4" />
-                  <span>Tinglashni to‘xtatish</span>
-                </>
+
+        {activeTab === 'brief' ? (
+          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border bg-muted/40 p-3 sm:flex-row">
+            <div className="flex items-center gap-2">
+              {!isPlayingBrief ? (
+                <Button type="button" onClick={() => speakText(generateDebriefText())} className="gap-2 text-xs font-bold">
+                  <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+                  Brifingni eshitish
+                </Button>
               ) : (
-                <>
-                  <Mic className="w-4 h-4" />
-                  <span>Mikrofonni yoqish va savol berish</span>
-                </>
+                <Button type="button" variant="destructive" onClick={stopSpeaking} className="gap-2 text-xs font-bold">
+                  <Pause className="h-4 w-4 fill-current" aria-hidden="true" />
+                  To‘xtatish
+                </Button>
               )}
-            </button>
-          </div>
-
-          {/* Tezkor Savol Tugmalari (6 ta Yuridik Ssenariy) */}
-          <div className="flex flex-wrap gap-1.5 items-center">
-            <span className="text-[10px] text-slate-400 font-mono">Tezkor savollar:</span>
-            {[
-              "Penya qancha va qonuniymi?",
-              "FK 707 bekor qilish nima?",
-              "Cheksiz javobgarlik bormi?",
-              "Shartnomani imzolash xavfsizmi?",
-              "Fors-major bandi to'g'rimi?"
-            ].map((q) => (
-              <button
-                key={q}
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                aria-label="Qayta tinglash"
+                title="Qayta tinglash"
                 onClick={() => {
-                  setTranscript(q);
-                  handleVoiceQuery(q);
+                  stopSpeaking();
+                  speakText(generateDebriefText());
                 }}
-                className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-850 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-sky-500/40 transition-all cursor-pointer"
               >
-                {q}
-              </button>
-            ))}
-          </div>
-
-          {/* Traskript va AI Ovozli Javobi */}
-          {(transcript || aiResponse) && (
-            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-2.5 text-xs">
-              {transcript && (
-                <div className="flex items-start gap-2 text-slate-300">
-                  <span className="font-bold text-sky-400 shrink-0">Siz:</span>
-                  <p className="italic">"{transcript}"</p>
-                </div>
-              )}
-              {aiResponse && (
-                <div className="space-y-2 pt-2 border-t border-slate-800/70">
-                  <div className="flex items-start gap-2 text-emerald-300">
-                    <span className="font-bold text-emerald-400 shrink-0">LexGuard:</span>
-                    <p className="leading-relaxed">{aiResponse}</p>
-                  </div>
-
-                  {referencedClauseId && onNavigateToClause && (
-                    <div className="flex justify-end pt-1">
-                      <button
-                        onClick={() => onNavigateToClause(referencedClauseId)}
-                        className="text-[11px] font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1 hover:underline cursor-pointer"
-                      >
-                        <span>Tegishli bandni Diff-da ko'rish</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                <RotateCcw className="h-3.5 w-3.5" />
+              </Button>
             </div>
-          )}
-        </div>
-      )}
-    </div>
+
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              <span>Tezlik:</span>
+              {[1.0, 1.25, 1.5].map((rate) => (
+                <Button
+                  key={rate}
+                  type="button"
+                  size="sm"
+                  variant={speechRate === rate ? 'default' : 'outline'}
+                  aria-pressed={speechRate === rate}
+                  className="h-6 px-2 text-[11px]"
+                  onClick={() => {
+                    setSpeechRate(rate);
+                    if (isPlayingBrief) {
+                      stopSpeaking();
+                      speakText(generateDebriefText());
+                    }
+                  }}
+                >
+                  {rate}x
+                </Button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <Button
+              type="button"
+              variant={isListening ? 'destructive' : 'secondary'}
+              onClick={toggleListening}
+              aria-pressed={isListening}
+              className="w-full gap-2 text-xs font-bold"
+            >
+              {isListening ? <MicOff className="h-4 w-4" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
+              {isListening ? 'Tinglashni to‘xtatish' : 'Mikrofonni yoqish va savol berish'}
+            </Button>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="text-[10px] text-muted-foreground">Tezkor savollar:</span>
+              {['Penya qancha va qonuniymi?', 'FK 707 bekor qilish nima?', 'Cheksiz javobgarlik bormi?', 'Shartnomani imzolash xavfsizmi?', "Fors-major bandi to'g'rimi?"].map((q) => (
+                <Button
+                  key={q}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-7 px-2.5 text-[11px] font-normal"
+                  onClick={() => {
+                    setTranscript(q);
+                    handleVoiceQuery(q);
+                  }}
+                >
+                  {q}
+                </Button>
+              ))}
+            </div>
+
+            {(transcript || aiResponse) && (
+              <div className="space-y-2.5 rounded-2xl border bg-muted/40 p-4 text-xs">
+                {transcript && (
+                  <div className="flex items-start gap-2">
+                    <span className="shrink-0 font-bold text-primary">Siz:</span>
+                    <p className="italic">“{transcript}”</p>
+                  </div>
+                )}
+                {aiResponse && (
+                  <div className="space-y-2 border-t pt-2.5">
+                    <div className="flex items-start gap-2">
+                      <span className="shrink-0 font-bold text-emerald-600 dark:text-emerald-400">LexGuard:</span>
+                      <p className="leading-relaxed">{aiResponse}</p>
+                    </div>
+                    {referencedClauseId && onNavigateToClause && (
+                      <div className="flex justify-end">
+                        <Button type="button" variant="link" size="sm" className="h-auto gap-1 p-0 text-[11px]" onClick={() => onNavigateToClause(referencedClauseId)}>
+                          Tegishli bandni Diff-da ko‘rish <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };

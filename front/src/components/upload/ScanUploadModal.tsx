@@ -1,211 +1,158 @@
 import React, { useRef, useState } from 'react';
-import { Card } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { 
-  Upload, 
-  FileText, 
-  X, 
-  ShieldCheck, 
-  Sparkles, 
-  Lock, 
-  ArrowRight,
-  FileCode,
-  Home,
-  ShoppingBag
-} from 'lucide-react';
+import { FileCode, Home, Lock, ShoppingBag, Sparkles, Upload } from 'lucide-react';
 import { ProgressEvent } from '../../types/contract';
+import { SampleContract } from '../../data/sampleContracts';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Progress } from '../ui/progress';
+import { Separator } from '../ui/separator';
 
 interface ScanUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAnalyze: (file: File | null, isDemo: boolean) => Promise<void>;
+  onAnalyze: (file: File | null, isDemo: boolean, sampleId?: SampleContract['id']) => Promise<boolean | void>;
   isLoading: boolean;
   progress: ProgressEvent | null;
+  error?: string | null;
 }
 
-export const ScanUploadModal: React.FC<ScanUploadModalProps> = ({
-  isOpen,
-  onClose,
-  onAnalyze,
-  isLoading,
-  progress,
-}) => {
+const SAMPLES = [
+  { id: 'it' as const, title: 'IT autsorsing', subtitle: 'B2B shartnoma', icon: FileCode, tone: 'text-zinc-500' },
+  { id: 'ijara' as const, title: 'Uy-joy ijarasi', subtitle: 'B2C fuqarolik', icon: Home, tone: 'text-emerald-500' },
+  { id: 'olish' as const, title: 'Oldi-sotdi', subtitle: 'Mulk va avto', icon: ShoppingBag, tone: 'text-amber-500' },
+] as const;
+
+export const ScanUploadModal: React.FC<ScanUploadModalProps> = ({ isOpen, onClose, onAnalyze, isLoading, progress, error }) => {
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen) return null;
-
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setDragActive(false);
-    }
+    if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
+    else if (e.type === 'dragleave') setDragActive(false);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setSelectedFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-    }
+    const file = e.dataTransfer.files?.[0];
+    if (file) setSelectedFile(file);
   };
 
   const handleStartAnalysis = async () => {
-    if (selectedFile) {
-      await onAnalyze(selectedFile, false);
-      onClose();
-    }
+    if (!selectedFile) return;
+    const ok = await onAnalyze(selectedFile, false);
+    if (ok !== false) onClose();
   };
 
-  const handleSelectSample = async (sampleType: 'it' | 'ijara' | 'olish') => {
-    await onAnalyze(null, true);
-    onClose();
+  const handleSelectSample = async (sampleId: SampleContract['id']) => {
+    const ok = await onAnalyze(null, true, sampleId);
+    if (ok !== false) onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div 
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-              <Upload className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-              Shartnomani Skanerlash va Tahlil Qilish
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Word (.docx), PDF (.pdf) yoki matn faylini yuklang
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-xl">
+            <Upload className="h-5 w-5 text-primary" aria-hidden="true" />
+            Shartnomani skanerlash va tahlil qilish
+          </DialogTitle>
+          <DialogDescription>Word (.docx), PDF (.pdf) yoki matn faylini yuklang</DialogDescription>
+        </DialogHeader>
 
-        {/* Dropzone */}
-        <div
+        <label
+          htmlFor="scan-file"
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={() => inputRef.current?.click()}
-          className={`cursor-pointer border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
-            dragActive
-              ? 'border-sky-500 bg-sky-50/50 dark:bg-sky-950/20'
-              : 'border-slate-200 dark:border-slate-800 hover:border-sky-400 bg-slate-50/50 dark:bg-slate-900/50'
+          className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-8 text-center transition-colors focus-within:ring-2 focus-within:ring-ring ${
+            dragActive ? 'border-primary bg-primary/5' : 'border-border bg-muted/40 hover:border-primary/60'
           }`}
         >
           <input
+            id="scan-file"
             ref={inputRef}
             type="file"
-            className="hidden"
+            className="sr-only"
             accept=".docx,.pdf,.txt"
-            onChange={handleChange}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) setSelectedFile(file);
+            }}
           />
-          <div className="flex flex-col items-center justify-center space-y-3">
-            <div className="p-3.5 rounded-full bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
-              <Upload className="w-6 h-6" />
-            </div>
-            {selectedFile ? (
-              <div className="space-y-1">
-                <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                  {selectedFile.name}
-                </p>
-                <p className="text-xs text-slate-500">
-                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB · Tanlandi
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
-                  Faylni shu yerga tortib tashlang yoki tanlang
-                </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  DOCX, PDF yoki TXT (25MB gacha)
-                </p>
-              </div>
-            )}
+          <span className="rounded-full bg-primary/10 p-3.5 text-primary">
+            <Upload className="h-6 w-6" aria-hidden="true" />
+          </span>
+          {selectedFile ? (
+            <span className="space-y-1">
+              <span className="block text-sm font-semibold">{selectedFile.name}</span>
+              <span className="block text-xs text-muted-foreground">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB, tanlandi</span>
+            </span>
+          ) : (
+            <span className="space-y-1">
+              <span className="block text-sm font-medium">Faylni shu yerga tortib tashlang yoki tanlang</span>
+              <span className="block text-xs text-muted-foreground">DOCX, PDF yoki TXT (25 MB gacha)</span>
+            </span>
+          )}
+        </label>
+
+        {isLoading && (
+          <div className="space-y-1.5" role="status">
+            <Progress value={progress?.progress_pct ?? 5} />
+            <p className="text-xs text-muted-foreground">{progress?.message || 'Audit o‘tkazilmoqda…'}</p>
           </div>
-        </div>
+        )}
+
+        {error && (
+          <Alert variant="destructive" role="alert">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         {selectedFile && (
-          <Button
-            onClick={handleStartAnalysis}
-            disabled={isLoading}
-            className="w-full gap-2 shadow-md"
-            size="lg"
-          >
-            <Sparkles className="w-4 h-4" />
-            {isLoading ? 'Audit o\'tkazilmoqda...' : 'Auditni Boshlash (Lex.uz Sinxron)'}
+          <Button onClick={handleStartAnalysis} disabled={isLoading} size="lg" className="w-full gap-2">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+            {isLoading ? 'Audit o‘tkazilmoqda…' : 'Auditni boshlash'}
           </Button>
         )}
 
-        {/* Quick Sample Contracts */}
-        <div className="space-y-2 pt-2">
-          <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-            Yoki Namunaviy Shartnomani Sinab Ko'ring:
-          </span>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <button
-              onClick={() => handleSelectSample('it')}
-              className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-sky-500 text-left transition-colors bg-white dark:bg-slate-850"
-            >
-              <FileCode className="w-4 h-4 text-sky-500 shrink-0" />
-              <div className="truncate">
-                <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">IT Autsorsing</div>
-                <div className="text-[10px] text-slate-500">B2B Shartnoma</div>
-              </div>
-            </button>
-            <button
-              onClick={() => handleSelectSample('ijara')}
-              className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-sky-500 text-left transition-colors bg-white dark:bg-slate-850"
-            >
-              <Home className="w-4 h-4 text-emerald-500 shrink-0" />
-              <div className="truncate">
-                <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">Uy-joy Ijarasi</div>
-                <div className="text-[10px] text-slate-500">B2C Fuqarolik</div>
-              </div>
-            </button>
-            <button
-              onClick={() => handleSelectSample('olish')}
-              className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-sky-500 text-left transition-colors bg-white dark:bg-slate-850"
-            >
-              <ShoppingBag className="w-4 h-4 text-amber-500 shrink-0" />
-              <div className="truncate">
-                <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">Oldi-Sotdi</div>
-                <div className="text-[10px] text-slate-500">Mulk va Avto</div>
-              </div>
-            </button>
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-muted-foreground">Yoki namunaviy shartnomani sinab ko‘ring</p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {SAMPLES.map(({ id, title, subtitle, icon: Icon, tone }) => (
+              <Button
+                key={id}
+                type="button"
+                variant="outline"
+                onClick={() => handleSelectSample(id)}
+                disabled={isLoading}
+                className="h-auto justify-start gap-2 px-3 py-2.5 text-left"
+              >
+                <Icon className={`h-4 w-4 shrink-0 ${tone}`} aria-hidden="true" />
+                <span className="min-w-0">
+                  <span className="block truncate text-xs font-semibold">{title}</span>
+                  <span className="block truncate text-[10px] font-normal text-muted-foreground">{subtitle}</span>
+                </span>
+              </Button>
+            ))}
           </div>
         </div>
 
-        {/* Security Footer Notice */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+        <Separator />
+        <DialogFooter className="flex-row items-center justify-between gap-2 text-[11px] text-muted-foreground sm:justify-between">
           <span className="flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-500" />
-            O‘RQ-547 Lokal PII Sanitization faol
+            <Lock className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
+            O‘RQ-547: shaxsga doir ma’lumotlar lokal maskalanadi
           </span>
-          <span>Lex.uz bazasi bilan sinxron</span>
-        </div>
-      </div>
-    </div>
+          <span>Lex.uz bazasi bilan ishlaydi</span>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

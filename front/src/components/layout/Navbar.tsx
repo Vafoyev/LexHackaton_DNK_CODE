@@ -1,23 +1,26 @@
 import React from 'react';
-import { 
-  LogIn, 
-  LogOut, 
-  Sun, 
-  Moon, 
-  FileText, 
-  BookOpen, 
-  User, 
-  Home, 
-  QrCode,
-  Sparkles,
-  ShieldCheck,
-  ChevronRight
-} from 'lucide-react';
+import { BookOpen, FileText, Home, LogIn, LogOut, Moon, QrCode, Sparkles, Sun, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Button } from '../ui/button';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
-export type MainNavTab = 'home' | 'documents' | 'laws' | 'profile';
+export type MainNavTab = 'home' | 'documents' | 'laws' | 'ai' | 'profile';
+
+const TABS: { id: MainNavTab; label: string; icon: React.ElementType; color: string; hint?: string }[] = [
+  { id: 'home', label: 'Asosiy', icon: Home, color: 'text-zinc-500' },
+  { id: 'documents', label: 'Hujjatlar', icon: FileText, color: 'text-zinc-500' },
+  { id: 'laws', label: 'Qonunlar', icon: BookOpen, color: 'text-emerald-500' },
+  { id: 'ai', label: 'AI', icon: Sparkles, color: 'text-zinc-500', hint: 'AI yordamchi (chat va ovozli)' },
+  { id: 'profile', label: 'Profil', icon: User, color: 'text-zinc-500' },
+];
+
+const LANDING_LINKS = [
+  { id: 'muammolar', label: 'Loyiha nima uchun?' },
+  { id: 'afzalliklar', label: 'Yengilliklari' },
+  { id: 'sinash', label: 'Qanday ishlaydi?' },
+];
 
 export interface NavbarProps {
   activeTab: MainNavTab;
@@ -30,221 +33,101 @@ export interface NavbarProps {
   hasAnalysis?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({
-  activeTab,
-  setActiveTab,
-  onOpenScan,
-  onOpenAuth,
-  segment,
-  onSegmentChange,
-  hasAnalysis = false,
-}) => {
-  const { user, isAuthenticated, logout } = useAuth();
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenScan, onOpenAuth, hasAnalysis = false }) => {
+  const { isAuthenticated, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-
-  const isB2B = segment === 'b2b';
 
   const scrollTo = (id: string) => {
     setActiveTab('home');
-    setTimeout(() => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 50);
+    setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 50);
   };
 
+  const signedIn = isAuthenticated || hasAnalysis;
+
   return (
-    <header className="fixed top-2 sm:top-3 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl transition-all duration-300">
-      <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 shadow-lg backdrop-blur-xl px-3 sm:px-6 py-2 transition-all duration-300">
+    <header className="fixed left-1/2 top-2 z-50 w-[96%] max-w-7xl -translate-x-1/2 sm:top-3">
+      <div className="glass rounded-2xl px-3 py-2 sm:px-6">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
-          
-          {/* 1. Brand Logo + Segment Switcher */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            <button 
-              onClick={() => setActiveTab('home')}
-              className="flex items-center gap-2 group text-left cursor-pointer"
-              title="Bosh sahifa"
-            >
-              <div className="h-8 sm:h-9 px-1.5 rounded-lg bg-slate-950 flex items-center justify-center border border-slate-800 shadow-sm">
-                <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-4 sm:h-4.5 w-auto object-contain brightness-125" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">
-                  LexGuard<span className={isB2B ? "text-emerald-500" : "text-sky-500"}>.AI</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-medium">Lex.uz Sinxron</span>
-              </div>
-            </button>
+          {/* Brend */}
+          <Button
+            variant="ghost"
+            onClick={() => setActiveTab('home')}
+            className="hidden h-auto shrink-0 gap-2 p-1 text-left hover:bg-transparent sm:flex"
+            aria-label="Bosh sahifa"
+          >
+            <span className="flex h-9 items-center justify-center rounded-lg border border-slate-800 bg-slate-950 px-1.5 shadow-sm">
+              <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-4 w-auto object-contain brightness-125" />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-lg font-bold leading-none tracking-tight">
+                LexGuard<span className="text-zinc-500">.AI</span>
+              </span>
+              <span className="text-[10px] font-medium text-muted-foreground">Lex.uz sinxron</span>
+            </span>
+          </Button>
 
-            {/* B2C / B2B Segment Pill */}
-            <div className="hidden md:flex items-center rounded-lg bg-slate-100 dark:bg-slate-800/80 p-0.5 border border-slate-200 dark:border-slate-700/60 text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => onSegmentChange('b2c')}
-                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
-                  !isB2B
-                    ? 'bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                Fuqaro
-              </button>
-              <button
-                type="button"
-                onClick={() => onSegmentChange('b2b')}
-                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
-                  isB2B
-                    ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                Biznes
-              </button>
-            </div>
-          </div>
-
-          {/* 2. CENTER NAVIGATION: 
-              A) Agar foydalanuvchi tizimga kirgan bo'lsa yoki shartnoma ochilgan bo'lsa -> Ish maydoni tablari (Asosiy, Hujjatlar, Qonunlar, Profil)
-              B) Agar LOGIN QILMAGAN bo'lsa -> Faqat Landing bo'limlari (Loyiha haqida, Yengilliklari, Sinash)
-          */}
-          {isAuthenticated || hasAnalysis ? (
-            /* ================= AUTENTIFIKATSIYADAN O'TGAN REJIM ================= */
-            <nav className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/40">
-              <button
-                onClick={() => setActiveTab('home')}
-                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'home'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-500" />
-                <span>Asosiy</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('documents')}
-                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'documents'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-500" />
-                <span>Hujjatlar</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('laws')}
-                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'laws'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500" />
-                <span>Qonunlar</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('profile')}
-                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'profile'
-                    ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500" />
-                <span>Profil</span>
-              </button>
+          {/* Markaziy navigatsiya */}
+          {signedIn ? (
+            <nav aria-label="Asosiy navigatsiya" className="min-w-0">
+              <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as MainNavTab)}>
+                <TabsList className="h-auto max-w-full overflow-x-auto p-1 [scrollbar-width:none]">
+                  {TABS.map(({ id, label, icon: Icon, color, hint }) => (
+                    <Tooltip key={id}>
+                      <TooltipTrigger asChild>
+                        <TabsTrigger value={id} aria-label={label} className="shrink-0 gap-1.5 px-2 text-xs sm:px-4 sm:text-sm">
+                          <Icon className={`h-4 w-4 ${color}`} aria-hidden="true" />
+                          {/* Mobilda (<640px) faqat ikonka: 5 ta tab 375px ga sig'ishi uchun */}
+                          <span className="hidden sm:inline">{label}</span>
+                        </TabsTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent className="sm:hidden">{hint || label}</TooltipContent>
+                    </Tooltip>
+                  ))}
+                </TabsList>
+              </Tabs>
             </nav>
           ) : (
-            /* ================= LOGIN QILMAGAN / MEHMON REJIMI (LANDING NAV) ================= */
-            <nav className="hidden lg:flex items-center gap-1 sm:gap-2">
-              <button
-                onClick={() => scrollTo('muammolar')}
-                className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
-              >
-                Loyiha Nima Uchun?
-              </button>
-              <button
-                onClick={() => scrollTo('afzalliklar')}
-                className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
-              >
-                Yengilliklari
-              </button>
-              <button
-                onClick={() => scrollTo('sinash')}
-                className="px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
-              >
-                Qanday Ishlaydi?
-              </button>
+            <nav aria-label="Sahifa bo‘limlari" className="hidden items-center gap-1 lg:flex">
+              {LANDING_LINKS.map((l) => (
+                <Button key={l.id} variant="ghost" size="sm" onClick={() => scrollTo(l.id)} className="text-muted-foreground">
+                  {l.label}
+                </Button>
+              ))}
             </nav>
           )}
 
-          {/* 3. Action Area */}
+          {/* Amallar */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {isAuthenticated || hasAnalysis ? (
-              /* Kirilgan holatda -> Skanerlash */
-              <Button
-                onClick={onOpenScan}
-                size="sm"
-                className={`gap-1.5 font-bold shadow-xs cursor-pointer ${
-                  isB2B
-                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                    : 'bg-sky-600 hover:bg-sky-700 text-white'
-                }`}
-              >
-                <QrCode className="w-4 h-4" />
-                <span>Skanerlash</span>
+            {signedIn ? (
+              <Button onClick={onOpenScan} size="sm" className="gap-1.5 font-semibold" aria-label="Skanerlash">
+                <QrCode className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Skanerlash</span>
               </Button>
             ) : (
-              /* Login qilinmagan holatda -> Bosh Kirish (OneID / E-IMZO) Tugmasi */
-              <Button
-                onClick={onOpenAuth}
-                size="sm"
-                className={`gap-1.5 font-bold shadow-sm transition-all cursor-pointer ${
-                  isB2B
-                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                    : 'bg-sky-600 hover:bg-sky-700 text-white'
-                }`}
-              >
-                <LogIn className="w-4 h-4" />
+              <Button onClick={onOpenAuth} size="sm" className="gap-1.5 font-semibold">
+                <LogIn className="h-4 w-4" aria-hidden="true" />
                 <span>Kirish (OneID / E-IMZO)</span>
               </Button>
             )}
 
-            {/* Theme Toggle (Sun/Moon) */}
             <Button
               variant="outline"
               size="icon"
               onClick={toggleTheme}
-              className="h-8 w-8 rounded-lg cursor-pointer"
-              title={isDark ? "Kunduzgi rejim" : "Tungi rejim"}
+              className="h-8 w-8"
+              aria-label={isDark ? 'Kunduzgi rejim' : 'Tungi rejim'}
+              title={isDark ? 'Kunduzgi rejim' : 'Tungi rejim'}
             >
-              {isDark ? (
-                <Sun className="h-4 w-4 text-amber-400" />
-              ) : (
-                <Moon className="h-4 w-4 text-slate-700" />
-              )}
+              {isDark ? <Sun className="h-4 w-4 text-amber-400" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
             </Button>
 
-            {/* Profil / Chiqish (Faqat tizimga kirilgan bo'lsa) */}
             {isAuthenticated && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={logout}
-                className="gap-1.5 text-xs text-red-600 dark:text-red-400 cursor-pointer"
-                title="Tizimdan chiqish"
-              >
-                <LogOut className="w-3.5 h-3.5" />
+              <Button variant="ghost" size="sm" onClick={logout} className="gap-1.5 text-xs text-destructive hover:text-destructive" aria-label="Chiqish">
+                <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                 <span className="hidden sm:inline">Chiqish</span>
               </Button>
             )}
           </div>
-
         </div>
       </div>
     </header>

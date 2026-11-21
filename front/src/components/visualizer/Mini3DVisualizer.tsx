@@ -153,17 +153,17 @@ export const Mini3DVisualizer: React.FC<Mini3DVisualizerProps> = ({
   return (
     <div 
       onClick={onOpenFull3D}
-      className="relative w-full h-44 rounded-2xl bg-slate-950/90 border border-slate-800 overflow-hidden cursor-pointer group hover:border-sky-500/50 transition-all flex items-center justify-center shadow-inner"
+      className="relative w-full h-44 rounded-2xl bg-slate-950/90 border border-slate-800 overflow-hidden cursor-pointer group hover:border-zinc-500/50 transition-all flex items-center justify-center shadow-inner"
     >
       <div ref={mountRef} className="w-full h-full" />
       
       {/* 3D Badge */}
-      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-sky-500/20 text-sky-400 border border-sky-500/30 text-[10px] font-mono uppercase tracking-wider flex items-center gap-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
+      <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-zinc-500/20 text-zinc-400 border border-zinc-500/30 text-[10px] font-mono uppercase tracking-wider flex items-center gap-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-ping" />
         WebGL 3D Sfera
       </div>
 
-      <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-slate-900/90 text-slate-300 border border-slate-700/80 text-[10px] font-semibold group-hover:text-sky-300 transition-colors">
+      <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-slate-900/90 text-slate-300 border border-slate-700/80 text-[10px] font-semibold group-hover:text-zinc-300 transition-colors">
         Kattalashtirish ↗
       </div>
     </div>

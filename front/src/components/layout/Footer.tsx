@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
           {/* Chap: Brend va rasmiy maqom */}
           <div className="flex items-center gap-2.5">
             <span className="font-bold text-slate-900 dark:text-white text-sm">
-              LexGuard<span className="text-sky-500">.AI</span>
+              LexGuard<span className="text-zinc-500">.AI</span>
             </span>
             <span className="text-slate-400 dark:text-slate-600 text-xs">·</span>
             <span className="text-slate-500 dark:text-slate-400 text-xs">
@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
               href="https://lex.uz" 
               target="_blank" 
               rel="noreferrer" 
-              className="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1.5 font-medium transition-colors"
+              className="text-zinc-600 dark:text-zinc-400 hover:underline flex items-center gap-1.5 font-medium transition-colors"
             >
               <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain brightness-110" />
               <span>Lex.uz Milliy Qonunchilik Portali</span>

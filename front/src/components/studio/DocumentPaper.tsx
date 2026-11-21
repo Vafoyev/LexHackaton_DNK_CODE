@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '../ui/button';
 import { AnalysisResult, ContractClause } from '../../types/contract';
 import { 
   ShieldAlert, 
@@ -54,7 +55,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
       {/* Hujjatning Yuqori Rekvizitlari (Liquid Glass Header) */}
       <div className="text-center pb-8 border-b border-slate-200 dark:border-white/10 space-y-2">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass-subtle border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-600 dark:text-slate-300">
-          <FileText className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
+          <FileText className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
           <span className="font-semibold text-slate-900 dark:text-white">{document.document_type}</span>
           <span className="text-slate-400 dark:text-slate-500">·</span>
           <span>Sana: {document.contract_date}</span>
@@ -87,7 +88,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
               onClick={() => onSelectClause(clause.id)}
               className={`p-5 rounded-2xl border transition-all cursor-pointer relative group ${
                 isSelected
-                  ? 'liquid-glass-accent ring-2 ring-sky-500 shadow-xl shadow-sky-500/10'
+                  ? 'liquid-glass-accent ring-2 ring-zinc-500 shadow-xl shadow-zinc-500/10'
                   : isRed && !isFixed
                   ? 'liquid-glass-danger border-rose-300 dark:border-rose-500/40 hover:border-rose-500'
                   : isYellow && !isFixed
@@ -103,7 +104,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                   <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-900/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white">
                     {clause.clause_number}
                   </span>
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
                     {clause.title}
                   </h3>
                 </div>
@@ -157,17 +158,20 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                         <span>⚠️</span>
                         <span className="truncate">{finding.issue_title}</span>
                       </div>
-                      <button
+                      <Button
                         type="button"
+                        variant="ghost"
+                        size="sm"
+                        aria-expanded={!!expandedFindings[clause.id]}
                         onClick={(e) => {
                           e.stopPropagation();
                           setExpandedFindings(prev => ({ ...prev, [clause.id]: !prev[clause.id] }));
                         }}
-                        className="px-2 py-0.5 rounded-md bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900/60 text-rose-800 dark:text-rose-300 text-[10px] font-bold shrink-0 flex items-center gap-1 transition-colors cursor-pointer"
+                        className="h-6 shrink-0 gap-1 px-2 text-[10px] font-bold text-rose-800 hover:bg-rose-100 dark:text-rose-300 dark:hover:bg-rose-950/60"
                       >
                         <span>{expandedFindings[clause.id] ? "Yashirish" : "Huquqiy izoh"}</span>
-                        <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${expandedFindings[clause.id] ? 'rotate-180' : ''}`} />
-                      </button>
+                        <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${expandedFindings[clause.id] ? 'rotate-180' : ''}`} aria-hidden="true" />
+                      </Button>
                     </div>
 
                     {expandedFindings[clause.id] && (
@@ -203,7 +207,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                       <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 text-[11px]">
                         <span className="font-semibold text-emerald-700 dark:text-emerald-300">Qonuniy asos:</span>
                         <span>{finding.legal_basis.source_title}, {finding.legal_basis.article}</span>
-                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-400 border border-sky-300 dark:border-sky-800">
+                        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-400 border border-zinc-300 dark:border-zinc-800">
                           {finding.legal_basis.norm_nature}
                         </span>
                       </div>
@@ -214,7 +218,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                           target="_blank"
                           rel="noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="text-[11px] font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 dark:hover:text-sky-300 hover:underline flex items-center gap-1 transition-colors"
+                          className="text-[11px] font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-500 dark:hover:text-zinc-300 hover:underline flex items-center gap-1 transition-colors"
                         >
                           <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain brightness-110" />
                           <span>Lex.uz da ko‘rish</span>
@@ -223,30 +227,33 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
 
                         {/* Tezkor Qabul qilish / Rad etish tugmasi */}
                         {onApplyFix && !isFixed && (
-                          <button
+                          <Button
                             type="button"
+                            size="sm"
                             onClick={(e) => {
                               e.stopPropagation();
                               onApplyFix(clause.id, finding.suggested_redline);
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold shadow-md shadow-emerald-600/30 flex items-center gap-1 transition-all cursor-pointer hover:scale-105"
+                            className="h-7 gap-1 bg-emerald-600 px-2.5 text-[11px] font-bold text-white hover:bg-emerald-600/90 dark:bg-emerald-600"
                           >
-                            <Check className="w-3 h-3 text-white" />
-                            <span>Qabul qilish</span>
-                          </button>
+                            <Check className="h-3 w-3" aria-hidden="true" />
+                            Qabul qilish
+                          </Button>
                         )}
                         {onRejectFix && isFixed && (
-                          <button
+                          <Button
                             type="button"
+                            size="sm"
+                            variant="secondary"
                             onClick={(e) => {
                               e.stopPropagation();
                               onRejectFix(clause.id);
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer"
+                            className="h-7 gap-1 px-2.5 text-[11px]"
                           >
-                            <Undo2 className="w-3 h-3" />
-                            <span>Bekor qilish</span>
-                          </button>
+                            <Undo2 className="h-3 w-3" aria-hidden="true" />
+                            Bekor qilish
+                          </Button>
                         )}
                       </div>
                     </div>
@@ -280,17 +287,20 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                 </div>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
+                aria-expanded={showSafeClauses}
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowSafeClauses(!showSafeClauses);
                 }}
-                className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:bg-white/10 transition-colors shrink-0 flex items-center gap-1 cursor-pointer"
+                className="shrink-0 gap-1 text-xs"
               >
-                <span>{showSafeClauses ? "Yashirish" : "Ko‘rish"}</span>
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${showSafeClauses ? 'rotate-180' : ''}`} />
-              </button>
+                {showSafeClauses ? "Yashirish" : "Ko‘rish"}
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${showSafeClauses ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </Button>
             </div>
 
             {showSafeClauses && (
@@ -341,7 +351,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
         <div className="flex items-center gap-1.5">
           <span>Qonunchilik bazasi:</span>
           <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain brightness-110" />
-          <span className="text-sky-600 dark:text-sky-400 font-semibold">Rasmiy milliy portal</span>
+          <span className="text-zinc-600 dark:text-zinc-400 font-semibold">Rasmiy milliy portal</span>
         </div>
         <span>LexGuard AI Raqamli Huquqiy Audit · O‘RQ-547</span>
       </div>

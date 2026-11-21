@@ -5,7 +5,10 @@ import { ClauseInspector } from './ClauseInspector';
 import { ThreeDModal } from './ThreeDModal';
 import { SideBySideDiffViewer } from '../diff/SideBySideDiffViewer';
 import { LiveVoiceAssistant } from '../voice/LiveVoiceAssistant';
-import { Sparkles, Check } from 'lucide-react';
+import { BalancePanel } from '../dashboard/BalancePanel';
+import { ArrowLeft, Mic } from 'lucide-react';
+import { Button } from '../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface ContractStudioProps {
   analysis: AnalysisResult;
@@ -20,7 +23,7 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
   initialView = 'reader',
   onAppliedCountChange,
 }) => {
-  const [activeView, setActiveView] = useState<'reader' | 'diff'>(initialView);
+  const [activeView, setActiveView] = useState<'reader' | 'diff' | 'balance'>(initialView);
 
   useEffect(() => {
     if (initialView) {
@@ -66,13 +69,38 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
   }, [fixedCount, onAppliedCountChange]);
 
   return (
-    <div className="flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100">
-      {/* Asosiy Ish Maydoni (Workspace) */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {/* 1. READER VIEW (Shartnoma Varaqi + AI Inspector Split) */}
-        {activeView === 'reader' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Chap tomon (65%): Shartnoma Varaqi (Qizil/Yashil boy diff) */}
+    <Tabs
+      value={activeView}
+      onValueChange={(v) => setActiveView(v as 'reader' | 'diff' | 'balance')}
+      className="flex flex-1 flex-col bg-transparent text-foreground"
+    >
+      {/* Yuqori panel: orqaga / hujjat nomi / ko'rinish tanlash */}
+      <div className="sticky top-16 z-20 border-b bg-background/70 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={onReset} className="gap-1.5 text-xs font-semibold text-muted-foreground">
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+              Boshqaruv paneliga qaytish
+            </Button>
+            <div className="hidden h-4 w-px bg-border sm:block" aria-hidden="true" />
+            <span className="max-w-[260px] truncate text-xs font-bold sm:max-w-md sm:text-sm">
+              {analysis.document?.filename || analysis.document?.document_type || "IT xizmat ko'rsatish shartnomasi"}
+            </span>
+          </div>
+
+          <TabsList>
+            <TabsTrigger value="reader" className="text-xs">Hujjat matni</TabsTrigger>
+            <TabsTrigger value="diff" className="text-xs">Taqqoslash (Diff)</TabsTrigger>
+            <TabsTrigger value="balance" className="text-xs">Balans</TabsTrigger>
+          </TabsList>
+        </div>
+      </div>
+
+      {/* Ish maydoni */}
+      <div className="mx-auto w-full max-w-7xl flex-1 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <TabsContent value="reader" className="mt-0 focus-visible:ring-0">
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
+            {/* Shartnoma varaqi (qizil/yashil redline) */}
             <div className="lg:col-span-8">
               <DocumentPaper
                 analysis={analysis}
@@ -84,8 +112,8 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
               />
             </div>
 
-            {/* O'ng tomon (35%): AI Yurist Inspektori (Sticky Liquid Glass) */}
-            <div className="lg:col-span-4 sticky top-20 space-y-4">
+            {/* AI yurist inspektori */}
+            <div className="sticky top-20 space-y-4 lg:col-span-4">
               <ClauseInspector
                 analysis={analysis}
                 selectedClause={selectedClause}
@@ -95,36 +123,34 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
                 appliedFixes={appliedFixes}
               />
 
-              {/* Ovozli Tahlil Tugmasi */}
-              <button
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => setShowVoiceBar(!showVoiceBar)}
-                className="w-full py-2.5 px-3 rounded-2xl liquid-glass hover:liquid-glass-accent text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-300 dark:border-white/10"
+                aria-expanded={showVoiceBar}
+                className="w-full gap-2 text-xs font-semibold"
               >
-                <span>🎙️ {showVoiceBar ? "Ovozli Yordamchini Yopish" : "Live Sinusoidal Ovozli Yordamchi"}</span>
-              </button>
+                <Mic className="h-4 w-4" aria-hidden="true" />
+                {showVoiceBar ? 'Ovozli yordamchini yopish' : 'Ovozli yordamchi'}
+              </Button>
 
-              {showVoiceBar && (
-                <LiveVoiceAssistant 
-                  analysis={analysis} 
-                  onNavigateToClause={(id) => setSelectedClauseId(id)}
-                />
-              )}
+              {showVoiceBar && <LiveVoiceAssistant analysis={analysis} onNavigateToClause={(id) => setSelectedClauseId(id)} />}
             </div>
           </div>
-        )}
+        </TabsContent>
 
-        {/* 2. DIFF VIEW (Side-by-Side Redline) */}
-        {activeView === 'diff' && (
-          <div className="space-y-4">
-            <SideBySideDiffViewer
-              analysis={analysis}
-              focusedClauseId={selectedClauseId}
-            />
+        <TabsContent value="diff" className="mt-0 space-y-4 focus-visible:ring-0">
+          <SideBySideDiffViewer analysis={analysis} focusedClauseId={selectedClauseId} />
+        </TabsContent>
+
+        {/* Tomonlar o'rtasidagi yuk taqsimoti va teng tahrirlar */}
+        <TabsContent value="balance" className="mt-0 focus-visible:ring-0">
+          <div className="mx-auto max-w-3xl">
+            <BalancePanel analysis={analysis} />
           </div>
-        )}
+        </TabsContent>
       </div>
 
-      {/* 3D Visualizer Modali */}
       <ThreeDModal
         isOpen={is3DModalOpen}
         onClose={() => setIs3DModalOpen(false)}
@@ -132,6 +158,6 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
         selectedClauseId={selectedClauseId}
         onSelectClause={(id) => setSelectedClauseId(id)}
       />
-    </div>
+    </Tabs>
   );
 };

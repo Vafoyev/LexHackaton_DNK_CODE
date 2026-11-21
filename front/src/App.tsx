@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { Navbar, MainNavTab } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
 import { LandingView } from './components/landing/LandingView';
+import { HomeDashboard } from './components/dashboard/HomeDashboard';
 import { ContractStudio } from './components/studio/ContractStudio';
 import { ThreeDModal } from './components/studio/ThreeDModal';
 import { DocumentsView } from './components/documents/DocumentsView';
 import { LawsView } from './components/laws/LawsView';
+import { AIChatView } from './components/ai/AIChatView';
 import { ProfileView } from './components/profile/ProfileView';
 import { ScanUploadModal } from './components/upload/ScanUploadModal';
 import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
+import { SampleContract } from './data/sampleContracts';
+import { Alert, AlertDescription } from './components/ui/alert';
+import { Button } from './components/ui/button';
 
 function MainApp() {
+  const { isAuthenticated, user } = useAuth();
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<MainNavTab>('home');
   const [studioSubView, setStudioSubView] = useState<'xulosa' | 'diff'>('xulosa');
@@ -27,16 +33,19 @@ function MainApp() {
   const [isScanModalOpen, setIsScanModalOpen] = useState(false);
   const [is3DModalOpen, setIs3DModalOpen] = useState(false);
   const [appliedCount, setAppliedCount] = useState(0);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
 
-  const handleAnalyze = async (file: File | null, isDemo: boolean) => {
+  const handleAnalyze = async (file: File | null, isDemo: boolean, sampleId?: SampleContract['id']): Promise<boolean> => {
     setIsLoading(true);
     setProgress(null);
+    setAnalyzeError(null);
 
     try {
       const result = await ApiService.analyzeDocument(
         file,
         (event) => setProgress(event),
-        isDemo
+        isDemo,
+        sampleId
       );
       setAnalysis(result);
       setActiveTab('home');
@@ -45,12 +54,13 @@ function MainApp() {
         particleCount: 80,
         spread: 60,
         origin: { y: 0.7 },
-        colors: ['#38BDF8', '#0284C7', '#22C55E'],
+        colors: ['#FAFAFA', '#A3A3A3', '#22C55E'],
       });
+      return true;
     } catch (err) {
       console.error(err);
-      setAnalysis(SAMPLE_IT_SERVICE_CONTRACT);
-      setActiveTab('home');
+      setAnalyzeError(err instanceof Error ? err.message : 'Tahlil bajarilmadi. Qayta urinib ko‘ring.');
+      return false;
     } finally {
       setIsLoading(false);
     }
@@ -64,11 +74,11 @@ function MainApp() {
   const currentAnalysis = analysis || SAMPLE_IT_SERVICE_CONTRACT;
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#030712] text-slate-900 dark:text-slate-100 selection:bg-sky-500 selection:text-white overflow-x-hidden transition-colors duration-300">
+    <div className="relative min-h-screen flex flex-col text-foreground selection:bg-foreground selection:text-background overflow-x-hidden transition-colors duration-300">
       {/* Sokin Ambient Orblar */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-20 dark:opacity-30 transition-opacity duration-300" aria-hidden="true">
-        <div className="absolute -top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-sky-500/10 blur-[140px]" />
-        <div className="absolute top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[140px]" />
+        <div className="absolute -top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-foreground/10 blur-[140px]" />
+        <div className="absolute top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full bg-foreground/5 blur-[140px]" />
       </div>
 
       {/* Floating Shadcn Navbar (Mehmon holatida Landing links + Kirish; Kirilganda Asosiy, Hujjatlar, Qonunlar, Profil) */}
@@ -82,6 +92,19 @@ function MainApp() {
         hasAnalysis={!!analysis}
       />
 
+      {analyzeError && !isScanModalOpen && (
+        <div className="fixed inset-x-0 top-20 z-40 mx-auto w-[calc(100%-2rem)] max-w-xl">
+          <Alert variant="destructive" role="alert" className="bg-background shadow-lg">
+            <AlertDescription className="flex items-center justify-between gap-3">
+              <span>{analyzeError}</span>
+              <Button type="button" size="sm" variant="outline" onClick={() => setAnalyzeError(null)}>
+                Yopish
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <div className="relative z-10 flex-1 flex flex-col pt-20">
         {activeTab === 'home' && (
@@ -94,6 +117,26 @@ function MainApp() {
                 onAppliedCountChange={setAppliedCount}
               />
             </div>
+          ) : isAuthenticated ? (
+            <div className="flex-1 flex flex-col">
+              <main className="flex-1 w-full pb-12">
+                <HomeDashboard
+                  currentAnalysis={currentAnalysis}
+                  onOpenContract={(c) => {
+                    setAnalysis(c);
+                    setActiveTab('home');
+                  }}
+                  onOpenScan={() => setIsScanModalOpen(true)}
+                  onAnalyzeDemo={() => handleAnalyze(null, true)}
+                  onAnalyzeFile={(file) => handleAnalyze(file, false)}
+                  isLoading={isLoading}
+                  progress={progress}
+                  onGoToDocuments={() => setActiveTab('documents')}
+                  onGoToLaws={() => setActiveTab('laws')}
+                />
+              </main>
+              <Footer />
+            </div>
           ) : (
             <div className="flex-1 flex flex-col">
               <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex flex-col justify-center">
@@ -102,8 +145,6 @@ function MainApp() {
                   isLoading={isLoading}
                   progress={progress}
                   onOpenAuth={() => setIsAuthModalOpen(true)}
-                  segment={segment}
-                  onSegmentChange={setSegment}
                 />
               </main>
               <Footer />
@@ -126,6 +167,10 @@ function MainApp() {
           <LawsView />
         )}
 
+        {activeTab === 'ai' && (
+          <AIChatView onRequireAuth={() => setIsAuthModalOpen(true)} />
+        )}
+
         {activeTab === 'profile' && (
           <ProfileView
             segment={segment}
@@ -142,6 +187,7 @@ function MainApp() {
         onAnalyze={handleAnalyze}
         isLoading={isLoading}
         progress={progress}
+        error={analyzeError}
       />
 
       {/* Auth Modal (ONE ID / Kirish) */}

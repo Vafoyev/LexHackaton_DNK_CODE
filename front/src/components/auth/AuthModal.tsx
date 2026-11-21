@@ -1,45 +1,57 @@
 import React, { useState } from 'react';
+import {
+  AlertCircle,
+  ArrowRight,
+  Building,
+  CheckCircle2,
+  CreditCard,
+  FileBadge,
+  Lock,
+  Mail,
+  ShieldCheck,
+  User,
+  Zap,
+} from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { EntityType } from '../../types/auth';
-import { 
-  X, 
-  ShieldCheck, 
-  Lock, 
-  Mail, 
-  Building, 
-  User, 
-  ArrowRight, 
-  Zap, 
-  CheckCircle2, 
-  AlertCircle,
-  FileBadge,
-  CreditCard
-} from 'lucide-react';
+import { Alert, AlertDescription } from '../ui/alert';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Separator } from '../ui/separator';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+/** Ikonkali maydon: Label + Input (shadcn) */
+const Field: React.FC<{
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  mono?: boolean;
+} & React.InputHTMLAttributes<HTMLInputElement>> = ({ id, label, icon: Icon, mono, className, ...props }) => (
+  <div className="space-y-1.5">
+    <Label htmlFor={id} className="text-xs text-muted-foreground">
+      {label}
+    </Label>
+    <div className="relative">
+      <Icon className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+      <Input id={id} className={`pl-9 ${mono ? 'font-mono' : ''} ${className || ''}`} {...props} />
+    </div>
+  </div>
+);
+
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const { login, demoLogin, register, isLoading } = useAuth();
 
-  React.useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Asosiy tanlov: Jismoniy shaxs yoki Yuridik shaxs
   const [selectedEntity, setSelectedEntity] = useState<EntityType>('LEGAL_ENTITY');
   const [mode, setMode] = useState<'login' | 'register'>('login');
 
-  // Forma maydonlari
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -49,11 +61,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [agreeConsent, setAgreeConsent] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  if (!isOpen) return null;
-
   const isIndividual = selectedEntity === 'INDIVIDUAL';
 
-  // Tezkor demo ma'lumotlarini to'ldirish
   const handleQuickDemo = async (type: EntityType) => {
     setSelectedEntity(type);
     await demoLogin(type);
@@ -75,346 +84,244 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       } catch (err: any) {
         setErrorMsg(err.message || 'Kirishda xatolik yuz berdi');
       }
-    } else {
-      if (!fullName || !email || !password) {
-        setErrorMsg('F.I.Sh., email va parolni kiriting');
-        return;
-      }
-      if (isIndividual && jshshir.length !== 14) {
-        setErrorMsg('JShShIR aniq 14 ta raqamdan iborat bo‘lishi lozim');
-        return;
-      }
-      if (!isIndividual && (!orgName || tin.length !== 9)) {
-        setErrorMsg('Tashkilot nomi va 9 xonali STIR (INN) kiritilishi shart');
-        return;
-      }
-      if (!agreeConsent) {
-        setErrorMsg('O‘RQ-547 bo‘yicha shaxsiy ma’lumotlarni qayta ishlashga rozilik shart');
-        return;
-      }
+      return;
+    }
 
-      try {
-        await register({
-          email,
-          password,
-          full_name: fullName,
-          entity_type: selectedEntity,
-          jshshir: isIndividual ? jshshir : undefined,
-          tin: !isIndividual ? tin : undefined,
-          org_name: !isIndividual ? orgName : undefined,
-        });
-        onClose();
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Ro‘yxatdan o‘tishda xatolik');
-      }
+    if (!fullName || !email || !password) {
+      setErrorMsg('F.I.Sh., email va parolni kiriting');
+      return;
+    }
+    if (isIndividual && jshshir.length !== 14) {
+      setErrorMsg('JShShIR aniq 14 ta raqamdan iborat bo‘lishi lozim');
+      return;
+    }
+    if (!isIndividual && (!orgName || tin.length !== 9)) {
+      setErrorMsg('Tashkilot nomi va 9 xonali STIR (INN) kiritilishi shart');
+      return;
+    }
+    if (!agreeConsent) {
+      setErrorMsg('O‘RQ-547 bo‘yicha shaxsiy ma’lumotlarni qayta ishlashga rozilik shart');
+      return;
+    }
+
+    try {
+      await register({
+        email,
+        password,
+        full_name: fullName,
+        entity_type: selectedEntity,
+        jshshir: isIndividual ? jshshir : undefined,
+        tin: !isIndividual ? tin : undefined,
+        org_name: !isIndividual ? orgName : undefined,
+      });
+      onClose();
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Ro‘yxatdan o‘tishda xatolik');
     }
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200"
-      onClick={onClose}
-    >
-      <div 
-        className="relative w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Yopish tugmasi */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        {/* Logo & Sarlavha */}
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 p-[2px] shadow-lg shadow-sky-500/20">
-            <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-              <ShieldCheck className="w-6 h-6 text-sky-400" />
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[92vh] max-w-lg overflow-y-auto sm:rounded-2xl">
+        <DialogHeader>
+          <div className="mb-1 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <ShieldCheck className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <div className="text-left">
+              <DialogTitle>LexGuard AI: kirish va ro‘yxatdan o‘tish</DialogTitle>
+              <DialogDescription>O‘zbekiston Respublikasi qonunchilik standartlari</DialogDescription>
             </div>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">
-              LexGuard AI — Kirish va Ro‘yxatdan O‘tish
-            </h3>
-            <p className="text-xs text-slate-400 font-mono">
-              O‘zbekiston Respublikasi Qonunchilik Standartlari
-            </p>
-          </div>
+        </DialogHeader>
+
+        {/* Shaxs turi */}
+        <div className="space-y-2">
+          <Label className="text-xs text-muted-foreground">Shaxs turini tanlang</Label>
+          <Tabs
+            value={selectedEntity}
+            onValueChange={(v) => {
+              setSelectedEntity(v as EntityType);
+              setErrorMsg(null);
+            }}
+          >
+            <TabsList className="grid h-auto w-full grid-cols-2 p-1">
+              <TabsTrigger value="INDIVIDUAL" className="flex-col gap-0.5 py-2">
+                <span className="flex items-center gap-2 text-xs font-semibold">
+                  <User className="h-4 w-4" aria-hidden="true" /> Jismoniy shaxs
+                </span>
+                <span className="text-[10px] font-normal text-muted-foreground">Fuqaro, JShShIR (PINFL)</span>
+              </TabsTrigger>
+              <TabsTrigger value="LEGAL_ENTITY" className="flex-col gap-0.5 py-2">
+                <span className="flex items-center gap-2 text-xs font-semibold">
+                  <Building className="h-4 w-4" aria-hidden="true" /> Yuridik shaxs
+                </span>
+                <span className="text-[10px] font-normal text-muted-foreground">Kompaniya, STIR (INN)</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
-        {/* 🎯 JISMONIY SHAXS / YURIDIK SHAXS TANLOV TUGMALARI (Soliq.uz uslubi) */}
-        <div className="mb-5">
-          <label className="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 font-bold">
-            Shaxs turini tanlang:
-          </label>
-          <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-2xl border border-slate-800">
-            {/* Jismoniy Shaxs Tugmasi */}
-            <button
-              type="button"
-              onClick={() => { setSelectedEntity('INDIVIDUAL'); setErrorMsg(null); }}
-              className={`py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                isIndividual
-                  ? 'bg-gradient-to-b from-sky-500/20 to-sky-600/30 text-sky-300 border border-sky-500/50 shadow-md shadow-sky-500/10'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <User className={`w-4 h-4 ${isIndividual ? 'text-sky-400' : 'text-slate-500'}`} />
-                <span className="text-xs font-bold">Jismoniy shaxs</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-400">
-                Fuqaro · JShShIR (PINFL)
-              </span>
-            </button>
+        {/* 1 bosishda tezkor kirish */}
+        <Button
+          type="button"
+          onClick={() => handleQuickDemo(selectedEntity)}
+          disabled={isLoading}
+          className="w-full justify-between"
+        >
+          <span className="flex items-center gap-2">
+            {isIndividual ? <Zap className="h-4 w-4" aria-hidden="true" /> : <Building className="h-4 w-4" aria-hidden="true" />}
+            {isIndividual ? 'Jismoniy shaxs sifatida tezkor kirish' : 'Yuridik shaxs sifatida tezkor kirish'}
+          </span>
+          <span className="rounded bg-primary-foreground/15 px-2 py-0.5 font-mono text-[10px]">
+            {isIndividual ? 'Jasur Aliyev (JShShIR)' : 'Smart Legal MCHJ (STIR)'}
+          </span>
+        </Button>
 
-            {/* Yuridik Shaxs Tugmasi */}
-            <button
-              type="button"
-              onClick={() => { setSelectedEntity('LEGAL_ENTITY'); setErrorMsg(null); }}
-              className={`py-3 px-3 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                !isIndividual
-                  ? 'bg-gradient-to-b from-emerald-500/20 to-emerald-600/30 text-emerald-300 border border-emerald-500/50 shadow-md shadow-emerald-500/10'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <Building className={`w-4 h-4 ${!isIndividual ? 'text-emerald-400' : 'text-slate-500'}`} />
-                <span className="text-xs font-bold">Yuridik shaxs</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-400">
-                Kompaniya · STIR (INN)
-              </span>
-            </button>
-          </div>
+        <div className="relative">
+          <Separator />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-3 text-[11px] text-muted-foreground">
+            yoki maxsus hisob bilan
+          </span>
         </div>
 
-        {/* ⚡ 1-Bosishda Tezkor Kirish (Tanlangan shaxsga mos ravishda) */}
-        <div className="mb-4">
-          {isIndividual ? (
-            <button
-              onClick={() => handleQuickDemo('INDIVIDUAL')}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-brand-600 hover:from-sky-500 hover:to-brand-500 text-white text-xs font-bold shadow-lg shadow-sky-600/30 flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01]"
-            >
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 fill-current text-sky-200" />
-                <span>👤 Jismoniy shaxs sifatida tezkor kirish</span>
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 text-sky-200">
-                Jasur Aliyev (JShShIR)
-              </span>
-            </button>
-          ) : (
-            <button
-              onClick={() => handleQuickDemo('LEGAL_ENTITY')}
-              className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 flex items-center justify-between transition-all cursor-pointer hover:scale-[1.01]"
-            >
-              <div className="flex items-center gap-2">
-                <Building className="w-4 h-4 text-emerald-200" />
-                <span>🏢 Yuridik shaxs sifatida tezkor kirish</span>
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-black/30 text-emerald-200">
-                Smart Legal MCHJ (STIR)
-              </span>
-            </button>
-          )}
-        </div>
-
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-800"></div>
-          </div>
-          <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-widest">
-            <span className="bg-slate-900 px-3 text-slate-500">yoki maxsus hisob bilan</span>
-          </div>
-        </div>
-
-        {/* Xatolik xabari */}
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errorMsg}</span>
-          </div>
+          <Alert variant="destructive" role="alert">
+            <AlertCircle className="h-4 w-4" aria-hidden="true" />
+            <AlertDescription>{errorMsg}</AlertDescription>
+          </Alert>
         )}
 
-        {/* FORMA (Jismoniy / Yuridik shaxsga moslashuvchan) */}
         <form onSubmit={handleSubmit} className="space-y-3">
           {mode === 'register' && (
             <>
-              <div>
-                <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                  {isIndividual ? 'F.I.Sh. (Fuqaro)' : 'Rahbar F.I.Sh.'}
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder={isIndividual ? "Masalan: Jasur Aliyev" : "Masalan: Alisher Qodirov"}
-                    className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
-                  />
-                </div>
-              </div>
+              <Field
+                id="auth-fullname"
+                label={isIndividual ? 'F.I.Sh. (fuqaro)' : 'Rahbar F.I.Sh.'}
+                icon={User}
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder={isIndividual ? 'Masalan: Jasur Aliyev' : 'Masalan: Alisher Qodirov'}
+                autoComplete="name"
+              />
 
-              {/* Jismoniy shaxs uchun JShShIR */}
               {isIndividual ? (
-                <div>
-                  <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                    JShShIR (14 xonali PINFL)
-                  </label>
-                  <div className="relative">
-                    <CreditCard className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                    <input
-                      type="text"
-                      maxLength={14}
-                      value={jshshir}
-                      onChange={(e) => setJshshir(e.target.value.replace(/\D/g, ''))}
-                      placeholder="30101901234567"
-                      className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-sky-500 transition-colors"
-                    />
-                  </div>
-                </div>
+                <Field
+                  id="auth-jshshir"
+                  label="JShShIR (14 xonali PINFL)"
+                  icon={CreditCard}
+                  mono
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={14}
+                  value={jshshir}
+                  onChange={(e) => setJshshir(e.target.value.replace(/\D/g, ''))}
+                  placeholder="30101901234567"
+                />
               ) : (
-                /* Yuridik shaxs uchun Tashkilot & STIR */
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Tashkilot nomi
-                    </label>
-                    <div className="relative">
-                      <Building className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                      <input
-                        type="text"
-                        value={orgName}
-                        onChange={(e) => setOrgName(e.target.value)}
-                        placeholder="Smart Solutions MCHJ"
-                        className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-emerald-500 transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-medium text-slate-400 mb-1">
-                      STIR / INN (9 xonali)
-                    </label>
-                    <div className="relative">
-                      <FileBadge className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-                      <input
-                        type="text"
-                        maxLength={9}
-                        value={tin}
-                        onChange={(e) => setTin(e.target.value.replace(/\D/g, ''))}
-                        placeholder="305123456"
-                        className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-emerald-500 transition-colors"
-                      />
-                    </div>
-                  </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <Field
+                    id="auth-org"
+                    label="Tashkilot nomi"
+                    icon={Building}
+                    type="text"
+                    value={orgName}
+                    onChange={(e) => setOrgName(e.target.value)}
+                    placeholder="Smart Solutions MCHJ"
+                    autoComplete="organization"
+                  />
+                  <Field
+                    id="auth-tin"
+                    label="STIR / INN (9 xonali)"
+                    icon={FileBadge}
+                    mono
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={9}
+                    value={tin}
+                    onChange={(e) => setTin(e.target.value.replace(/\D/g, ''))}
+                    placeholder="305123456"
+                  />
                 </div>
               )}
             </>
           )}
 
-          <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">Elektron pochta</label>
-            <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={isIndividual ? "jasur@mail.uz" : "director@kompaniya.uz"}
-                className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">Maxfiy parol</label>
-            <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-sky-500 transition-colors"
-              />
-            </div>
-          </div>
+          <Field
+            id="auth-email"
+            label="Elektron pochta"
+            icon={Mail}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={isIndividual ? 'jasur@mail.uz' : 'director@kompaniya.uz'}
+            autoComplete="email"
+          />
+          <Field
+            id="auth-password"
+            label="Parol"
+            icon={Lock}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+          />
 
           {mode === 'register' && (
-            <label className="flex items-start gap-2 pt-1 text-[11px] text-slate-400 cursor-pointer">
-              <input
-                type="checkbox"
+            <div className="flex items-start gap-2 pt-1">
+              <Checkbox
+                id="auth-consent"
                 checked={agreeConsent}
-                onChange={(e) => setAgreeConsent(e.target.checked)}
-                className="mt-0.5 rounded border-slate-800 bg-slate-950 text-sky-500"
+                onCheckedChange={(v) => setAgreeConsent(v === true)}
+                className="mt-0.5"
               />
-              <span>
-                O‘RQ-547 qonuni bo‘yicha {isIndividual ? 'JShShIR va shaxsiy ma’lumotlarni' : 'korxona tijoriy ma’lumotlarini'} anonimlashtirib tekshirishga roziman.
-              </span>
-            </label>
+              <Label htmlFor="auth-consent" className="text-xs font-normal leading-snug text-muted-foreground">
+                O‘RQ-547 qonuni bo‘yicha {isIndividual ? 'JShShIR va shaxsiy ma’lumotlarni' : 'korxona tijoriy ma’lumotlarini'} anonimlashtirib
+                tekshirishga roziman.
+              </Label>
+            </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer mt-2 ${
-              isIndividual
-                ? 'bg-sky-500 hover:bg-sky-400 text-white shadow-sky-500/20'
-                : 'bg-emerald-500 hover:bg-emerald-400 text-white shadow-emerald-500/20'
-            }`}
-          >
+          <Button type="submit" disabled={isLoading} className="mt-1 w-full gap-1.5">
             {isLoading ? (
-              <span>Tekshirilmoqda...</span>
+              'Tekshirilmoqda…'
             ) : mode === 'login' ? (
               <>
-                <span>{isIndividual ? 'Jismoniy Shaxs sifatida Kirish' : 'Yuridik Shaxs sifatida Kirish'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                {isIndividual ? 'Jismoniy shaxs sifatida kirish' : 'Yuridik shaxs sifatida kirish'}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </>
             ) : (
               <>
-                <span>Ro‘yxatdan O‘tish</span>
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                Ro‘yxatdan o‘tish
+                <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
               </>
             )}
-          </button>
+          </Button>
         </form>
 
-        {/* Tab almashtirish */}
-        <div className="mt-5 text-center text-xs text-slate-400">
-          {mode === 'login' ? (
-            <span>
-              Hisobingiz yo‘qmi?{' '}
-              <button 
-                onClick={() => { setMode('register'); setErrorMsg(null); }}
-                className={`${isIndividual ? 'text-sky-400' : 'text-emerald-400'} font-bold hover:underline`}
-              >
-                Yangi hisob ochish
-              </button>
-            </span>
-          ) : (
-            <span>
-              Akkauntingiz bormi?{' '}
-              <button 
-                onClick={() => { setMode('login'); setErrorMsg(null); }}
-                className={`${isIndividual ? 'text-sky-400' : 'text-emerald-400'} font-bold hover:underline`}
-              >
-                Kirish sahifasi
-              </button>
-            </span>
-          )}
-        </div>
+        <p className="text-center text-sm text-muted-foreground">
+          {mode === 'login' ? 'Hisobingiz yo‘qmi?' : 'Hisobingiz bormi?'}{' '}
+          <Button
+            type="button"
+            variant="link"
+            className="h-auto p-0 font-semibold"
+            onClick={() => {
+              setMode(mode === 'login' ? 'register' : 'login');
+              setErrorMsg(null);
+            }}
+          >
+            {mode === 'login' ? 'Yangi hisob ochish' : 'Kirish sahifasi'}
+          </Button>
+        </p>
 
-        {/* Lex.uz & Qonuniylik kafolati */}
-        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[10px] text-slate-500">
+        <div className="flex items-center justify-center gap-2 border-t pt-3 text-[11px] text-muted-foreground">
           <span>Qonuniy asos:</span>
-          <img src="/lex_uz.svg" alt="Lex.uz" className="h-3.5 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity" />
+          <img src="/lex_uz.svg" alt="Lex.uz" className="h-3.5 w-auto object-contain opacity-80" />
           <span>· Soliq.uz · OneID standartlariga mos</span>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };

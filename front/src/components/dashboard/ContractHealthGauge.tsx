@@ -159,7 +159,7 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
           <div className="p-4 rounded-2xl bg-slate-950/50 border border-slate-800/80 space-y-2.5">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-                <Activity className="w-3.5 h-3.5 text-sky-400" />
+                <Activity className="w-3.5 h-3.5 text-zinc-400" />
                 <span>Shartnoma Moddalari Xaritasi (DNA Barcode):</span>
               </span>
               <span className="text-[10px] font-mono text-slate-500">
@@ -196,7 +196,7 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
 
             <div className="flex items-center justify-between text-[10px] text-slate-500 px-1">
               <span>1.1 (Muqaddima)</span>
-              <span className="text-sky-400 font-semibold">{summary.balance_label}</span>
+              <span className="text-zinc-400 font-semibold">{summary.balance_label}</span>
               <span>{clauses[clauses.length - 1]?.clause_number || '18.1'} (Yakuniy)</span>
             </div>
           </div>
@@ -245,7 +245,7 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
               step={5000000}
               value={contractAmount}
               onChange={(e) => setContractAmount(Number(e.target.value))}
-              className="w-full accent-sky-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
+              className="w-full accent-zinc-500 bg-slate-800 h-1.5 rounded-lg cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-500">
               <span>10 mln</span>
@@ -286,7 +286,7 @@ export const ContractHealthGauge: React.FC<ContractHealthGaugeProps> = ({
               <span>Redline taklifi bilan:</span>
               <span className="text-emerald-400 font-mono font-bold">{formatCurrency(legalRedlinePenalty)}</span>
             </div>
-            <div className="pt-1 border-t border-slate-800 flex justify-between text-[11px] font-bold text-sky-400">
+            <div className="pt-1 border-t border-slate-800 flex justify-between text-[11px] font-bold text-zinc-400">
               <span>Yuridik Xavf Qisqarishi:</span>
               <span>-{Math.round((savedAmount / Math.max(currentRiskPenalty, 1)) * 100)}%</span>
             </div>

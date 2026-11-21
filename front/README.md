@@ -50,3 +50,17 @@ npm run dev
 # Ishlab chiqarish uchun build qilish
 npm run build
 ```
+
+
+## UI tizimi: shadcn/ui
+
+Interfeys rasmiy [shadcn/ui](https://ui.shadcn.com) (new-york uslubi, Radix primitivlari) asosida. Sozlamalar `components.json`da, `@` aliasi `src/`ga ishora qiladi.
+
+- **Komponentlar:** `src/components/ui/` (rasmiy CLI bilan olingan: `npx shadcn@latest add <nom>`). Loyiha o'zgartirishlari: `Badge` ga semantik variantlar
+  (`danger`, `warning`, `success`, `neutral`), `Progress` ga `indicatorClassName`.
+- **Tema:** `src/index.css` dagi CSS o'zgaruvchilari (`--background`, `--primary`, `--card`, ...). Qiymatlar loyihaning avvalgi palitrasiga moslangan
+  (qorong'i fon `#030712`, karta `#0B132B`, aksent sky). Yorug'/qorong'i rejim `.dark` sinfi bilan.
+- **Qoida:** yangi tugma, input, modal, tab, tooltip, ochiladigan blok uchun qo'lda `<button>`/`fixed inset-0` yozmang; mos shadcn komponentini ishlating
+  (`Button`, `Input`, `Dialog`, `Tabs`, `Tooltip`, `Collapsible`, `Alert`, `Skeleton`, `Progress`).
+- Yashirin fayl inputlari (`<input type="file" className="hidden">`) shadcn'da analogi yo'qligi uchun oddiy qoldirilgan.
+- Ishlatilmaydigan (o'lik) fayllar: `ExecutiveSummary`, `ContractHealthGauge`, `StudioHeader`, `ContractUploader`, `Mini3DVisualizer`, `LexUzLogo`, `utils/export.ts`.

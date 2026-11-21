@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { 
   ShieldAlert, 
   AlertTriangle, 
@@ -162,20 +164,22 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
         {riskyClauses.length > 0 && (
           <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 font-mono">
             <span>{currentRiskIndex >= 0 ? `${currentRiskIndex + 1}/${riskyClauses.length}` : ''}</span>
-            <button
-              onClick={handlePrevRisk}
-              title="Oldingi xavfga o‘tish"
-              className="p-1 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={handleNextRisk}
-              title="Keyingi xavfga o‘tish"
-              className="p-1 rounded-lg bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button type="button" variant="secondary" size="icon" onClick={handlePrevRisk} className="h-6 w-6" aria-label="Oldingi xavfga o‘tish">
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Oldingi xavfga o‘tish</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button type="button" variant="secondary" size="icon" onClick={handleNextRisk} className="h-6 w-6" aria-label="Keyingi xavfga o‘tish">
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Keyingi xavfga o‘tish</TooltipContent>
+            </Tooltip>
           </div>
         )}
       </div>
@@ -196,10 +200,10 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
 
         {/* 🧠 Legal Knowledge Graph Moddalar Zanjiri (Multi-Hop) */}
         {finding && lawChain.length > 0 && (
-          <div className="p-3.5 rounded-2xl liquid-glass-subtle border border-sky-300 dark:border-sky-500/30 space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-mono font-bold text-sky-700 dark:text-sky-400">
+          <div className="p-3.5 rounded-2xl liquid-glass-subtle border border-zinc-300 dark:border-zinc-500/30 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono font-bold text-zinc-700 dark:text-zinc-400">
               <span className="flex items-center gap-1.5">
-                <GitBranch className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+                <GitBranch className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
                 Lex.uz Knowledge Graph (Moddalar Zanjiri)
               </span>
               <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3 w-auto object-contain brightness-110" />
@@ -207,10 +211,10 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
 
             <div className="space-y-1.5 pt-1">
               {lawChain.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 hover:border-sky-400 dark:hover:border-sky-500/40 transition-all">
+                <div key={idx} className="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 hover:border-zinc-400 dark:hover:border-zinc-500/40 transition-all">
                   <div className="min-w-0 pr-2">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-100 dark:bg-sky-500/20 text-sky-800 dark:text-sky-300 font-bold">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-zinc-500/20 text-zinc-800 dark:text-zinc-300 font-bold">
                         {item.article}
                       </span>
                       <span className="text-[9px] font-mono uppercase text-slate-500 dark:text-slate-400">
@@ -224,7 +228,7 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1 px-2 rounded-lg bg-sky-500/15 hover:bg-sky-500/30 text-sky-700 dark:text-sky-300 text-[10px] font-bold flex items-center gap-1 shrink-0 transition-colors"
+                    className="p-1 px-2 rounded-lg bg-zinc-500/15 hover:bg-zinc-500/30 text-zinc-700 dark:text-zinc-300 text-[10px] font-bold flex items-center gap-1 shrink-0 transition-colors"
                   >
                     <span>Ochish</span>
                     <ExternalLink className="w-2.5 h-2.5" />
@@ -265,26 +269,25 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
 
         {/* Ovozli Yurist Brifingi */}
         <div className="pt-1">
-          <button
+          <Button
+            type="button"
+            variant={isPlayingAudio ? 'destructive' : 'outline'}
             onClick={playVoiceExplanation}
-            className={`w-full py-2 px-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-semibold transition-all cursor-pointer ${
-              isPlayingAudio
-                ? 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-500/40 animate-pulse'
-                : 'liquid-glass-subtle hover:liquid-glass-accent text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10'
-            }`}
+            aria-pressed={isPlayingAudio}
+            className="w-full gap-2 text-xs font-semibold"
           >
             {isPlayingAudio ? (
               <>
-                <VolumeX className="w-3.5 h-3.5 text-rose-500" />
-                <span>Ovozli sharhni to‘xtatish</span>
+                <VolumeX className="h-3.5 w-3.5" aria-hidden="true" />
+                Ovozli sharhni to‘xtatish
               </>
             ) : (
               <>
-                <Volume2 className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
-                <span>Advokat ovozli sharhini eshitish (15s)</span>
+                <Volume2 className="h-3.5 w-3.5 text-zinc-500" aria-hidden="true" />
+                Ovozli sharhni eshitish
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -293,21 +296,19 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
         <div className="p-4 border-t border-slate-200 dark:border-white/10 liquid-glass-subtle">
           {!isFixed ? (
             <div className="grid grid-cols-2 gap-2">
-              <button
+              <Button
+                type="button"
                 onClick={() => onApplyFix(selectedClause.id, finding.suggested_redline)}
-                className="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-[1.02]"
+                className="gap-1.5 bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-600/90 dark:bg-emerald-600"
               >
-                <Check className="w-3.5 h-3.5" />
-                <span>Qabul qilish</span>
-              </button>
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                Qabul qilish
+              </Button>
 
-              <button
-                onClick={() => onRejectFix && onRejectFix(selectedClause.id)}
-                className="py-2.5 px-3 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-semibold text-xs border border-slate-300 dark:border-white/10 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400" />
-                <span>Rad etish</span>
-              </button>
+              <Button type="button" variant="outline" onClick={() => onRejectFix && onRejectFix(selectedClause.id)} className="gap-1.5 text-xs font-semibold">
+                <X className="h-3.5 w-3.5 text-rose-500" aria-hidden="true" />
+                Rad etish
+              </Button>
             </div>
           ) : (
             <div className="flex items-center justify-between gap-2 p-2 rounded-xl bg-emerald-100 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-800 dark:text-emerald-300 font-bold text-xs">
@@ -316,13 +317,10 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
                 <span>Tahrir qabul qilindi</span>
               </div>
               {onRejectFix && (
-                <button
-                  onClick={() => onRejectFix(selectedClause.id)}
-                  className="px-2 py-1 rounded-lg bg-slate-900/60 hover:bg-slate-900 text-slate-300 hover:text-white text-[11px] font-normal flex items-center gap-1 transition-colors"
-                >
-                  <Undo2 className="w-3 h-3" />
-                  <span>Bekor qilish</span>
-                </button>
+                <Button type="button" variant="secondary" size="sm" onClick={() => onRejectFix(selectedClause.id)} className="h-7 gap-1 px-2 text-[11px] font-normal">
+                  <Undo2 className="h-3 w-3" aria-hidden="true" />
+                  Bekor qilish
+                </Button>
               )}
             </div>
           )}

@@ -31,11 +31,11 @@ export const LexUzLogo: React.FC<LexUzLogoProps> = ({
         className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-xl transition-all border ${
           lightBg
             ? 'bg-white/80 border-slate-200 text-slate-700 hover:bg-white shadow-sm'
-            : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:border-sky-500/40 hover:bg-slate-800/80 shadow-inner'
+            : 'bg-slate-900/80 border-slate-800 text-slate-300 hover:border-zinc-500/40 hover:bg-slate-800/80 shadow-inner'
         }`}
         title="Lex.uz — O'zbekiston Respublikasi Qonunchilik ma'lumotlari milliy bazasi"
       >
-        <span className="text-[10px] uppercase font-mono font-bold text-sky-400">Manba:</span>
+        <span className="text-[10px] uppercase font-mono font-bold text-zinc-400">Manba:</span>
         <img
           src="/lex_uz.svg"
           alt="Lex.uz"
@@ -50,8 +50,8 @@ export const LexUzLogo: React.FC<LexUzLogoProps> = ({
     <div
       className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-xl border backdrop-blur-sm ${
         lightBg
-          ? 'bg-sky-50 border-sky-200 text-sky-950'
-          : 'bg-sky-950/40 border-sky-500/30 text-sky-200'
+          ? 'bg-zinc-50 border-zinc-200 text-zinc-950'
+          : 'bg-zinc-950/40 border-zinc-500/30 text-zinc-200'
       }`}
     >
       <img
@@ -59,7 +59,7 @@ export const LexUzLogo: React.FC<LexUzLogoProps> = ({
         alt="Lex.uz"
         className={`${className} object-contain`}
       />
-      <span className="text-[10px] font-mono uppercase font-bold text-sky-400 tracking-wider">
+      <span className="text-[10px] font-mono uppercase font-bold text-zinc-400 tracking-wider">
         Qonuniy Asos
       </span>
     </div>

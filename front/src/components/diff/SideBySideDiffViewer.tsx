@@ -1,20 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AnalysisResult, Finding, RiskLevel } from '../../types/contract';
-import { 
-  AlertTriangle, 
-  ExternalLink, 
-  Copy, 
-  Check, 
-  Search, 
-  Scale, 
-  ShieldAlert, 
-  Filter, 
-  Sparkles,
-  ArrowRight,
-  BookOpen,
-  AlertCircle,
-  X
-} from 'lucide-react';
+import { Check, Copy, ExternalLink, Scale, Search, ShieldAlert, Sparkles, TriangleAlert } from 'lucide-react';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 
 interface SideBySideDiffViewerProps {
   analysis: AnalysisResult;
@@ -83,335 +76,268 @@ export const SideBySideDiffViewer: React.FC<SideBySideDiffViewerProps> = ({
     return true;
   });
 
+  const riskTone = (level: RiskLevel) =>
+    level === 'RED'
+      ? 'border-rose-200 bg-rose-50/60 dark:border-rose-900/60 dark:bg-card hover:border-rose-400'
+      : level === 'YELLOW'
+      ? 'border-amber-200 bg-amber-50/60 dark:border-amber-900/60 dark:bg-card hover:border-amber-400'
+      : level === 'GREEN'
+      ? 'border-emerald-200 bg-emerald-50/40 dark:border-border dark:bg-card/60'
+      : '';
+
+  const riskBadge = (level: RiskLevel) =>
+    level === 'RED'
+      ? { variant: 'danger' as const, label: 'Qizil: huquqiy xavf', dot: 'bg-rose-500' }
+      : level === 'YELLOW'
+      ? { variant: 'warning' as const, label: 'Sariq: tijoriy xavf', dot: 'bg-amber-500' }
+      : level === 'GREEN'
+      ? { variant: 'success' as const, label: 'Yashil: xavfsiz', dot: 'bg-emerald-500' }
+      : { variant: 'neutral' as const, label: 'Kulrang', dot: 'bg-slate-500' };
+
+  const FILTERS: { value: RiskLevel | 'ALL' | 'RISKS_ONLY'; label: string; dot?: string }[] = [
+    { value: 'RISKS_ONLY', label: `Xavfli bandlar (${analysis.summary.red_count + analysis.summary.yellow_count + analysis.summary.gray_count})` },
+    { value: 'ALL', label: `Barchasi (${analysis.clauses.length})` },
+    { value: 'RED', label: `Qizil (${analysis.summary.red_count})`, dot: 'bg-red-500' },
+    { value: 'YELLOW', label: `Sariq (${analysis.summary.yellow_count})`, dot: 'bg-amber-500' },
+    { value: 'GREEN', label: `Yashil (${analysis.summary.green_count})`, dot: 'bg-emerald-500' },
+  ];
+
   return (
     <div className="space-y-6">
-      {/* Control Bar (Filtrlar va Qidiruv) */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 liquid-glass rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-          <button
-            onClick={() => setFilter('RISKS_ONLY')}
-            className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              filter === 'RISKS_ONLY'
-                ? 'bg-gradient-to-r from-red-600 to-amber-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>Xavfli Bandlar ({analysis.summary.red_count + analysis.summary.yellow_count + analysis.summary.gray_count})</span>
-          </button>
+      {/* Filtrlar va qidiruv */}
+      <Card>
+        <CardContent className="flex flex-col items-stretch justify-between gap-4 p-4 sm:flex-row sm:items-center">
+          <Tabs value={filter} onValueChange={(v) => setFilter(v as RiskLevel | 'ALL' | 'RISKS_ONLY')} className="min-w-0">
+            <TabsList className="h-auto max-w-full justify-start overflow-x-auto">
+              {FILTERS.map((f) => (
+                <TabsTrigger key={f.value} value={f.value} className="gap-1.5 whitespace-nowrap text-xs">
+                  {f.value === 'RISKS_ONLY' && <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />}
+                  {f.dot && <span className={`h-2 w-2 rounded-full ${f.dot}`} aria-hidden="true" />}
+                  {f.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
 
-          <button
-            onClick={() => setFilter('ALL')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-              filter === 'ALL'
-                ? 'bg-sky-600 text-white shadow-md shadow-sky-600/20'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            Barchasi ({analysis.clauses.length})
-          </button>
+          <div className="relative min-w-[240px]">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <Input
+              type="search"
+              placeholder="Band matni yoki modda qidirish…"
+              aria-label="Bandlarni qidirish"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
-          <button
-            onClick={() => setFilter('RED')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              filter === 'RED'
-                ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-red-500"></span>
-            <span>Qizil ({analysis.summary.red_count})</span>
-          </button>
-
-          <button
-            onClick={() => setFilter('YELLOW')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              filter === 'YELLOW'
-                ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-            <span>Sariq ({analysis.summary.yellow_count})</span>
-          </button>
-
-          <button
-            onClick={() => setFilter('GREEN')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              filter === 'GREEN'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>Yashil ({analysis.summary.green_count})</span>
-          </button>
-        </div>
-
-        {/* Qidiruv */}
-        <div className="relative min-w-[240px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Band matni yoki modda qidirish..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Ro'yxat (Cards) */}
+      {/* Bandlar */}
       <div className="space-y-4">
         {filteredClauses.length === 0 ? (
-          <div className="text-center py-12 liquid-glass rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
-            <Scale className="w-10 h-10 mx-auto text-slate-400 mb-2 opacity-50" />
-            <p className="text-sm font-medium">Ushbu filtr bo'yicha bandlar topilmadi</p>
-          </div>
+          <Card className="border-dashed">
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <Scale className="mx-auto mb-2 h-10 w-10 opacity-50" aria-hidden="true" />
+              <p className="text-sm font-medium">Ushbu filtr bo‘yicha bandlar topilmadi</p>
+            </CardContent>
+          </Card>
         ) : (
           filteredClauses.map((item) => {
             const hasFinding = !!item.finding;
             const isRed = item.risk_level === 'RED';
             const isYellow = item.risk_level === 'YELLOW';
-            const isGreen = item.risk_level === 'GREEN';
             const isAccepted = item.finding ? acceptedFindings[item.finding.id] : false;
             const isFocused = focusedClauseId === item.id;
+            const badge = riskBadge(item.risk_level);
 
             return (
-              <div
+              <Card
                 key={item.id}
                 ref={(el) => (clauseRefs.current[item.id] = el)}
-                className={`transition-all duration-300 rounded-2xl border p-4 sm:p-5 shadow-sm ${
-                  isFocused
-                    ? 'ring-2 ring-sky-500 bg-sky-50/50 dark:bg-sky-950/20 border-sky-400 dark:border-sky-500/80 shadow-md'
-                    : isRed
-                    ? 'bg-rose-50/60 dark:bg-slate-900/80 border-rose-200 dark:border-rose-900/60 hover:border-rose-400'
-                    : isYellow
-                    ? 'bg-amber-50/60 dark:bg-slate-900/80 border-amber-200 dark:border-amber-900/60 hover:border-amber-400'
-                    : isGreen
-                    ? 'bg-emerald-50/40 dark:bg-slate-900/40 border-emerald-200 dark:border-slate-800/80'
-                    : 'bg-white/80 dark:bg-slate-900/60 border-slate-200 dark:border-gray-800'
+                className={`transition-all duration-300 ${
+                  isFocused ? 'border-primary ring-2 ring-primary/60' : riskTone(item.risk_level)
                 }`}
               >
-                {/* Band sarlavhasi va teglari */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-200 dark:border-slate-800/80">
+                <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2 space-y-0 border-b p-4 sm:px-5">
                   <div className="flex items-center gap-2.5">
-                    <span className="font-mono text-xs sm:text-sm font-bold text-slate-900 dark:text-white px-2 py-0.5 rounded-lg bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
+                    <Badge variant="outline" className="font-mono text-xs sm:text-sm">
                       {item.clause_number}
-                    </span>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">
-                      {item.title}
-                    </h3>
+                    </Badge>
+                    <h3 className="text-sm font-semibold">{item.title}</h3>
                   </div>
-
                   <div className="flex items-center gap-2">
-                    {/* Risk Badge */}
-                    <span
-                      className={`text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 ${
-                        isRed
-                          ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-400 border border-rose-300 dark:border-rose-500/30'
-                          : isYellow
-                          ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30'
-                          : isGreen
-                          ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/30'
-                          : 'bg-slate-100 dark:bg-gray-500/20 text-slate-700 dark:text-gray-400 border border-slate-300 dark:border-gray-500/30'
-                      }`}
-                    >
-                      <span className={`w-2 h-2 rounded-full ${isRed ? 'bg-rose-500' : isYellow ? 'bg-amber-500' : isGreen ? 'bg-emerald-500' : 'bg-gray-500'}`} />
-                      {isRed ? 'QIZIL (Huquqiy Xavf)' : isYellow ? 'SARIQ (Tijoriy Xavf)' : isGreen ? 'YASHIL (Xavfsiz)' : 'KULRANG'}
-                    </span>
-
-                    {/* Verification Status */}
+                    <Badge variant={badge.variant} className="gap-1.5">
+                      <span className={`h-2 w-2 rounded-full ${badge.dot}`} aria-hidden="true" />
+                      {badge.label}
+                    </Badge>
                     {item.finding && (
-                      <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-sky-50 dark:bg-slate-800 text-sky-700 dark:text-sky-400 border border-sky-200 dark:border-slate-700 font-semibold">
+                      <Badge variant="outline" className="font-mono text-[10px]">
                         {item.finding.verification_status}
-                      </span>
+                      </Badge>
                     )}
                   </div>
-                </div>
+                </CardHeader>
 
-                {/* Side-by-Side Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-                  {/* Chap Ustun: Asl Matn */}
-                  <div className="space-y-3 bg-white/70 dark:bg-slate-950/70 p-4 rounded-xl border border-slate-200 dark:border-slate-800/80 shadow-sm">
-                    <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                <CardContent className="grid grid-cols-1 items-start gap-5 p-4 sm:p-5 lg:grid-cols-2">
+                  {/* Asl matn */}
+                  <div className="space-y-3 rounded-xl border bg-background/70 p-4">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground">
                       <span>Hujjatdagi asl tahrir</span>
-                      {isRed && <span className="text-rose-600 dark:text-rose-400 font-bold text-[10px]">⚠️ Qonunga Ziddiyat</span>}
-                      {isYellow && <span className="text-amber-600 dark:text-amber-400 font-bold text-[10px]">⚠️ Asimmetrik Shart</span>}
+                      {isRed && <span className="flex items-center gap-1 text-[10px] font-bold text-rose-600 dark:text-rose-400"><TriangleAlert className="h-3 w-3" aria-hidden="true" /> Qonunga ziddiyat</span>}
+                      {isYellow && <span className="flex items-center gap-1 text-[10px] font-bold text-amber-600 dark:text-amber-400"><TriangleAlert className="h-3 w-3" aria-hidden="true" /> Asimmetrik shart</span>}
                     </div>
 
-                    <p className={`text-xs sm:text-sm leading-relaxed ${
-                      isRed 
-                        ? 'text-rose-950 dark:text-rose-200 bg-rose-50/70 dark:bg-red-950/20 p-2.5 rounded-lg border border-rose-200 dark:border-red-900/40 font-medium' 
-                        : isYellow 
-                        ? 'text-amber-950 dark:text-amber-200 bg-amber-50/70 dark:bg-amber-950/20 p-2.5 rounded-lg border border-amber-200 dark:border-amber-900/40 font-medium' 
-                        : 'text-slate-700 dark:text-slate-300'
-                    }`}>
-                      "{item.finding?.original_quote || item.original_text}"
+                    <p
+                      className={`text-xs leading-relaxed sm:text-sm ${
+                        isRed
+                          ? 'rounded-lg border border-rose-200 bg-rose-50/70 p-2.5 font-medium text-rose-950 dark:border-red-900/40 dark:bg-red-950/20 dark:text-rose-200'
+                          : isYellow
+                          ? 'rounded-lg border border-amber-200 bg-amber-50/70 p-2.5 font-medium text-amber-950 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-200'
+                          : 'text-foreground/80'
+                      }`}
+                    >
+                      “{item.finding?.original_quote || item.original_text}”
                     </p>
 
                     {item.finding && (
-                      <div className="pt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-800/60 text-xs gap-2">
-                        <span className="font-semibold text-slate-700 dark:text-slate-300 truncate text-[11px]">
-                          ⚠️ {item.finding.issue_title}
+                      <div className="flex items-center justify-between gap-2 border-t pt-2 text-xs">
+                        <span className="flex min-w-0 items-center gap-1.5 truncate text-[11px] font-semibold">
+                          <TriangleAlert className="h-3.5 w-3.5 shrink-0 text-amber-500" aria-hidden="true" />
+                          <span className="truncate">{item.finding.issue_title}</span>
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedFindingModal(item.finding!)}
-                          className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/40 dark:hover:bg-sky-900/40 text-sky-700 dark:text-sky-300 text-[11px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-sky-200 dark:border-sky-800/50 shrink-0 shadow-sm"
-                          title="Batafsil yuridik asos va tahlilni ko'rish"
-                        >
-                          <span>ℹ️ Huquqiy Tahlil</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </button>
+                        <Button type="button" variant="outline" size="sm" className="shrink-0 gap-1.5" onClick={() => setSelectedFindingModal(item.finding!)}>
+                          Huquqiy tahlil
+                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                        </Button>
                       </div>
                     )}
                   </div>
 
-                  {/* O'ng Ustun: Qonuniy Tavsiya va Lex.uz Asosi */}
+                  {/* Tavsiya */}
                   <div className="space-y-3">
                     {hasFinding && item.finding ? (
-                      <div className="bg-white/80 dark:bg-slate-950/90 p-4 rounded-xl border border-emerald-200 dark:border-sky-900/40 shadow-sm space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-semibold text-emerald-700 dark:text-sky-400 flex items-center gap-1.5">
-                            <Sparkles className="w-3.5 h-3.5" />
-                            <span>LexGuard Tavsiya Etgan Tahrir</span>
+                      <div className="space-y-3 rounded-xl border border-emerald-200 bg-background/80 p-4 dark:border-emerald-900/40">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                            LexGuard tavsiya etgan tahrir
                           </span>
-
                           <div className="flex items-center gap-1.5">
-                            <button
-                              onClick={() => handleCopyRedline(item.finding!.id, item.finding!.suggested_redline)}
-                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all text-[11px] flex items-center gap-1 border border-slate-200 dark:border-slate-700 cursor-pointer"
-                              title="Tahrirni nusxalash"
-                            >
-                              {copiedId === item.finding.id ? (
-                                <>
-                                  <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                                  <span className="text-emerald-600 dark:text-emerald-400">Nusxalandi</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy className="w-3.5 h-3.5" />
-                                  <span>Nusxa</span>
-                                </>
-                              )}
-                            </button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button type="button" variant="outline" size="sm" className="gap-1" onClick={() => handleCopyRedline(item.finding!.id, item.finding!.suggested_redline)}>
+                                  {copiedId === item.finding.id ? (
+                                    <>
+                                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                                      <span className="text-emerald-600 dark:text-emerald-400">Nusxalandi</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                                      Nusxa
+                                    </>
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Tahrirni nusxalash</TooltipContent>
+                            </Tooltip>
 
-                            <button
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant={isAccepted ? 'default' : 'outline'}
+                              aria-pressed={isAccepted}
+                              className={`gap-1 ${isAccepted ? 'bg-emerald-600 text-white hover:bg-emerald-600/90 dark:bg-emerald-600' : ''}`}
                               onClick={() => handleToggleAccept(item.finding!.id)}
-                              className={`px-2.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all flex items-center gap-1 border cursor-pointer ${
-                                isAccepted
-                                  ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                                  : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
-                              }`}
                             >
-                              <Check className="w-3.5 h-3.5" />
-                              <span>{isAccepted ? 'Qabul qilindi' : 'Qabul qilish'}</span>
-                            </button>
+                              <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                              {isAccepted ? 'Qabul qilindi' : 'Qabul qilish'}
+                            </Button>
                           </div>
                         </div>
 
-                        {/* Redline Text Box */}
-                        <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 text-emerald-950 dark:text-emerald-300 text-xs sm:text-sm font-medium leading-relaxed">
-                          "{item.finding.suggested_redline}"
+                        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium leading-relaxed text-emerald-950 dark:border-emerald-900/50 dark:bg-emerald-950/20 dark:text-emerald-300 sm:text-sm">
+                          “{item.finding.suggested_redline}”
                         </div>
 
-                        {/* Lex.uz Giperhavolasi va Qonuniy Asos */}
-                        <div className="pt-2 border-t border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-800">
+                            <Badge variant="outline" className="text-[10px]">
                               {item.finding.legal_basis.norm_nature}
-                            </span>
-                            <span className="text-xs text-slate-700 dark:text-slate-300 font-medium">
-                              {item.finding.legal_basis.article}
-                            </span>
+                            </Badge>
+                            <span className="text-xs font-medium">{item.finding.legal_basis.article}</span>
                           </div>
-
-                          <a
-                            href={item.finding.legal_basis.lex_uz_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 hover:underline flex items-center gap-1 transition-colors"
-                          >
-                            <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain brightness-110" />
-                            <span>Lex.uz da ko'rish</span>
-                            <ExternalLink className="w-3.5 h-3.5" />
-                          </a>
+                          <Button asChild variant="link" size="sm" className="h-auto gap-1 p-0 text-xs">
+                            <a href={item.finding.legal_basis.lex_uz_url} target="_blank" rel="noreferrer">
+                              <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-3.5 w-auto object-contain" />
+                              Lex.uz da ko‘rish
+                              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                            </a>
+                          </Button>
                         </div>
                       </div>
                     ) : (
-                      <div className="h-full flex items-center justify-center p-6 bg-slate-100/60 dark:bg-slate-950/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
-                        <div className="text-center space-y-1">
-                          <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                          <p className="text-xs font-medium text-slate-700 dark:text-slate-300">Band qonunchilikka muvofiq</p>
-                          <p className="text-[11px] text-slate-500">Qo‘shimcha tahrir kiritish talab etilmaydi</p>
+                      <div className="flex h-full items-center justify-center rounded-xl border border-dashed bg-muted/40 p-6 text-muted-foreground">
+                        <div className="space-y-1 text-center">
+                          <Check className="mx-auto h-5 w-5 text-emerald-500" aria-hidden="true" />
+                          <p className="text-xs font-medium text-foreground">Band qonunchilikka muvofiq</p>
+                          <p className="text-[11px]">Qo‘shimcha tahrir kiritish talab etilmaydi</p>
                         </div>
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             );
           })
         )}
       </div>
 
-      {/* Huquqiy Tahlil Modali (Juda ko'p yozuvlarni modalda qulay ko'rsatish) */}
-      {selectedFindingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-lg liquid-glass-card rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-white/15 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-400 border border-rose-300 dark:border-rose-500/30 text-[10px] font-bold font-mono">
-                  {selectedFindingModal.clause_number}-band
-                </span>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                  {selectedFindingModal.issue_title}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedFindingModal(null)}
-                className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      {/* Huquqiy tahlil */}
+      <Dialog open={!!selectedFindingModal} onOpenChange={(open) => !open && setSelectedFindingModal(null)}>
+        <DialogContent className="max-w-lg">
+          {selectedFindingModal && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-2 pr-6">
+                  <Badge variant="danger" className="font-mono text-[10px]">
+                    {selectedFindingModal.clause_number}-band
+                  </Badge>
+                  <DialogTitle className="text-sm">{selectedFindingModal.issue_title}</DialogTitle>
+                </div>
+                <DialogDescription className="sr-only">Aniqlangan muammo, huquqiy asos va tavsiya etilgan tuzatish maqsadi</DialogDescription>
+              </DialogHeader>
 
-            <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40">
-                <p className="font-bold text-rose-800 dark:text-rose-300 text-[11px] mb-1">Aniqlangan muammo va huquqiy xavf:</p>
-                <p className="text-rose-950 dark:text-rose-100 leading-relaxed font-normal">{selectedFindingModal.issue_explanation}</p>
-              </div>
+              <div className="space-y-3 text-xs">
+                <div className="rounded-xl border border-rose-200 bg-rose-50 p-3.5 dark:border-rose-900/40 dark:bg-rose-950/30">
+                  <p className="mb-1 text-[11px] font-bold text-rose-800 dark:text-rose-300">Aniqlangan muammo va huquqiy xavf</p>
+                  <p className="leading-relaxed text-rose-950 dark:text-rose-100">{selectedFindingModal.issue_explanation}</p>
+                </div>
 
-              <div className="p-3.5 rounded-xl bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900/40 space-y-2">
-                <p className="font-bold text-sky-800 dark:text-sky-300 text-[11px]">Tavsiya etilgan tuzatish maqsadi:</p>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-normal">{selectedFindingModal.redline_reasoning}</p>
-                <div className="pt-2 border-t border-sky-200 dark:border-sky-900/30 flex items-center justify-between text-[11px]">
-                  <span className="font-mono text-sky-800 dark:text-sky-300 font-semibold">{selectedFindingModal.legal_basis.article}</span>
-                  <a
-                    href={selectedFindingModal.legal_basis.lex_uz_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-sky-600 dark:text-sky-400 hover:underline flex items-center gap-1 font-semibold"
-                  >
-                    <span>Lex.uz da ko‘rish</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                <div className="space-y-2 rounded-xl border border-zinc-200 bg-zinc-50 p-3.5 dark:border-zinc-900/40 dark:bg-zinc-950/30">
+                  <p className="text-[11px] font-bold text-zinc-800 dark:text-zinc-300">Tavsiya etilgan tuzatish maqsadi</p>
+                  <p className="leading-relaxed text-foreground/80">{selectedFindingModal.redline_reasoning}</p>
+                  <div className="flex items-center justify-between border-t border-zinc-200 pt-2 text-[11px] dark:border-zinc-900/30">
+                    <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-300">{selectedFindingModal.legal_basis.article}</span>
+                    <Button asChild variant="link" size="sm" className="h-auto gap-1 p-0 text-[11px]">
+                      <a href={selectedFindingModal.legal_basis.lex_uz_url} target="_blank" rel="noreferrer">
+                        Lex.uz da ko‘rish <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                      </a>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="pt-2 flex justify-end">
-              <button
-                onClick={() => setSelectedFindingModal(null)}
-                className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-800 dark:text-white transition-all cursor-pointer"
-              >
-                Yopish
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+              <DialogFooter>
+                <Button type="button" variant="secondary" onClick={() => setSelectedFindingModal(null)}>
+                  Yopish
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

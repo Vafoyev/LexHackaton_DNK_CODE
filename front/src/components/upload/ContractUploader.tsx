@@ -78,11 +78,11 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             onClick={() => switchEntityType('INDIVIDUAL')}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               isIndividual
-                ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/30'
+                ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 text-white shadow-lg shadow-zinc-500/30'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse" />
             <span>Jismoniy Shaxs (B2C)</span>
           </button>
 
@@ -90,7 +90,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             onClick={() => switchEntityType('LEGAL_ENTITY')}
             className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               !isIndividual
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30'
+                ? 'bg-gradient-to-r from-emerald-500 to-zinc-600 text-white shadow-lg shadow-emerald-500/30'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
@@ -123,8 +123,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
               Shartnomangizni <span className={`bg-clip-text text-transparent ${
                 isIndividual 
-                  ? 'bg-gradient-to-r from-sky-600 via-cyan-600 to-blue-600 dark:from-sky-400 dark:via-cyan-300 dark:to-blue-400' 
-                  : 'bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 dark:from-emerald-300 dark:via-teal-200 dark:to-green-400'
+                  ? 'bg-gradient-to-r from-zinc-600 via-zinc-600 to-zinc-600 dark:from-zinc-400 dark:via-zinc-300 dark:to-zinc-400' 
+                  : 'bg-gradient-to-r from-emerald-600 via-zinc-600 to-green-600 dark:from-emerald-300 dark:via-zinc-200 dark:to-green-400'
               }`}>
                 Imzolashdan Oldin
               </span> Huquqiy Auditdan O‘tkazing
@@ -157,7 +157,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             <div className="w-full h-56 sm:h-64 rounded-2xl relative overflow-hidden flex items-center justify-center">
               {/* Soft radial glow behind 3D emblem */}
               <div className={`absolute inset-0 rounded-full blur-2xl opacity-30 pointer-events-none ${
-                isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
+                isIndividual ? 'bg-zinc-500' : 'bg-emerald-500'
               }`} />
               <LexUz3DLogo size="md" className="w-full h-full relative z-10" autoRotate={true} interactive={false} />
             </div>
@@ -175,7 +175,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         className={`relative overflow-hidden rounded-3xl p-8 sm:p-12 text-center transition-all duration-300 liquid-glass-card ${
           dragOver 
             ? isIndividual 
-              ? 'border-sky-400 bg-sky-950/40 scale-[1.01]' 
+              ? 'border-zinc-400 bg-zinc-950/40 scale-[1.01]' 
               : 'border-emerald-400 bg-emerald-950/40 scale-[1.01]'
             : selectedFile 
             ? 'border-emerald-500/50 bg-slate-900/50' 
@@ -194,7 +194,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         {isLoading ? (
           <div className="py-8 space-y-6 max-w-lg mx-auto">
             <div className="relative w-24 h-24 mx-auto">
-              <div className={`absolute inset-0 rounded-full border-4 animate-ping ${isIndividual ? 'border-sky-500/20' : 'border-emerald-500/20'}`} />
+              <div className={`absolute inset-0 rounded-full border-4 animate-ping ${isIndividual ? 'border-zinc-500/20' : 'border-emerald-500/20'}`} />
               <div className="w-full h-full rounded-full border-4 border-t-sky-400 border-r-emerald-400 border-b-sky-500 border-l-transparent animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center font-black text-sm text-white">
                 {progress?.progress_pct ?? 45}%
@@ -206,7 +206,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
                 Shartnoma Huquqiy Tahlildan O'tmoqda...
               </h3>
               <p className="text-xs text-slate-300 font-mono">
-                Bosqich: <span className="text-sky-300 font-semibold">{progress?.stage || 'O‘RQ-547 PII MASKALASH'}</span>
+                Bosqich: <span className="text-zinc-300 font-semibold">{progress?.stage || 'O‘RQ-547 PII MASKALASH'}</span>
               </p>
             </div>
 
@@ -215,8 +215,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               <div 
                 className={`h-full rounded-full transition-all duration-300 ${
                   isIndividual 
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-500 shadow-sm shadow-sky-500' 
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-500 shadow-sm shadow-emerald-500'
+                    ? 'bg-gradient-to-r from-zinc-500 to-zinc-500 shadow-sm shadow-zinc-500' 
+                    : 'bg-gradient-to-r from-emerald-500 to-zinc-500 shadow-sm shadow-emerald-500'
                 }`}
                 style={{ width: `${progress?.progress_pct ?? 45}%` }}
               />
@@ -226,9 +226,9 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
           /* Holat 2: Fayl tanlangan */
           <div className="space-y-6 max-w-md mx-auto">
             <div className={`w-16 h-16 rounded-2xl mx-auto flex items-center justify-center p-3 liquid-glass-pill ${
-              isIndividual ? 'border-sky-500/40 shadow-sky-500/20' : 'border-emerald-500/40 shadow-emerald-500/20'
+              isIndividual ? 'border-zinc-500/40 shadow-zinc-500/20' : 'border-emerald-500/40 shadow-emerald-500/20'
             }`}>
-              <FileText className={`w-8 h-8 ${isIndividual ? 'text-sky-400' : 'text-emerald-400'}`} />
+              <FileText className={`w-8 h-8 ${isIndividual ? 'text-zinc-400' : 'text-emerald-400'}`} />
             </div>
 
             <div>
@@ -254,8 +254,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
                 onClick={startAnalysis}
                 className={`w-full sm:w-auto px-7 py-2.5 rounded-full text-white text-xs font-bold shadow-xl flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-105 ${
                   isIndividual 
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-sky-500/30' 
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-emerald-500/30'
+                    ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 shadow-zinc-500/30' 
+                    : 'bg-gradient-to-r from-emerald-500 to-zinc-600 shadow-emerald-500/30'
                 }`}
               >
                 <span>Tahlilni Boshlash</span>
@@ -267,7 +267,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
           /* Holat 3: Bo'sh yuklash maydoni */
           <div className="space-y-5">
             <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center p-3 liquid-glass-pill border-white/20 shadow-xl group-hover:scale-110 transition-transform">
-              <Upload className={`w-7 h-7 ${isIndividual ? 'text-sky-400' : 'text-emerald-400'}`} />
+              <Upload className={`w-7 h-7 ${isIndividual ? 'text-zinc-400' : 'text-emerald-400'}`} />
             </div>
 
             <div className="space-y-1.5">
@@ -287,8 +287,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
                 onClick={() => fileInputRef.current?.click()}
                 className={`px-6 py-2.5 rounded-full text-white font-bold text-xs shadow-xl transition-all cursor-pointer hover:scale-105 ${
                   isIndividual 
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-sky-500/30' 
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-emerald-500/30'
+                    ? 'bg-gradient-to-r from-zinc-500 to-zinc-600 shadow-zinc-500/30' 
+                    : 'bg-gradient-to-r from-emerald-500 to-zinc-600 shadow-emerald-500/30'
                 }`}
               >
                 Kompyuterdan Tanlash
@@ -326,10 +326,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl liquid-glass-card liquid-hover-glow cursor-pointer transition-all group border-white/10"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30 font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-500/15 text-zinc-400 border border-zinc-500/30 font-bold">
                   UY-JOY IJARASI
                 </span>
-                <span className="text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
+                <span className="text-slate-500 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Kvartira / Bino Ijara Shartnomasi
@@ -418,10 +418,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl liquid-glass-card liquid-hover-glow cursor-pointer transition-all group border-white/10"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30 font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-500/15 text-zinc-400 border border-zinc-500/30 font-bold">
                   SUPPLY SALE
                 </span>
-                <span className="text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
+                <span className="text-slate-500 group-hover:text-zinc-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Uskunalar Yetkazib Berish Shartnomasi

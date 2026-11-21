@@ -47,12 +47,12 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
           {/* Lex.uz & LexGuard Brand Pill */}
           <div 
             onClick={onReset}
-            className="hidden sm:flex items-center gap-2 p-1.5 px-2.5 rounded-xl bg-slate-900/60 border border-white/10 cursor-pointer hover:border-sky-500/30 transition-all"
+            className="hidden sm:flex items-center gap-2 p-1.5 px-2.5 rounded-xl bg-slate-900/60 border border-white/10 cursor-pointer hover:border-zinc-500/30 transition-all"
             title="LexGuard.AI Bosh sahifasi"
           >
             <img src="/lex_uz.svg" alt="Lex.uz" className="h-4.5 w-auto object-contain brightness-125" />
             <div className="flex flex-col -space-y-0.5">
-              <span className="text-[9px] font-black tracking-wider uppercase font-mono text-sky-400">Lex.uz</span>
+              <span className="text-[9px] font-black tracking-wider uppercase font-mono text-zinc-400">Lex.uz</span>
               <span className="text-xs font-black tracking-tight text-white">LexGuard.AI</span>
             </div>
           </div>
@@ -61,7 +61,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             <div className="flex items-center gap-2">
               <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
                 isIndividual 
-                  ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/30' 
+                  ? 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/30' 
                   : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
               }`}>
                 {isIndividual ? 'JISMONIY SHAXS' : 'YURIDIK B2B'}
@@ -78,11 +78,11 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             href="https://lex.uz"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-sky-500/40 transition-all text-[10px] text-slate-600 dark:text-slate-300"
+            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-zinc-500/40 transition-all text-[10px] text-slate-600 dark:text-slate-300"
             title="Lex.uz qonunchilik bazasi bilan sinxronlangan"
           >
             <img src="/lex_uz.svg" alt="Lex.uz" className="h-3.5 w-auto object-contain brightness-110" />
-            <span className="font-mono text-sky-600 dark:text-sky-400 font-bold">Moslashtirilgan</span>
+            <span className="font-mono text-zinc-600 dark:text-zinc-400 font-bold">Moslashtirilgan</span>
           </a>
         </div>
 
@@ -112,7 +112,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
 
           <button
             onClick={onOpen3D}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/60 transition-all cursor-pointer"
           >
             <img src="/lex_uz.svg" alt="3D" className="h-3 w-auto object-contain brightness-125" />
             <span>3D Xarita</span>
@@ -130,13 +130,13 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             {isDark ? (
               <Sun className="w-4 h-4 text-amber-400" />
             ) : (
-              <Moon className="w-4 h-4 text-indigo-600" />
+              <Moon className="w-4 h-4 text-zinc-600" />
             )}
           </button>
 
           <button
             onClick={() => exportToDocx(analysis)}
-            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sky-600 dark:text-sky-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:border-sky-500/40 transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-zinc-600 dark:text-zinc-300 text-xs font-semibold border border-slate-200 dark:border-slate-700 hover:border-zinc-500/40 transition-all cursor-pointer"
             title="Word (.docx) yuklab olish"
           >
             DOCX

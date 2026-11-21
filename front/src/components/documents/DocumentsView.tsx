@@ -175,11 +175,11 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       {/* Document Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filteredDocs.map((doc) => (
-          <Card key={doc.id} className="hover:border-sky-500/50 transition-all duration-200">
+          <Card key={doc.id} className="hover:border-zinc-500/50 transition-all duration-200">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400">
+                  <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-950/60 text-zinc-600 dark:text-zinc-400">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
@@ -192,19 +192,19 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                   </div>
                 </div>
                 {doc.status === 'QIZIL' && (
-                  <Badge variant="risk-red" className="shrink-0 gap-1">
+                  <Badge variant="danger" className="shrink-0 gap-1">
                     <ShieldAlert className="w-3 h-3" />
                     Qonun Ziddiyati
                   </Badge>
                 )}
                 {doc.status === 'SARIQ' && (
-                  <Badge variant="risk-yellow" className="shrink-0 gap-1">
+                  <Badge variant="warning" className="shrink-0 gap-1">
                     <AlertTriangle className="w-3 h-3" />
                     Tijoriy Xavf
                   </Badge>
                 )}
                 {doc.status === 'YASHIL' && (
-                  <Badge variant="risk-green" className="shrink-0 gap-1">
+                  <Badge variant="success" className="shrink-0 gap-1">
                     <ShieldCheck className="w-3 h-3" />
                     Muvozanatli
                   </Badge>
