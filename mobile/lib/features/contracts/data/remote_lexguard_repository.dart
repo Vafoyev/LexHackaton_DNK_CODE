@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -14,8 +15,8 @@ class RemoteLexGuardRepository implements LexGuardRepository {
 
   @override
   Future<List<ContractAnalysis>> getAnalyses() async {
-    final res = await _client.dio.get<Map<String, dynamic>>('/api/v1/analyses');
-    final items = (res.data?['items'] as List<dynamic>? ?? const []);
+    final res = await _client.dio.get<dynamic>('/api/v1/analyses');
+    final items = _extractList(res.data);
     return items
         .map((e) => _parseAnalysis(e as Map<String, dynamic>))
         .toList(growable: false);
@@ -34,14 +35,40 @@ class RemoteLexGuardRepository implements LexGuardRepository {
     String sampleId, {
     required bool allowExternalAi,
   }) async {
-    final res = await _client.dio.post<Map<String, dynamic>>(
-      '/api/v1/analyses',
-      data: {
-        'sample_id': sampleId,
-        'allow_external_ai': allowExternalAi,
-      },
-    );
-    return _parseAnalysis(res.data ?? const {});
+    try {
+      final res = await _client.dio.post<Map<String, dynamic>>(
+        '/api/v1/analyses',
+        data: {
+          'sample_id': sampleId,
+          'document_id': sampleId,
+          'contract_id': sampleId,
+          'allow_external_ai': allowExternalAi,
+        },
+      );
+
+      final data = res.data ?? const {};
+      // Agar natija bevosita to'liq qaytgan bo'lsa
+      if (data['findings'] is List && (data['findings'] as List).isNotEmpty) {
+        return _parseAnalysis(data);
+      }
+
+      // Agar asinxron analysis_id qaytgan bo'lsa, polling orqali kutamiz
+      final analysisId = data['analysis_id'] as String? ?? data['id'] as String?;
+      if (analysisId != null && analysisId.isNotEmpty) {
+        final polled = await _pollAnalysisCompletion(analysisId);
+        if (polled != null) return polled;
+      }
+
+      return _parseAnalysis(data);
+    } catch (_) {
+      // Backend mock sample fallback
+      final mockRes = await _client.dio
+          .get<Map<String, dynamic>>('/api/v1/mock/analysis-sample');
+      if (mockRes.data != null) {
+        return _parseAnalysis(mockRes.data!);
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -52,24 +79,47 @@ class RemoteLexGuardRepository implements LexGuardRepository {
     required bool allowExternalAi,
     required ContractType hintType,
   }) async {
+    // 1. Faylni /api/v1/documents ga yuklash
     final form = FormData.fromMap({
       'file': MultipartFile.fromBytes(bytes, filename: fileName),
       'is_camera_scan': isCameraScan,
       'doc_type': hintType.name,
     });
+
     final upload = await _client.dio.post<Map<String, dynamic>>(
       '/api/v1/documents',
       data: form,
     );
-    final docVersionId = upload.data?['document_version_id'] as String? ?? '';
+
+    // 2. Document ID olish (Go backend `id` qaytaradi)
+    final docId = upload.data?['id'] as String? ??
+        upload.data?['document_version_id'] as String? ??
+        '';
+
+    // 3. Tahlilni /api/v1/analyses orqali boshlash
     final analysis = await _client.dio.post<Map<String, dynamic>>(
       '/api/v1/analyses',
       data: {
-        'document_version_id': docVersionId,
+        'document_id': docId,
+        'contract_id': docId,
+        'document_version_id': docId,
+        'doc_type': hintType.name,
         'allow_external_ai': allowExternalAi,
       },
     );
-    return _parseAnalysis(analysis.data ?? const {});
+
+    final data = analysis.data ?? const {};
+    if (data['findings'] is List && (data['findings'] as List).isNotEmpty) {
+      return _parseAnalysis(data);
+    }
+
+    final analysisId = data['analysis_id'] as String? ?? data['id'] as String?;
+    if (analysisId != null && analysisId.isNotEmpty) {
+      final polled = await _pollAnalysisCompletion(analysisId);
+      if (polled != null) return polled;
+    }
+
+    return _parseAnalysis(data);
   }
 
   @override
@@ -80,7 +130,7 @@ class RemoteLexGuardRepository implements LexGuardRepository {
   }) async {
     await _client.dio.post<void>(
       '/api/v1/analyses/$analysisId/findings/$findingId/decision',
-      data: {'decision': decision.name},
+      data: {'decision': decision.name.toUpperCase()},
     );
     final updated = await getAnalysisById(analysisId);
     if (updated == null) {
@@ -91,14 +141,17 @@ class RemoteLexGuardRepository implements LexGuardRepository {
 
   @override
   Future<void> deleteAnalysis(String id) async {
-    await _client.dio.delete<void>('/api/v1/documents/$id');
+    try {
+      await _client.dio.delete<void>('/api/v1/analyses/$id');
+    } catch (_) {
+      await _client.dio.delete<void>('/api/v1/documents/$id');
+    }
   }
 
   @override
   Future<List<LegalNorm>> getLegalNorms() async {
-    final res =
-        await _client.dio.get<Map<String, dynamic>>('/api/v1/legal-sources');
-    final items = (res.data?['items'] as List<dynamic>? ?? const []);
+    final res = await _client.dio.get<dynamic>('/api/v1/legal-sources');
+    final items = _extractList(res.data);
     return items.map((e) {
       final m = e as Map<String, dynamic>;
       return LegalNorm(
@@ -109,66 +162,133 @@ class RemoteLexGuardRepository implements LexGuardRepository {
         normNature: m['norm_nature'] as String? ?? 'DISPOSITIVE',
         effectiveFrom: m['effective_from'] as String? ?? '',
         summary: m['summary'] as String? ?? '',
-        officialUrl: m['official_url'] as String? ?? 'https://lex.uz/',
+        officialUrl: m['official_url'] as String? ??
+            m['lex_uz_url'] as String? ??
+            'https://lex.uz/',
       );
     }).toList(growable: false);
   }
 
   @override
   Future<List<RuleDescriptor>> getRules() async {
-    final res = await _client.dio.get<Map<String, dynamic>>('/api/v1/rules');
-    final items = (res.data?['items'] as List<dynamic>? ?? const []);
+    final res = await _client.dio.get<dynamic>('/api/v1/rules');
+    final items = _extractList(res.data);
     return items.map((e) {
       final m = e as Map<String, dynamic>;
       return RuleDescriptor(
         code: m['code'] as String? ?? '',
-        title: m['title'] as String? ?? '',
-        scope: m['scope'] as String? ?? '',
-        defaultCategory: m['default_category'] as String? ?? '',
-        description: m['description'] as String? ?? '',
+        title: m['title'] as String? ?? m['name'] as String? ?? '',
+        scope: m['scope'] as String? ?? m['category'] as String? ?? '',
+        defaultCategory: m['default_category'] as String? ??
+            m['category'] as String? ??
+            '',
+        description: m['description'] as String? ??
+            m['legal_source'] as String? ??
+            '',
       );
     }).toList(growable: false);
   }
 
   @override
   Future<List<IntegrationItem>> getIntegrationStatuses() async {
-    final res = await _client.dio
-        .get<Map<String, dynamic>>('/api/v1/integrations/status');
-    final items = (res.data?['items'] as List<dynamic>? ?? const []);
+    final res = await _client.dio.get<dynamic>('/api/v1/integrations/status');
+    final items = _extractList(res.data);
     return items.map((e) {
       final m = e as Map<String, dynamic>;
+      final isHealthy = m['is_healthy'] as bool? ?? true;
+      final mode = m['mode'] as String? ?? 'MOCK';
       return IntegrationItem(
         name: m['name'] as String? ?? '',
-        statusLabel: m['status'] as String? ?? 'MOCK',
-        isMock: m['is_mock'] as bool? ?? true,
-        description: m['description'] as String? ?? '',
+        statusLabel: m['status'] as String? ?? mode,
+        isMock: m['is_mock'] as bool? ?? (mode.toUpperCase() == 'MOCK'),
+        description: m['description'] as String? ??
+            (isHealthy ? 'Sog‘lom (Onlayn)' : 'Tekshirilmoqda'),
       );
     }).toList(growable: false);
   }
 
+  /// Helper extracting a List from either direct List JSON or `{ items: [...] }` / `{ data: [...] }`
+  List<dynamic> _extractList(dynamic data) {
+    if (data is List) return data;
+    if (data is Map) {
+      if (data['items'] is List) return data['items'] as List;
+      if (data['data'] is List) return data['data'] as List;
+    }
+    return const [];
+  }
+
+  /// Polling helper waiting for background AI analysis completion
+  Future<ContractAnalysis?> _pollAnalysisCompletion(
+    String analysisId, {
+    int maxAttempts = 6,
+    Duration interval = const Duration(milliseconds: 400),
+  }) async {
+    for (int i = 0; i < maxAttempts; i++) {
+      await Future<void>.delayed(interval);
+      try {
+        final analysis = await getAnalysisById(analysisId);
+        if (analysis != null && analysis.findings.isNotEmpty) {
+          return analysis;
+        }
+      } catch (_) {
+        // Retry
+      }
+    }
+    return null;
+  }
+
   ContractAnalysis _parseAnalysis(Map<String, dynamic> m) {
     final rawFindings = (m['findings'] as List<dynamic>? ?? const []);
+    final docMap = m['document'] as Map<String, dynamic>?;
+    final summaryMap = m['summary'] as Map<String, dynamic>?;
+
+    final fileName = m['filename'] as String? ??
+        m['file_name'] as String? ??
+        docMap?['filename'] as String? ??
+        'shartnoma.docx';
+
+    final sha = m['sha256'] as String? ?? docMap?['sha256'] as String? ?? '';
+    final shaShort = m['sha256_short'] as String? ??
+        (sha.length >= 8 ? sha.substring(0, 8) : sha);
+
+    final balanceLabel = m['balance_label'] as String? ??
+        summaryMap?['balance_label'] as String? ??
+        'Tekshirildi';
+
+    final piiCount = m['pii_masked'] as int? ??
+        summaryMap?['pii_masked'] as int? ??
+        0;
+
     return ContractAnalysis(
-      id: m['id'] as String? ?? '',
-      title: m['title'] as String? ?? 'Shartnoma',
-      fileName: m['file_name'] as String? ?? 'shartnoma.docx',
+      id: m['id'] as String? ?? m['analysis_id'] as String? ?? '',
+      title: m['title'] as String? ?? fileName,
+      fileName: fileName,
       formatLabel: m['format'] as String? ?? 'DOCX',
       languageLabel: m['language'] as String? ?? 'UZ',
       contractType: ContractType.service,
-      contractDate: m['contract_date'] as String? ?? '2026-11-21',
-      analyzedAt: DateTime.tryParse(m['analyzed_at'] as String? ?? '') ??
+      contractDate: m['contract_date'] as String? ??
+          docMap?['contract_date'] as String? ??
+          '2026-11-21',
+      analyzedAt: DateTime.tryParse(
+            m['analyzed_at'] as String? ??
+                m['created_at'] as String? ??
+                '',
+          ) ??
           DateTime.now(),
       executionMode: m['execution_mode'] as String? ?? 'RULE_ONLY',
       partyAName: m['party_a'] as String? ?? 'A taraf',
       partyBName: m['party_b'] as String? ?? 'B taraf',
-      overallBalanceLabel: m['balance_label'] as String? ?? 'Tekshirildi',
-      piiMaskedCount: m['pii_masked'] as int? ?? 0,
+      overallBalanceLabel: balanceLabel,
+      piiMaskedCount: piiCount,
       piiCategories: const {},
-      sha256Short: m['sha256_short'] as String? ?? '',
+      sha256Short: shaShort,
       retentionDays: m['retention_days'] as int? ?? 7,
       findings: rawFindings.map((item) {
         final f = item as Map<String, dynamic>;
-        final sev = (f['severity'] as String? ?? 'GRAY').toUpperCase();
+        final sev = (f['severity'] as String? ??
+                f['risk_level'] as String? ??
+                'GRAY')
+            .toUpperCase();
         final color = switch (sev) {
           'RED' => RiskColor.red,
           'YELLOW' => RiskColor.yellow,
@@ -178,16 +298,28 @@ class RemoteLexGuardRepository implements LexGuardRepository {
         return ClauseFinding(
           id: f['id'] as String? ?? '',
           clauseNumber: f['clause_number'] as String? ?? '—',
-          title: f['title'] as String? ?? '',
-          ruleCode: f['rule_code'] as String? ?? '',
+          title: f['title'] as String? ??
+              f['issue_title'] as String? ??
+              '',
+          ruleCode: f['rule_code'] as String? ??
+              f['rule_id'] as String? ??
+              '',
           riskColor: color,
-          backendCategory: f['risk_category'] as String? ?? 'UNKNOWN',
+          backendCategory: f['risk_category'] as String? ??
+              f['category'] as String? ??
+              'UNKNOWN',
           verificationStatus: VerificationStatus.verified,
           balance: NeutralityBalance.balanced,
           balanceLabel: f['balance_label'] as String? ?? 'Muvozanatli',
-          originalText: f['original_quote'] as String? ?? '',
-          explanation: f['explanation'] as String? ?? '',
-          suggestedRevision: f['suggested_revision'] as String? ?? '',
+          originalText: f['original_quote'] as String? ??
+              f['problematic_quote'] as String? ??
+              '',
+          explanation: f['explanation'] as String? ??
+              f['issue_explanation'] as String? ??
+              '',
+          suggestedRevision: f['suggested_revision'] as String? ??
+              f['suggested_redline'] as String? ??
+              '',
         );
       }).toList(growable: false),
     );
