@@ -68,3 +68,8 @@ env/
 venv/
 .venv/
 orchestrator/docs_extracted/
+
+# Test artifacts & local binaries
+screenshots/
+front/screenshots/
+backend/server

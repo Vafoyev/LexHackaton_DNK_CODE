@@ -43,10 +43,14 @@ ARG APP_VERSION=4.0.0
 
 WORKDIR /app
 
-# Install curl for container healthcheck and libpq runtime
+# curl (healthcheck), libpq runtime va Tesseract OCR (skaner/rasm hujjatlar uchun: o'zbek, rus, ingliz tillari)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libpq5 \
+    tesseract-ocr \
+    tesseract-ocr-uzb \
+    tesseract-ocr-rus \
+    tesseract-ocr-eng \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy virtualenv from builder

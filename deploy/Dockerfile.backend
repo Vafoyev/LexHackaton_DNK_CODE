@@ -43,6 +43,10 @@ RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build \
     -ldflags="-s -w" \
     -o /dist/migrate ./cmd/migrate
 
+# Yuklangan fayllar katalogi: distroless'da RUN yo'q, shuning uchun builder'da yaratib nonroot (65532) ga beramiz.
+# Aks holda yangi named volume root:root bo'lib, nonroot backend yoza olmaydi (STORAGE_ERROR: permission denied).
+RUN mkdir -p /dist/uploads
+
 # ── Stage 2: Tests (optional, runs in CI) ────────────────────
 FROM builder AS tester
 RUN CGO_ENABLED=0 go test -race -count=1 -timeout=120s ./...
@@ -59,6 +63,8 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Copy compiled binaries
 COPY --from=builder /dist/lexguard-api /app/lexguard-api
 COPY --from=builder /dist/migrate      /app/migrate
+COPY --from=builder /build/api         /app/api
+COPY --from=builder --chown=65532:65532 /dist/uploads /app/uploads
 
 # Non-root user (distroless default: uid=65532/nonroot)
 USER nonroot:nonroot

@@ -164,6 +164,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set in .env}
       AI_PROVIDER: ${AI_PROVIDER:-noop}
       EXTERNAL_AI_ENABLED: ${EXTERNAL_AI_ENABLED:-false}
+      ALLOW_DEMO_LOGIN: ${ALLOW_DEMO_LOGIN:-false}
+      CORS_ORIGINS: ${CORS_ORIGINS:-}
+      METRICS_TOKEN: ${METRICS_TOKEN:-}
       STORAGE_DIR: /app/uploads
       REDIS_URL: "redis://:${REDIS_PASSWORD:-redis_lexguard_2026}@redis:6379/0"
       MINIO_ENDPOINT: "minio:9000"
