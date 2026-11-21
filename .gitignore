@@ -42,6 +42,7 @@ go.work
 /mobile/.pub-cache/
 /mobile/.pub/
 *.apk
+!releases/LexGuard-AI.apk
 *.aab
 
 # Node.js / Web (Front & Admin)
