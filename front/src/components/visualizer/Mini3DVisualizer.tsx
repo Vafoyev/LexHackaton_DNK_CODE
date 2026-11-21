@@ -131,6 +131,18 @@ export const Mini3DVisualizer: React.FC<Mini3DVisualizerProps> = ({
 
     return () => {
       cancelAnimationFrame(animId);
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((mat) => mat.dispose());
+          } else if (obj.material) {
+            obj.material.dispose();
+          }
+        }
+      });
+      particleGeo.dispose();
+      particleMat.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

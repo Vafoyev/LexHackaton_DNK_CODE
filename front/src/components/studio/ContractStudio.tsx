@@ -6,6 +6,7 @@ import { ClauseInspector } from './ClauseInspector';
 import { ThreeDModal } from './ThreeDModal';
 import { SideBySideDiffViewer } from '../diff/SideBySideDiffViewer';
 import { LiveVoiceAssistant } from '../voice/LiveVoiceAssistant';
+import { Sparkles, Check, Wand2 } from 'lucide-react';
 
 interface ContractStudioProps {
   analysis: AnalysisResult;
@@ -29,12 +30,21 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
 
   const selectedClause = analysis.clauses.find((c) => c.id === selectedClauseId) || null;
 
-  // 1-Click Fix funksiyasi
+  // 1-Click Fix (Qabul qilish) funksiyasi
   const handleApplyFix = (clauseId: string, fixedText: string) => {
     setAppliedFixes((prev) => ({
       ...prev,
       [clauseId]: fixedText,
     }));
+  };
+
+  // Rad etish / Bekor qilish funksiyasi
+  const handleRejectFix = (clauseId: string) => {
+    setAppliedFixes((prev) => {
+      const next = { ...prev };
+      delete next[clauseId];
+      return next;
+    });
   };
 
   // Barcha xavflarni bir vaqtda avto-tuzatish (Auto-fix all)
@@ -58,7 +68,7 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
-      {/* Studio Header */}
+      {/* Studio Header (Minimalist Chrome) */}
       <StudioHeader
         analysis={analysis}
         activeView={activeView}
@@ -72,26 +82,30 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Avto-tuzatish Taklif Banneri (agar hali tuzatilmagan xavflar bo'lsa) */}
         {fixedCount < riskyCount && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-sky-950/40 to-slate-900 border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
+          <div className="mb-6 p-4 rounded-2xl liquid-glass border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xl">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shrink-0">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
+              <div className="p-2 rounded-xl liquid-glass-subtle border border-white/10 flex items-center justify-center shrink-0">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
               </div>
               <div>
-                <p className="text-xs font-bold text-white">
-                  Shartnomada {riskyCount} ta noqonuniy va asimmetrik band aniqlandi ({fixedCount} tasi tuzatildi)
+                <p className="text-xs font-bold text-white flex items-center gap-2">
+                  <span>Shartnomada {riskyCount} ta noqonuniy va asimmetrik band aniqlandi ({fixedCount} tasi qabul qilindi)</span>
+                  <span className="text-[10px] font-mono px-2 py-0.2 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                    Boy Redline Tahrir
+                  </span>
                 </p>
-                <p className="text-[11px] text-slate-400">
-                  Lex.uz milliy qonunchilik bazasi va O‘zR Fuqarolik Kodeksi talablari asosida barcha bandlarni bir bosishda avto-tuzatishingiz mumkin.
+                <p className="text-[11px] text-slate-300">
+                  O‘zR Fuqarolik Kodeksi va Lex.uz milliy qonunchilik bazasi talablari asosida barcha bandlarni 1-bosishda avto-tuzating.
                 </p>
               </div>
             </div>
 
             <button
               onClick={handleAutoFixAll}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105 shrink-0"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-sky-500/25 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105 shrink-0"
             >
-              <span>Barcha Xavflarni Avto-Tuzatish</span>
+              <Wand2 className="w-3.5 h-3.5" />
+              <span>Barcha Xavflarni Qabul Qilish</span>
             </button>
           </div>
         )}
@@ -99,32 +113,35 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
         {/* 1. READER VIEW (Shartnoma Varaqi + AI Inspector Split) */}
         {activeView === 'reader' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Chap tomon (65%): Shartnoma Varaqi */}
+            {/* Chap tomon (65%): Shartnoma Varaqi (Qizil/Yashil boy diff) */}
             <div className="lg:col-span-8">
               <DocumentPaper
                 analysis={analysis}
                 selectedClauseId={selectedClauseId}
                 onSelectClause={(id) => setSelectedClauseId(id)}
                 appliedFixes={appliedFixes}
+                onApplyFix={handleApplyFix}
+                onRejectFix={handleRejectFix}
               />
             </div>
 
-            {/* O'ng tomon (35%): AI Yurist Inspektori (Sticky) */}
+            {/* O'ng tomon (35%): AI Yurist Inspektori (Sticky Liquid Glass) */}
             <div className="lg:col-span-4 sticky top-20 space-y-4">
               <ClauseInspector
                 analysis={analysis}
                 selectedClause={selectedClause}
                 onSelectClause={(id) => setSelectedClauseId(id)}
                 onApplyFix={handleApplyFix}
+                onRejectFix={handleRejectFix}
                 appliedFixes={appliedFixes}
               />
 
               {/* Ovozli Tahlil Tugmasi */}
               <button
                 onClick={() => setShowVoiceBar(!showVoiceBar)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-2xl liquid-glass hover:liquid-glass-accent text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer border border-white/10"
               >
-                <span>🎙️ {showVoiceBar ? "Ovozli Yuristni Yopish" : "AI Live Ovozli Yuristni Ochish"}</span>
+                <span>🎙️ {showVoiceBar ? "Ovozli Yordamchini Yopish" : "Live Sinusoidal Ovozli Yordamchi"}</span>
               </button>
 
               {showVoiceBar && (

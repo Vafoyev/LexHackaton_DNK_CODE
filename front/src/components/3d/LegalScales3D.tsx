@@ -170,7 +170,20 @@ export const LegalScales3D: React.FC<LegalScales3DProps> = ({
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((mat) => mat.dispose());
+          } else if (obj.material) {
+            obj.material.dispose();
+          }
+        }
+      });
       renderer.dispose();
+      if (renderer.domElement && container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, [tiltRatio, isFixed]);
 

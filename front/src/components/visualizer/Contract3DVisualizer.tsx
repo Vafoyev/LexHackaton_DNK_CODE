@@ -414,7 +414,24 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
       container.removeEventListener('click', onClick);
       container.removeEventListener('wheel', onWheel);
       resizeObserver.disconnect();
+
+      // Zero-Leak Cleanup: Dispose all geometries, materials, and textures
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach((mat) => mat.dispose());
+          } else if (obj.material) {
+            obj.material.dispose();
+          }
+        }
+      });
+      starField.geometry.dispose();
+      (starField.material as THREE.Material).dispose();
       renderer.dispose();
+      if (renderer.domElement && container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, [analysis, autoRotate, layoutMode]);
 

@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { 
   LogIn, 
   LogOut, 
-  ChevronDown
+  ChevronDown,
+  Zap,
+  FolderOpen,
+  Scale,
+  User,
+  Box,
+  FileCheck2,
+  ExternalLink
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { EntityType } from '../../types/auth';
 
 interface NavbarProps {
   onReset: () => void;
@@ -30,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isIndividual = (user?.entity_type || activeEntityType) === 'INDIVIDUAL';
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80 transition-all">
+    <header className="sticky top-0 z-50 liquid-glass border-b border-white/10 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -38,237 +44,172 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onReset}
             className="flex items-center gap-3 cursor-pointer group shrink-0"
           >
-            <div className={`relative h-10 px-2.5 rounded-xl p-[2px] transition-transform duration-300 group-hover:scale-105 shadow-lg flex items-center justify-center ${
+            <div className={`relative h-10 px-2.5 rounded-2xl p-[2px] transition-transform duration-300 group-hover:scale-105 shadow-lg flex items-center justify-center ${
               isIndividual
-                ? 'bg-gradient-to-tr from-sky-600 via-blue-500 to-cyan-400 shadow-sky-500/20'
-                : 'bg-gradient-to-tr from-emerald-600 via-teal-500 to-green-400 shadow-emerald-500/20'
+                ? 'bg-gradient-to-tr from-sky-500 via-blue-500 to-cyan-400 shadow-sky-500/25'
+                : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-green-400 shadow-emerald-500/25'
             }`}>
-              <div className="w-full h-full bg-slate-900 rounded-[10px] px-2 flex items-center justify-center">
+              <div className="w-full h-full bg-slate-950/80 rounded-[14px] px-2 flex items-center justify-center backdrop-blur-md">
                 <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
               </div>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                <span className="text-xl font-black tracking-tight text-white drop-shadow-sm">
                   LexGuard<span className={isIndividual ? "text-sky-400" : "text-emerald-400"}>.AI</span>
                 </span>
-                <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${
+                <span className={`text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full border ${
                   isIndividual
-                    ? 'bg-sky-500/10 text-sky-400 border-sky-500/30'
-                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                    ? 'bg-sky-500/15 text-sky-400 border-sky-500/30'
+                    : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
                 }`}>
-                  {isIndividual ? 'FUQARO' : 'B2B'}
+                  {isIndividual ? 'B2C' : 'B2B'}
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
-                Lex.uz 3D Qonuniy Audit Platformasi
-              </p>
             </div>
           </div>
 
-          {/* Lex.uz 3D Model Ko'rish Tugmasi */}
-          {onOpen3D && (
+          {/* MINIMALIST CHROME MENU: '⚡ Tahlil' • '📂 Hujjatlar' • '⚖️ Qonunlar' • '👤 Profil' */}
+          <nav className="flex items-center gap-1.5 p-1 liquid-glass-subtle rounded-2xl border border-white/10">
+            {/* 1. ⚡ Tahlil */}
             <button
-              type="button"
-              onClick={onOpen3D}
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-sky-500/10 hover:scale-105"
-              title="3D Lex.uz GLTF modelini ko'rish"
-            >
-              <img src="/lex_uz.svg" alt="Lex.uz 3D" className="h-3.5 w-auto object-contain brightness-125" />
-              <span>3D Lex.uz</span>
-            </button>
-          )}
-
-          {/* MARKAZIY SHAXS TURINI ALMASHTIRGICH (JISMONIY / YURIDIK) */}
-          <div className="flex items-center p-1 bg-slate-900/90 rounded-2xl border border-slate-800 shadow-inner">
-            <button
-              onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                isIndividual
-                  ? 'bg-gradient-to-r from-sky-600 to-brand-600 text-white shadow-md shadow-sky-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
+              onClick={onReset}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                !hasAnalysis
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/25'
+                  : 'text-slate-300 hover:text-white hover:liquid-glass-accent'
               }`}
+              title="Yangi shartnoma yuklash va tahlil"
             >
-              Jismoniy shaxs
+              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              <span>Tahlil</span>
             </button>
 
+            {/* 2. 📂 Hujjatlar */}
             <button
-              onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                !isIndividual
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
+              onClick={() => {
+                if (hasAnalysis) {
+                  setActiveView('diff');
+                } else {
+                  onReset();
+                }
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                hasAnalysis && activeView === 'diff'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/25'
+                  : 'text-slate-300 hover:text-white hover:liquid-glass-accent'
               }`}
+              title="Tahlil qilingan hujjatlar va Redline Diff"
             >
-              Yuridik shaxs
+              <FolderOpen className="w-3.5 h-3.5 text-sky-400" />
+              <span>Hujjatlar</span>
             </button>
-          </div>
 
-          {/* Navigation Tabs (agar tahlil yuklangan bo'lsa) */}
-          {hasAnalysis && (
-            <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 shadow-inner">
+            {/* 3. ⚖️ Qonunlar (Lex.uz Milliy Portali) */}
+            <a
+              href="https://lex.uz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:liquid-glass-accent transition-all cursor-pointer"
+              title="O‘zbekiston Qonunchilik ma’lumotlari milliy bazasi (Lex.uz)"
+            >
+              <Scale className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Qonunlar</span>
+            </a>
+
+            {/* 3D Sfera tugmasi (mavjud bo'lsa) */}
+            {onOpen3D && (
               <button
-                onClick={() => setActiveView('dashboard')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'dashboard'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                type="button"
+                onClick={onOpen3D}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sky-300 hover:text-white hover:liquid-glass-accent text-xs font-bold transition-all cursor-pointer border border-sky-500/20"
+                title="Three.js 3D Risk Sferasini ochish"
+              >
+                <Box className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
+                <span>3D</span>
+              </button>
+            )}
+          </nav>
+
+          {/* O'NG TOMON: '👤 Profil' & Shaxs turi (B2B / B2C) */}
+          <div className="flex items-center gap-2">
+            {/* Shaxs turini almashtirish (Fuqaro / Biznes) */}
+            <div className="hidden sm:flex items-center p-0.5 liquid-glass-subtle rounded-xl border border-white/10 text-[11px] font-bold">
+              <button
+                onClick={() => switchEntityType('INDIVIDUAL')}
+                className={`px-2.5 py-1 rounded-lg transition-all ${
+                  isIndividual ? 'bg-sky-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                Executive Xulosa
+                Fuqaro
               </button>
-
               <button
-                onClick={() => setActiveView('visualizer3d')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'visualizer3d'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
+                onClick={() => switchEntityType('LEGAL_ENTITY')}
+                className={`px-2.5 py-1 rounded-lg transition-all ${
+                  !isIndividual ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                3D Sfera
+                Biznes
               </button>
+            </div>
 
-              <button
-                onClick={() => setActiveView('diff')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'diff'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Diff
-              </button>
-            </nav>
-          )}
-
-          {/* O'ng tomon: Login / Foydalanuvchi Profili */}
-          <div className="flex items-center gap-3">
+            {/* 4. 👤 Profil (Kirish yoki Profil menyusi) */}
             {!isAuthenticated ? (
               <button
                 onClick={onOpenAuth}
-                className={`px-4 py-2 rounded-xl text-white text-xs font-bold shadow-lg flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 ${
+                className={`px-3.5 py-1.5 rounded-xl text-white text-xs font-bold shadow-lg flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 ${
                   isIndividual
-                    ? 'bg-gradient-to-r from-sky-500 to-brand-600 shadow-sky-500/20'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-emerald-500/20'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 shadow-sky-500/25'
+                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-emerald-500/25'
                 }`}
               >
-                <LogIn className="w-3.5 h-3.5" />
-                <span>Kirish / OneID</span>
+                <User className="w-3.5 h-3.5" />
+                <span>Profil</span>
               </button>
             ) : (
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className={`flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-slate-900 border transition-all text-left cursor-pointer ${
+                  className={`flex items-center gap-2 p-1.5 pr-2.5 rounded-2xl liquid-glass border transition-all text-left cursor-pointer ${
                     isIndividual 
                       ? 'border-sky-500/40 hover:border-sky-400' 
                       : 'border-emerald-500/40 hover:border-emerald-400'
                   }`}
                 >
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
+                  <div className={`w-7 h-7 rounded-xl flex items-center justify-center font-bold text-xs ${
                     isIndividual 
                       ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' 
                       : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                   }`}>
-                    {user?.full_name ? user.full_name.charAt(0).toUpperCase() : (isIndividual ? 'J' : 'Y')}
+                    <User className="w-3.5 h-3.5" />
                   </div>
-                  <div className="hidden sm:block">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-white leading-tight">
-                        {user?.full_name?.split(' ')[0]}
-                      </span>
-                      <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold uppercase ${
-                        isIndividual 
-                          ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' 
-                          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                      }`}>
-                        {isIndividual ? 'JISMONIY' : 'YURIDIK'}
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 block truncate max-w-[120px] font-mono">
-                      {isIndividual ? `JShShIR: ${user?.jshshir || '301019...'}` : `STIR: ${user?.tin || '305123...'}`}
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold text-white hidden sm:inline">
+                    Profil
+                  </span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
                 {/* Dropdown Menu */}
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="p-2.5 border-b border-slate-800 mb-2">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold text-white">{user?.full_name}</span>
-                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                          isIndividual ? 'bg-sky-500/20 text-sky-400' : 'bg-emerald-500/20 text-emerald-400'
-                        }`}>
-                          {isIndividual ? 'FUQARO' : 'KORPORATIV'}
-                        </span>
-                      </div>
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl liquid-glass border border-white/10 shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="p-2 border-b border-white/10 mb-2">
+                      <span className="text-xs font-bold text-white block">{user?.full_name}</span>
                       <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
-
-                      <div className="mt-2.5 p-2 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                        {isIndividual ? (
-                          <div className="flex items-center justify-between text-[11px]">
-                            <span className="text-slate-400">JShShIR:</span>
-                            <span className="text-sky-300 font-mono font-bold">{user?.jshshir || '30101901234567'}</span>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400">STIR (INN):</span>
-                              <span className="text-emerald-300 font-mono font-bold">{user?.tin || '305123456'}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400">Tashkilot:</span>
-                              <span className="text-slate-200 font-semibold truncate max-w-[120px]">{user?.org_name || 'MCHJ'}</span>
-                            </div>
-                          </>
-                        )}
-                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-900">
-                          <span className="text-slate-400">Tahlil Limiti:</span>
-                          <span className="text-emerald-400 font-bold">
-                            {user?.quota?.remaining ?? (isIndividual ? 9 : 46)} ta qoldi
-                          </span>
-                        </div>
-                      </div>
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-sky-300 mt-1 inline-block">
+                        {isIndividual ? 'Fuqaro (B2C)' : 'Tadbirkorlik (B2B)'}
+                      </span>
                     </div>
 
-                    {/* Shaxs turini almashtirish imkoniyati */}
-                    <div className="mb-2 p-1.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                      <span className="text-slate-400 text-[11px]">Rejim:</span>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => switchEntityType('INDIVIDUAL')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            isIndividual ? 'bg-sky-500 text-white' : 'text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          Jismoniy
-                        </button>
-                        <button
-                          onClick={() => switchEntityType('LEGAL_ENTITY')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            !isIndividual ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          Yuridik
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-800">
-                      <button
-                        onClick={() => {
-                          logout();
-                          setShowDropdown(false);
-                        }}
-                        className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5" />
-                        <span>Chiqish (Logout)</span>
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowDropdown(false);
+                      }}
+                      className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Chiqish</span>
+                    </button>
                   </div>
                 )}
               </div>
