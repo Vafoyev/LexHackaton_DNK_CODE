@@ -7,9 +7,14 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-white font-bold text-sm">
-              <Shield className="w-4 h-4 text-sky-400" />
-              <span>LexGuard AI v3.2</span>
+            <div className="flex items-center gap-2.5 text-white font-bold text-sm">
+              <div className="p-1 px-1.5 rounded-lg bg-slate-900 border border-white/10 flex items-center justify-center">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4.5 w-auto object-contain brightness-125" />
+              </div>
+              <div className="flex flex-col -space-y-0.5">
+                <span className="text-[9px] font-black tracking-widest uppercase font-mono text-sky-400 leading-none">Lex.uz</span>
+                <span className="text-sm font-black tracking-tight text-white leading-tight">LexGuard.AI <span className="text-xs font-mono text-slate-400 font-normal">v3.2</span></span>
+              </div>
             </div>
             <p className="text-slate-400 text-[11px] leading-relaxed">
               O'zbekiston B2B shartnomalarini avtonom tahlil qilish, qonuniy ziddiyatlarni aniqlash va interaktiv 3D WebGL risk xaritasini qurish tizimi.

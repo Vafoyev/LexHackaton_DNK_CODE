@@ -61,21 +61,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* 1. Brand Logo */}
           <div 
             onClick={onReset}
-            className="flex items-center gap-3 cursor-pointer group shrink-0"
+            className="flex items-center gap-2.5 cursor-pointer group shrink-0"
             title="Bosh sahifaga qaytish"
           >
-            <div className={`relative h-9 px-2.5 rounded-full p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
+            <div className={`relative h-9.5 px-2.5 rounded-2xl p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
               isIndividual
                 ? 'bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-300 shadow-sky-500/30'
                 : 'bg-gradient-to-tr from-emerald-400 via-teal-500 to-green-300 shadow-emerald-500/30'
             }`}>
-              <div className="w-full h-full bg-slate-950/85 rounded-full px-2 flex items-center justify-center backdrop-blur-md">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4.5 w-auto object-contain brightness-125" />
+              <div className="w-full h-full bg-slate-950/90 rounded-[14px] px-2 flex items-center justify-center backdrop-blur-md">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
+            <div className="flex flex-col justify-center">
+              <div className="flex items-center gap-1.5 leading-none mb-0.5">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-3 w-auto object-contain brightness-125" />
+                <span className={`text-[10px] font-black tracking-widest uppercase font-mono ${
+                  isIndividual ? 'text-sky-500 dark:text-sky-400' : 'text-emerald-500 dark:text-emerald-400'
+                }`}>
+                  Lex.uz
+                </span>
+              </div>
+              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white leading-tight">
                 LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
               </span>
             </div>

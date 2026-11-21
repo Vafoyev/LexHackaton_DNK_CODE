@@ -44,6 +44,19 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             <span>Yangi Shartnoma</span>
           </button>
 
+          {/* Lex.uz & LexGuard Brand Pill */}
+          <div 
+            onClick={onReset}
+            className="hidden sm:flex items-center gap-2 p-1.5 px-2.5 rounded-xl bg-slate-900/60 border border-white/10 cursor-pointer hover:border-sky-500/30 transition-all"
+            title="LexGuard.AI Bosh sahifasi"
+          >
+            <img src="/lex_uz.svg" alt="Lex.uz" className="h-4.5 w-auto object-contain brightness-125" />
+            <div className="flex flex-col -space-y-0.5">
+              <span className="text-[9px] font-black tracking-wider uppercase font-mono text-sky-400">Lex.uz</span>
+              <span className="text-xs font-black tracking-tight text-white">LexGuard.AI</span>
+            </div>
+          </div>
+
           <div>
             <div className="flex items-center gap-2">
               <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
