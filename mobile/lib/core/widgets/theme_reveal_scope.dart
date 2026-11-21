@@ -75,7 +75,8 @@ class _ThemeRevealScopeState extends State<ThemeRevealScope>
 
   @override
   void dispose() {
-    _clearSnapshot();
+    _snapshot?.dispose();
+    _snapshot = null;
     _anim.dispose();
     super.dispose();
   }

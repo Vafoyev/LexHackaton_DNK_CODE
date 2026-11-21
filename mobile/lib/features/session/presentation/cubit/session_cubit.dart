@@ -10,7 +10,7 @@ import '../../../contracts/domain/entities/lex_models.dart';
 class SessionState extends Equatable {
   const SessionState({
     this.lang = AppLang.uz,
-    this.uzbekScript = UzbekScript.reformed,
+    this.uzbekScript = UzbekScript.standard,
     this.themeMode = ThemeMode.light,
     this.segment = AccountSegment.business,
     this.hasCompletedOnboarding = false,

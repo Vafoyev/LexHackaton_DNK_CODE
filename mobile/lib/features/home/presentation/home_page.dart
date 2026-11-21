@@ -153,30 +153,60 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
+                  InkWell(
+                    key: const Key('role_switch_pill'),
+                    onTap: () => _showRoleQuickSwitch(
+                      context,
+                      session.segment,
+                      lang,
+                      script,
                     ),
-                    decoration: BoxDecoration(
-                      color: c.rolePrimary.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(999),
-                      border: Border.all(
-                        color: c.rolePrimary.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(999),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
                       ),
-                    ),
-                    child: Text(
-                      isBusiness
-                          ? AppStrings.t(lang, 'business_b2b', script: script)
-                          : AppStrings.t(
-                              lang,
-                              'individual_b2c',
-                              script: script,
+                      decoration: BoxDecoration(
+                        color: c.rolePrimary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(
+                          color: c.rolePrimary.withValues(alpha: 0.25),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 7,
+                            height: 7,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: c.rolePrimary,
                             ),
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w800,
-                        color: c.rolePrimary,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            isBusiness
+                                ? AppStrings.t(lang, 'business_b2b', script: script)
+                                : AppStrings.t(
+                                    lang,
+                                    'individual_b2c',
+                                    script: script,
+                                  ),
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontWeight: FontWeight.w800,
+                              color: c.rolePrimary,
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          Icon(
+                            CupertinoIcons.chevron_down,
+                            size: 11,
+                            color: c.rolePrimary,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -234,40 +264,48 @@ class HomePage extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: (isBusiness
-                                              ? const Color(0xFFFBBF24)
-                                              : Colors.white)
-                                          .withValues(
-                                        alpha: isBusiness ? 0.22 : 0.18,
-                                      ),
-                                      borderRadius: BorderRadius.circular(999),
-                                      border: Border.all(
-                                        color: (isBusiness
-                                                ? const Color(0xFFFDE68A)
-                                                : Colors.white)
-                                            .withValues(alpha: 0.35),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      AppStrings.adaptUz(
-                                        session.quota.planName,
-                                        lang,
-                                        script,
-                                      ),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w800,
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: (isBusiness
+                                                  ? const Color(0xFFFBBF24)
+                                                  : Colors.white)
+                                              .withValues(
+                                            alpha: isBusiness ? 0.22 : 0.18,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(999),
+                                          border: Border.all(
+                                            color: (isBusiness
+                                                    ? const Color(0xFFFDE68A)
+                                                    : Colors.white)
+                                                .withValues(alpha: 0.35),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          AppStrings.adaptUz(
+                                            session.quota.planName,
+                                            lang,
+                                            script,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                  const Spacer(),
+                                  const SizedBox(width: 8),
                                   InkWell(
                                     onTap: () => PlansModalSheet.show(context),
                                     borderRadius: BorderRadius.circular(999),
@@ -917,6 +955,110 @@ class HomePage extends StatelessWidget {
               FilledButton(
                 onPressed: () => Navigator.of(ctx).pop(),
                 child: Text(AppStrings.t(lang, 'ok_btn', script: script)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showRoleQuickSwitch(
+    BuildContext context,
+    AccountSegment current,
+    AppLang lang,
+    UzbekScript script,
+  ) {
+    final c = context.lexColors;
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(14),
+        child: GlassCard(
+          radius: 28,
+          blurSigma: 26,
+          tintColor: c.glassFillStrong,
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                AppStrings.t(lang, 'role_switch_title', script: script),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: c.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                key: const Key('quick_switch_individual'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFF0066FF),
+                  child: Icon(
+                    CupertinoIcons.person_fill,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+                title: Text(
+                  AppStrings.t(lang, 'role_individual_title', script: script),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
+                ),
+                trailing: current == AccountSegment.individual
+                    ? const Icon(
+                        CupertinoIcons.checkmark_circle_fill,
+                        color: Color(0xFF0066FF),
+                      )
+                    : null,
+                onTap: () {
+                  context
+                      .read<SessionCubit>()
+                      .setSegment(AccountSegment.individual);
+                  Navigator.of(ctx).pop();
+                },
+              ),
+              const SizedBox(height: 6),
+              ListTile(
+                key: const Key('quick_switch_business'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFF047857),
+                  child: Icon(
+                    CupertinoIcons.building_2_fill,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+                title: Text(
+                  AppStrings.t(lang, 'role_business_title', script: script),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
+                ),
+                trailing: current == AccountSegment.business
+                    ? const Icon(
+                        CupertinoIcons.checkmark_circle_fill,
+                        color: Color(0xFF047857),
+                      )
+                    : null,
+                onTap: () {
+                  context
+                      .read<SessionCubit>()
+                      .setSegment(AccountSegment.business);
+                  Navigator.of(ctx).pop();
+                },
               ),
             ],
           ),
