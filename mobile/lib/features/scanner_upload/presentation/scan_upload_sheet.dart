@@ -309,7 +309,7 @@ class _ScanUploadSheetState extends State<ScanUploadSheet> {
                   _DemoSampleTile(
                     key: const Key('demo_sample_service'),
                     title: 'B2B Xizmat ko‘rsatish shartnomasi (UZ-Lotin)',
-                    subtitle: 'R1–R5 qoidalari · 4 rang + PII maskalash',
+                    subtitle: 'R1–R5 qoidalari · 3 rang + PII maskalash',
                     badge: 'DOCX',
                     onTap: () => _runSample('sample_b2b_service'),
                   ),

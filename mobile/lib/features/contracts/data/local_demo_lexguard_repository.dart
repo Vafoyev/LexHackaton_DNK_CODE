@@ -14,6 +14,11 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
         allowExternalAi: true,
         analyzedAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
+      _buildSampleLeaseAgreement(
+        id: 'ana_lease_03',
+        allowExternalAi: true,
+        analyzedAt: DateTime.now().subtract(const Duration(hours: 7)),
+      ),
       _buildSampleNotarialSale(
         id: 'ana_notarial_02',
         allowExternalAi: false,
@@ -618,6 +623,106 @@ class LocalDemoLexGuardRepository implements LexGuardRepository {
             officialUrl: 'https://lex.uz/uz/docs/-3805227',
           ),
           actionTag: 'MEDIATION',
+        ),
+      ],
+    );
+  }
+
+  ContractAnalysis _buildSampleLeaseAgreement({
+    required String id,
+    required bool allowExternalAi,
+    required DateTime analyzedAt,
+  }) {
+    return ContractAnalysis(
+      id: id,
+      title: 'Noturar joy ijarasi shartnomasi №18',
+      fileName: 'ofis_ijara_18.docx',
+      formatLabel: 'DOCX',
+      languageLabel: 'O‘zbekcha',
+      contractType: ContractType.nonResidentialLease,
+      contractDate: '2026-10-01',
+      analyzedAt: analyzedAt,
+      executionMode: allowExternalAi
+          ? 'Gibrid AI + Verifier (PII maskalangan)'
+          : 'Lokal qoidalar (tashqariga chiqmaydi)',
+      partyAName: 'Ijaraga beruvchi',
+      partyBName: 'Ijarachi',
+      overallBalanceLabel: 'Ijarachiga og‘ir',
+      piiMaskedCount: 4,
+      piiCategories: const {'STIR': 2, 'ACCOUNT': 1, 'PHONE': 1},
+      sha256Short: 'c48e19f02a11',
+      retentionDays: 30,
+      redactedPreview:
+          'Noturar joy ijarasi. STIR [STIR_1] va [STIR_2], hisob [ACCOUNT_1].',
+      findings: const [
+        ClauseFinding(
+          id: 'f_lease_1',
+          clauseNumber: '4.1',
+          title: 'Ijara haqini bir tomonlama oshirish',
+          ruleCode: 'R1_PAYMENT_TERMS',
+          riskColor: RiskColor.yellow,
+          backendCategory: 'COMMERCIAL',
+          verificationStatus: VerificationStatus.verified,
+          balance: NeutralityBalance.heavyPartyB,
+          balanceLabel: 'Ijarachiga og‘ir',
+          originalText:
+              'Ijaraga beruvchi ijara haqini istalgan vaqtda ogohlantirishsiz oshirish huquqiga ega.',
+          explanation:
+              'Agar ijara haqini qayta ko‘rish muddati va chegarasi belgilanmasa, yil davomida kutilmagan xarajat yuzaga keladi.',
+          suggestedRevision:
+              'Ijara haqi yiliga bir martadan ko‘p bo‘lmagan holda, 30 kun oldin yozma ogohlantirish va ikki tomonlama qo‘shimcha kelishuv bilan o‘zgartiriladi.',
+          citation: LegalCitation(
+            code: 'FK-UZ',
+            title: 'Fuqarolik kodeksi',
+            article: '544-modda',
+            part: '2-qism',
+            normNature: 'DISPOSITIVE',
+            effectiveFrom: '1997-03-01',
+            officialUrl: 'https://lex.uz/uz/acts/-180552',
+          ),
+          actionTag: 'CLAIM',
+        ),
+        ClauseFinding(
+          id: 'f_lease_2',
+          clauseNumber: '7.1',
+          title: 'Sudgacha pretenziya va mediatsiya yo‘q',
+          ruleCode: 'R5_DISPUTE_MEDIATION',
+          riskColor: RiskColor.yellow,
+          backendCategory: 'COMMERCIAL',
+          verificationStatus: VerificationStatus.verified,
+          balance: NeutralityBalance.balanced,
+          balanceLabel: 'Muvozanatli',
+          originalText:
+              'Kelishmovchiliklar yuzaga kelganda taraflar to‘g‘ridan-to‘g‘ri iqtisodiy sudga murojaat qiladi.',
+          explanation:
+              'Sudgacha 10 kunlik pretenziya va mediatsiya bosqichini qo‘shish nizoni tez va kam xarajat bilan hal qilishga yordam beradi.',
+          suggestedRevision:
+              'Nizolar avvalo 10 kunlik yozma pretenziya va professional mediatsiya orqali hal qilinadi; kelishuv bo‘lmasa sudga oshiriladi.',
+          citation: LegalCitation(
+            code: 'MED-UZ',
+            title: 'Mediatsiya to‘g‘risidagi qonun',
+            article: '16-modda',
+            part: '2-qism',
+            normNature: 'DISPOSITIVE',
+            effectiveFrom: '2019-01-01',
+            officialUrl: 'https://lex.uz/uz/docs/-3805227',
+          ),
+          actionTag: 'MEDIATION',
+        ),
+        ClauseFinding(
+          id: 'f_lease_3',
+          clauseNumber: '2.1',
+          title: 'Ijara obyekti va maydoni aniq ko‘rsatilgan',
+          ruleCode: 'R2_SUBJECT_CLEAR',
+          riskColor: RiskColor.green,
+          backendCategory: 'OK',
+          verificationStatus: VerificationStatus.verified,
+          balance: NeutralityBalance.balanced,
+          balanceLabel: 'Muvozanatli',
+          originalText:
+              'Toshkent sh., Amir Temur ko‘chasi 108-uy, 4-qavat, 120 kv.m ofis xonasi.',
+          explanation: 'Tekshirilgan qoidalar bo‘yicha muammo topilmadi.',
+          suggestedRevision: 'O‘zgartirish talab etilmaydi.',
         ),
       ],
     );

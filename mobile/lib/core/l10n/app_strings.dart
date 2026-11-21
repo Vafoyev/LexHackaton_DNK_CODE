@@ -29,7 +29,7 @@ class AppStrings {
   static String t(
     AppLang lang,
     String key, {
-    UzbekScript script = UzbekScript.standard,
+    UzbekScript script = UzbekScript.reformed,
   }) {
     final map = switch (lang) {
       AppLang.uz => _uz,
@@ -125,6 +125,39 @@ class AppStrings {
     'switch_role_screen': 'Rol tanlash ekraniga o‘tish',
 
     // Home & Services
+    'b2b_monitoring_title': 'Qonun monitoringi',
+    'b2b_monitoring_slogan':
+        'Qonun o‘zgaradi — shartnoma o‘zgarmaydi. Aynan sizning bandlaringiz nazoratda.',
+    'b2b_monitoring_badge': 'ta o‘zgarish',
+    'b2b_monitoring_all_clear': 'Barcha hujjatlaringiz yangi qonunlarga mos',
+    'b2b_monitoring_active_pill': 'Monitoring faol',
+    'b2b_monitoring_affected_pill': 'Qonun o‘zgardi',
+    'b2b_notif_title': 'Bildirishnomalar',
+    'b2b_notif_mark_read': 'O‘qildi',
+    'b2b_notif_empty': 'Yangi ogohlantirishlar yo‘q',
+    'b2b_mon_affected_doc': 'Ta’sirlangan hujjat va band',
+    'b2b_mon_fk4_note':
+        'FK 4-modda: Yangi qonun avvalgi shartnomani avtomatik noqonuniy qilmaydi, lekin uzaytirish yoki o‘zgartirishda bandni yangilash tavsiya etiladi.',
+    'b2b_mon_accept_btn': 'Yangilashni qabul qilish',
+    'b2b_mon_open_contract': 'Shartnomani ochish',
+    'b2b_mon_resolved_badge': 'Yangilandi',
+    'b2b_mon_toast_resolved': 'Band tahriri qabul qilindi va nazorat yangilandi',
+    'b2b_mon_toast_added': 'Hujjat qonun monitoringiga qo‘shildi',
+    'docs_tab_contracts': 'Shartnomalarim',
+    'docs_tab_company_docs': 'Hujjatlarim',
+    'docs_upload_company_doc': 'Korxona hujjatini yuklash',
+    'svc_check_contract': 'Shartnoma\ntekshirish',
+    'svc_monitoring': 'Qonun\nmonitoringi',
+    'export_letter_title': '3. Hamkorga xat / Pretenziya loyihasi',
+    'b2b_team_title': 'Jamoa, Rollar va Audit',
+    'b2b_team_sub': 'Pro tarifda bir nechta xodim va audit jurnali',
+    'b2b_billing_title': 'To‘lov va E-faktura',
+    'b2b_billing_sub': 'Bank o‘tkazmasi, E-faktura, Payme / Click',
+    'b2b_stir_label': 'STIR: 309 481 225',
+    'company_docs_title': 'Firma hujjatlari',
+    'company_docs_sub': 'Qonun o‘zgarsa ta’sirlangan band darhol xabar qilinadi',
+    'company_docs_upload_btn': 'Firma hujjatini yuklash',
+    'company_docs_empty': 'Hali firma hujjati yuklanmagan',
     'law_updates_title': 'Qonundagi yangiliklar',
     'news_badge_new': 'Yangi',
     'news_1_code': 'O‘RQ-1115',
@@ -168,7 +201,7 @@ class AppStrings {
         'R5 qoidasi shartnomada 10 kunlik pretenziya va professional mediatsiya bosqichini qo‘shishni tavsiya qiladi (Mediatsiya qonuni, 16-modda).',
     'lawyer_title': 'Hamkor advokat ko‘rigi',
     'lawyer_body':
-        'Kulrang (Unknown) yoki tasdiqlanmagan bandlar reyestrdagi hamkor advokatga yo‘naltiriladi.',
+        'Manba topilmagan yoki rangsiz «Tekshirilmadi» bandlari reyestrdagi hamkor advokatga yo‘naltiriladi.',
     'ok_btn': 'Tushunarli',
 
     // Documents
@@ -209,7 +242,7 @@ class AppStrings {
     'file_too_large': 'Fayl hajmi 10 MB limitidan katta.',
     'file_unreadable': 'Faylni o‘qib bo‘lmadi. Boshqa fayl tanlang.',
     'demo_1_title': 'B2B Xizmat shartnomasi (O‘zbekcha)',
-    'demo_1_sub': 'R1–R5 qoidalari · 4 rang + PII maskalash',
+    'demo_1_sub': 'R1–R5 qoidalari · 3 rang + PII maskalash',
     'demo_2_title': 'Bino oldi-sotdi loyihasi (Notarial R6)',
     'demo_2_sub': 'FK 110–112 majburiy notarial tasdiq signali',
     'demo_3_title': 'Uskuna yetkazib berish №19 (RU)',
@@ -227,28 +260,29 @@ class AppStrings {
     'yellow_label': 'Sariq',
     'gray_label': 'Tekshirilmadi',
     'green_label': 'Yashil',
-    'red_full': 'Qizil · Qonun xavfi',
+    'red_full': 'Qizil · Qonunga zid',
     'yellow_full': 'Sariq · E’tibor kerak',
     'gray_full': 'Rangsiz · Tekshirilmadi',
     'green_full': 'Yashil · Muammo topilmadi',
-    'status_guide_title': 'Natija statuslari',
+    'status_guide_title': 'Natija: 3 rang',
     'status_guide_more': 'Batafsil',
-    'status_red_title': 'Qizil — Qonun xavfi',
-    'status_red_short': 'Moddasi tasdiqlangan qonuniy xavf va notariat',
+    'status_red_title': 'Qizil — Qonunga zid',
+    'status_red_short': 'Tuzatish shart · modda va notariat',
     'status_red_detail':
-        'Iqtibosi va moddasi tasdiqlangan qonun xavfi, jumladan majburiy notarial qoida (R6). Iqtibossiz qizil berilmaydi.',
+        'Iqtibosi tasdiqlangan qonun xavfi, jumladan majburiy notarial qoida (R6). Tuzatish shart — iqtibossiz qizil berilmaydi.',
     'status_yellow_title': 'Sariq — E’tibor kerak',
-    'status_yellow_short': 'Qonunga mos, lekin «qilmasangiz → oqibat» bor',
+    'status_yellow_short': 'Qonunga mos, lekin «qilmasangiz → oqibat»',
     'status_yellow_detail':
-        'Qonunga mos, lekin e’tibor talab qiladi: «Agar shu ishni qilmasangiz → shu oqibat bo‘ladi». Masalan: penyaga chegara qo‘ymasangiz, 2 hafta kechikishda summaning 14%i ketishi mumkin.',
+        'Qonunga mos, lekin tijoriy oqibati bor: «Agar shu ishni qilmasangiz → shu oqibat bo‘ladi». Masalan: penyaga chegara qo‘ymasangiz, 2 hafta kechikishda summaning 14%i ketadi. Balans yorlig‘i kimga og‘irligini ko‘rsatadi.',
     'status_green_title': 'Yashil — Muammo topilmadi',
-    'status_green_short': 'Tekshirilgan qoidalarda ziddiyat yo‘q («xavfsiz» emas)',
+    'status_green_short': 'Tekshirilgan qoidalar bo‘yicha («xavfsiz» emas)',
     'status_green_detail':
         'Tekshirilgan R1–R6 qoidalarida muammo topilmadi. Bu «xavfsiz» degani emas — yakuniy qarorni foydalanuvchi qabul qiladi.',
-    'status_gray_title': 'Rangsiz — Tekshirilmadi',
-    'status_gray_short': 'Manba noaniq — tizim taxmin qilmaydi, advokatga yo‘naltiradi',
+    'status_gray_title': 'Manba topilmasa — xulosa yo‘q («0»)',
+    'status_gray_short':
+        'Manba topilmasa, matn noaniq yoki xorijiy qonun bo‘lsa — xulosa chiqarilmaydi (rangsiz «Tekshirilmadi» → hamkor advokat).',
     'status_gray_detail':
-        'Manba tasdiqlanmasa, hujjat turi aniqlanmasa, matn noaniq o‘qilsa yoki xorijiy qonun bo‘lsa — tizim taxmin qilmaydi («0» xulosa) va hamkor advokatga yo‘naltiradi.',
+        'Tur aniqlanmasa, matn ishonchsiz o‘qilsa, shartnoma xorijiy qonunga bo‘ysunsa yoki iqtibos tasdiqlanmasa — band rangsiz «Tekshirilmadi» deb belgilanadi va hamkor advokatga yo‘naltiriladi. Tizim taxmin qilmaydi.',
     'status_guide_footer':
         'O‘RQ-1115: Axborot-tahliliy tizim. Har bandda taraf balansi ko‘rsatiladi; bitta foizli «xavf indeksi» ishlatilmaydi.',
     'tab_clauses': 'Xulosalar',
@@ -305,7 +339,7 @@ class AppStrings {
     'effective_from': 'Kuchga kirgan',
     'link_copied': 'Havola nusxalandi',
     'lawyer_escalation':
-        'Hamkor advokatga yo‘naltirish: Ushbu band Unknown toifasida. Pullik ko‘rik faqat reyestrdagi hamkor advokat orqali amalga oshiriladi.',
+        'Hamkor advokatga yo‘naltirish: Ushbu band rangsiz «Tekshirilmadi» holatida (tizim taxmin qilmaydi). Ekspert ko‘rigi hamkor advokat orqali amalga oshiriladi.',
     'dismiss_btn': 'Rad etish',
     'accept_btn': 'Tahrirni qabul qilish',
     'export_comments_title': '1. Izohli takliflar .docx + Bayonnoma',
@@ -468,6 +502,39 @@ class AppStrings {
     'logout_btn': 'Выйти',
     'switch_role_screen': 'Перейти к выбору роли',
 
+    'b2b_monitoring_title': 'Мониторинг законов',
+    'b2b_monitoring_slogan':
+        'Закон меняется — договор остаётся прежним. Проверяем именно ваши пункты.',
+    'b2b_monitoring_badge': 'изменений',
+    'b2b_monitoring_all_clear': 'Все документы соответствуют актуальным нормам',
+    'b2b_monitoring_active_pill': 'Мониторинг активен',
+    'b2b_monitoring_affected_pill': 'Закон изменён',
+    'b2b_notif_title': 'Уведомления',
+    'b2b_notif_mark_read': 'Прочитать все',
+    'b2b_notif_empty': 'Новых уведомлений нет',
+    'b2b_mon_affected_doc': 'Затронутый документ и пункт',
+    'b2b_mon_fk4_note':
+        'ГК ст. 4: Новый закон не делает старый договор автоматически незаконным, но при продлении или правках рекомендуется обновить пункт.',
+    'b2b_mon_accept_btn': 'Принять обновление',
+    'b2b_mon_open_contract': 'Открыть договор',
+    'b2b_mon_resolved_badge': 'Обновлено',
+    'b2b_mon_toast_resolved': 'Обновление пункта принято',
+    'b2b_mon_toast_added': 'Документ добавлен в мониторинг законов',
+    'docs_tab_contracts': 'Мои договоры',
+    'docs_tab_company_docs': 'Мои документы',
+    'docs_upload_company_doc': 'Загрузить документ компании',
+    'svc_check_contract': 'Проверить\nдоговор',
+    'svc_monitoring': 'Мониторинг\nзаконов',
+    'export_letter_title': '3. Письмо партнёру / Претензия',
+    'b2b_team_title': 'Команда, Роли и Аудит',
+    'b2b_team_sub': 'В тарифе Pro: роли сотрудников и журнал аудита',
+    'b2b_billing_title': 'Оплата и ЭСФ',
+    'b2b_billing_sub': 'Безнал для ООО, ЭСФ, Payme / Click',
+    'b2b_stir_label': 'ИНН: 309 481 225',
+    'company_docs_title': 'Документы компании',
+    'company_docs_sub': 'Уведомим, если закон затронет пункт документа',
+    'company_docs_upload_btn': 'Загрузить документ компании',
+    'company_docs_empty': 'Документы компании ещё не загружены',
     'law_updates_title': 'Изменения в законах',
     'news_badge_new': 'Новое',
     'news_1_code': 'ЗРУ-1115',
@@ -511,7 +578,7 @@ class AppStrings {
         'Правило R5 предлагает 10-дневный претензионный порядок и этап медиации перед судом (Закон о медиации, ст. 16).',
     'lawyer_title': 'Проверка адвокатом-партнёром',
     'lawyer_body':
-        'Серые (Unknown) или неподтверждённые пункты направляются адвокату-партнёру из реестра.',
+        'Непроверенные пункты без подтверждённого источника («Не проверено») направляются адвокату-партнёру из реестра.',
     'ok_btn': 'Понятно',
 
     'docs_title': 'Мои договоры',
@@ -570,22 +637,26 @@ class AppStrings {
     'yellow_full': 'Жёлтый · Нужен контроль',
     'gray_full': 'Без цвета · Не проверено',
     'green_full': 'Зелёный · Проблем не найдено',
-    'status_guide_title': 'Статусы проверки',
+    'status_guide_title': 'Результат: 3 цвета',
     'status_guide_more': 'Подробнее',
-    'status_red_title': 'Красный — Правовой риск',
-    'status_red_short': 'Подтверждённый риск по закону и нотариат',
+    'status_red_title': 'Красный — Против закона',
+    'status_red_short':
+        'Нужно исправить · Подтверждённый правовой риск и нотариат',
     'status_red_detail':
         'Правовой риск с подтверждённой статьёй закона, включая обязательный нотариат (R6). Без цитаты красный не ставится.',
-    'status_yellow_title': 'Жёлтый — Нужен контроль',
-    'status_yellow_short': 'Законно, но есть последствие «если не изменить»',
+    'status_yellow_title': 'Жёлтый — Законно, но нужен контроль',
+    'status_yellow_short':
+        '«Если не изменить → последствие» (пеня без лимита = 14% за 2 недели)',
     'status_yellow_detail':
-        'Соответствует закону, но требует внимания: «Если не сделать это → будет такое последствие». Например: пеня без лимита может забрать 14% суммы за 2 недели.',
+        'Соответствует закону, но требует внимания: «Если не сделать это → будет такое последствие». Например: пеня без лимита забирает 14% суммы за 2 недели.',
     'status_green_title': 'Зелёный — Проблем не найдено',
-    'status_green_short': 'Нарушений по правилам нет (не значит «безопасно»)',
+    'status_green_short':
+        'По проверенным правилам; не означает «безопасно»',
     'status_green_detail':
         'По проверенным правилам R1–R6 проблем не найдено. Это не означает «полностью безопасно» — решение остаётся за человеком.',
-    'status_gray_title': 'Без цвета — Не проверено',
-    'status_gray_short': 'Источник неясен — без догадок, к адвокату',
+    'status_gray_title': 'Нет источника — нет вывода («0»)',
+    'status_gray_short':
+        'Если источник не подтверждён или право иностранное — без цвета («Не проверено» → к адвокату-партнёру).',
     'status_gray_detail':
         'Если источник не подтверждён, тип договора неясен, текст плохо читается или действует иностранное право — система не угадывает («0») и направляет к адвокату-партнёру.',
     'status_guide_footer':
@@ -643,7 +714,7 @@ class AppStrings {
     'effective_from': 'Действует с',
     'link_copied': 'Ссылка скопирована',
     'lawyer_escalation':
-        'Передача адвокату: этот пункт относится к категории Unknown. Платная проверка проводится только адвокатом из реестра.',
+        'Передача адвокату: пункт отмечен без цвета «Не проверено» (система не угадывает). Экспертная проверка проводится через адвоката-партнёра.',
     'dismiss_btn': 'Отклонить',
     'accept_btn': 'Принять правку',
     'export_comments_title': '1. Комментарии .docx + Протокол',
@@ -804,6 +875,39 @@ class AppStrings {
     'logout_btn': 'Sign Out',
     'switch_role_screen': 'Open role selection screen',
 
+    'b2b_monitoring_title': 'Law Monitoring',
+    'b2b_monitoring_slogan':
+        'Laws change — signed contracts do not. We track your exact clauses.',
+    'b2b_monitoring_badge': 'alerts',
+    'b2b_monitoring_all_clear': 'All company documents match current laws',
+    'b2b_monitoring_active_pill': 'Monitored',
+    'b2b_monitoring_affected_pill': 'Law Updated',
+    'b2b_notif_title': 'Notifications',
+    'b2b_notif_mark_read': 'Mark read',
+    'b2b_notif_empty': 'No new alerts',
+    'b2b_mon_affected_doc': 'Affected document & clause',
+    'b2b_mon_fk4_note':
+        'Civil Code Art. 4: A new law does not automatically invalidate prior contracts, but updating this clause is recommended before renewal.',
+    'b2b_mon_accept_btn': 'Accept Update',
+    'b2b_mon_open_contract': 'Open Contract',
+    'b2b_mon_resolved_badge': 'Updated',
+    'b2b_mon_toast_resolved': 'Clause update accepted',
+    'b2b_mon_toast_added': 'Document added to law monitoring',
+    'docs_tab_contracts': 'My Contracts',
+    'docs_tab_company_docs': 'My Documents',
+    'docs_upload_company_doc': 'Upload company document',
+    'svc_check_contract': 'Check\nContract',
+    'svc_monitoring': 'Law\nMonitoring',
+    'export_letter_title': '3. Partner Letter / Claim Draft',
+    'b2b_team_title': 'Team, Roles & Audit',
+    'b2b_team_sub': 'Multi-user roles & audit log on Pro plan',
+    'b2b_billing_title': 'Billing & E-Invoice',
+    'b2b_billing_sub': 'Bank transfer, E-invoice, Payme / Click',
+    'b2b_stir_label': 'TIN: 309 481 225',
+    'company_docs_title': 'Company Documents',
+    'company_docs_sub': 'Alerts you if a law change affects any clause',
+    'company_docs_upload_btn': 'Upload company document',
+    'company_docs_empty': 'No company documents uploaded yet',
     'law_updates_title': 'Legal Updates',
     'news_badge_new': 'New',
     'news_1_code': 'Law 1115',
@@ -847,7 +951,7 @@ class AppStrings {
         'Rule R5 suggests adding a 10-day pre-trial claim period and registered mediation step (Mediation Law, Art. 16).',
     'lawyer_title': 'Partner Lawyer Review',
     'lawyer_body':
-        'Gray (Unknown) or unverified clauses can be escalated to a registered partner lawyer.',
+        'Uncolored "Not Checked" clauses without a verified source are escalated to a registered partner lawyer.',
     'ok_btn': 'Got it',
 
     'docs_title': 'My Contracts',
@@ -906,22 +1010,25 @@ class AppStrings {
     'yellow_full': 'Yellow · Needs Attention',
     'gray_full': 'Uncolored · Not Checked',
     'green_full': 'Green · No Issues Found',
-    'status_guide_title': 'Result Statuses',
+    'status_guide_title': 'Result: 3 Colors',
     'status_guide_more': 'Details',
-    'status_red_title': 'Red — Legal Risk',
-    'status_red_short': 'Verified statutory risk including notarization',
+    'status_red_title': 'Red — Violates Law',
+    'status_red_short':
+        'Must fix · Verified statutory risk including notarization',
     'status_red_detail':
         'Verified legal risk backed by a statute citation, including mandatory notarization (R6). No red flag without a verified citation.',
-    'status_yellow_title': 'Yellow — Needs Attention',
-    'status_yellow_short': 'Lawful, but has an "if unchanged → impact" risk',
+    'status_yellow_title': 'Yellow — Lawful, Needs Attention',
+    'status_yellow_short':
+        '"If unchanged → consequence" (uncapped penalty = 14% in 2 weeks)',
     'status_yellow_detail':
         'Lawful, yet requires commercial attention: "If you leave this unchanged → this consequence follows." Example: uncapped penalties can reach 14% in 2 weeks.',
     'status_green_title': 'Green — No Issues Found',
-    'status_green_short': 'No issues in checked rules (does not mean risk-free)',
+    'status_green_short': 'Across checked rules; does not mean risk-free',
     'status_green_detail':
         'No issues detected across checked R1–R6 rules. This does not mean risk-free — final review remains with the user.',
-    'status_gray_title': 'Uncolored — Not Checked',
-    'status_gray_short': 'Unclear source — no guessing, escalate to lawyer',
+    'status_gray_title': 'No Source — No Verdict ("0")',
+    'status_gray_short':
+        'If source is unverified or foreign law applies — marked uncolored "Not Checked" and routed to a partner lawyer.',
     'status_gray_detail':
         'If a citation cannot be verified, document type is unclear, text is unreadable, or foreign law applies — the system never guesses ("0") and escalates to a partner lawyer.',
     'status_guide_footer':
@@ -979,7 +1086,7 @@ class AppStrings {
     'effective_from': 'Effective from',
     'link_copied': 'Link copied',
     'lawyer_escalation':
-        'Partner Lawyer Escalation: This clause is Unknown. Paid review happens strictly through a registered partner lawyer.',
+        'Partner Lawyer Escalation: Marked uncolored "Not Checked" (system never guesses). Expert review is provided via a registered partner lawyer.',
     'dismiss_btn': 'Dismiss',
     'accept_btn': 'Accept Revision',
     'export_comments_title': '1. Annotated Comments .docx + Protocol',
