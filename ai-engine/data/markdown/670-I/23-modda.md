@@ -1,0 +1,7 @@
+# 670-I 23-modda: Xoʻjalik shartnomalari toʻgʻrisidagi qonunchilikka rioya etilishini nazorat qilish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-18942#-5551003](https://lex.uz/docs/-18942#-5551003)
+**Bog'liq havolalar:** 23-modda, 22-modda, 985-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Xoʻjalik shartnomalarini tuzish, bajarish, oʻzgartirish va bekor qilish bilan bogʻliq boʻlgan qonunchilikka rioya etilishi ustidan nazoratni qonun hujjatlariga muvofiq prokuratura organlari amalga oshiradi. Bu organlar aybdor shaxslarni qonunda belgilangan javobgarlikka tortish, xoʻjalik yurituvchi subyektga yetkazilgan zararni qoplash yuzasidan zarur chora-tadbirlarni koʻradi. ( 23-modda Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Oʻzbekiston Respublikasi “Prokuratura toʻgʻrisida”gi Qonunining 22-moddasi , Oʻzbekiston Respublikasi Fuqarolik kodeksining 14 va 985-moddalari , Oʻzbekiston Respublikasi Oliy sudi Plenumining 2016-yil 27-dekabrdagi 26-son “Jinoyat natijasida yetkazilgan mulkiy ziyonni qoplashga oid qonunchilikni qoʻllash boʻyicha sud amaliyoti toʻgʻrisida”gi qarori . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.03.00 Majburiyatlarni buzganlik uchun javobgarlik] V. SHARTNOMA MAJBURIYATLARINI BUZGANLIK UCHUN JAVOBGARLIK

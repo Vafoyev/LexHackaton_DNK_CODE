@@ -1,0 +1,7 @@
+# ORQ-547 29-modda: Hamma foydalanishi mumkin boʻlgan shaxsga doir maʼlumotlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-4396419#-4397669](https://lex.uz/docs/-4396419#-4397669)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Subyektning roziligi bilan erkin foydalanilishi mumkin boʻlgan yoki maxfiylikka rioya etishga doir talablar tatbiq etilmaydigan shaxsga doir maʼlumotlar hamma foydalanishi mumkin boʻlgan shaxsga doir maʼlumotlardir. Aholini axborot bilan taʼminlash maqsadida shaxsga doir maʼlumotlarning hamma foydalanishi mumkin boʻlgan manbalari (shu jumladan biografik maʼlumotnomalar, telefon, manzil kitoblari, hamma foydalanishi mumkin boʻlgan elektron axborot resurslari) yaratilishi mumkin. Shaxsga doir maʼlumotlarning hamma foydalanishi mumkin boʻlgan manbalariga subyektning yozma roziligi bilan uning familiyasi, ismi, otasining ismi, tugʻilgan yili va joyi, manzili, abonent raqami, kasbi toʻgʻrisidagi maʼlumotlar hamda subyekt tomonidan maʼlum qilinadigan boshqa shaxsga doir maʼlumotlar kiritilishi mumkin. Subyekt haqidagi maʼlumotlar shaxsga doir maʼlumotlarning hamma foydalanishi mumkin boʻlgan manbalaridan uning murojaatiga koʻra, rozilik qanday shaklda berilgan boʻlsa, shunday shaklda yoki yozma shaklda, shu jumladan elektron hujjat tarzida, shuningdek vakolatli davlat organining yoki sudning qaroriga koʻra chiqarib tashlanishi mumkin. 6-bob. Shaxsga doir maʼlumotlarga ishlov berish ishtirokchilarining huquq va majburiyatlari

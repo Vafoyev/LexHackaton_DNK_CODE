@@ -1,0 +1,7 @@
+# FK-UZ-1 151-modda: Maxsus daʼvo muddatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-153704](https://lex.uz/docs/-111189#-153704)
+**Bog'liq havolalar:** 151-modda, 162-modda, 163-modda, 724-modda, 24-modda, 63-modda, 118-modda, 114-modda, 576-modda, 88-modda, 41-modda, 62-modda
+
+## Norma matni:
+Ayrim turdagi talablar uchun qonunchilikda umumiy daʼvo muddatiga qaraganda qisqartirilgan yoki uzaytirilgan maxsus daʼvo muddatlari belgilanishi mumkin. (151-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Agar qonunda boshqacha tartib belgilangan boʻlmasa, ushbu Kodeks 152-162-moddalarining qoidalari maxsus daʼvo muddatlariga ham joriy qilinadi. mazkur Kodeksning 145 — 150 , 152 — 163-moddalari , 724-moddasining uchinchi qismi , Oʻzbekiston Respublikasi Oila kodeksi 24-moddasining ikkinchi qismi , 63-moddasining ikkinchi qismi , 117, 118-moddalari , Uu-joy kodeksi 114-moddasining ikkinchi qismi , Mehnat kodeksi 576-modda , Soliq kodeksining (yangi tahriri) 88-moddasi , “Masʼuliyati cheklangan hamda qoʻshimcha masʼuliyatli jamiyatlar toʻgʻrisida”gi Qonunning 41-moddasi , “Qimmatli qogʻozlar bozori toʻgʻrisida”gi Qonunning 62-moddasi , Vazirlar Mahkamasining 23.10.2008-yildagi 232-son qarori bilan tasdiqlangan Oʻzbekiston Respublikasi temir yoʻl Ustavi.

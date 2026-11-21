@@ -1,0 +1,7 @@
+# FK-UZ-2 441-modda: Tovarlarni yetkazib berish tartibi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183232](https://lex.uz/docs/-180552#-183232)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Tovarlarni yetkazib berish mahsulot yetkazib beruvchi tomonidan tovarlarni shartnoma boʻyicha sotib oluvchiga yoki shartnomada oluvchi sifatida koʻrsatilgan shaxsga joʻnatish (topshirish) yoʻli bilan amalga oshiriladi. Mahsulot yetkazib berish shartnomasida tovarlarni oluvchilarga joʻnatish toʻgʻrisida sotib oluvchining sotuvchiga koʻrsatmalar berish huquqi (joʻnatish raznaryadkasi) nazarda tutilgan hollarda, mahsulot yetkazib beruvchi tovarlarni joʻnatish raznaryadkasida koʻrsatilgan oluvchilarga joʻnatadi (topshiradi). Joʻnatish raznaryadkasining mazmuni va uni sotib oluvchi tomonidan mahsulot yetkazib beruvchiga yuborish muddati mahsulot yetkazib berish shartnomasida belgilanadi. Agar joʻnatish raznaryadkasini yuborish muddati shartnomada nazarda tutilgan boʻlmasa, u mahsulot yetkazib beruvchiga mahsulot yetkazib berish davri boshlanishidan kamida oʻttiz kun oldin yuborilishi lozim. Sotib oluvchining belgilangan muddatda joʻnatish raznaryadkasini taqdim qilmasligi mahsulot yetkazib beruvchiga yo mahsulot yetkazib berish shartnomasini bajarishdan bosh tortish, yoki sotib oluvchidan tovarlar haqini toʻlashni talab qilish huquqini beradi. Bundan tashqari mahsulot yetkazib beruvchi joʻnatish raznaryadkasini taqdim qilmaslik tufayli yetkazilgan zararni toʻlashni talab qilishga haqli.

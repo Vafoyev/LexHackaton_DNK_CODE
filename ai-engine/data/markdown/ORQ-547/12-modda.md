@@ -1,0 +1,7 @@
+# ORQ-547 12-modda: Shaxsga doir maʼlumotlardan foydalanish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-4396419#-4397353](https://lex.uz/docs/-4396419#-4397353)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 12.00.00.00 Axborot va axborotlashtirish / 12.03.00.00 Axborot resurslari. Axborot resurslaridan foydalanish / 12.03.06.00 Shaxsga doir maʼlumotlar va ularning himoyasi] Mulkdorning, operatorning va uchinchi shaxsning faoliyati maqsadlarini amalga oshirishga qaratilgan shaxsga doir maʼlumotlar bilan harakatlar shaxsga doir maʼlumotlardan foydalanishdir. Mulkdor, operator va uchinchi shaxs tomonidan shaxsga doir maʼlumotlardan foydalanish bu maʼlumotlarning zarur darajada himoya qilinishini taʼminlash sharti bilan faqat ushbu shaxsga doir maʼlumotlarni yigʻish boʻyicha ilgari bildirilgan maqsadlar uchun amalga oshiriladi. Mulkdor va (yoki) operatorning, shuningdek uchinchi shaxsning shaxsga doir maʼlumotlarga ishlov berish bilan bogʻliq boʻlgan xodimlari tomonidan shaxsga doir maʼlumotlardan foydalanish faqat ularning oʻz kasbiy, xizmat yoki mehnat majburiyatlariga muvofiq amalga oshirilishi kerak. Mulkdor va (yoki) operatorning, shuningdek uchinchi shaxsning shaxsga doir maʼlumotlarga ishlov berish bilan bogʻliq boʻlgan xodimlari oʻziga ishonib topshirilgan yoki kasbiy, xizmat yoxud mehnat majburiyatlarini bajarishi sababli maʼlum boʻlib qolgan shaxsga doir maʼlumotlarning oshkor etilishiga yoʻl qoʻymasligi shart.

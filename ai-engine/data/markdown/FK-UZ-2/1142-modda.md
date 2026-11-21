@@ -1,0 +1,7 @@
+# FK-UZ-2 1142-modda: Merosdan majburiy ulush olish huquqi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-199046](https://lex.uz/docs/-180552#-199046)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Meros qoldiruvchining voyaga yetmagan yoki mehnatga qobiliyatsiz bolalari, shu jumladan farzandlikka olgan bolalari, shuningdek mehnatga qobiliyatsiz eri (xotini) va ota-onasi, shu jumladan uni farzandlikka olganlar, vasiyatnomaning mazmunidan qatʼi nazar, qonun boʻyicha voris boʻlganlarida ulardan har biriga tegishi lozim boʻlgan ulushning kamida yarmini (majburiy ulush) meros qilib oladilar. Majburiy ulush olish huquqiga ega boʻlgan merosxoʻr biron-bir asos boʻyicha merosdan oladigan hamma narsa, shu jumladan oddiy uy jihozlari va roʻzgʻor buyumlaridan iborat mol-mulkning qiymati ham, bunday merosxoʻr foydasiga qilingan vasiyat majburiyatining qiymati ham majburiy ulushga qoʻshiladi. Merosdan majburiy ulush olish huquqiga ega boʻlgan merosxoʻr uchun vasiyatnomada belgilangan har qanday cheklashlar va shartlar unga tegadigan merosning majburiy ulushdan ortiqcha qismiga nisbatangina haqiqiydir. Qoʻshimcha maʼlumot uchun Oliy sud plenumining 2011-yil 20-iyuldagi 5-son “Sudlar tomonidan meros huquqiga oid qonunchilikning qoʻllanilishi toʻgʻrisida”gi qarori 11-bandining uchinchi xatboshisi , 12-bandi .

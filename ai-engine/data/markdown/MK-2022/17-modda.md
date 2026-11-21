@@ -1,0 +1,7 @@
+# MK-2022 17-modda: Mehnat haqidagi boshqa huquqiy hujjatlar qoidalarining va mehnat shartnomasi shartlarining haqiqiy emasligi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6257780](https://lex.uz/docs/-6257288#-6257780)
+**Bog'liq havolalar:** 13-modda, 14-modda, 15-modda, 16-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.07.00 Mehnat shartnomasi (kontrakt)] Ushbu Kodeks 13-moddasining ikkinchi qismida , 14-moddasining birinchi , ikkinchi va toʻrtinchi qismlarida , 15-moddasining birinchi va ikkinchi qismlarida nazarda tutilgan talablarga rioya etmaslik xodimning holatini yomonlashtiradigan mehnat haqidagi boshqa huquqiy hujjatlar qoidalarining haqiqiy emasligiga sabab boʻladi. Ushbu Kodeks 16-moddasining ikkinchi qismida nazarda tutilgan talablarga rioya etmaslik xodimning holatini yomonlashtiradigan mehnat shartnomasi shartlarining haqiqiy emasligiga sabab boʻladi. Haqiqiy boʻlmagan mehnat haqidagi boshqa huquqiy hujjatlarning qoidalari, shuningdek mehnat shartnomasining shartlari qoʻllanilmaydi. Bunday qoidalar va shartlar qabul qilingan paytdan eʼtiboran haqiqiy emas deb hisoblanadi. Mehnat haqidagi boshqa huquqiy hujjatlar ayrim qoidalarining yoki mehnat shartnomasi alohida shartlarining haqiqiy emasligi tegishli hujjatning yoki mehnat shartnomasining umuman haqiqiy emasligiga sabab boʻlmaydi.

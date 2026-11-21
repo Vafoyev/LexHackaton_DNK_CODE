@@ -115,7 +115,50 @@ services:
       start_period: 20s
 
   # ──────────────────────────────────────────────
-  #  4. Go Backend — Modular Monolith
+  #  4. AI Engine (Python 3.11+ gRPC + FastAPI)
+  # ──────────────────────────────────────────────
+  ai-engine:
+    build:
+      context: ../ai-engine
+      dockerfile: ../deploy/Dockerfile.ai-engine
+      target: production
+      args:
+        PYTHON_VERSION: "3.11"
+        APP_VERSION: "${APP_VERSION:-4.0.0}"
+    image: lexguard/ai-engine:${APP_VERSION:-latest}
+    container_name: lexguard_ai_engine
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      HTTP_PORT: "8000"
+      GRPC_PORT: "50051"
+      DATABASE_URL: "postgres://${POSTGRES_USER:-lexguard}:${POSTGRES_PASSWORD:-lexguard_secret_2026}@postgres:5432/${POSTGRES_DB:-lexguard}"
+      REDIS_URL: "redis://:${REDIS_PASSWORD:-redis_lexguard_2026}@redis:6379/0"
+    ports:
+      - "${AI_ENGINE_PORT:-8000}:8000"
+      - "${AI_ENGINE_GRPC_PORT:-50051}:50051"
+    networks:
+      lexguard_net:
+        ipv4_address: 172.28.0.25
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+          cpus: "2.0"
+
+  # ──────────────────────────────────────────────
+  #  5. Go Backend — Modular Monolith
   # ──────────────────────────────────────────────
   backend:
     build:
@@ -142,6 +185,7 @@ services:
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minio_lexguard_2026}
       MINIO_BUCKET: ${MINIO_BUCKET:-lexguard-documents}
       MINIO_USE_SSL: "false"
+      AI_ENGINE_GRPC_ADDR: "ai-engine:50051"
     volumes:
       - uploads_data:/app/uploads
     ports:
@@ -153,6 +197,8 @@ services:
       postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      ai-engine:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "/app/lexguard-api", "healthcheck"]
@@ -167,7 +213,7 @@ services:
           cpus: "1.0"
 
   # ──────────────────────────────────────────────
-  #  5. Web Frontend (React + Three.js + D-10)
+  #  6. Web Frontend (React + Three.js + D-10)
   # ──────────────────────────────────────────────
   frontend:
     build:
@@ -202,7 +248,7 @@ services:
           cpus: "0.5"
 
   # ──────────────────────────────────────────────
-  #  6. Admin Portal (B2B Analytics)
+  #  7. Admin Portal (B2B Analytics)
   # ──────────────────────────────────────────────
   admin:
     build:

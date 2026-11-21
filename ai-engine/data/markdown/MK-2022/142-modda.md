@@ -1,0 +1,7 @@
+# MK-2022 142-modda: Ish beruvchi uchun majburiy boʻlgan, xodimning tashabbusi bilan vaqtincha boshqa ishga oʻtkazish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6260973](https://lex.uz/docs/-6257288#-6260973)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.21.00 Boshqa ishga oʻtkazish] Xodimning vaqtincha boshqa ishga oʻtkazish toʻgʻrisidagi iltimosi ish beruvchi tomonidan quyidagi uzrli sabablarga koʻra qanoatlantirilishi lozim: qaysi tibbiy xulosaga muvofiq xodim sogʻligʻining holatiga koʻra vaqtincha yengilroq yoki noqulay ishlab chiqarish omillarini istisno etadigan ishga oʻtkazishga muhtoj boʻlsa, oʻsha tibbiy xulosaning mavjudligi; qaysi tibbiy xulosaga muvofiq homilador ayol vaqtincha yengilroq yoki noqulay ishlab chiqarish omillarining taʼsirini istisno etadigan ishga oʻtkazishga muhtoj boʻlsa, oʻsha tibbiy xulosaning mavjudligi; ikki yoshga toʻlmagan bolasini parvarishlayotgan ota-onaning biri (vasiy) tomonidan avvalgi ishini bajarish mumkin emasligi; ushbu iltimos uzrli sabablar tufayli kelib chiqqan va bunday ish ish beruvchida mavjud boʻlgan boshqa hollarda. Xodimning tashabbusiga koʻra vaqtincha boshqa ishga oʻtkazish uchun uzrli sabablar roʻyxati, shuningdek bunday oʻtkazish chogʻida mehnatga haq toʻlash tartibi jamoa shartnomasida belgilanishi mumkin, agar bunday shartnoma tuzilmagan boʻlsa, ish beruvchi tomonidan kasaba uyushmasi qoʻmitasi bilan kelishilgan holda belgilanadi.

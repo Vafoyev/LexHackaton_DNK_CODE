@@ -1,0 +1,7 @@
+# FK-UZ-2 666-modda: Qurilish pudrati shartnomasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-189044](https://lex.uz/docs/-180552#-189044)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Qurilish pudrati shartnomasi boʻyicha pudratchi shartnomada belgilangan muddatda buyurtmachining topshirigʻi bilan muayyan obyektni qurish yoki boshqa qurilish ishini bajarish majburiyatini oladi, buyurtmachi esa pudratchiga ishni bajarish uchun zarur sharoit yaratib berish, ishni qabul qilish va kelishilgan haqni toʻlash majburiyatini oladi. Qurilish pudrati shartnomasi korxonani, binoni (jumladan uy-joy binosini), inshootni yoki boshqa obyektni qurish yoki qayta qurish haqida, shuningdek montaj, sozlash-ishga tushirish va qurilayotgan obyekt bilan bevosita bogʻliq boʻlgan boshqa ishlarni bajarish haqida tuziladi. Qurilish pudrati shartnomasi toʻgʻrisidagi qoidalar, agar shartnomada boshqacha tartib nazarda tutilgan boʻlmasa, bino va inshootlarni kapital taʼmirlash ishlariga nisbatan ham tatbiq etiladi. Qurilish pudrati shartnomasida nazarda tutilgan hollarda obyektni buyurtmachi qabul qilib olganidan keyin uni shartnomada koʻrsatilgan muddatda ishlatishni taʼminlash majburiyatini pudratchi oʻz zimmasiga oladi. Tugallanmagan qurilishning mulkdori u buyurtmachiga topshirilguncha va uning haqi toʻlanguncha pudratchi hisoblanadi. Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasining Shaharsozlik kodeksi .

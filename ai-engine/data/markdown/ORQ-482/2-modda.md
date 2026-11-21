@@ -1,0 +1,7 @@
+# ORQ-482 2-modda: Mediatsiya toʻgʻrisidagi qonunchilik
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-3805227#-5483327](https://lex.uz/uz/docs/-3805227#-5483327)
+**Bog'liq havolalar:** 2-modda
+
+## Norma matni:
+Mediatsiya toʻgʻrisidagi qonunchilik ushbu Qonun va boshqa qonunchilik hujjatlaridan iboratdir. [ OKOZ: 1. 19.00.00.00 Xalqaro munosabatlar. Xalqaro huquq / 19.06.00.00 Xalqaro shartnomalar huquqi / 19.06.03.00 Shartnomalarga rioya qilishni qoʻllash va sharhlash] Agar Oʻzbekiston Respublikasining xalqaro shartnomasida Oʻzbekiston Respublikasining mediatsiya toʻgʻrisidagi qonunchiligida nazarda tutilganidan boshqacha qoidalar belgilangan boʻlsa, xalqaro shartnoma qoidalari qoʻllaniladi. ( 2-modda Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Jismoniy va yuridik shaxslarning huquqlari va qonuniy manfaatlarini himoya qilish tizimini takomillashtirish, nizolarni hal qilishning muqobil imkoniyatlarini kengaytirish, shuningdek, sudlarda ish hajmini maqbullashtirishda mediatsiya instituti, hakamlik sudlari va xalqaro arbitrajlarning rolini tubdan oshirish maqsadida Oʻzbekiston Respublikasi Prezidentining 2020-yil 17-iyundagi PQ-4754-sonli “Nizolarni muqobil hal etishning mexanizmlarini yanada takomillashtirish chora-tadbirlari toʻgʻrisida”gi qarori ham qabul qilindi.

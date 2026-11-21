@@ -1,0 +1,7 @@
+# ORQ-850 3-modda: Ushbu Qonunning qoʻllanilish sohasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6518381#-6519460](https://lex.uz/docs/-6518381#-6519460)
+**Bog'liq havolalar:** 3-modda
+
+## Norma matni:
+[ OKOZ: 1. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.01.00.00 Tadbirkorlik toʻgʻrisidagi qonunchilik / 09.01.02.00 Tadbirkorlik subyektlari. Tadbirkorlik subyektlarini roʻyxatga olish; 2. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.02.00.00 Raqobat toʻgʻrisida qonunchilik. Tabiiy monopoliyalar / 09.02.01.00 Umumiy qoidalar; 3. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.17.00.00 Savdo / 09.17.11.00 Tovarlar sotishda isteʼmolchilar huquqlarini himoya qilish] Ushbu Qonun jismoniy va yuridik shaxslarning, shu jumladan davlat organlarining Oʻzbekiston Respublikasi hududida va (yoki) undan tashqarida sodir etiladigan, Oʻzbekiston Respublikasidagi tovar yoki moliya bozorida raqobatning cheklanishiga, shuningdek raqobat yoki tabiiy monopoliya sharoitlarida isteʼmolchilarning huquqlari va qonuniy manfaatlari kamsitilishiga olib keladigan yoki olib kelishi mumkin boʻlgan harakatlariga (harakatsizligiga) nisbatan tatbiq etiladi. Ushbu Qonun intellektual mulk obyektlariga boʻlgan mutlaq huquqlar bilan bogʻliq munosabatlarga nisbatan tatbiq etilmaydi, bundan insofsiz raqobatni taqiqlash hollari mustasno. (3-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2026-yil 5-fevraldagi OʻRQ-1117-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 07.02.2026-y., 03/26/1117/0116-son)

@@ -1,0 +1,7 @@
+# FK-UZ-1 9-modda: Fuqarolik huquqlarini amalga oshirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-150408](https://lex.uz/docs/-111189#-150408)
+**Bog'liq havolalar:** 13-modda, 41-modda
+
+## Norma matni:
+Fuqarolar va yuridik shaxslar oʻzlariga tegishli boʻlgan fuqarolik huquqlarini, shu jumladan ularni himoya qilish huquqini ham oʻz xohishlariga koʻra tasarruf etadilar. Fuqarolar va yuridik shaxslarning oʻz huquqlarini amalga oshirishdan voz kechishi bu huquqlarning bekor qilinishiga olib kelmaydi, qonunda nazarda tutilgan hollar bundan mustasno. Fuqarolik huquqlarini amalga oshirish boshqa shaxslarning huquqlarini hamda qonun bilan qoʻriqlanadigan manfaatlarini buzmasligi shart. Fuqarolik huquqiy munosabatlari ishtirokchilarining halol, oqilona va adolat bilan harakat qilishi nazarda tutiladi. Fuqarolar va yuridik shaxslar oʻz huquqlarini amalga oshirishda jamiyatning maʼnaviy tamoyillari va axloqiy normalarini hurmat qilishlari, tadbirkorlar esa — ish odobi qoidalariga ham rioya etishlari kerak. Fuqarolar va yuridik shaxslarning boshqa shaxsga zarar yetkazishga, boshqacha shakllarda huquqni suiisteʼmol qilishga, shuningdek huquqni uning maqsadiga zid tarzda amalga oshirishga qaratilgan harakatlariga yoʻl qoʻyilmaydi. Ushbu moddaning uchinchi , toʻrtinchi va beshinchi qismlarida nazarda tutilgan talablarga rioya qilinmagan taqdirda, sud shaxsga qarashli huquqni himoya qilishni rad etishi mumkin. Oʻzbekiston Respublikasi Konstitutsiyasining 13-modda , mazkur Kodeksning 8 , 10 — 13 , 17 , 22 , 41-moddalari .

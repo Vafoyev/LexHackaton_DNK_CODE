@@ -30,9 +30,9 @@
 - [x] **TASK-101**: Go Modular Monolith poydevori, PostgreSQL 16 migratsiyalari va MinIO integratsiyasi.
 - [x] **TASK-102**: PII Redactor (O'RQ-547) va 10 ta deterministik Go qoidalari.
 - [~] **TASK-103**: `proto/legal_ai.proto` bo'yicha gRPC Client integratsiyasi (Go → Python `ai-engine`).
-- [~] **TASK-104**: Active Self-Correction Verifier Loop (modda mos kelmasa RAG qayta qidiruvi va AI qayta tahlil so'rovi).
+- [x] **TASK-104**: Active Self-Correction Verifier Loop (modda mos kelmasa RAG qayta qidiruvi va AI Engine SelfCorrect qayta tahlil so'rovi).
 - [x] **TASK-105**: Server-Sent Events (SSE) hujjat tahlili streaming endpointlari (`/api/v1/analyses/{id}/events`).
-- [~] **TASK-106**: WebSockets server Live Voice Assistant interaktiv savol-javobi uchun (`/api/v1/ws/voice`).
+- [x] **TASK-106**: WebSockets server Live Voice Assistant interaktiv savol-javobi uchun (`/api/v1/ws/voice`).
 - [x] **TASK-107**: DOCX va PDF hisobot eksporti (Izohli takliflar + "LOYIHA" to'liq tahrir).
 
 ---
@@ -89,6 +89,6 @@
 
 ## 🚀 7. DevOps, SRE & CI/CD Lead (`agy8` — 7-DEVOPS-INFRA)
 - [x] **TASK-701**: `deploy/docker-compose.yml` va tarmoq infratuzilmasi.
-- [~] **TASK-702**: Docker Compose ga `ai-engine` (Python gRPC servisi) konteynerini qo'shish va GPU/CPU sozlamalari.
-- [~] **TASK-703**: `./scripts/run_dev.sh` ni barcha yangi xizmatlar bilan sinxronlashtirish.
+- [x] **TASK-702**: Docker Compose ga `ai-engine` (Python gRPC servisi) konteynerini qo'shish va GPU/CPU sozlamalari.
+- [x] **TASK-703**: `./scripts/run_dev.sh` ni barcha yangi xizmatlar bilan sinxronlashtirish.
 - [x] **TASK-704**: GitHub Actions 7-jobli CI pipeline.

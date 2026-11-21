@@ -1,0 +1,7 @@
+# FK-UZ-2 1045-modda: Rasmiy hujjatlar, ramzlar va belgilarning loyihalariga boʻlgan huquqlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-197545](https://lex.uz/docs/-180552#-197545)
+**Bog'liq havolalar:** 9-modda
+
+## Norma matni:
+Rasmiy hujjat, ramz yoki belgining loyihasiga boʻlgan mualliflik huquqi loyihani yaratgan (ishlab chiqqan) shaxsga tegishlidir. Rasmiy hujjatlar, ramzlar va belgilarning loyihalarini ishlab chiqqan shaxslar, basharti bunday loyihani ishlab chiqish toʻgʻrisida topshiriq bergan organ tomonidan taqiqlanmagan boʻlsa, oʻzlari yaratgan loyihalarni eʼlon qilishga haqlidirlar. Loyihani eʼlon qilishda uni ishlab chiqqan shaxslar oʻz ismlarini koʻrsatishga haqlidirlar. Vakolatli organ rasmiy hujjat tayyorlash uchun loyihadan, basharti loyiha uni ishlab chiqqan shaxs tomonidan eʼlon qilingan yoki tegishli organga yuborilgan boʻlsa, mazkur shaxsning roziligisiz foydalanishi mumkin. Loyiha asosida rasmiy hujjatlar, ramzlar va belgilar tayyorlash chogʻida rasmiy hujjat, ramz yoki belgi tayyorlayotgan organning xohishiga koʻra loyihaga qoʻshimchalar va oʻzgartishlar kiritilishi mumkin. Vakolatli organ loyihani maʼqullaganidan keyin loyihadan uni ishlab chiqqan shaxsning ismi-sharifini koʻrsatmagan holda foydalanish mumkin. Oʻzbekiston Respublikasining 2006-yil 20-iyuldagi OʻRQ-42-son “Mualliflik huquqi va turdosh huquqlar toʻgʻrisida”gi Qonunning 9-moddasi .

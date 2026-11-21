@@ -1,0 +1,7 @@
+# FK-UZ-1 94-modda: Pul (valyuta)
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-152894](https://lex.uz/docs/-111189#-152894)
+**Bog'liq havolalar:** 11-modda, 39-modda, 45-modda, 94-modda
+
+## Norma matni:
+Oʻzbekiston Respublikasining pul birligi soʻmdir. Oʻzbekiston Respublikasining “Oʻzbekiston Respublikasining davlat mustaqilligi asoslari toʻgʻrisida”gi Qonunning 11-moddasi , “Oʻzbekiston Respublikasi Markaziy banki toʻgʻrisida”gi (yangi tahriri)Qonuni 39-moddasining birinchi , ikkinchi qismlari , Oʻzbekiston Respublikasining Prezidentining 16.07.1994-yildagi “Oʻzbekiston Respublikasining milliy valyutasini muomalaga kiritish toʻgʻrisida”gi PF-870-son Farmoni . Soʻm yozib qoʻyilgan qiymati boʻyicha qabul qilinishi shart boʻlgan qonuniy toʻlov vositasidir. Toʻlovlar naqd pul bilan va naqd pulsiz hisob-kitoblar tarzida amalga oshiriladi. mazkur Kodeksning 45-bobi , “Oʻzbekiston Respublikasi Markaziy banki toʻgʻrisida”gi (yangi tahriri) Qonunning 45-moddasi . Hisob-kitoblarni chet el valyutasida amalga oshirish hollari, tartibi va shartlari qonunchilik bilan belgilab qoʻyiladi. (94-moddaning toʻrtinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.04.00.00 Fuqarolik qonunchiligi obyektlari / 03.04.03.00 Moddiy neʼmatlar / 03.04.03.01 Koʻchar va koʻchmas mol-mulk]

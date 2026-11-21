@@ -1,0 +1,7 @@
+# FK-UZ-1 47-modda: Vakolatxonalar va filiallar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-151442](https://lex.uz/docs/-111189#-151442)
+**Bog'liq havolalar:** 9-modda, 7-modda, 5-modda, 3-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Vakolatxona yuridik shaxsning u turgan yerdan tashqarida joylashgan, yuridik shaxs manfaatlarini ifodalaydigan va ularni himoya qiladigan alohida boʻlinmasidir. [ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Filial yuridik shaxsning u turgan yerdan tashqarida joylashgan hamda uning barcha vazifalarini yoki vazifalarining bir qismini, shu jumladan vakolatxona vazifalarini bajaradigan alohida boʻlinmasidir. Agar qonunda boshqacha tartib belgilangan boʻlmasa, vakolatxona va filiallar yuridik shaxs hisoblanmaydi. Ular oʻzlarini tashkil etgan yuridik shaxs tomonidan mol-mulk bilan taʼminlanadilar hamda u tasdiqlagan nizomlar asosida ish olib boradilar. Vakolatxona va filiallarning rahbarlari yuridik shaxs tomonidan tayinlanadi hamda uning ishonchnomasi asosida ish olib boradi. “Nodavlat notijorat tashkilotlari toʻgʻrisida”gi Qonunning 9-moddasi , “Aksiyadorlik jamiyatlari va aksiyadorlarning huquqlarini himoya qilish toʻgʻrisida”gi Qonunning 7-moddasi , “Masʼuliyati cheklangan hamda qoʻshimcha masʼuliyatli jamiyatlar toʻgʻrisida”gi Qonun 5-moddasi ikkinchi qismi , “Xoʻjalik shirkatlari toʻgʻrisida”gi Qonunning 3-moddasi yettinchi qismi , “Xususiy korxona toʻgʻrisida”gi Qonunning 9-moddasi .

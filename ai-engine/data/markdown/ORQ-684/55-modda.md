@@ -1,0 +1,7 @@
+# ORQ-684 55-modda: Auksionni oʻtkazilmagan deb eʼlon qilishning umumiy tartibi va oqibatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-5382974#-5386187](https://lex.uz/docs/-5382974#-5386187)
+**Bog'liq havolalar:** 49-modda, 1-modda, 55-modda
+
+## Norma matni:
+Agar auksionda bir nafar ishtirokchi ishtirok etgan boʻlsa yoki hech kim ishtirok etmagan boʻlsa, auksion oʻtkazilmagan deb hisoblanadi va gʻolib aniqlanmaydi. Davlat buyurtmachisi auksionni uch ish kuniga uzaytirishi yoki xaridni ushbu Qonun talablariga muvofiq elektron doʻkon vositasida (ushbu Qonunning 49-moddasida belgilangan mezonlar doirasida) yoki kichik qiymatli xaridning soddalashtirilgan tartib-taomili (ushbu Qonunning 51 1 -moddasida belgilangan mezonlar doirasida) yoxud eng yaxshi takliflarni tanlash orqali amalga oshirishi mumkin. (55-moddaning birinchi qismi Oʻzbekiston Respublikasining 2024-yil 27-noyabrdagi OʻRQ-1005-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.11.2024-y., 03/24/1005/0977-son. Kuchga kirish sanasi — 2025-yil 1-mart) [ OKOZ: 1. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.05.00.00 Birja faoliyati / 09.05.03.00 Birja (auksion) savdolarini oʻtkazish va bitimlarni rasmiylashtirish tartibi] Auksionni uzaytirish avvalgi auksion tamom boʻlgan paytdan eʼtiboran uch ish kuni ichida davlat buyurtmachisi tomonidan amalga oshiriladi. 7-bob. Eng yaxshi takliflarni tanlash

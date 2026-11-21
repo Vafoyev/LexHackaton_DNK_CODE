@@ -1,0 +1,7 @@
+# FK-UZ-2 1042-modda: Mualliflik huquqi obyektlarining turlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-197425](https://lex.uz/docs/-180552#-197425)
+**Bog'liq havolalar:** 1042-modda, 21-modda, 1041-modda, 6-modda
+
+## Norma matni:
+Mualliflik huquqi obyektlari jumlasiga quyidagilar kiradi: adabiy asarlar (adabiy-badiiy, ilmiy, oʻquv, publitsistik va boshqa asarlar); dramatik va ssenariy asarlar; matnli va matnsiz musiqa asarlari; musiqali-dramatik asarlar; xoreografiya asarlari va pantomimalar; audiovizual asarlar; (1042-moddaning yettinchi xatboshi Oʻzbekiston Respublikasining 2007-yil 16-yanvardagi OʻRQ-79-sonli Qonuni tahririda — OʻR QHT, 2007-y., 3-son, 21-modda) rangtasvir, haykaltaroshlik, grafika, dizayn asarlari va boshqa tasviriy sanʼat asarlari; manzarali-amaliy va sahna bezagi sanʼati asarlari; arxitektura, shaharsozlik va bogʻ-park barpo etish sanʼati asarlari; fotografiya asarlari va fotografiyaga oʻxshash usullarda yaratilgan asarlar; joʻgʻrofiya, geologiya xaritalari va boshqa xaritalar, joʻgʻrofiya, topografiya va boshqa fanlarga taalluqli tarhlar, eskizlar va asarlar; barcha turdagi elektron-hisoblash mashinalari (EHM) uchun dasturlar, shu jumladan amaliy dasturlar va operatsiya tizimlari; ushbu Kodeksning 1041-moddasida belgilab qoʻyilgan talablarga javob beruvchi boshqa asarlar. Oʻzbekiston Respublikasining 2006-yil 20-iyuldagi OʻRQ-42-son “Mualliflik huquqi va turdosh huquqlar toʻgʻrisida”gi Qonunning 6-moddasi .

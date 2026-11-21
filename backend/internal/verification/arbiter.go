@@ -33,9 +33,10 @@ type VerifiedFinding struct {
 	Severity             string                `json:"severity"`
 	RiskLevel            string                `json:"risk_level"`
 	VerificationStatus   VerificationStatus    `json:"verification_status"`
-	OriginalQuote        string                `json:"original_quote"`
-	SuggestedRevision    string                `json:"suggested_revision"`
-	SuggestedRedline     string                `json:"suggested_redline"`
+	OriginalQuote        string                `json:"original_quote"`    // Asl matn (Qizil)
+	ProblematicQuote     string                `json:"problematic_quote"` // Alias: Asl xavfli matn (Qizil)
+	SuggestedRevision    string                `json:"suggested_revision"`// Tavsiya matn (Yashil)
+	SuggestedRedline     string                `json:"suggested_redline"` // Alias: Tavsiya matn (Yashil)
 	IssueTitle           string                `json:"issue_title"`
 	IssueExplanation     string                `json:"issue_explanation"`
 	LegalSourceVersionID *string               `json:"legal_source_version_id,omitempty"`
@@ -48,12 +49,24 @@ type VerifiedFinding struct {
 	Disclaimer           string                `json:"disclaimer"`
 }
 
-type Arbiter struct {
-	corpusRepo *legalcorpus.Repository
+type SelfCorrector interface {
+	SelfCorrect(ctx context.Context, req ai.SelfCorrectionRequest) (*ai.SelfCorrectionResponse, error)
 }
 
-func NewArbiter(corpusRepo *legalcorpus.Repository) *Arbiter {
-	return &Arbiter{corpusRepo: corpusRepo}
+type Arbiter struct {
+	corpusRepo    *legalcorpus.Repository
+	selfCorrector SelfCorrector
+}
+
+func NewArbiter(corpusRepo *legalcorpus.Repository, selfCorrector ...SelfCorrector) *Arbiter {
+	var sc SelfCorrector
+	if len(selfCorrector) > 0 {
+		sc = selfCorrector[0]
+	}
+	return &Arbiter{
+		corpusRepo:    corpusRepo,
+		selfCorrector: sc,
+	}
 }
 
 // Arbitrate reconciles Go Rules, LLM draft, and Legal Corpus using the 10-Vector Hallucination Filter
@@ -169,6 +182,7 @@ func (a *Arbiter) Arbitrate(
 			RiskLevel:            string(rf.Severity),
 			VerificationStatus:   vStatus,
 			OriginalQuote:        rf.OriginalQuote,
+			ProblematicQuote:     rf.OriginalQuote,
 			SuggestedRevision:    rf.SuggestedRevision,
 			SuggestedRedline:     rf.SuggestedRevision,
 			IssueTitle:           rf.Explanation,
@@ -244,6 +258,42 @@ func (a *Arbiter) Arbitrate(
 				vectors["6"] = false
 			}
 
+			// Active Self-Correction Verifier Loop (Talab 2: Agar modda mos kelmasa, AI Engine ga qayta murojaat qilish)
+			if a.selfCorrector != nil && (vStatus == StatusUnverified || vStatus == StatusReviewRequired || vStatus == StatusUnknown) {
+				scReq := ai.SelfCorrectionRequest{
+					ClauseText:           clauseText,
+					PreviousCitedArticle: fmt.Sprintf("%s %s", llmDraft.CitedLawCode, llmDraft.CitedArticle),
+					VerificationError:    "Legal Knowledge Graph tekshiruvida modda topilmadi yoki normativ muddat mos kelmadi",
+				}
+				if scResp, scErr := a.selfCorrector.SelfCorrect(ctx, scReq); scErr == nil && scResp != nil && scResp.Resolved && scResp.CorrectedArticle != "" {
+					parts := strings.SplitN(strings.TrimSpace(scResp.CorrectedArticle), " ", 2)
+					corrLawCode := "FK-UZ"
+					corrArticle := scResp.CorrectedArticle
+					if len(parts) == 2 {
+						corrLawCode = parts[0]
+						corrArticle = parts[1]
+					}
+					if reArt, reErr := a.corpusRepo.ValidateCitation(ctx, corrLawCode, corrArticle, "", contractDate); reErr == nil && reArt != nil {
+						idCopy := reArt.ID
+						lsvID = &idCopy
+						llmDraft.CitedLawCode = corrLawCode
+						llmDraft.CitedArticle = corrArticle
+						llmDraft.OfficialURL = reArt.OfficialURL
+						if scResp.Explanation != "" {
+							llmDraft.Explanation = scResp.Explanation
+						}
+						if scResp.SuggestedRedline != "" {
+							llmDraft.SuggestedRevision = scResp.SuggestedRedline
+						}
+						vStatus = StatusVerified
+						vectors["1"] = true
+						vectors["2"] = true
+						vectors["6"] = true
+						temporalNote = fmt.Sprintf("Active Self-Correction muvaffaqiyatli: %s", scResp.CorrectedArticle)
+					}
+				}
+			}
+
 			// Vector 3: Substring Grounding
 			if !checkSubstringMatch(clauseText, llmDraft.OriginalQuote) {
 				vStatus = StatusReviewRequired
@@ -283,6 +333,7 @@ func (a *Arbiter) Arbitrate(
 				RiskLevel:            llmDraft.Severity,
 				VerificationStatus:   vStatus,
 				OriginalQuote:        llmDraft.OriginalQuote,
+				ProblematicQuote:     llmDraft.OriginalQuote,
 				SuggestedRevision:    llmDraft.SuggestedRevision,
 				SuggestedRedline:     llmDraft.SuggestedRevision,
 				IssueTitle:           llmDraft.Explanation,

@@ -1,0 +1,7 @@
+# FK-UZ-2 552-modda: Ijaraga oluvchining talabi bilan mulk ijarasi shartnomasini muddatidan oldin bekor qilish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-184468](https://lex.uz/docs/-180552#-184468)
+**Bog'liq havolalar:** 382-modda
+
+## Norma matni:
+Ijaraga oluvchining talabi bilan mulk ijarasi shartnomasi sud tomonidan muddatidan oldin bekor qilinishi mumkin, agar: ijaraga beruvchi mol-mulkni foydalanish uchun ijaraga oluvchiga bermasa yoki mol-mulkdan shartnoma shartlariga yoxud mol-mulkning vazifasiga muvofiq foydalanishga toʻsqinlik qilsa; ijaraga oluvchiga topshirilgan mol-mulkda undan foydalanishga toʻsqinlik qiladigan kamchiliklar boʻlib, ularni ijaraga beruvchi shartnoma tuzish vaqtida aytib oʻtmagan, ijaraga oluvchiga oldindan maʼlum boʻlmagan va shartnoma tuzayotganda mol-mulkni koʻzdan kechirish yoxud uning sozligini tekshirish vaqtida aniqlanishi mumkin boʻlmagan boʻlsa; ijaraga beruvchi shartnomada belgilangan muddatlarda, agarda shartnomada muddat belgilangan boʻlmasa, oqilona muddatlarda oʻz zimmasidagi mol-mulkni kapital taʼmirlash majburiyatini bajarmasa; ijaraga oluvchi javobgar boʻlmagan holatlar tufayli mol-mulk foydalanishga yaroqsiz boʻlib qolsa. Mulk ijarasi shartnomasida ushbu Kodeks 382-moddasining ikkinchi qismiga muvofiq ijaraga oluvchining talabi bilan shartnomani muddatidan oldin bekor qilishning boshqa asoslari ham belgilanishi mumkin.

@@ -78,8 +78,9 @@ func main() {
 	// Repositories & Adapters
 	docRepo := documents.NewRepository(dbPool)
 	corpusRepo := legalcorpus.NewRepository(dbPool)
+	aiEngineClient := ai.NewEngineClient()
 	aiProvider := ai.NewProvider(cfg.AIProvider)
-	arbiter := verification.NewArbiter(corpusRepo)
+	arbiter := verification.NewArbiter(corpusRepo, aiEngineClient)
 	broadcaster := analysis.NewSSEBroadcaster()
 
 	// Services

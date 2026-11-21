@@ -1,0 +1,7 @@
+# ORQ-684 52-modda: Boshlangʻich narxni pasaytirish uchun oʻtkaziladigan auksionni oʻtkazish mezonlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-5382974#-5386005](https://lex.uz/docs/-5382974#-5386005)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.02.00 Davlat ehtiyojlari. Davlat xaridlari; 2. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.05.00.00 Birja faoliyati / 09.05.03.00 Birja (auksion) savdolarini oʻtkazish va bitimlarni rasmiylashtirish tartibi] Boshlangʻich narxni pasaytirish uchun oʻtkaziladigan auksion (bundan buyon matnda auksion deb yuritiladi) vositasidagi davlat xaridi quyidagi shartlar bir vaqtning oʻzida bajarilgan taqdirda amalga oshiriladi: tovarning standart xususiyatlarga ega boʻlishi; tovarning texnik, ekspluatatsiya qilinish xususiyatlarini va boshqa xususiyatlarini baholash hamda taqqoslash zarurati mavjud emasligi; tovarning qiymati bir shartnoma boʻyicha bazaviy hisoblash miqdorining yigirma besh ming baravarigacha (budjet buyurtmachilari uchun olti ming baravarigacha) boʻlgan miqdorini tashkil etishi kerak. Xizmatlar va ishlarning davlat xaridi auksion obyekti boʻla olmaydi. Tovarni eʼlonda bayon etilgan shartlar asosida eng past narx boʻyicha yetkazib berishni taklif qilgan ishtirokchi auksion gʻolibi boʻladi. Bunda mazkur norma belgilangan sifat standartlariga muvofiq boʻlgan tovarlarni yetkazib berish talabini bekor qilmaydi.

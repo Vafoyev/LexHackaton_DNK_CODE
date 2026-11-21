@@ -1,0 +1,7 @@
+# FK-UZ-2 1075-modda: Turdosh huquqlar subyektlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-1111142](https://lex.uz/docs/-180552#-1111142)
+**Bog'liq havolalar:** 45-modda
+
+## Norma matni:
+Ijrochilar, fonogrammalarni tayyorlovchilar, efir yoki kabel orqali koʻrsatuv yoxud eshittirish beruvchi tashkilotlar turdosh huquqlar subyektlaridir. Turdosh huquqlarning yuzaga kelishi va amalga oshirilishi uchun turdosh huquqlar obyektini roʻyxatdan oʻtkazish yoki biron-bir boshqa rasmiyatchilikka rioya etish talab qilinmaydi. Yuridik va jismoniy shaxslar, shu jumladan koʻrsatuv yoki eshittirishni efirga uzatish va kabel orqali yuborishni (retranslyatsiya ham shunga kiradi) amalga oshiruvchi yuridik va jismoniy shaxslar, ushbu Kodeksda va boshqa qonunlarda nazarda tutilgan hollardan tashqari, asardan, ijrodan, fonogrammadan yoxud efir yoki kabel orqali koʻrsatuv yoxud eshittirish beruvchi tashkilotning koʻrsatuv yoki eshittirishidan faqat huquq egasi yoki boshqa vakolatli shaxs bilan tuzilgan shartnomaga binoan foydalanishlari mumkin. Retranslyatsiya mualliflar, ijrochilar, fonogrammalarni tayyorlovchilar va boshqa huquq egalarining efirga uzatish, kabel orqali yuborish, barchaning eʼtiboriga yetkazishga boʻlgan huquqlariga rioya qilingan holda amalga oshirilishi kerak. Oʻzbekiston Respublikasining 2006-yil 20-iyuldagi OʻRQ-42-son “Mualliflik huquqi va turdosh huquqlar toʻgʻrisida”gi Qonunning 45-moddasi .

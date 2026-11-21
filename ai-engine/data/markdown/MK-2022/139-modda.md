@@ -1,0 +1,7 @@
+# MK-2022 139-modda: Xodimni boshqa ishga oʻtkazish muddati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6260947](https://lex.uz/docs/-6257288#-6260947)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.21.00 Boshqa ishga oʻtkazish] Xodim boshqa ishga oʻtkazilayotganda u oʻzi bajarish uchun oʻtkazilgan ishga kirishishi kerak boʻlgan sana belgilanishi kerak. Xodimni boshqa ishga oʻtkazish qaysi muddatga amalga oshirilayotganligiga qarab boshqa ishga oʻtkazish turlari doimiy va vaqtinchaga ajratiladi. Agar xodimni vaqtincha boshqa ishga oʻtkazish yuz bergan boʻlsa, bunday oʻtkazish muddati belgilanishi kerak. Xodimni vaqtincha boshqa ishga oʻtkazish muddati quyidagilar vositasida belgilanishi mumkin: vaqtincha oʻtkazishning umumiy davomiyligini kunlar, oylar, yillar bilan koʻrsatish; qaysi ishga oʻtkazish amalga oshirilgan boʻlsa, oʻsha ishni bajarish boshlanadigan kalendar sanani va oʻtkazish muddati tugaydigan kalendar sanani koʻrsatish; boshqa ishga oʻtish muddati qaysi hodisaning yuz berishi bilan tugaydigan boʻlsa, oʻsha hodisani aniqlash (vaqtincha yoʻq boʻlgan xodimning ishga chiqishi va boshqalar). Xodimni vaqtincha boshqa ishga oʻtkazish muddati tugagach, ish beruvchi xodimga mehnat shartnomasida shart qilib koʻrsatilgan avvalgi ishini berishi shart.

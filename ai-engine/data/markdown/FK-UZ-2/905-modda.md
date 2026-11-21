@@ -1,0 +1,7 @@
+# FK-UZ-2 905-modda: Tovar omborining majburiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195881](https://lex.uz/docs/-180552#-195881)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Tovar ombori standartlar, texnikaviy shartlar, texnologiya yoʻriqnomalari, saqlash yoʻriqnomalari, ayrim turdagi tovarlarni saqlash qoidalarida, ombor uchun majburiy boʻlgan boshqa maxsus normativ hujjatlarda belgilab qoʻyilgan saqlash shartlari (tartiboti)ga rioya qilishi lozim. Agar omborda omonat saqlash shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, tovar ombori tovarlarni saqlash uchun qabul qilib olayotganida ularni oʻz hisobidan koʻzdan kechirishi kerak. Agar omonat saqlash egasizlantirish yoʻli bilan amalga oshirilayotgan boʻlsa, tovar ombori tovar egasiga tovarlarni yoki ularning namunalarini koʻzdan kechirish, namuna olish hamda tovarlarning toʻliq saqlanishini taʼminlash uchun zarur chora-tadbirlarni koʻrish imkoniyatlarini berishi shart. Tovarlarning toʻliq saqlanishini taʼminlash uchun saqlash sharoitlarini tezlik bilan oʻzgartirish talab qilinadigan hollarda tovar ombori zarur shoshilinch choralarni mustaqil koʻrishga haqli. U koʻrilgan choralar toʻgʻrisida tovar egasiga xabar berishi shart. Saqlash vaqtida tovar omborda omonat saqlash shartnomasida kelishilganidan yoki odatdagi tabiiy buzilish normalari doirasidan tashqari chiqadigan darajada buzilganligi aniqlangan taqdirda, tovar ombori bu haqda darhol dalolatnoma tuzishi va oʻsha kuniyoq yuk topshiruvchini xabardor qilishi shart.

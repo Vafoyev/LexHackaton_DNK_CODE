@@ -1,0 +1,7 @@
+# MK-2022 535-modda: Oʻzbekiston Respublikasi Kambagʻallikni qisqartirish va bandlik vazirligining Davlat mehnat inspeksiyasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-7385748](https://lex.uz/docs/-6257288#-7385748)
+**Bog'liq havolalar:** 535-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.02.00 Mehnat sohasidagi boshqaruv] Oʻzbekiston Respublikasi Kambagʻallikni qisqartirish va bandlik vazirligining Davlat mehnat inspeksiyasi (bundan buyon matnda Davlat mehnat inspeksiyasi deb yuritiladi) Oʻzbekiston Respublikasi Kambagʻallikni qisqartirish va bandlik vazirligining tarkibiy boʻlinmasi boʻlib, u ish beruvchilar tomonidan mehnat toʻgʻrisidagi qonunchilik, aholining bandligi, ish beruvchining fuqarolik javobgarligini majburiy sugʻurta qilish, nogironligi boʻlgan shaxslarning huquqlari toʻgʻrisidagi qonunchilik, mehnat toʻgʻrisidagi boshqa huquqiy hujjatlar, mehnatni muhofaza qilish qoidalari hamda mehnat standartlari talablariga rioya etilishi ustidan davlat nazoratini va tekshiruvini amalga oshiradi. (535-modda Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son) Vazirlar Mahkamasining 2018-yil 31-dekabrdagi 1066-son “Oʻzbekiston Respublikasi Bandlik va mehnat munosabatlari vazirligi faoliyatini takomillashtirish chora-tadbirlari toʻgʻrisida”gi qarori .

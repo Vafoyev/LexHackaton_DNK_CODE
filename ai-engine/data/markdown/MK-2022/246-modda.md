@@ -1,0 +1,7 @@
+# MK-2022 246-modda: Mehnatga haq toʻlash shartlarini va miqdorini belgilash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263767](https://lex.uz/docs/-6257288#-6263767)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.03.00.00 Mehnatga haq toʻlash / 05.03.05.00 Mehnat normalari va ishbay baholash] Mehnatga haq toʻlash shartlari va miqdori ish beruvchi hamda xodim oʻrtasidagi kelishuvga koʻra, bajariladigan ishning murakkabligi va shartlari, xodimning kasbiy-malakaviy va ishchanlik sifatlari, uning mehnati hamda tashkilotning xoʻjalik faoliyati natijalari hisobga olingan holda ushbu ish beruvchida amalda boʻlgan mehnatga haq toʻlash tizimlariga muvofiq belgilanadi. Mehnatga haq toʻlash tizimlari, shu jumladan tarif stavkalari, maoshlar, kompensatsiya xususiyatiga ega qoʻshimcha toʻlovlar va ustamalar, shu jumladan normal sharoitlardan chetga chiquvchi sharoitlardagi ish uchun shunday qoʻshimcha toʻlovlar hamda ustamalar miqdorlari, ragʻbatlantiruvchi xususiyatga ega qoʻshimcha toʻlovlar va ustamalar tizimlari hamda mukofotlash tizimlari jamoa kelishuvlarida, jamoa shartnomasida, shuningdek ish beruvchi tomonidan kasaba uyushmasi qoʻmitasi bilan kelishuvga koʻra qabul qilinadigan ichki hujjatlarda, mehnat toʻgʻrisidagi qonunchilikka muvofiq mehnat shartnomasida belgilanadi. Mehnatga haq toʻlash miqdori biror-bir eng koʻp miqdor bilan cheklanmaydi.

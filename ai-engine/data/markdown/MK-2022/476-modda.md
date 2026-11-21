@@ -1,0 +1,7 @@
+# MK-2022 476-modda: Mehnat faoliyatini noqulay mehnat sharoitlarida amalga oshiruvchi xodimlarni majburiy tibbiy koʻrikdan oʻtkazish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6267615](https://lex.uz/docs/-6257288#-6267615)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.03.00 Kasbiy kasalliklar. Mehnat jarohatlari; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.07.00 Alohida toifadagi xodimlarni mehnatining muhofaza qilish] Ish beruvchi noqulay mehnat sharoitlaridagi ishlarda band boʻlgan xodimlarning dastlabki (mehnat shartnomasini tuzayotganda) va davriy (ish jarayonida) majburiy tibbiy koʻriklardan oʻtkazilishini tashkil etishi shart. [ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.03.00.00 Respublika ijro etuvchi hokimiyat organlari va xoʻjalik boshqaruvi organlari / 02.03.02.00 Vazirliklar] Bajarilishi chogʻida dastlabki va davriy majburiy tibbiy koʻriklar oʻtkaziladigan noqulay mehnat sharoitlaridagi ishlarning roʻyxati hamda majburiy tibbiy koʻriklarni oʻtkazish tartibi Oʻzbekiston Respublikasi Sogʻliqni saqlash vazirligi tomonidan belgilanadi. Oʻzbekiston Respublikasi sogʻliqni saqlash vazirining 2012-yil 10-iyuldagi 200-son buyrugʻi bilan tasdiqlangan Xodimlarni tibbiy koʻrikdan oʻtkazish tartibi toʻgʻrisida nizom (roʻyxat raqami 2387, 29.08.2012-y.)

@@ -1,0 +1,7 @@
+# FK-UZ-1 140-modda: Ishonchnoma boʻyicha vakolatlarni boshqa shaxsga berish (boshqa shaxsga oʻtkazish)
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-153609](https://lex.uz/docs/-111189#-153609)
+**Bog'liq havolalar:** 138-modda, 139-modda, 47-modda
+
+## Norma matni:
+Ishonchnoma berilgan shaxs oʻz vakolatidagi harakatlarni shaxsan amalga oshirishi shart. Basharti, unga ishonchnoma bilan vakolat berilgan boʻlsa yoki uni ishonchnoma bergan shaxsning manfaatlarini himoya qilishga sharoit majbur qilsa, u harakatlarni amalga oshirishni boshqa shaxsga oʻtkazishi mumkin. Vakolatlarning boshqa shaxsga berilishiga asos boʻlgan ishonchnoma notarial tasdiqlangan boʻlishi kerak, ushbu Kodeksning 136 , 137 , 138 -moddalarida nazarda tutilgan hollar bundan mustasno. Boshqa shaxsga oʻtkazish boʻyicha berilgan ishonchnomaning amal qilish muddati uning berilishiga asos boʻlgan asosiy ishonchnomaning amal qilish muddatidan oshib ketishi mumkin emas. Vakolatlarini boshqaga bergan shaxs ishonchnoma bergan shaxsga buni maʼlum qilishi hamda mazkur shaxs va uning yashash joyi toʻgʻrisidagi zarur maʼlumotlarni xabar qilishi kerak. Mazkur burchlar bajarilmasa, oʻz vakolatlarini boshqaga bergan shaxs undan vakolat olgan shaxsning harakatlari uchun xuddi oʻzining harakatlari kabi javobgar boʻladi. mazkur Kodeksning 110 , 129 , 134, 135 , 137 , 139-moddasi , Oʻzbekiston Respublikasining “Notariat toʻgʻrisida”gi Qonun 47-moddasining ikkinchi qismi

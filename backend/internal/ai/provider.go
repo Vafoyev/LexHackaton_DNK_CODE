@@ -215,6 +215,8 @@ func NewProvider(providerName string) Provider {
 	switch strings.ToLower(providerName) {
 	case "noop":
 		return &NoopRuleOnlyProvider{}
+	case "engine", "ai-engine", "remote", "grpc", "http":
+		return NewEngineClient()
 	default:
 		return NewTemporalLegalAIProvider()
 	}

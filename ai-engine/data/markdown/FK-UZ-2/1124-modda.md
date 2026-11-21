@@ -1,0 +1,7 @@
+# FK-UZ-2 1124-modda: Vasiyatnomaning shakliga doir umumiy qoidalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-198721](https://lex.uz/docs/-180552#-198721)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Vasiyatnoma yozilgan joyi va vaqti koʻrsatilgan holda yozma shaklda tuzilishi lozim. Quyidagi vasiyatnomalar yozma shaklda tuzilgan hisoblanadi: notarial tasdiqlangan vasiyatnomalar; notarial tasdiqlangan vasiyatnomalarga tenglashtirilgan vasiyatnomalar. Yozma shakldagi vasiyatnoma vasiyat qiluvchining oʻz qoʻli bilan imzolanishi lozim. Agar vasiyat qiluvchi jismoniy nuqsonlari, kasalligi yoki savodsizligi tufayli vasiyatnomani oʻz qoʻli bilan imzolay olmasa, uning iltimosiga binoan notarius yoki qonunga muvofiq vasiyatnomani tasdiqlaydigan boshqa shaxs hozir boʻlganida vasiyat qiluvchi oʻz qoʻli bilan imzolay olmaganligining sabablari koʻrsatilgan holda vasiyatnomaga boshqa shaxs imzo qoʻyishi mumkin. Quyidagilar vasiyat qiluvchining oʻrniga vasiyatnomani imzolashi mumkin emas: notarius yoki vasiyatnomani tasdiqlovchi boshqa shaxs; vasiyatnoma kimning foydasiga tuzilgan yoki kimga nisbatan vasiyat majburiyati yuklatilgan boʻlsa, oʻsha shaxs, uning eri (xotini), bolalari, ota-onasi, nevaralari va chevaralari, shuningdek vasiyat qiluvchining qonun boʻyicha merosxoʻrlari; toʻliq muomala layoqatiga ega boʻlmagan fuqarolar; savodsizlar va vasiyatnomani oʻqiy olmaydigan boshqa shaxslar; yolgʻon guvohlik berganlik uchun muqaddam sudlangan shaxslar.

@@ -1,0 +1,7 @@
+# FK-UZ-2 977-modda: Ommaviy tanlov shartlarini oʻzgartirish va uni bekor qilish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196495](https://lex.uz/docs/-180552#-196495)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Ommaviy tanlov eʼlon qilgan shaxs ishlarni taqdim etish uchun belgilangan muddatning faqat birinchi yarimi mobaynida uning shartlarini oʻzgartirishga yoki tanlovni bekor qilishga haqli. Tanlov shartlarini oʻzgartirish yoki uni bekor qilish toʻgʻrisida tanlov qanday usulda eʼlon qilingan boʻlsa, shunday usulda xabar berilishi lozim. Tanlov shartlari oʻzgargan yoki u bekor qilingan taqdirda, tanlov eʼlon qilgan shaxs eʼlonda nazarda tutilgan ishni konkurs shartlarining oʻzgartirilishi yoki uning bekor qilinishi oʻziga maʼlum boʻlguncha yoki maʼlum boʻlishi lozim boʻlguncha bajargan har qanday shaxsning xarajatlarini toʻlashi lozim. Agar tanlov shartlarini oʻzgartirishda yoki uni bekor qilishda ushbu moddaning birinchi yoki ikkinchi qismlarida koʻrsatilgan talablar buzilgan boʻlsa, tanlovni eʼlon qilgan shaxs eʼlonda koʻrsatilgan shartlarga javob beradigan ishni bajarganlarga mukofot toʻlashi lozim. Tanlovni eʼlon qilgan shaxs, agar koʻrsatilgan ish tanlovdan mustasno tarzda, xususan, tanlov toʻgʻrisidagi eʼlonga qadar bajarilganligini yoxud avval boshdanoq tanlov shartlariga nomuvofiq boʻlganligini isbotlasa, xarajatlarni toʻlash majburiyatidan ozod qilinadi.

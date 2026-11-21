@@ -1,0 +1,7 @@
+# FK-UZ-1 106-modda: Bitimning ogʻzaki shakli
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-5444526](https://lex.uz/docs/-111189#-5444526)
+**Bog'liq havolalar:** 106-modda, 108-modda, 289-modda, 504-modda, 539-modda, 710-modda, 733-modda, 877-modda, 984-modda, 8-modda
+
+## Norma matni:
+Qonunchilikda yoki taraflarning kelishuvida yozma shakl belgilab qoʻyilmagan, jumladan u tuzilayotgan vaqtning oʻzidayoq bajariladigan bitim ogʻzaki tuzilishi mumkin. Shaxsning xatti-harakatidan uning bitim tuzishga boʻlgan xohish-irodasi bilinib turgan holda ham bunday bitim tuzilgan hisoblanadi. Jeton, patta yoki odatda qabul qilingan boshqa belgi berish yoʻli bilan tasdiqlangan bitim, agar qonunchilikda boshqacha tartib belgilangan boʻlmasa, ogʻzaki shaklda tuzilgan bitim hisoblanadi. Yozma shaklda tuzilgan shartnomani bajarishga qaratilgan bitimlar, agar qonunchilik va shartnomaga zid boʻlmasa, taraflarning kelishuviga muvofiq ogʻzaki tuzilishi mumkin. (106-modda Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) mazkur Kodeksning 101, 102 , 107, 108-moddalari , 289-moddasining ikkinchi qismi , 504-moddasining birinchi qismi , 539-moddasining birinchi qismi , 710-moddasining ikkinchi qismi ,733-moddasining birinchi qismi , 877-moddasining ikkinchi, uchinchi qismlari , 984-moddasining birinchi qismi ,Oʻzbekiston Respublikasining “Isteʼmolchilar huquqlarini himoya qilish toʻgʻrisida”gi Qonuni 8-moddasining toʻrtinchi qismi .

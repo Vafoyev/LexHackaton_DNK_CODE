@@ -1,0 +1,7 @@
+# MK-2022 314-modda: Intizomiy jazoni qoʻllash muddatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6265032](https://lex.uz/docs/-6257288#-6265032)
+**Bog'liq havolalar:** 13-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.07.00.00 Muddatlar. Daʼvo muddati / 03.07.01.00 Muddatlar; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.05.00.00 Mehnat intizomi / 05.05.04.00 Intizomiy javobgarlik / 05.05.04.01 Intizomiy jazolar] Intizomiy jazo intizomiy qilmish aniqlanganidan keyin darhol, biroq aniqlangan kundan eʼtiboran bir oydan kechiktirmay qoʻllaniladi, bunda xodim vaqtincha ishga layoqatsiz boʻlgan yoki taʼtilda boʻlgan davr hisobga olinmaydi. Xizmat tekshiruvi natijalari toʻgʻrisidagi dalolatnoma komissiya tomonidan imzolangan kun xizmat tekshiruvi natijalari boʻyicha aniqlangan intizomiy qilmish aniqlangan kun deb hisoblanadi. [ OKOZ: 1. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.04.00.00 Auditorlik faoliyati / 09.04.01.00 Umumiy qoidalar] Intizomiy jazo intizomiy qilmish sodir etilgan kundan eʼtiboran olti oydan kechiktirmay, taftish yoki moliya-xoʻjalik faoliyatini tekshirish yoxud auditorlik tekshiruvi natijalariga koʻra esa, u sodir etilgan kundan eʼtiboran ikki yildan kechiktirmay qoʻllanilishi mumkin. Ushbu muddatlarga jinoyat ishini yuritish vaqti kiritilmaydi. Oʻzbekiston Respublikasi Jinoyat kodeksining 13-moddasi .

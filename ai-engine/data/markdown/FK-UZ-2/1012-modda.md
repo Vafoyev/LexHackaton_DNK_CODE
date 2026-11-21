@@ -1,0 +1,7 @@
+# FK-UZ-2 1012-modda: Zararni qoplash miqdorining oʻzgarishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196836](https://lex.uz/docs/-180552#-196836)
+**Bog'liq havolalar:** 1004-modda
+
+## Norma matni:
+Mehnat qobiliyatini qisman yoʻqotgan jabrlanuvchi zararni toʻlash majburiyati yuklangan shaxsdan istalgan vaqtda, agar uning mehnat qobiliyati sogʻligʻiga yetkazilgan shikast tufayli oʻziga zararni undirish belgilangan paytda boʻlganidagiga nisbatan yomonlashsa, qoplash miqdorini tegishlicha koʻpaytirishni talab qilishga haqli. Jabrlanuvchining sogʻligʻiga yetkazilgan zararning oʻrnini qoplash majburiyati zimmasiga yuklangan shaxs, agar jabrlanuvchining mehnat qobiliyati zararni undirish belgilangan paytda boʻlgandagiga nisbatan oshgan boʻlsa, qoplash miqdorini tegishlicha kamaytirishni talab qilishga haqli. Jabrlanuvchi, agar zararning oʻrnini qoplash majburiyati zimmasiga yuklangan fuqaroning mulkiy ahvoli yaxshilangan boʻlsa, qoplash miqdori esa ushbu Kodeks 1004-moddasining beshinchi qismiga muvofiq kamaytirilgan boʻlsa, zararni toʻlash miqdorini koʻpaytirishni talab qilishga haqli. Sud zarar yetkazgan fuqaroning talabiga binoan, agar uning mulkiy ahvoli nogironligi yoxud pensiya yoshiga yetganligi sababli zararning oʻrnini qoplash belgilangan paytdagiga nisbatan yomonlashgan boʻlsa, zararning oʻrnini qoplash miqdorini kamaytirishi mumkin, zarar qasddan yetkazilgan hollar bundan mustasno.

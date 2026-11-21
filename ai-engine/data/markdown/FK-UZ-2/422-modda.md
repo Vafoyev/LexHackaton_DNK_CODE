@@ -1,0 +1,7 @@
+# FK-UZ-2 422-modda: Tovar haqini boʻlib-boʻlib toʻlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183136](https://lex.uz/docs/-180552#-183136)
+**Bog'liq havolalar:** 422-modda
+
+## Norma matni:
+Tovarni nasiyaga sotish shartnomasida tovar haqini boʻlib-boʻlib toʻlash nazarda tutilishi mumkin. Haqini boʻlib-boʻlib toʻlash sharti bilan tovarni nasiyaga sotish shartnomasida oldi-sotdi shartnomasining boshqa muhim shartlari bilan bir qatorda tovar bahosi, toʻlovlarning tartibi, muddatlari va miqdori koʻrsatilgan boʻlsa, bunday shartnoma tuzilgan hisoblanadi. Agar sotib oluvchi haqini boʻlib-boʻlib toʻlash sharti bilan sotilgan va oʻziga topshirilgan tovar uchun navbatdagi toʻlovni shartnomada belgilangan muddatda amalga oshirmasa, sotuvchi shartnomani bajarishdan bosh tortishga va garov narsasini undirish uchun nazarda tutilgan tartibda undiruvni tovarga qaratishga haqli. (422-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2019-yil 22-oktabrdagi OʻRQ-572-sonli Qonuni tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 23.10.2019-y., 03/19/572/3943-son) Tovarni kreditga sotish toʻgʻrisidagi shartnomada nazarda tutilgan taqdirda, sotib oluvchi olingan tovar ulushining haqi toʻlangan qismini majburiyatlarni bajarish taʼminoti sifatida berishga haqli. (422-modda Oʻzbekiston Respublikasining 2019-yil 22-oktabrdagi OʻRQ-572-sonli Qonuniga asosan toʻrtinchi qism bilan toʻldirilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 23.10.2019-y., 03/19/572/3943-son)

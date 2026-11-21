@@ -1,0 +1,7 @@
+# MK-2022 239-modda: Ijtimoiy taʼtillar berish asoslari va xodim tomonidan ulardan foydalanishning oʻziga xos xususiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263433](https://lex.uz/docs/-6257288#-6263433)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.06 Ijtimoiy va boshqa taʼtillar] Qonunchilik, jamoa kelishuvlari yoxud jamoa shartnomasi yoki mehnat haqidagi boshqa huquqiy hujjatlar xodimning ijtimoiy taʼtilga boʻlgan huquqi yuzaga kelishini qaysi holatlar bilan bogʻlaydigan boʻlsa, shunday holatlarning paydo boʻlishi xodimga ijtimoiy taʼtillar berish asosidir. Koʻrsatilgan holatlar mavjud boʻlgan taqdirda, ish beruvchi xodimga ijtimoiy taʼtil berishi shart. Barcha ijtimoiy taʼtillar vaqtida, ular qonunchilikda belgilanganligidan yoki jamoa kelishuvlarida yoxud jamoa shartnomasida yoki mehnat haqidagi boshqa huquqiy hujjatlarda nazarda tutilganligidan qatʼi nazar, xodimning avvalgi ish joyi (lavozimi) saqlanib qoladi. Ijtimoiy taʼtillar har yilgi mehnat taʼtilidan tashqari beriladi. Xodim tomonidan belgilangan muddatlarda foydalanilmagan ijtimoiy taʼtil boshqa muddatga oʻtkazilishi mumkin emas. Ijtimoiy taʼtillarni jamlab hisoblashga va pulli kompensatsiya bilan almashtirishga yoʻl qoʻyilmaydi. 6-§. Ish haqi qisman saqlanadigan va ish haqi saqlanmaydigan taʼtillar

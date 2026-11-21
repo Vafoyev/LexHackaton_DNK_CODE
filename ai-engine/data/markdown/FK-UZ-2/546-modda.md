@@ -1,0 +1,7 @@
+# FK-UZ-2 546-modda: Ijaraga olingan mol-mulkni tasarruf qilish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-5447596](https://lex.uz/docs/-180552#-5447596)
+**Bog'liq havolalar:** 546-modda, 13-modda
+
+## Norma matni:
+Agar ushbu Kodeksda, boshqa qonunchilikda boshqacha tartib belgilangan boʻlmasa, ijaraga oluvchi ijaraga olingan mol-mulkni ijaraga beruvchining roziligi bilan ikkilamchi ijaraga (qoʻshimcha ijaraga) topshirishga, mulk ijarasi shartnomasi boʻyicha oʻz huquq va majburiyatlarini boshqa shaxsga oʻtkazishga (qayta ijara), ijaraga olingan mol-mulkni tekin foydalanish uchun berishga, shuningdek bu huquqlarini garovga qoʻyishga va ularni xoʻjalik shirkatlari va jamiyatlari ustav fondiga (kapitaliga) hissa sifatida yoki ishlab chiqarish kooperativiga pay badali sifatida topshirishga haqli. Koʻrsatib oʻtilgan hollarda ijaraga oluvchi shartnoma boʻyicha ijaraga beruvchi oldida javobgar boʻlib qolaveradi, qayta ijara bundan mustasno. Mol-mulkni boshqa shaxslarga topshirish haqidagi shartnoma ijara shartnomasining amal qilish muddatidan ortiq muddatga tuzilishi mumkin emas. Agar qonunchilikda boshqacha tartib belgilangan boʻlmasa, ijaraga olingan mol-mulkni ikkilamchi ijaraga topshirish haqidagi shartnomaga nisbatan mulk ijarasi shartnomasi haqidagi qoidalar qoʻllaniladi. (546-modda Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) “Fermer xoʻjaligi toʻgʻrisida”gi Qonunning 13-moddasi .

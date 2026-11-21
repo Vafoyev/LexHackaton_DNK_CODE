@@ -21,7 +21,7 @@ void main() {
     expect(find.byKey(const Key('splash_screen')), findsOneWidget);
     expect(find.text('LexGuard AI'), findsOneWidget);
     expect(
-      find.text('Imzolashdan oldin shartnomani tekshiring'),
+      find.text('Aqlli shartnoma tekshiruvi'),
       findsOneWidget,
     );
 
@@ -31,15 +31,15 @@ void main() {
 
     // 2. Onboarding 3 slides -> finish
     expect(find.byKey(const Key('onboarding_screen')), findsOneWidget);
-    expect(find.text('Bandma-band aqlli tekshiruv'), findsOneWidget);
+    expect(find.text('Xavfli bandlarni toping'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('onboarding_next_btn')));
     await tester.pumpAndSettle();
-    expect(find.text('Shaxsiy ma’lumotlar lokal himoyada'), findsOneWidget);
+    expect(find.text('Ma’lumotingiz himoyada'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('onboarding_next_btn')));
     await tester.pumpAndSettle();
-    expect(find.text('Lex.uz havola va 2 xil DOCX eksport'), findsOneWidget);
+    expect(find.text('Tayyor tuzatishlar'), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('onboarding_next_btn')));
     await tester.pumpAndSettle();
@@ -47,7 +47,7 @@ void main() {
     // 3. Role Selection screen renders with the dual-role question
     expect(find.byKey(const Key('role_select_screen')), findsOneWidget);
     expect(
-      find.text('Yuridik shaxsmisiz yoki Jismoniy shaxs?'),
+      find.text('Kim sifatida kirasiz?'),
       findsOneWidget,
     );
     expect(find.byKey(const Key('role_card_individual')), findsOneWidget);
@@ -58,7 +58,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const Key('login_screen')), findsOneWidget);
-    expect(find.text('E-IMZO / ERI bilan kirish (Mock)'), findsOneWidget);
+    expect(find.text('E-IMZO bilan kirish'), findsOneWidget);
     final loginCtx =
         tester.element(find.byKey(const Key('login_primary_auth_btn')));
     expect(loginCtx.lexColors.rolePrimary, const Color(0xFF047857));
@@ -80,20 +80,21 @@ void main() {
     await tester.tap(find.byKey(const Key('quick_switch_individual')));
     await tester.pumpAndSettle();
 
-    final homeCtx = tester.element(find.text('Vafoyev Isobek · Shaxsiy'));
-    expect(homeCtx.lexColors.rolePrimary, const Color(0xFF0066FF));
+    final homeCtx = tester.element(find.text('Vafoyev Isobek'));
+    expect(homeCtx.lexColors.rolePrimary, const Color(0xFF1D63FF));
 
     // 6. Open Floating Scan Orb -> Run B2B Service Demo -> Analysis Detail
     await tester.tap(find.byKey(const Key('center_scan_fab')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 450));
     await tester.tap(find.byKey(const Key('scan_quick_upload')));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('demo_sample_service')));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('Taraf balansi'), findsOneWidget);
-    expect(find.textContaining('Eng muhim 3 ta muammo'), findsOneWidget);
+    expect(find.textContaining('Imzolashdan oldin tuzating'), findsOneWidget);
+    expect(find.textContaining('Tayyor hujjat (DOCX)'), findsOneWidget);
     expect(find.textContaining('Xavf indeksi:'), findsNothing);
   });
 }

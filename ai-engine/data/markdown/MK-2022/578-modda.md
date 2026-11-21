@@ -1,0 +1,7 @@
+# MK-2022 578-modda: Jamoaviy mehnat nizosini hal etishda (tartibga solishda) ishtirok etuvchi shaxslar uchun kafolatlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6269485](https://lex.uz/docs/-6257288#-6269485)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.13.00 Boshqa kafolatlar va kompensatsiyalar; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.11.00.00 Mehnat nizolari / 05.11.02.00 Jamoa mehnat nizolari] Yarashtirish komissiyasining aʼzolari, mehnat arbitrlari jamoaviy mehnat nizosini hal etishda (tartibga solishda) ishtirok etish vaqtida nizoni hal etish (tartibga solish) vaqti uchun oʻrtacha ish haqi saqlab qolingan holda asosiy ishidan ozod qilinadi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.11.00.00 Mehnat nizolari / 05.11.02.00 Jamoa mehnat nizolari] Xodimlarning, ular birlashmalarining jamoaviy mehnat nizosini hal etishda (tartibga solishda) ishtirok etayotgan vakillari jamoaviy mehnat nizosini hal etish (tartibga solish) davrida intizomiy jazoga tortilishi, boshqa ishga oʻtkazilishi mumkin emas, ular bilan tuzilgan mehnat shartnomasi ularning vakilligiga vakolat bergan organning oldindan roziligini olmay turib, ish beruvchining tashabbusiga koʻra bekor qilinishi mumkin emas.

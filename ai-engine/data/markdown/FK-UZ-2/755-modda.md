@@ -1,0 +1,7 @@
+# FK-UZ-2 755-modda: Qarzdorning pul talabnomasini moliya agentiga ijro etishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-190700](https://lex.uz/docs/-180552#-190700)
+**Bog'liq havolalar:** 755-modda
+
+## Norma matni:
+Qarzdor mijozdan yoki moliya agentidan pul talabnomasidan ushbu moliya agenti foydasiga voz kechilganligi haqida yozma bildirishnoma olgan va unda ijro etilishi kerak boʻlgan pul talabnomasi belgilangan, shuningdek toʻlov amalga oshirilishi kerak boʻlgan moliya agenti koʻrsatilgan taqdirda qarzdor toʻlovni moliya agentiga amalga oshirishi shart. Qarzdorning roziligisiz pul majburiyatining valyutasi va u amalga oshiriladigan mamlakat oʻzgartirilishi mumkin emas. (755-modda Oʻzbekiston Respublikasining 2025-yil 17-apreldagi OʻRQ-1058-sonli Qonuniga asosan ikkinchi qism bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 18.04.2025-y., 03/25/1058/0355-son) Qarzdorning iltimosiga koʻra moliya agenti oqilona muddatda qarzdorga pul talabnomasidan haqiqatan ham moliya agenti foydasiga voz kechilganligining isbotini taqdim etishi kerak. Agar moliya agenti ushbu majburiyatni bajarmagan boʻlsa, qarzdor ushbu talabnoma boʻyicha toʻlovni mijozga nisbatan amalga oshirib, uning oldidagi oʻz majburiyatini bajarishga haqli. Qarzdorning pul talabnomasini ushbu moddaning qoidalariga muvofiq moliya agenti foydasiga bajarishi qarzdorni mijoz oldidagi tegishli majburiyatdan ozod qiladi.

@@ -1,0 +1,7 @@
+# FK-UZ-1 199-modda: Mol-mulkni mulkdordan olib qoʻyish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154090](https://lex.uz/docs/-111189#-154090)
+**Bog'liq havolalar:** 199-modda, 65-modda, 204-modda, 11-modda, 23-modda, 17-modda
+
+## Norma matni:
+Mol-mulkni mulkdordan olib qoʻyishga qonunda nazarda tutilgan hollarda va tartibda mulkdorning majburiyatlari boʻyicha undiruv ana shu mol-mulkka qaratilgan taqdirda, shuningdek natsionalizatsiya qilish, rekvizitsiya va musodara qilish tartibida yoʻl qoʻyiladi. (199-moddaning birinchi qismi Oʻzbekiston Respublikasining 2022-yil 7-noyabrdagi OʻRQ-801-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 08.11.2022-y., 03/22/801/0998-son) Agar qonunga asosan shaxsga tegishli boʻla olmaydigan mol-mulk uning mulki boʻlib qolsa, ushbu mol-mulkka nisbatan mulk huquqi sud tartibida bekor qilinib, olib qoʻyilgan mol-mulkning qiymati shaxsga toʻlanadi. Oʻzbekiston Respublikasining Konstitutsiyasi 65 -moddasi uchinchi qismi , mazkur Kodeksning 202 — 204-moddalari , Oʻzbekiston Respublikasining Uy-joy kodeksining 11-moddasining beshinchi, oltinchi qismlari , Oʻzbekiston Respublikasining “Tadbirkorlik faoliyati erkinligining kafolatlari toʻgʻrisida”gi Qonuni 23-moddasi , Oʻzbekiston Respublikasining “Sud hujjatlari va boshqa organlar hujjatlarini ijro etish toʻgʻrisida”gi Qonuni 5 — 7-boblari , “Xususiy mulkni himoya qilish va mulkdorlar huquqlarining kafolatlari toʻgʻrisida”gi Qonunning 16, 17-moddalari .

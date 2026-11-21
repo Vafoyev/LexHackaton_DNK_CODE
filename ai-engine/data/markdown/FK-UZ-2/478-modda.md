@@ -1,0 +1,7 @@
+# FK-UZ-2 478-modda: Energiya taʼminoti shartnomasi qoidalarini tutashtirilgan tarmoq orqali taʼminlash borasidagi boshqa munosabatlarga nisbatan qoʻllash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-5447316](https://lex.uz/docs/-180552#-5447316)
+**Bog'liq havolalar:** 478-modda
+
+## Norma matni:
+Agar qonunchilikda boshqacha tartib belgilangan boʻlmasa, tutashtirilgan tarmoq orqali issiqlik energiyasi bilan taʼminlash munosabatlariga nisbatan ushbu paragraf qoidalari qoʻllanadi. (478-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Vazirlar Mahkamasining 2009-yil 22-avgustdagi 245-son qarori bilan tasdiqlangan “Issiqlik energiyasidan foydalanish Qoidalari ”. Agar qonunchilikda, shartnomada boshqacha tartib nazarda tutilgan boʻlmasa yoki u majburiyat mohiyatidan kelib chiqmasa, tutashtirilgan tarmoq orqali gaz, neft va neft mahsulotlari, suv va boshqa tovarlar bilan taʼminlash munosabatlariga nisbatan ushbu paragraf qoidalari qoʻllanadi. (478-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.11.00.00 Majburiyatlarning alohida turlari / 03.11.01.00 Oldi-sotdi / 03.11.01.07 Koʻchmas mulkni sotish] 7-§. Koʻchmas mulkni sotish

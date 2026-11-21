@@ -1,0 +1,7 @@
+# MK-2022 440-modda: Oʻrindoshlik asosida ishda kafolatli toʻlovlarni va kompensatsiya toʻlovlarini amalga oshirishning oʻziga xos xususiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266911](https://lex.uz/docs/-6257288#-6266911)
+**Bog'liq havolalar:** 386-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.13.00 Boshqa kafolatlar va kompensatsiyalar; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.09.00.00 Ijtimoiy muhofazaga muhtoj xodimlar mehnatini tartibga solishning qoʻshimcha kafolatlari va xususiyatlari / 05.09.04.00 Ishni taʼlim bilan birga qoʻshib olib borayotgan xodimlar uchun imtiyozlar] Ishni taʼlim olish bilan birga olib boruvchi shaxslarga kafolatli toʻlovlar va kompensatsiya toʻlovlari faqat asosiy ish joyida beriladi. mazkur Kodeksning 383 — 386-moddalari . [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.16.00 Oʻrindoshlik] Mehnat shartnomasini alohida asoslarga koʻra bekor qilish chogʻida xodimlarning ishga joylashish davri uchun oʻrtacha ish haqi faqat asosiy ish joyidagi mehnat shartnomasi bekor qilinganda saqlanadi. Oʻrindoshlik asosida ishlovchi shaxslarga mehnat toʻgʻrisidagi qonunchilikda hamda mehnat haqidagi boshqa huquqiy hujjatlarda nazarda tutilgan oʻzga kafolatli toʻlovlar va kompensatsiya toʻlovlari toʻliq hajmda beriladi. Mazkur kodeksning 17-bobi .

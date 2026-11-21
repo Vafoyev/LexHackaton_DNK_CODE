@@ -1,0 +1,7 @@
+# FK-UZ-1 28-modda: Emansipatsiya
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-151126](https://lex.uz/docs/-111189#-151126)
+**Bog'liq havolalar:** 42-modda, 326-modda, 12-modda
+
+## Norma matni:
+Oʻn olti yoshga toʻlgan voyaga yetmagan shaxs mehnat shartnomasi boʻyicha ishlayotgan boʻlsa yoki ota-onasi, farzandlikka oluvchilari yoxud homiysining roziligiga binoan tadbirkorlik faoliyati bilan shugʻullanayotgan boʻlsa, u toʻla muomalaga layoqatli deb eʼlon qilinishi mumkin. Voyaga yetmagan shaxsni toʻla muomalaga layoqatli deb eʼlon qilish (emansipatsiya) ota-onaning, farzandlikka oluvchilarning yoki homiyning roziligi bilan vasiylik va homiylik organining qaroriga muvofiq yoxud, bunday rozilik boʻlmagan taqdirda, sudning qarori bilan amalga oshiriladi. Ota-ona, farzandlikka oluvchilar va homiy emansipatsiya qilingan voyaga yetmaganning majburiyatlari boʻyicha, xususan, u yetkazgan zarar oqibatida kelib chiqqan majburiyatlar boʻyicha javobgar boʻlmaydilar. mazkur Kodeksning 22 , 27 , 29 , 42-moddalari , Oʻzbekiston Respublikasining Fuqarolik protsessual kodeksi 324 — 326-moddalari , Oʻzbekiston Respublikasining 02.01.2014-yildagi “Vasiylik va homiylik toʻgʻrisida”gi Qonunining 12-moddasi birinchi qismining oʻn beshinchi xatboshisi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.02.00.00 Fuqarolar (jismoniy shaxslar) / 03.02.04.00 Voyaga etmaganlarning fuqarolik-huquqiy holati. 14 yoshgacha boʻlgan fuqarolarning muomala layoqati. 14 yoshdan 18 yoshgacha boʻlgan fuqarolarning muomala layoqati. Emansipatsiya]

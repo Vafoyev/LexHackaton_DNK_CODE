@@ -1,0 +1,7 @@
+# FK-UZ-2 823-modda: Topshiriq shartnomasining bekor boʻlishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195301](https://lex.uz/docs/-180552#-195301)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Topshiriq shartnomasi: topshiriq beruvchi topshiriqni bekor qilishi; vakil topshiriqdan bosh tortishi; topshiriq beruvchining yoki vakilning vafot etishi, ulardan birining muomalaga layoqatsiz, muomala layoqati cheklangan yoki bedarak yoʻqolgan deb topilishi natijasida toʻxtatiladi. Topshiriq beruvchi istagan vaqtda topshiriqni bekor qilishga, vakil esa topshiriqdan bosh tortishga haqli. Bu huquqdan voz kechish haqidagi kelishuv oʻz-oʻzidan haqiqiy boʻlmaydi. Agar vakil topshiriq shartnomasining bekor qilingani haqida bilmagan va bilishi lozim boʻlmagan boʻlsa, uning topshiriq beruvchining koʻrsatmasiga muvofiq qonuniy ravishda qilgan harakatlari topshiriq beruvchi (uning qonuniy vorisi) zimmasiga uchinchi shaxslar va vakilga nisbatan majburiyat yuklaydi. Tadbirkor sifatida ish olib borayotgan vakil bilan topshiriq shartnomasidan bosh tortayotgan taraf shartnomani bekor qilish toʻgʻrisida ikkinchi tarafni, agar shartnomada uzoqroq muddat nazarda tutilgan boʻlmasa, kamida oʻttiz kun oldin xabardor qilishi shart. Tijorat vakili boʻlgan yuridik shaxs qayta tashkil etilganida topshiriq beruvchi oʻz topshirigʻini ana shunday oldindan xabar bermay turib bekor qilishga haqli.

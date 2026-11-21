@@ -91,14 +91,14 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Padding(
-                        padding: EdgeInsets.fromLTRB(hPad, 12, hPad, 8),
+                        padding: EdgeInsets.fromLTRB(hPad.clamp(12.0, 18.0), 12, hPad.clamp(12.0, 18.0), 8),
                         child: Row(
                           children: [
                             GlassPill(
                               key: const Key('login_back_role_btn'),
                               onTap: () => context.go('/role-select'),
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
+                                horizontal: 10,
                                 vertical: 8,
                               ),
                               child: Icon(
@@ -107,44 +107,57 @@ class _LoginPageState extends State<LoginPage> {
                                 color: c.textPrimary,
                               ),
                             ),
-                            const SizedBox(width: 8),
-                            GlassPill(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: c.rolePrimary,
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: GlassPill(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 6,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: c.rolePrimary,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    isBusiness
-                                        ? AppStrings.t(
-                                            lang,
-                                            'business_b2b',
-                                            script: script,
-                                          )
-                                        : AppStrings.t(
-                                            lang,
-                                            'individual_b2c',
-                                            script: script,
-                                          ),
-                                    style: TextStyle(
-                                      fontSize: 12.5,
-                                      fontWeight: FontWeight.w700,
-                                      color: c.textPrimary,
+                                    const SizedBox(width: 6),
+                                    Flexible(
+                                      child: Text(
+                                        isBusiness
+                                            ? AppStrings.t(
+                                                lang,
+                                                'business_b2b',
+                                                script: script,
+                                              )
+                                            : AppStrings.t(
+                                                lang,
+                                                'individual_b2c',
+                                                script: script,
+                                              ),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: c.textPrimary,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             const Spacer(),
                             GlassPill(
                               key: const Key('lang_picker_pill'),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
                               onTap: () => LanguagePickerSheet.show(context),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -152,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Text(
                                     lang.code,
                                     style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: 12.5,
                                       fontWeight: FontWeight.w700,
                                       color: c.textPrimary,
                                     ),
@@ -160,13 +173,13 @@ class _LoginPageState extends State<LoginPage> {
                                   const SizedBox(width: 4),
                                   Icon(
                                     CupertinoIcons.chevron_down,
-                                    size: 12,
+                                    size: 11,
                                     color: c.textSecondary,
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
                             LexThemeTogglePill(
                               isDark: session.themeMode == ThemeMode.dark,
                             ),

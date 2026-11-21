@@ -1,0 +1,7 @@
+# FK-UZ-2 417-modda: Sotib oluvchining tovarni qabul qilish majburiyati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-182669](https://lex.uz/docs/-180552#-182669)
+**Bog'liq havolalar:** 417-modda, 31-modda
+
+## Norma matni:
+Sotib oluvchi oʻziga sotuvchi tomonidan topshirilgan tovarni qabul qilib olishi shart, u tovarni almashtirib berishni talab qilish yoki oldi-sotdi shartnomasini bajarishni rad etishga haqli boʻlgan hollar bundan mustasno. Agar qonunchilikda yoki oldi-sotdi shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, sotib oluvchi odatda qoʻyiladigan talablarga muvofiq tegishli tovarni topshirish va olishni taʼminlash uchun oʻzi tomonidan zarur boʻlgan harakatlarni amalga oshirishi lozim. (417-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Sotib oluvchi qonunchilik yoki oldi-sotdi shartnomasini buzgan holda tovarni qabul qilmasa yoki qabul qilishdan bosh tortsa, sotuvchi shartnomani bajarishdan bosh tortish va zararni qoplashni talab qilishga haqli. (417-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) “Xoʻjalik yurituvchi subyektlar faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunning 31-moddasi .

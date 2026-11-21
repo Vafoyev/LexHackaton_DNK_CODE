@@ -2,18 +2,34 @@ import React, { useState } from 'react';
 import { 
   LogIn, 
   LogOut, 
-  ChevronDown
+  ChevronDown,
+  Box,
+  ShieldCheck,
+  FileText,
+  GitCompare,
+  User,
+  Building2,
+  Sun,
+  Moon,
+  Download,
+  Upload,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { EntityType } from '../../types/auth';
+import { useTheme } from '../../context/ThemeContext';
+import { AnalysisResult } from '../../types/contract';
+import { exportToDocx, exportToPDF } from '../../utils/export';
 
-interface NavbarProps {
+export interface NavbarProps {
   onReset: () => void;
-  activeView: 'dashboard' | 'diff' | 'visualizer3d';
-  setActiveView: (view: 'dashboard' | 'diff' | 'visualizer3d') => void;
+  activeView: 'xulosa' | 'diff' | '3D' | 'dashboard';
+  setActiveView: (view: 'xulosa' | 'diff' | '3D' | 'dashboard') => void;
   hasAnalysis: boolean;
   onOpenAuth: () => void;
   onOpen3D?: () => void;
+  onLoadDemo?: () => void;
+  analysis?: AnalysisResult | null;
+  appliedCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -23,255 +39,236 @@ export const Navbar: React.FC<NavbarProps> = ({
   hasAnalysis,
   onOpenAuth,
   onOpen3D,
+  onLoadDemo,
+  analysis,
+  appliedCount = 0,
 }) => {
   const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const isIndividual = (user?.entity_type || activeEntityType) === 'INDIVIDUAL';
 
+  const handleSelectView = (view: 'xulosa' | 'diff' | '3D') => {
+    if (view === '3D') {
+      if (onOpen3D) onOpen3D();
+      return;
+    }
+    if (!hasAnalysis && onLoadDemo) {
+      onLoadDemo();
+    }
+    setActiveView(view);
+  };
+
+  // Dinamik xavfsizlik bali
+  const score = analysis 
+    ? Math.min(100, (100 - analysis.summary.risk_score) + appliedCount * 12)
+    : 85;
+
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/85 border-b border-slate-800/80 transition-all">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+    <header className="fixed top-2 sm:top-3 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl transition-all duration-300">
+      {/* Floating Stadium Capsule Navbar */}
+      <div className={`liquid-glass-pill rounded-full px-4 sm:px-6 py-2 transition-all duration-300 ${
+        isIndividual ? 'border-sky-500/25 shadow-sky-950/40' : 'border-emerald-500/25 shadow-emerald-950/40'
+      }`}>
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          {/* 1. Brand Logo */}
           <div 
             onClick={onReset}
-            className="flex items-center gap-3 cursor-pointer group shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0"
+            title="Bosh sahifaga qaytish"
           >
-            <div className={`relative h-10 px-2.5 rounded-xl p-[2px] transition-transform duration-300 group-hover:scale-105 shadow-lg flex items-center justify-center ${
+            <div className={`relative h-8 px-2 rounded-full p-[1.5px] transition-transform duration-300 group-hover:scale-105 shadow-md flex items-center justify-center ${
               isIndividual
-                ? 'bg-gradient-to-tr from-sky-600 via-blue-500 to-cyan-400 shadow-sky-500/20'
-                : 'bg-gradient-to-tr from-emerald-600 via-teal-500 to-green-400 shadow-emerald-500/20'
+                ? 'bg-gradient-to-tr from-sky-400 via-blue-500 to-cyan-300 shadow-sky-500/30'
+                : 'bg-gradient-to-tr from-emerald-400 via-teal-500 to-green-300 shadow-emerald-500/30'
             }`}>
-              <div className="w-full h-full bg-slate-900 rounded-[10px] px-2 flex items-center justify-center">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
+              <div className="w-full h-full bg-slate-950/85 rounded-full px-1.5 flex items-center justify-center backdrop-blur-md">
+                <img src="/lex_uz.svg" alt="" aria-hidden="true" className="h-4 w-auto object-contain brightness-125" />
               </div>
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                  LexGuard<span className={isIndividual ? "text-sky-400" : "text-emerald-400"}>.AI</span>
-                </span>
-                <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${
-                  isIndividual
-                    ? 'bg-sky-500/10 text-sky-400 border-sky-500/30'
-                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                }`}>
-                  {isIndividual ? 'FUQARO' : 'B2B'}
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
-                Lex.uz 3D Qonuniy Audit Platformasi
-              </p>
+
+            <div className="flex items-center gap-1.5">
+              <span className="text-base sm:text-xl font-black tracking-tight text-slate-900 dark:text-white">
+                LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
+              </span>
             </div>
           </div>
 
-          {/* Lex.uz 3D Model Ko'rish Tugmasi */}
-          {onOpen3D && (
-            <button
-              type="button"
-              onClick={onOpen3D}
-              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-sky-500/10 hover:scale-105"
-              title="3D Lex.uz GLTF modelini ko'rish"
-            >
-              <img src="/lex_uz.svg" alt="Lex.uz 3D" className="h-3.5 w-auto object-contain brightness-125" />
-              <span>3D Lex.uz</span>
-            </button>
-          )}
-
-          {/* MARKAZIY SHAXS TURINI ALMASHTIRGICH (JISMONIY / YURIDIK) */}
-          <div className="flex items-center p-1 bg-slate-900/90 rounded-2xl border border-slate-800 shadow-inner">
+          {/* 2. Center Glass Capsule Menu — Katta va Aniq Navigatsiya */}
+          <nav className="flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
+            {/* Fuqaro (B2C Mode) */}
             <button
               onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 isIndividual
-                  ? 'bg-gradient-to-r from-sky-600 to-brand-600 text-white shadow-md shadow-sky-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
+              title="Fuqaro (B2C) — Jismoniy shaxs shartnomalari"
             >
-              Jismoniy shaxs
+              <User className="w-4 h-4" />
+              <span>Fuqaro</span>
             </button>
 
+            {/* Biznes (B2B Mode) */}
             <button
               onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 !isIndividual
-                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
+              title="Biznes (B2B) — Korporativ shartnomalar"
             >
-              Yuridik shaxs
+              <Building2 className="w-4 h-4" />
+              <span>Biznes</span>
             </button>
-          </div>
 
-          {/* Navigation Tabs (agar tahlil yuklangan bo'lsa) */}
-          {hasAnalysis && (
-            <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 shadow-inner">
-              <button
-                onClick={() => setActiveView('dashboard')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'dashboard'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Executive Xulosa
-              </button>
+            {/* Xulosa */}
+            <button
+              onClick={() => handleSelectView('xulosa')}
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
+                activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
+                  ? isIndividual
+                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              }`}
+              title="Shartnoma Huquqiy Xulosasi"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Xulosa</span>
+            </button>
 
-              <button
-                onClick={() => setActiveView('visualizer3d')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'visualizer3d'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                3D Sfera
-              </button>
+            {/* Diff */}
+            <button
+              onClick={() => handleSelectView('diff')}
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
+                activeView === 'diff'
+                  ? isIndividual
+                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              }`}
+              title="Yonma-yon Qizil / Yashil Redline Diff"
+            >
+              <GitCompare className="w-4 h-4" />
+              <span>Diff</span>
+            </button>
+            {/* 3D */}
+            <button
+              onClick={() => handleSelectView('3D')}
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
+                activeView === '3D'
+                  ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              }`}
+              title="Three.js 3D Risk Xaritasi"
+            >
+              <Box className="w-4 h-4 text-cyan-400" />
+              <span>3D</span>
+            </button>
+          </nav>
 
-              <button
-                onClick={() => setActiveView('diff')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  activeView === 'diff'
-                    ? 'bg-slate-800 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                Diff
-              </button>
-            </nav>
-          )}
+          {/* 3. Right Actions: Eksport, Tungi/Kunduzgi Rejim, Kirish */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Eksport DOCX / PDF (agar shartnoma mavjud bo'lsa) */}
+            {hasAnalysis && analysis && (
+              <div className="hidden md:flex items-center gap-1 p-0.5 rounded-full bg-slate-200/50 dark:bg-white/5 border border-slate-300/50 dark:border-white/10 text-[11px] font-bold">
+                <button
+                  onClick={() => exportToDocx(analysis)}
+                  className="px-2 py-0.5 rounded-full text-sky-600 dark:text-sky-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Word (.docx) yuklab olish"
+                >
+                  DOCX
+                </button>
+                <button
+                  onClick={() => exportToPDF(analysis)}
+                  className="px-2 py-0.5 rounded-full text-emerald-600 dark:text-emerald-400 hover:bg-white dark:hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Audit PDF yuklab olish"
+                >
+                  PDF
+                </button>
+              </div>
+            )}
 
-          {/* O'ng tomon: Login / Foydalanuvchi Profili */}
-          <div className="flex items-center gap-3">
-            {!isAuthenticated ? (
+            {/* Yangi shartnoma yuklash tugmasi */}
+            {hasAnalysis && (
               <button
-                onClick={onOpenAuth}
-                className={`px-4 py-2 rounded-xl text-white text-xs font-bold shadow-lg flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 ${
-                  isIndividual
-                    ? 'bg-gradient-to-r from-sky-500 to-brand-600 shadow-sky-500/20'
-                    : 'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-emerald-500/20'
-                }`}
+                onClick={onReset}
+                className="hidden lg:flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 transition-all cursor-pointer"
+                title="Boshqa shartnoma yuklash"
               >
-                <LogIn className="w-3.5 h-3.5" />
-                <span>Kirish / OneID</span>
+                <Upload className="w-3 h-3 text-sky-500" />
+                <span>Yuklash</span>
               </button>
-            ) : (
+            )}
+
+            {/* Tungi / Kunduzgi Rejim Tugmasi */}
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full transition-all cursor-pointer hover:scale-105 border bg-slate-200/60 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border-slate-300 dark:border-white/15 text-slate-700 dark:text-amber-400 shadow-sm"
+              title={isDark ? "Kunduzgi rejim (Light Mode)" : "Tungi rejim (Dark Mode)"}
+            >
+              {isDark ? (
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 text-indigo-600" />
+              )}
+            </button>
+
+            {/* User Profile / Kirish */}
+            {isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className={`flex items-center gap-2.5 p-1.5 pr-3 rounded-2xl bg-slate-900 border transition-all text-left cursor-pointer ${
-                    isIndividual 
-                      ? 'border-sky-500/40 hover:border-sky-400' 
-                      : 'border-emerald-500/40 hover:border-emerald-400'
-                  }`}
+                  className="flex items-center gap-1.5 py-1 pl-2 pr-1.5 rounded-full bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-xs text-slate-800 dark:text-white transition-all cursor-pointer"
                 >
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
-                    isIndividual 
-                      ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' 
-                      : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${
+                    isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
                   }`}>
-                    {user?.full_name ? user.full_name.charAt(0).toUpperCase() : (isIndividual ? 'J' : 'Y')}
+                    {user?.full_name?.charAt(0) || 'U'}
                   </div>
-                  <div className="hidden sm:block">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-white leading-tight">
-                        {user?.full_name?.split(' ')[0]}
-                      </span>
-                      <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold uppercase ${
-                        isIndividual 
-                          ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30' 
-                          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                      }`}>
-                        {isIndividual ? 'JISMONIY' : 'YURIDIK'}
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 block truncate max-w-[120px] font-mono">
-                      {isIndividual ? `JShShIR: ${user?.jshshir || '301019...'}` : `STIR: ${user?.tin || '305123...'}`}
-                    </span>
-                  </div>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <span className="max-w-[70px] truncate font-medium">
+                    {user?.full_name?.split(' ')[0]}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
                 </button>
 
-                {/* Dropdown Menu */}
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="p-2.5 border-b border-slate-800 mb-2">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-bold text-white">{user?.full_name}</span>
-                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                          isIndividual ? 'bg-sky-500/20 text-sky-400' : 'bg-emerald-500/20 text-emerald-400'
-                        }`}>
-                          {isIndividual ? 'FUQARO' : 'KORPORATIV'}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
-
-                      <div className="mt-2.5 p-2 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                        {isIndividual ? (
-                          <div className="flex items-center justify-between text-[11px]">
-                            <span className="text-slate-400">JShShIR:</span>
-                            <span className="text-sky-300 font-mono font-bold">{user?.jshshir || '30101901234567'}</span>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400">STIR (INN):</span>
-                              <span className="text-emerald-300 font-mono font-bold">{user?.tin || '305123456'}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400">Tashkilot:</span>
-                              <span className="text-slate-200 font-semibold truncate max-w-[120px]">{user?.org_name || 'MCHJ'}</span>
-                            </div>
-                          </>
-                        )}
-                        <div className="flex items-center justify-between text-[11px] pt-1 border-t border-slate-900">
-                          <span className="text-slate-400">Tahlil Limiti:</span>
-                          <span className="text-emerald-400 font-bold">
-                            {user?.quota?.remaining ?? (isIndividual ? 9 : 46)} ta qoldi
-                          </span>
-                        </div>
+                  <div className="absolute right-0 mt-2 w-64 liquid-glass-card rounded-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="p-3 border-b border-slate-200 dark:border-white/10 mb-1">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user?.full_name}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{user?.email || 'Foydalanuvchi'}</p>
+                      <div className="flex items-center gap-1.5 mt-2 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>OneID / E-IMZO tasdiqlangan</span>
                       </div>
                     </div>
 
-                    {/* Shaxs turini almashtirish imkoniyati */}
-                    <div className="mb-2 p-1.5 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                      <span className="text-slate-400 text-[11px]">Rejim:</span>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => switchEntityType('INDIVIDUAL')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            isIndividual ? 'bg-sky-500 text-white' : 'text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          Jismoniy
-                        </button>
-                        <button
-                          onClick={() => switchEntityType('LEGAL_ENTITY')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            !isIndividual ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          Yuridik
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-800">
-                      <button
-                        onClick={() => {
-                          logout();
-                          setShowDropdown(false);
-                        }}
-                        className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer"
-                      >
-                        <LogOut className="w-3.5 h-3.5" />
-                        <span>Chiqish (Logout)</span>
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowDropdown(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Chiqish</span>
+                    </button>
                   </div>
                 )}
               </div>
+            ) : (
+              <button
+                onClick={onOpenAuth}
+                className="flex items-center gap-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-300 dark:border-white/20 transition-all cursor-pointer hover:scale-105 shadow-sm"
+                title="Tizimga kirish yoki ro'yxatdan o'tish"
+              >
+                <LogIn className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+                <span>Kirish</span>
+              </button>
             )}
           </div>
         </div>

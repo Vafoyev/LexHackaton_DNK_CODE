@@ -1,0 +1,7 @@
+# MK-2022 192-modda: Smenali ishda ish vaqti rejimi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6262493](https://lex.uz/docs/-6257288#-6262493)
+**Bog'liq havolalar:** 185-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.01 Ish vaqtining muddati] Ikki va undan ortiq smenadagi ish smenali ish deb hisoblanadi. Smenali ish ishlab chiqarish jarayonining (ishning) davomiyligi har kungi ishning belgilangan davomiyligidan oshadigan hollarda, shuningdek asbob-uskunalardan yanada samarali foydalanish, ishlab chiqarish (ishlar, xizmatlar) hajmini oshirish maqsadida joriy etiladi. mazkur Kodeksning 185-moddasi . Smenali ishda ish vaqti rejimi smenalarga boʻlinib ishlash jadvali bilan belgilanadi. Xodimlar smenalar boʻyicha bir maromda navbat almashadi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.26.00 Dam olish vaqti; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.27.00 Ishdagi tanaffuslar] Xodimni surunkasiga ikki smena davomida ishga jalb etish taqiqlanadi. Smenalar orasidagi har kungi dam olishning eng kam davomiyligi (bitta smena oxiridan to keyingi smena boshlanishiga qadar) dam olish va ovqatlanish uchun tanaffus vaqti bilan birga kamida oʻn ikki soatni tashkil etishi kerak.

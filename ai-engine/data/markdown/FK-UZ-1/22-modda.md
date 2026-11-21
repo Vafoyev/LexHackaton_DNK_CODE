@@ -1,0 +1,7 @@
+# FK-UZ-1 22-modda: Fuqaroning muomala layoqati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-151077](https://lex.uz/docs/-111189#-151077)
+**Bog'liq havolalar:** 17-modda, 42-modda, 39-modda, 15-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Fuqaroning oʻz harakatlari bilan fuqarolik huquqlariga ega boʻlish va ularni amalga oshirish, oʻzi uchun fuqarolik burchlarini vujudga keltirish va ularni bajarish layoqati (muomala layoqati) u voyaga yetgach, yaʼni oʻn sakkiz yoshga toʻlgach toʻla hajmda vujudga keladi. Voyaga yetgunga qadar qonuniy asosda nikohdan oʻtgan fuqaro nikohdan oʻtgan vaqtdan eʼtiboran toʻla hajmda muomala layoqatiga ega boʻladi. Nikoh tuzish natijasida ega boʻlingan muomala layoqati oʻn sakkiz yoshga toʻlmasdan turib nikoh bekor qilingan taqdirda ham toʻla saqlanib qoladi. Nikoh haqiqiy emas deb topilganida sud voyaga yetmagan er (xotin) sud belgilagan paytdan boshlab toʻla muomala layoqatini yoʻqotganligi haqida qaror qabul qilishi mumkin. mazkur Kodeksning 16, 17-moddalari , Oʻzbekiston Respublikasi Fuqarolik protsessual kodeksi 42-moddasi , Oʻzbekiston Respublikasining Uy-joy kodeksining 39-moddasi , Oʻzbekiston Respublikasining Oila kodeksining 15-moddasi ikkinchi qismi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.02.00.00 Fuqarolar (jismoniy shaxslar) / 03.02.05.00 Fuqaroni muomalaga layoqatsiz deb tan olish. Muomala layoqatini cheklash]

@@ -1,0 +1,7 @@
+# MK-2022 143-modda: Xodimning sogʻligʻi holatiga koʻra boshqa ishga doimiy oʻtkazish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6260982](https://lex.uz/docs/-6257288#-6260982)
+**Bog'liq havolalar:** 173-modda, 100-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.21.00 Boshqa ishga oʻtkazish] Ish beruvchi boʻsh (vakant) ish oʻrni mavjud boʻlgan taqdirda, sogʻligʻining holatiga koʻra, tibbiy xulosaga muvofiq yengilroq yoki noqulay ishlab chiqarish omillarining taʼsirini istisno etadigan, sogʻligʻining holati boʻyicha qarshi koʻrsatma boʻlmagan ishga doimiy oʻtkazishga muhtoj boʻlgan xodimni uning roziligi bilan shunday ishga oʻtkazishi shart. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.23.00 Ishdan boʻshatish nafaqasi] Xodim ushbu moddaning birinchi qismida nazarda tutilgan boshqa ishga oʻtkazilishni rad etgan taqdirda, shuningdek agar ish beruvchida xodim sogʻligʻi holati boʻyicha qarshi koʻrsatma boʻlmagan boshqa ish boʻlmasa, xodim bilan tuzilgan mehnat shartnomasi xodim sogʻligʻi holati boʻyicha qarshi koʻrsatma boʻlmagan boshqa ishga oʻtkazilishni rad etganligi yoxud ish beruvchida tegishli ish boʻlmaganligi munosabati bilan xodimga ushbu Kodeksning 173-moddasida nazarda tutilgan ishdan boʻshatish nafaqasi toʻlangan hamda va 100-moddasida nazarda tutilgan kafolatlar taqdim etilgan holda bekor qilinishi mumkin.

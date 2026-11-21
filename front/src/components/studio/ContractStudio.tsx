@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnalysisResult, ContractClause } from '../../types/contract';
-import { StudioHeader } from './StudioHeader';
 import { DocumentPaper } from './DocumentPaper';
 import { ClauseInspector } from './ClauseInspector';
 import { ThreeDModal } from './ThreeDModal';
 import { SideBySideDiffViewer } from '../diff/SideBySideDiffViewer';
 import { LiveVoiceAssistant } from '../voice/LiveVoiceAssistant';
+import { Sparkles, Check } from 'lucide-react';
 
 interface ContractStudioProps {
   analysis: AnalysisResult;
   onReset: () => void;
+  initialView?: 'reader' | 'diff';
+  onAppliedCountChange?: (count: number) => void;
 }
 
 export const ContractStudio: React.FC<ContractStudioProps> = ({
   analysis,
   onReset,
+  initialView = 'reader',
+  onAppliedCountChange,
 }) => {
-  const [activeView, setActiveView] = useState<'reader' | 'diff'>('reader');
+  const [activeView, setActiveView] = useState<'reader' | 'diff'>(initialView);
+
+  useEffect(() => {
+    if (initialView) {
+      setActiveView(initialView);
+    }
+  }, [initialView]);
+
   const [selectedClauseId, setSelectedClauseId] = useState<string | null>(() => {
     // Dastlab birinchi qizil yoki sariq xavfli bandni avtomatik tanlash
     const firstRisky = analysis.clauses.find((c) => c.risk_level === 'RED' || c.risk_level === 'YELLOW');
@@ -29,7 +40,7 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
 
   const selectedClause = analysis.clauses.find((c) => c.id === selectedClauseId) || null;
 
-  // 1-Click Fix funksiyasi
+  // 1-Click Fix (Qabul qilish) funksiyasi
   const handleApplyFix = (clauseId: string, fixedText: string) => {
     setAppliedFixes((prev) => ({
       ...prev,
@@ -37,94 +48,59 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
     }));
   };
 
-  // Barcha xavflarni bir vaqtda avto-tuzatish (Auto-fix all)
-  const handleAutoFixAll = () => {
-    const newFixes: Record<string, string> = { ...appliedFixes };
-    analysis.findings.forEach((f) => {
-      const matchClause = analysis.clauses.find(
-        (c) => c.clause_number === f.clause_number || c.id === f.clause_id
-      );
-      if (matchClause && f.suggested_redline) {
-        newFixes[matchClause.id] = f.suggested_redline;
-      }
+  // Rad etish / Bekor qilish funksiyasi
+  const handleRejectFix = (clauseId: string) => {
+    setAppliedFixes((prev) => {
+      const next = { ...prev };
+      delete next[clauseId];
+      return next;
     });
-    setAppliedFixes(newFixes);
   };
 
-  const riskyCount = analysis.clauses.filter(
-    (c) => c.risk_level === 'RED' || c.risk_level === 'YELLOW'
-  ).length;
   const fixedCount = Object.keys(appliedFixes).length;
 
+  useEffect(() => {
+    if (onAppliedCountChange) {
+      onAppliedCountChange(fixedCount);
+    }
+  }, [fixedCount, onAppliedCountChange]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
-      {/* Studio Header */}
-      <StudioHeader
-        analysis={analysis}
-        activeView={activeView}
-        setActiveView={setActiveView}
-        onOpen3D={() => setIs3DModalOpen(true)}
-        onReset={onReset}
-        appliedCount={fixedCount}
-      />
-
+    <div className="flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100">
       {/* Asosiy Ish Maydoni (Workspace) */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Avto-tuzatish Taklif Banneri (agar hali tuzatilmagan xavflar bo'lsa) */}
-        {fixedCount < riskyCount && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-sky-950/40 to-slate-900 border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shrink-0">
-                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white">
-                  Shartnomada {riskyCount} ta noqonuniy va asimmetrik band aniqlandi ({fixedCount} tasi tuzatildi)
-                </p>
-                <p className="text-[11px] text-slate-400">
-                  Lex.uz milliy qonunchilik bazasi va O‘zR Fuqarolik Kodeksi talablari asosida barcha bandlarni bir bosishda avto-tuzatishingiz mumkin.
-                </p>
-              </div>
-            </div>
-
-            <button
-              onClick={handleAutoFixAll}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105 shrink-0"
-            >
-              <span>Barcha Xavflarni Avto-Tuzatish</span>
-            </button>
-          </div>
-        )}
-
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* 1. READER VIEW (Shartnoma Varaqi + AI Inspector Split) */}
         {activeView === 'reader' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Chap tomon (65%): Shartnoma Varaqi */}
+            {/* Chap tomon (65%): Shartnoma Varaqi (Qizil/Yashil boy diff) */}
             <div className="lg:col-span-8">
               <DocumentPaper
                 analysis={analysis}
                 selectedClauseId={selectedClauseId}
                 onSelectClause={(id) => setSelectedClauseId(id)}
                 appliedFixes={appliedFixes}
+                onApplyFix={handleApplyFix}
+                onRejectFix={handleRejectFix}
               />
             </div>
 
-            {/* O'ng tomon (35%): AI Yurist Inspektori (Sticky) */}
+            {/* O'ng tomon (35%): AI Yurist Inspektori (Sticky Liquid Glass) */}
             <div className="lg:col-span-4 sticky top-20 space-y-4">
               <ClauseInspector
                 analysis={analysis}
                 selectedClause={selectedClause}
                 onSelectClause={(id) => setSelectedClauseId(id)}
                 onApplyFix={handleApplyFix}
+                onRejectFix={handleRejectFix}
                 appliedFixes={appliedFixes}
               />
 
               {/* Ovozli Tahlil Tugmasi */}
               <button
                 onClick={() => setShowVoiceBar(!showVoiceBar)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-xs font-bold text-slate-300 hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-2xl liquid-glass hover:liquid-glass-accent text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-300 dark:border-white/10"
               >
-                <span>🎙️ {showVoiceBar ? "Ovozli Yuristni Yopish" : "AI Live Ovozli Yuristni Ochish"}</span>
+                <span>🎙️ {showVoiceBar ? "Ovozli Yordamchini Yopish" : "Live Sinusoidal Ovozli Yordamchi"}</span>
               </button>
 
               {showVoiceBar && (

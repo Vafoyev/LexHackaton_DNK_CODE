@@ -1,0 +1,7 @@
+# MK-2022 309-modda: Xizmat tekshiruvini oʻtkazish vaqtida xodimni ishdan chetlashtirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6264894](https://lex.uz/docs/-6257288#-6264894)
+**Bog'liq havolalar:** 308-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.22.00 Mehnat shartnomasi (kontrakti)ning bekor qilinishi / 05.02.22.04 Ishdan chetlashtirish] Agar xodimning ish joyida hozir boʻlishi xizmat tekshiruviga xalaqit berishi mumkin deb taxmin qilish uchun asosli sabablar mavjud boʻlsa, ish beruvchi xodimni ishdan chetlashtirishga haqli. Xodimni ishdan chetlashtirish ish beruvchining buyrugʻi bilan rasmiylashtiriladi va buyruq oʻziga nisbatan xizmat tekshiruvi oʻtkazilayotgan xodimning eʼtiboriga imzo qoʻydirib yetkaziladi. Agar xodim uni ishdan chetlashtirish toʻgʻrisidagi buyruq bilan tanishishni yoki bunday buyruqqa imzo qoʻyishni rad etsa, komissiya aʼzolari tegishli dalolatnoma tuzadi. Ish beruvchi xodimning talabiga koʻra unga ishdan chetlashtirish haqidagi buyruqning tasdiqlangan koʻchirma nusxasini u murojaat etgan kunidan eʼtiboran uch kundan kechiktirmay berishi shart. Xodimni ishdan chetlashtirish muddati ushbu Kodeksning 308-moddasida belgilangan xizmat tekshiruvini oʻtkazish muddatidan oshib ketmasligi kerak. Oʻziga nisbatan xizmat tekshiruvi oʻtkazilayotganligi sababli ishdan chetlashtirilgan xodimga ishdan chetlashtirishning butun davri uchun oʻrtacha ish haqi saqlanib qoladi.

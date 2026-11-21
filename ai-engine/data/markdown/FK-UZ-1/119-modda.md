@@ -1,0 +1,7 @@
+# FK-UZ-1 119-modda: Muomalaga layoqatsiz deb topilgan fuqaro tomonidan tuzilgan bitimning haqiqiy emasligi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-153487](https://lex.uz/docs/-111189#-153487)
+**Bog'liq havolalar:** 117-modda, 128-modda, 996-modda, 34-modda, 42-modda, 66-modda, 316-modda, 16-modda, 37-modda, 43-modda, 173-modda, 3-modda, 32-modda
+
+## Norma matni:
+Ruhiy kasalligi yoki aqli zaifligi sababli muomalaga layoqatsiz deb topilgan fuqaro tomonidan tuzilgan bitim oʻz-oʻzidan haqiqiy emas. Bunday bitimga nisbatan ushbu Kodeks 117-moddasining ikkinchi qismida nazarda tutilgan qoidalar qoʻllaniladi. Oʻzbekiston Respublikasi Konstitutsiyasining 128-moddasi beshinchi qismi , mazkur Kodeksning 30 , 32 , 119 , 996-moddalari , Oʻzbekiston Respublikasining Fuqarolik protsessual kodeksi 34-moddasi birinchi qismi , 42-moddasi beshinchi qismi , 66-moddasi birinchi qismi , 310 — 316-moddalari , Oʻzbekiston Respublikasining Oila kodeksi 16-moddasi toʻrtinchi xatboshisi , 37-moddasi ikkinchi qismi , 43-moddasi birinchi , uchinchi xatboshilari , 173-moddasi , Oʻzbekiston Respublikasining 02.01.2014-yildagi “Vasiylik va homiylik toʻgʻrisida”gi Qonunining 3-moddasi , 32-moddasi birinchi , oʻn ikkinchi qismlari . Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy sudi Plenumining 12.12.2008-yildagi “Fuqarolik ishlari boʻyicha ekspertiza tayinlash, oʻtkazish va ekspert xulosasiga baho berishda sud amaliyotida kelib chiqadigan ayrim masalalar haqida”gi 24-son qarori 6-bandining ikkinchi xatboshisi .

@@ -1,0 +1,7 @@
+# MK-2022 258-modda: Qisqartirilgan va toʻliqsiz ish vaqtida mehnatga haq toʻlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263873](https://lex.uz/docs/-6257288#-6263873)
+**Bog'liq havolalar:** 415-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.02 Ish vaqtining qisqartirilgan muddati; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.03.00.00 Mehnatga haq toʻlash / 05.03.01.00 Umumiy masalalar] Qisqartirilgan ish vaqti sharoitlarida band boʻlgan xodimlarning ish haqi normal ish vaqti uchun belgilangan toʻliq hajmda toʻlanadi. Ushbu moddaning birinchi qismida nazarda tutilgan qoida mazkur Kodeks 415-moddasining ikkinchi qismida nazarda tutilgan, oʻquv yili davomida oʻqishdan boʻsh vaqtida ishlaydigan oʻn sakkiz yoshga toʻlmagan shaxslarning mehnatiga haq toʻlash ishlab berilgan vaqtga mutanosib ravishda yoki ishlab chiqargan mahsulotiga qarab amalga oshiriladigan hollarga nisbatan tatbiq etilmaydi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.03 Toʻliqsiz ish vaqti] Toʻliqsiz ish vaqtida (toʻliqsiz ish kuni, toʻliqsiz ish haftasi, toʻliqsiz ish kunining va toʻliqsiz ish haftasining qoʻshilishi) ishlaydigan xodimlarning mehnatiga haq toʻlash ishlab berilgan vaqtiga mutanosib ravishda yoki haqiqatda ishlab chiqargan mahsulotiga qarab amalga oshiriladi.

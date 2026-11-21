@@ -1,0 +1,7 @@
+# MK-2022 219-modda: Har yilgi qoʻshimcha taʼtillar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263033](https://lex.uz/docs/-6257288#-6263033)
+**Bog'liq havolalar:** 481-modda, 483-modda, 220-modda, 401-modda, 24-modda, 50-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.03 Har yilgi qoʻshimcha taʼtillar] Har yilgi qoʻshimcha taʼtillar: ushbu Kodeksning 481-moddasiga muvofiq mehnat sharoitlari noqulay ishlarda band boʻlgan xodimlarga; ushbu Kodeksning 483-moddasiga muvofiq noqulay tabiiy-iqlim sharoitlarida ish bajarayotgan xodimlarga; ushbu Kodeksning 220-moddasiga muvofiq bitta tashkilotda yoki tarmoqda koʻp yillik ish stajiga ega boʻlgan xodimlarga; qonunchilikda, jamoa kelishuvlarida, shuningdek jamoa shartnomasida, ichki hujjatlarda, mehnat shartnomasida nazarda tutilgan boshqa hollarda beriladi. mazkur Kodeksning 401-moddasi , Oʻzbekiston Respublikasi “Qutqaruv xizmati va qutqaruvchi maqomi toʻgʻrisida”gi Qonuni 24-moddasining yettinchi qismi , Oʻzbekiston Respublikasi “Prokuratura toʻgʻrisida”gi Qonuni 50-moddasining uchinchi qismi , Oʻzbekiston Respublikasi Prezidentining 2002-yil 30-maydagi PF-3079-sonli “Yadro poligonlarida va boshqa yadroviy-radiatsiya obyektlarida harbiy xizmatni oʻtagan pensiya yoshidagi shaxslarni ijtimoiy qoʻllab-quvvatlash toʻgʻrisida”gi Farmoni 2-bandining birinchi , uchinchi xatboshilari .

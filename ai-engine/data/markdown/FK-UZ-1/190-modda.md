@@ -1,0 +1,7 @@
+# FK-UZ-1 190-modda: Moddiy madaniy meros obyektlarini xoʻjasizlarcha saqlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-3694405](https://lex.uz/docs/-111189#-3694405)
+**Bog'liq havolalar:** 190-modda, 23-modda, 24-modda
+
+## Norma matni:
+Agar mulkdor oʻziga qarashli moddiy madaniy meros obyektiga xoʻjasizlarcha munosabatda boʻlsa va uning but saqlanishini taʼminlamasa, madaniy meros obyektlarini muhofaza qilish va ulardan foydalanish sohasidagi davlat boshqaruvini amalga oshiruvchi tegishli organlar mulkdorni moddiy madaniy meros obyektiga xoʻjasizlarcha munosabatda boʻlishni toʻxtatish haqida ogohlantiradi. Agar mulkdor ushbu talabni bajarmasa, tegishli organlarning daʼvosiga koʻra sud moddiy madaniy meros obyektini olib qoʻyish haqida qaror chiqarishi mumkin va ushbu moddiy madaniy meros obyekti davlat mulkiga oʻtadi. Olib qoʻyilgan moddiy madaniy meros obyektining qiymati mulkdorga kelishuvda belgilangan miqdorda, nizo chiqqan taqdirda esa sud tomonidan belgilangan miqdorda toʻlanadi. Kechiktirib boʻlmaydigan hollarda moddiy madaniy meros obyektini olib qoʻyish haqidagi daʼvo oldindan ogohlantirmasdan ham qoʻzgʻatilishi mumkin. (190-modda Oʻzbekiston Respublikasining 2018-yil 18-apreldagi OʻRQ-476-sonli Qonuni tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 19.04.2018-y., 03/18/476/1087-son) Oʻzbekiston Respublikasining “Madaniy meros obyektlarini muhofaza qilish va ulardan foydalanish toʻgʻrisida”gi Qonuni II boʻlimi , 23-moddasining ikkinchi qismi , 24-moddasi .

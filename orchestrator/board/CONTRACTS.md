@@ -422,3 +422,30 @@ Go backend to'liq ishga tushguncha Frontend, Mobile va Admin jamoalari bloklanma
 - **Web**: Three.js WebGL fazoviy sfera (`Contract3DVisualizer.tsx` va `Mini3DVisualizer.tsx`). Markaziy yadro + har bir band uchun xavf rangidagi 3D orbital tugunlar.
 - **Mobile**: CustomPainter 3D-styled concentric arc (`GlanceableRiskGauge`) + DNA barcode heatmap strip + real-time animated waveform (`MobileVoiceAssistantBar`).
 
+### 7.4. Real-Time Streaming: Live Voice WebSockets (`/api/v1/ws/voice`)
+- **Protokol**: RFC 6455 WebSocket (`ws://localhost:8080/api/v1/ws/voice`)
+- **Mijozdan keluvchi xabar**:
+```json
+{
+  "query": "Shartnomada qanday jiddiy xatarlar bor?",
+  "analysis_id": "01934f2a-7b3c-7000-8000-000000000010"
+}
+```
+- **Serverdan chiquvchi oqim (Streaming Events)**:
+  1. `voice_connected`:
+     `{"event": "voice_connected", "session_id": "...", "text": "LexGuard AI Live Voice Server tayyor."}`
+  2. `voice_chunk` (gapma-gap real-time audio/waveform animatsiyasi uchun):
+     `{"event": "voice_chunk", "chunk_index": 0, "sentence": "Shartnomada 2 ta jiddiy xavf aniqlandi.", "is_final": false}`
+  3. `voice_end`:
+     `{"event": "voice_end", "answer": "...", "cited_articles": ["FK-UZ 707-modda"], "actionable_advice": "...", "is_final": true}`
+
+### 7.5. Python AI Engine & Active Self-Correction Loop
+- **AI Engine Manzili**: `http://localhost:8000` (FastAPI / Zero-Dep Server)
+- **Moddalar korpusi**: 2,058 ta qonunlar zanjiri (Knowledge Graph)
+- **Active Self-Correction (`POST /api/v1/self-correct`)**:
+  Agar Go Verifier da modda Legal Knowledge Graph ga mos kelmasa yoki bekor qilingan bo'lsa, AI Engine avtomatik muqobil moddani topib, qayta tekshiruvdan o'tkazadi va natijani `VERIFIED` holatiga keltiradi.
+- **Asl matn (Qizil) va Tavsiya matn (Yashil)**:
+  - `problematic_quote` / `original_quote`: Qizil rangda asl noqonuniy band matni.
+  - `suggested_redline` / `suggested_revision`: Yashil rangda yuridik jihatdan to'g'ri taklif etilgan redline matni.
+
+

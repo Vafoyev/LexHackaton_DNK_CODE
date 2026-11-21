@@ -1,0 +1,7 @@
+# FK-UZ-2 549-modda: Taraflar oʻzgarganda mol-mulk ijarasi shartnomasining oʻz kuchida qolishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-184454](https://lex.uz/docs/-180552#-184454)
+**Bog'liq havolalar:** 549-modda
+
+## Norma matni:
+Ijaraga topshirilgan mol-mulkka nisbatan mulk (operativ boshqarish, meros qilib qoldiriladigan umrbod egalik qilish) huquqining boshqa shaxsga oʻtishi mulk ijarasi shartnomasining oʻzgartirilishi yoxud bekor qilinishi uchun asos boʻlmaydi. (549-moddaning birinchi qismi Oʻzbekiston Respublikasining 2025-yil 7-fevraldagi OʻRQ-1025-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 07.02.2025-y., 03/25/1025/0116-son. Kuchga kirish sanasi — 2025-yil 8-may) Koʻchmas mulkni ijaraga olgan fuqaro vafot etgan taqdirda, agar qonun yoki shartnomada boshqacha tartib belgilanmagan boʻlsa, ushbu mol-mulkni ijaraga topshirish shartnomasi boʻyicha uning huquq va majburiyatlari vorisga oʻtadi. Shartnomaning tuzilishi ijaraga oluvchining shaxsiy fazilatlari bilan bogʻliq boʻlgan hollardan tashqari ijaraga beruvchi bunday vorisning shartnoma amal qilishining qolgan muddatida shartnomaga qoʻshilishini rad etishga haqli emas. Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy xoʻjalik sudi Plenumining 2011-yil 1-dekabrdagi 234-son “Mulk ijarasi shartnomasiga oid fuqarolik qonun hujjatlari normalarini iqtisodiy sudlar tomonidan qoʻllashning ayrim masalalari toʻgʻrisida”gi Qarorining 8-bandi .

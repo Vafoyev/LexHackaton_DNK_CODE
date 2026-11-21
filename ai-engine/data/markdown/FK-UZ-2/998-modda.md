@@ -1,0 +1,7 @@
+# FK-UZ-2 998-modda: Oʻz harakatlarining ahamiyatini tushuna olmaydigan fuqaro tomonidan yetkazilgan zarar uchun javobgarlik
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196655](https://lex.uz/docs/-180552#-196655)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Oʻz harakatlarining ahamiyatini tushuna olmaydigan yoki ularni idora qila olmaydigan holatda zarar yetkazgan muomalaga layoqatli fuqaro, shuningdek oʻn toʻrt yoshdan oʻn sakkiz yoshgacha boʻlgan voyaga yetmagan keltirgan zarari uchun javobgar boʻlmaydi. Agar jabrlanuvchining hayoti yoki sogʻligʻiga zarar yetkazilgan boʻlsa, sud jabrlanuvchining va zarar yetkazuvchining mulkiy ahvolini, shuningdek boshqa holatlarni inobatga olib, zararni toʻlash majburiyatini toʻligʻicha yoki qisman zarar yetkazuvchiga yuklashi mumkin. Zarar yetkazuvchi, agar spirtli ichimliklar, giyohvandlik vositalari isteʼmol qilish tufayli yoki boshqa usulda oʻzini oʻzi shu holatga keltirgan boʻlsa, javobgarlikdan ozod qilinmaydi. Agar zarar ruhiy holati buzilgani (ruhiy kasallik yoki aqli zaiflik) oqibatida oʻz harakatlari ahamiyatini tushuna olmagan yoki ularni idora qila olmagan shaxs tomonidan yetkazilgan boʻlsa, zararni toʻlash majburiyati sud tomonidan bu shaxs bilan birga yashovchi, zarar yetkazuvchining bunday holati haqida bilgan, lekin uni muomalaga layoqatsiz deb topish va uning ustidan vasiylik oʻrnatish toʻgʻrisida masala qoʻymagan eri (xotini), ota-onasi, voyaga yetgan farzandlariga yuklanishi mumkin.

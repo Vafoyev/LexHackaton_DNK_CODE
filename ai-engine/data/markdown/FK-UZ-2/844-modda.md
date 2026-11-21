@@ -1,0 +1,7 @@
+# FK-UZ-2 844-modda: Vositachining topshiriqni bajarishdan bosh tortishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195426](https://lex.uz/docs/-180552#-195426)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Agar vositachilik shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, vositachi shartnomani bajarishdan bosh tortishga haqli emas, shartnoma amal qilish muddati koʻrsatilmasdan tuzilgan hollar bundan mustasno. Bunday holda vositachi komitentga shartnomani bekor qilishi haqida, agar xabar qilishning uzoqroq muddati shartnomada nazarda tutilgan boʻlmasa, kamida oʻttiz kun oldin xabar berishi shart. Vositachi komitentning mol-mulki saqlanishini taʼminlash uchun zarur chora-tadbirlarni koʻrishi shart. Vositachi topshiriqni bajarishdan bosh tortayotganligi haqida xabardor qilingan komitent vositachining topshiriqni bajarishdan bosh tortayotganligi haqida bildirishnoma olgan kundan eʼtiboran, agar shartnomada boshqa muddat belgilangan boʻlmasa, oʻn besh kun ichida vositachi ixtiyoridagi oʻz mol-mulkini tasarruf etishi shart. Agar komissioner ushbu majburiyatni bajarmasa, vositachi yo mol-mulkni saqlab qoʻyishga topshirishga yoki uni komitent uchun iloji boricha foydali bahoda sotishga haqli. Agar vositachilik shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, topshiriqni bajarishdan bosh tortgan vositachi shartnoma bekor qilinguncha oʻzi tuzgan bitimlar uchun vositachilik haqi olishga, shuningdek shu paytga qadar qilgan xarajatlarining qoplanishiga boʻlgan huquqini saqlab qoladi.

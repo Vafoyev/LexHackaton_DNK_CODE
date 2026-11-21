@@ -1,0 +1,7 @@
+# FK-UZ-2 1021-modda: Umumiy qoidalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196921](https://lex.uz/docs/-180552#-196921)
+**Bog'liq havolalar:** 1021-modda
+
+## Norma matni:
+Maʼnaviy zarar uni yetkazuvchining aybi boʻlgan taqdirda, zarar yetkazuvchi tomonidan qoplanadi, ushbu moddaning ikkinchi qismida nazarda tutilgan hollar bundan mustasno. Maʼnaviy zarar uni yetkazuvchining aybidan qatʼi nazar, quyidagi hollarda qoplanadi, agar: zarar fuqaroning hayoti va sogʻligʻiga oshiqcha xavf manbai tomonidan yetkazilgan boʻlsa; zarar fuqaroga uni qonunga xilof tarzda hukm qilish, qonunga xilof tarzda jinoiy javobgarlikka tortish, ehtiyot chorasi sifatida qamoqqa olishni yoki munosib xulq-atvorda boʻlish haqida tilxat olishni qonunga xilof tarzda qoʻllanish, qonunga xilof tarzda maʼmuriy jazo qoʻllanish va qonunga xilof tarzda ushlab turish, shuningdek har qanday qiynoqqa solish va boshqa shafqatsiz, gʻayriinsoniy yoki qadr-qimmatni kamsituvchi muomala hamda jazo turlarini qoʻllash natijasida yetkazilgan boʻlsa; (1021-modda ikkinchi qismining uchinchi xatboshisi Oʻzbekiston Respublikasining 2022-yil 29-martdagi OʻRQ-761-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 30.03.2022-y., 03/22/761/0250-son) zarar or-nomus, qadr-qimmat va ishchanlik obroʻ-eʼtiborini haqoratlovchi maʼlumotlarni tarqatish tufayli yetkazilgan boʻlsa; qonunda nazarda tutilgan boshqa hollarda.

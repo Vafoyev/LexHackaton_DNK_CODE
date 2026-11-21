@@ -252,4 +252,55 @@ func TestArbiter_AntiHallucinationVectors(t *testing.T) {
 			t.Errorf("Vector 9 false bo'lishi kerak edi")
 		}
 	})
+
+	// Active Self-Correction Verifier Loop Test (Talab 2)
+	t.Run("ActiveSelfCorrection_Loop", func(t *testing.T) {
+		mockCorrector := &mockSelfCorrector{
+			resp: &ai.SelfCorrectionResponse{
+				Resolved:         true,
+				CorrectedArticle: "FK-UZ 707-modda",
+				Explanation:      "AI Self-Correction orqali FK 707 aniqlandi",
+				SuggestedRedline: "Amaldagi xarajatlar qoplanishi shart",
+			},
+		}
+		corrArbiter := verification.NewArbiter(repo, mockCorrector)
+
+		clauseNum := "9.1"
+		clauseText := "Buyurtmachi shartnomani xohlagan paytda bekor qiladi."
+
+		// Model xato qonun ko'rsatmoqda (masalan mavjud bo'lmagan FK 9999-modda)
+		llmDraft := &ai.DraftSuggestion{
+			RuleCode:          "SVC_UNILATERAL_TERMINATION",
+			RiskCategory:      "LEGAL",
+			Severity:          "RED",
+			OriginalQuote:     "xohlagan paytda bekor qiladi",
+			SuggestedRevision: "Tahrir",
+			CitedLawCode:      "FK-UZ",
+			CitedArticle:      "9999-modda", // Non-existent!
+			OfficialURL:       "https://lex.uz/docs/fake",
+			ConfidenceScore:   0.8,
+		}
+
+		verified := corrArbiter.Arbitrate(ctx, clauseNum, clauseText, contractDate, 0.95, nil, llmDraft)
+		if len(verified) == 0 {
+			t.Fatalf("Verified findings bo'sh qaytdi")
+		}
+
+		f := verified[0]
+		if f.VerificationStatus != verification.StatusVerified {
+			t.Errorf("Self-Correction muvaffaqiyatli bo'lgach VERIFIED bo'lishi kerak edi, lekin: %s", f.VerificationStatus)
+		}
+		if f.LegalSource == nil || f.LegalSource.Article != "707-modda" {
+			t.Errorf("Modda to'g'rilanmadi, kutilgan 707-modda, olindi: %+v", f.LegalSource)
+		}
+	})
+}
+
+type mockSelfCorrector struct {
+	resp *ai.SelfCorrectionResponse
+	err  error
+}
+
+func (m *mockSelfCorrector) SelfCorrect(ctx context.Context, req ai.SelfCorrectionRequest) (*ai.SelfCorrectionResponse, error) {
+	return m.resp, m.err
 }

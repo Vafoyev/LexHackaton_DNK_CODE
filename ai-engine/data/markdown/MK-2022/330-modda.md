@@ -1,0 +1,7 @@
+# MK-2022 330-modda: Mehnatda mayib boʻlganlik yoki kasb kasalligi tufayli boquvchi vafot etganligi munosabati bilan bir yoʻla beriladigan nafaqaning miqdori
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6265178](https://lex.uz/docs/-6257288#-6265178)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.03.00 Kasbiy kasalliklar. Mehnat jarohatlari] Mehnatda mayib boʻlganlik yoki kasb kasalligi tufayli boquvchi vafot etganligi munosabati bilan bir yoʻla beriladigan nafaqaning miqdori jamoa shartnomasida, agar u tuzilmagan boʻlsa, ish beruvchi va kasaba uyushmasi qoʻmitasi oʻrtasidagi kelishuvga binoan belgilanadi. Boquvchi vafot etganligi munosabati bilan bir yoʻla beriladigan nafaqaning miqdori marhumning oʻrtacha yillik ish haqining olti baravaridan kam boʻlmasligi kerak. Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2005-yil 11-fevraldagi 60-sonli qarori bilan tasdiqlangan Xodimlarga ularning mehnat vazifalarini bajarish bilan bogʻliq holda jarohatlanishi, kasb kasalliklariga chalinishi yoki salomatlikning boshqa xil shikastlanishi tufayli yetkazilgan zararni toʻlash qoidalarining 29 va 30-bandlari va Oʻzbekiston Respublikasi Oliy sudi Plenumining 2003-yil 19-dekabrdagi 18-sonli “Mehnat vazifalarini bajarishi munosabati bilan xodimning hayoti va sogʻligʻiga yetkazilgan zararni qoplashga oid nizolar boʻyicha sud amaliyoti haqida”gi qarorining 12-bandi .

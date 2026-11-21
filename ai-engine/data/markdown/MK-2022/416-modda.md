@@ -1,0 +1,7 @@
+# MK-2022 416-modda: Oʻn sakkiz yoshgacha boʻlgan xodimlar uchun har kunlik ishning (smenaning) davomiyligi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266668](https://lex.uz/docs/-6257288#-6266668)
+**Bog'liq havolalar:** 416-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.01 Ish vaqtining muddati] Har kunlik ishning (smenaning) davomiyligi quyidagilardan oshishi mumkin emas: oʻn beshdan oʻn olti yoshgacha boʻlgan xodimlar uchun — olti kunlik ish haftasida — toʻrt soatdan, besh kunlik ish haftasida — besh soatdan, oʻn oltidan oʻn sakkiz yoshgacha boʻlgan xodimlar uchun esa olti kunlik ish haftasida — olti soatdan, besh kunlik ish haftasida — yetti soatu oʻttiz daqiqadan; oʻquv yili davomida ishni oʻqish bilan birga olib boruvchi umumiy oʻrta, oʻrta maxsus va professional taʼlim tashkilotlarining oʻn beshdan oʻn olti yoshgacha boʻlgan oʻquvchilari uchun — olti kunlik ish haftasida — ikki soatdan, besh kunlik ish haftasida — ikki soatu oʻttiz daqiqadan, oʻn oltidan oʻn sakkiz yoshgacha boʻlgan oʻquvchilari uchun esa olti kunlik ish haftasida — uch soatdan, besh kunlik ish haftasida — toʻrt soatdan. (416-moddaning uchinchi xatboshisi Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son)

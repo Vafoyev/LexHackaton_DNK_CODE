@@ -1,0 +1,7 @@
+# FK-UZ-2 453-modda: Tovarlar toʻliq yetkazib berilmagan, tovarlarning kamchiliklarini bartaraf etish yoki tovarlarni butlash toʻgʻrisidagi talablar bajarilmagan hollarda sotib oluvchining huquqlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183357](https://lex.uz/docs/-180552#-183357)
+**Bog'liq havolalar:** 456-modda
+
+## Norma matni:
+Agar mahsulot yetkazib beruvchi tovarlarni mahsulot yetkazib berish shartnomasida nazarda tutilgan miqdorda yetkazib bermagan boʻlsa yoxud sotib oluvchining (oluvchining) tegishli darajada sifatli boʻlmagan tovarlarni almashtirish yoki tovarlarni butlash toʻgʻrisidagi talablarini belgilangan muddatda bajarmasa, sotib oluvchi yetkazib berilmagan tovarlarni boshqa shaxslardan olib, ularni olish bilan bogʻliq barcha zarur va oqilona xarajatlarni mahsulot yetkazib beruvchi zimmasiga yuklash huquqiga ega. Mahsulot yetkazib beruvchi tovarlarni toʻliq yetkazib bermagan yoki sotib oluvchining tovarlarning kamchiliklarini bartaraf etish yoki tovarlarni butlash toʻgʻrisidagi talablarini bajarmagan hollarda sotib oluvchining boshqa shaxslardan tovarlar olishga qilgan xarajatlari ushbu Kodeks 456-moddasining birinchi qismida nazarda tutilgan qoidalarga muvofiq hisoblab chiqariladi. Sotib oluvchi (oluvchi) tovarlarning kamchiligi bartaraf etilguncha va ular butlanguncha yoki almashtirilguncha tegishli darajada sifatli boʻlmagan va but boʻlmagan tovarlar haqini toʻlashdan bosh tortish, bordi-yu, tovarlar haqi toʻlangan boʻlsa, –– toʻlangan summani qaytarishni talab qilish huquqiga ega.

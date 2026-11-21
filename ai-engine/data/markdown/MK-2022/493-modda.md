@@ -1,0 +1,7 @@
+# MK-2022 493-modda: Mavsumiy xodimlarning mehnat taʼtili
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6267760](https://lex.uz/docs/-6257288#-6267760)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.13.00 Mavsumiy ishlar; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.01 Har yilgi mehnat taʼtili] Mavsumiy xodimlar ishning har bir oyi uchun kamida ikki kalendar kun hisobidan haq toʻlanadigan mehnat taʼtili olish huquqiga ega. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.08 Foydalanilmagan taʼtillar uchun kompensatsiya toʻlash] Agar mavsumiy xodim toʻliq mavsum ishlagan boʻlsa, unga keyinchalik mehnat shartnomasini bekor qilgan holda haq toʻlanadigan mehnat taʼtili beriladi. Bu holda taʼtilning oxirgi kuni mehnat shartnomasi bekor qilingan kun deb hisoblanadi. Mehnat shartnomasi bekor qilinganda haq toʻlanadigan mehnat taʼtili oʻrniga mavsumiy xodimga uning xohishiga koʻra pulli kompensatsiya toʻlanadi. Agar mavsumiy xodim bilan tuzilgan mehnat shartnomasi mavsum tugagunga qadar muddatidan oldin bekor qilinsa, mehnat shartnomasini bekor qilish chogʻida unga foydalanilmagan mehnat taʼtili uchun ishlab berilgan vaqtga mutanosib ravishda kompensatsiya toʻlanadi.

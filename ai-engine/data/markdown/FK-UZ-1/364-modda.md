@@ -1,0 +1,7 @@
+# FK-UZ-1 364-modda: Shartnoma tuzish toʻgʻrisidagi asosiy qoidalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-155621](https://lex.uz/docs/-111189#-155621)
+**Bog'liq havolalar:** 364-modda, 366-modda, 10-modda
+
+## Norma matni:
+Agar taraflar oʻrtasida shartnomaning barcha muhim shartlari yuzasidan shunday hollarda talab qilinadigan shaklda kelishuvga erishilgan boʻlsa, shartnoma tuzilgan hisoblanadi. Shartnomaning narsasi toʻgʻrisidagi shartlar, qonunchilikda bunday turdagi shartnomalar uchun muhim yoki zarur deb hisoblangan shartlar, shuningdek taraflardan birining arizasiga koʻra kelishib olinishi zarur boʻlgan hamma shartlar muhim shartlar hisoblanadi. (364-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Shartnoma taraflardan birining oferta (shartnoma tuzish haqida taklif) yoʻllashi va ikkinchi taraf uni akseptlashi (taklifni qabul qilishi) yoʻli bilan tuziladi. sud amaliyoti. mazkur Kodeksning 6 , 353 — 363 , 366-moddalari , Oʻzbekiston Respublikasining “Xoʻjalik yurituvchi subyektlar faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunining 10-moddasi . Qoʻshimcha maʼlumot uchun Oliy xoʻjalik sudi Plenumining 04.03.2002-yildagi “Oʻzbekiston Respublikasining “Xoʻjalik yurituvchi subyektlar Faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunini iqtisodiy sudlar amaliyotida qoʻllashning ayrim masalalari haqida”gi 103-son Qarorining 5-bandi .

@@ -1,0 +1,7 @@
+# MK-2022 363-modda: Xodimlarni sut, davolash-profilaktika oziq-ovqati, gazlangan shoʻr suv, shaxsiy himoya va gigiyena vositalari bilan taʼminlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6265778](https://lex.uz/docs/-6257288#-6265778)
+**Bog'liq havolalar:** 18-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.07.00 Alohida toifadagi xodimlarni mehnatining muhofaza qilish] Mehnat sharoiti noqulay ishlarda band boʻlgan xodimlar belgilangan normalar boʻyicha sut (shunga teng boshqa oziq-ovqat mahsulotlari), davolash-profilaktika oziq-ovqati, gazlangan shoʻr suv (issiq sexlarda ishlovchilar uchun), maxsus kiyim-bosh, sanitar kiyim-bosh, maxsus poyabzal va boshqa shaxsiy himoya va gigiyena vositalari bilan bepul taʼminlanadi. Bunday ishlarning roʻyxati, beriladigan narsalarning normalari, taʼminot tartibi va shartlari jamoa kelishuvlarida, jamoa shartnomasida, agar ular tuzilmagan boʻlsa, ish beruvchi tomonidan kasaba uyushmasi qoʻmitasi bilan kelishuvga koʻra qonunchilikda belgilangan normativlarga muvofiq belgilanadi. Oʻzbekiston Respublikasining “Mehnatni muhofaza qilish toʻgʻrisida”gi Qonunining 18-moddasi . Xodimlarning shaxsiy himoya vositalarini olish, saqlash, yuvish, tozalash, taʼmirlash, dezinfeksiya qilish va zararsizlantirish ish beruvchining mablagʻlari hisobidan amalga oshiriladi.

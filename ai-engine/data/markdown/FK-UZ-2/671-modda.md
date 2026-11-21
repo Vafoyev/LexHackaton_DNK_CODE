@@ -1,0 +1,7 @@
+# FK-UZ-2 671-modda: Loyiha-smeta hujjatlariga oʻzgartishlar kiritish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-189069](https://lex.uz/docs/-180552#-189069)
+**Bog'liq havolalar:** 382-modda
+
+## Norma matni:
+Agar texnik hujjatlarga oʻzgartishlar kiritish tufayli bajarilishi kerak boʻladigan qoʻshimcha ishlar qiymati jihatidan smetada koʻrsatilgan qurilish umumiy qiymatining oʻn foizidan oshib ketmasa va qurilish pudrati shartnomasida nazarda tutilgan ishlarning xususiyatini oʻzgartirmasa, buyurtmachi texnik hujjatlarga oʻzgartishlar kiritishga haqli. Texnik hujjatlarga ushbu moddaning birinchi qismida koʻrsatilganiga nisbatan kattaroq hajmda oʻzgartishlar kiritish taraflar kelishgan qoʻshimcha smeta asosida amalga oshiriladi. Agar ishning qiymati pudratchiga bogʻliq boʻlmagan sabablarga koʻra smetadan kamida oʻn foiz oshgan boʻlsa, pudratchi ushbu Kodeksning 382-moddasiga muvofiq smetani qayta koʻrib chiqishni talab qilishga haqli. Pudratchi loyiha-smeta hujjatlaridagi kamchiliklarni aniqlash va yoʻqotish bilan bogʻliq oqilona xarajatlarni qoplashni talab qilishga haqli. Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy xoʻjalik sudi Plenumining 2016-yil 23-dekabrdagi 306-son “Iqtisodiy sudlar tomonidan qurilish pudrati shartnomasidan kelib chiqadigan nizolarni hal etishda qonun hujjatlarini qoʻllashning ayrim masalalari toʻgʻrisida”gi qarorining 6.1-bandi , 6.5-bandi , 7-bandining uchinchi xatboshisi .

@@ -1,0 +1,7 @@
+# FK-UZ-2 926-modda: Sugʻurta shartnomasidan kelib chiqadigan majburiyatlarning sugʻurta qildiruvchi va naf oluvchi tomonidan bajarilishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196177](https://lex.uz/docs/-180552#-196177)
+**Bog'liq havolalar:** 926-modda
+
+## Norma matni:
+Naf oluvchi foydasiga sugʻurta shartnomasi tuzish, shu jumladan u sugʻurtalangan shaxs boʻlganda ham, sugʻurta qildiruvchini, agar shartnomada boshqacha tartib nazarda tutilmagan yoxud sugʻurta qildiruvchining zimmasidagi majburiyatlar foydasiga shartnoma tuzilgan shaxs tomonidan bajarilmagan boʻlsa, ushbu shartnomadan kelib chiqadigan majburiyatlarni bajarishdan ozod qilmaydi. Naf oluvchi mulkiy sugʻurta shartnomasi boʻyicha sugʻurta tovonini yoxud shaxsiy sugʻurta shartnomasi boʻyicha sugʻurta toʻlovini toʻlashni talab qilganida sugʻurtalovchi undan, shu jumladan sugʻurtalangan shaxs naf oluvchi boʻlgan taqdirda ham, sugʻurta shartnomasi boʻyicha majburiyatlarni, shu bilan birga sugʻurta qildiruvchining zimmasida boʻlgan, lekin u bajarmagan majburiyatlarni bajarishni talab qilishga haqli. Ilgari bajarilishi lozim boʻlgan majburiyatlarni bajarmaslik yoki oʻz vaqtida bajarmaslik oqibatlari xavfi naf oluvchining zimmasida boʻladi. (926-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2026-yil 22-iyundagi OʻRQ 1154-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 23.06.2026-y., 03/26/1154/0618-son)

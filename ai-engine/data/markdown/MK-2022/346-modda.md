@@ -1,0 +1,7 @@
+# MK-2022 346-modda: Xodim tomonidan zararning oʻrnini ixtiyoriy ravishda qoplash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6265424](https://lex.uz/docs/-6257288#-6265424)
+**Bog'liq havolalar:** 340-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.06.00.00 Mehnat shartnomasi taraflarining moddiy javobgarligi / 05.06.03.00 Ish beruvchiga yetkazilgan zarar uchun xodimning moddiy javobgarligi / 05.06.03.07 Xodim tomonidan zararni ixtiyoriy ravishda toʻlash] Ish beruvchiga zarar yetkazganlikda aybdor boʻlgan xodim zararning oʻrnini ixtiyoriy ravishda toʻliq yoki qisman qoplashga haqli. Zararning oʻrnini ixtiyoriy ravishda qoplash ushbu Kodeksda nazarda tutilgan doirada amalga oshiriladi. mazkur Kodeksning 340-moddasi . Xodimning va ish beruvchining kelishuviga binoan zararning oʻrnini boʻlib-boʻlib toʻlash asosida qoplashga yoʻl qoʻyiladi. Bunday holda xodim ish beruvchiga zararning oʻrnini qoplash toʻgʻrisidagi yozma majburiyatni toʻlovlarning aniq muddatlarini koʻrsatgan holda taqdim etadi. Agar zararning oʻrnini ixtiyoriy ravishda qoplash toʻgʻrisida notarial tasdiqlangan majburiyatni bergan xodim mehnat munosabatlarini tugatgan boʻlsa va zararning oʻrnini qoplashdan bosh tortsa, qoplanmagan qarz notariusning ijro xatlariga asosan undiriladi. Xodim yetkazilgan zararning oʻrnini qoplash uchun ish beruvchiga uning roziligi bilan bahosi teng boʻlgan mol-mulk berishi yoki shikastlangan mol-mulkni tuzatib berishi mumkin.

@@ -1,0 +1,7 @@
+# FK-UZ-2 688-modda: Buyurtmachining majburiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-189148](https://lex.uz/docs/-180552#-189148)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Agar shartnomada boshqacha tartib nazarda tutilgan boʻlmasa, buyurtmachi loyiha va qidiruv ishlari pudrat shartnomasi boʻyicha quyidagilarni bajarishi: barcha ishlar bajarib boʻlinganidan keyin belgilangan narxning hammasini pudratchiga toʻlashi yoki ishlarning ayrim bosqichlari tugallanganidan keyin narxning tegishli qismini toʻlashi; pudratchidan olingan loyiha-smeta hujjatlaridan faqat shartnomada nazarda tutilgan maqsadlarda foydalanishi, loyiha-smeta hujjatlarini pudratchining roziligisiz uchinchi shaxslarga bermasligi va undagi maʼlumotlarni oshkor qilmasligi; loyiha va qidiruv ishlarini bajarishda shartnomada nazarda tutilgan hajmda va shartlarda pudratchiga xizmat koʻrsatishi; tayyor boʻlgan loyiha-smeta hujjatlarini tegishli davlat organlari va fuqarolarning oʻzini oʻzi boshqarish organlari bilan kelishib olishda pudratchi bilan birga qatnashishi; pudratchiga bogʻliq boʻlmagan holatlar tufayli loyiha va qidiruv ishlarini bajarish uchun boshlangʻich maʼlumotlar oʻzgarishi bilan bogʻliq qoʻshimcha xarajatlarni pudratchiga toʻlashi; tayyorlangan loyiha-smeta hujjatlarining yoki bajarilgan qidiruv ishlarining kamchiliklari borligi munosabati bilan uchinchi shaxs tomonidan buyurtmachiga nisbatan qoʻzgʻatilgan daʼvo yuzasidan ishda qatnashishga pudratchini jalb qilishi shart.

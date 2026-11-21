@@ -1,0 +1,7 @@
+# MK-2022 457-modda: Xodimni masofadan turib ishlashga qabul qilishni va oʻtkazishni rasmiylashtirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6267248](https://lex.uz/docs/-6257288#-6267248)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Xodimni masofadan turib ishlashga qabul qilish va oʻtkazish ish beruvchining buyrugʻi bilan rasmiylashtiriladi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.12.00 Muddatli mehnat shartnomalari] Masofadan turib ishlash toʻgʻrisidagi mehnat shartnomasi xodimni masofadan turib ishlashga nomuayyan muddatga yoki muddatli mehnat shartnomasiga koʻra qabul qilish haqidagi ish beruvchining buyrugʻi eʼlon qilinishi uchun asosdir. Masofadan turib ishlovchi xodim bilan muddatli mehnat shartnomasini tuzishga ushbu Kodeksda nazarda tutilgan cheklovlarga amal qilgan holda yoʻl qoʻyiladi. Vazirlar Mahkamasining 2024-yil 14-noyabrdagi 758-son qarori bilan tasdilangan Masofadan turib ishlovchi xodim bilan yozma mehnat shartnomasining namunaviy shakli . Mehnat shartnomasiga doir qoʻshimcha kelishuv doimiy ravishda masofadan turib ishlashga oʻtish toʻgʻrisida buyruqni eʼlon qilish uchun asos boʻladi. Xodimning vaqtincha masofadan turib ishlashga oʻtishi haqida buyruqni eʼlon qilish uchun xodimning masofadan turib ishlashga oʻtishga va ishni masofadan turib bajarish rejimi shartlariga roziligini aks ettiradigan arizasi asos boʻladi.

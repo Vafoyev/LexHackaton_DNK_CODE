@@ -1,0 +1,7 @@
+# MK-2022 20-modda: Xodimning mehnatga oid huquq layoqati va muomala layoqati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6257912](https://lex.uz/docs/-6257288#-6257912)
+**Bog'liq havolalar:** 118-modda, 20-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.02.00.00 Fuqarolar (jismoniy shaxslar) / 03.02.02.00 Fuqarolarning huquq layoqati va muomala layoqati] Mehnat huquqlari va majburiyatlariga ega boʻlish layoqati (mehnatga oid huquq layoqati) hamda fuqaroning (jismoniy shaxsning) oʻz xatti-harakatlari orqali mehnat huquqlariga ega boʻlish va ularni amalga oshirish, oʻzi uchun mehnat majburiyatlarini olish va ularni bajarish layoqati (mehnatga oid muomala layoqati) Oʻzbekiston Respublikasining barcha fuqarolari uchun teng ravishda eʼtirof etiladi. Chet el fuqarolari, fuqaroligi boʻlmagan shaxslar, agar Oʻzbekiston Respublikasining qonunchiligida yoki xalqaro shartnomasida boshqacha qoida nazarda tutilmagan boʻlsa, xuddi Oʻzbekiston Respublikasi fuqarolari ega boʻlgan mehnatga oid huquq layoqatiga va muomala layoqatiga ega boʻladi. Xodimning mehnatga oid huquq layoqati va muomala layoqati u oʻn olti yoshga toʻlgan paytidan eʼtiboran bir vaqtning oʻzida vujudga keladi, bundan ushbu Kodeksda va boshqa qonunlarda nazarda tutilgan hollar mustasno. mazkur Kodeksning 118-moddasi , Oʻzbekiston Respublikasi “Bola huquqlarining kafolatlari toʻgʻrisida”gi Qonunining 20-moddasi .

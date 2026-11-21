@@ -1,0 +1,7 @@
+# MK-2022 410-modda: Oilaviy vazifalarni bajarish bilan mashgʻul shaxslardan biriga kafolatlar berish sharti
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266530](https://lex.uz/docs/-6257288#-6266530)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.12.00 Ayrim toifadagi xodimlar uchun kafolatlar va kompensatsiyalar] Ushbu Kodeksda bolaning otasiga yoki oilaviy vazifalarni bajarish bilan mashgʻul boshqa shaxslarga (onadan tashqari) mehnat sohasida qoʻshimcha kafolatlar nazarda tutilgan hollarda, ular bolaning onasi yoki oilaviy vazifalarni bajarish bilan mashgʻul boshqa shaxs bu kafolatlardan foydalanmayotganligini tasdiqlovchi hujjatni (ish joyidan maʼlumotnomani, oʻlim toʻgʻrisidagi guvohnomani, ona va oilaviy vazifalarni bajarish bilan mashgʻul boshqa shaxs muomalaga layoqatsiz deb topilganligi toʻgʻrisidagi qonuniy kuchga kirgan yoki ota-onalik huquqidan mahrum qilish haqidagi qonuniy kuchga kirgan sud qarorini va hokazolarni) ish beruvchiga ish joyi boʻyicha taqdim etishi kerak. Agar bolaning onasi ishlamasa hamda bolaning parvarishi va tarbiyasi bilan mashgʻul boʻlsa yoxud ishlasa hamda ushbu paragrafda nazarda tutilgan kafolatlardan foydalansa, otaga yoki oilaviy vazifalarni bajarish bilan mashgʻul boshqa shaxslarga mazkur kafolatlar berilmaydi. 2-§. Oʻn sakkiz yoshgacha boʻlgan xodimlarning mehnatini huquqiy jihatdan tartibga solishning oʻziga xos xususiyatlari

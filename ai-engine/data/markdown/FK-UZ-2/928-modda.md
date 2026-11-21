@@ -1,0 +1,7 @@
+# FK-UZ-2 928-modda: Bosh polis boʻyicha sugʻurtalash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196185](https://lex.uz/docs/-180552#-196185)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Bir turdagi mol-mulk (tovarlar, yuklar va hokazoning) turli turkumlarini muayyan muddat davomida bir xildagi shartlarda muntazam sugʻurtalash sugʻurta qildiruvchining sugʻurtalovchi bilan kelishuviga binoan bitta sugʻurta shartnomasi –– bosh polis asosida amalga oshirilishi mumkin. Sugʻurta qildiruvchi bosh polisning taʼsir doirasida boʻladigan mol-mulkning har bir turkumi toʻgʻrisida sugʻurtalovchiga bunday polisda shartlashilgan maʼlumotlarni unda nazarda tutilgan muddatda, agar muddat nazarda tutilmagan boʻlsa — ular olinganidan keyin darhol xabar qilishi shart. Agar hatto bunday maʼlumotlarni olish paytigacha sugʻurtalovchi toʻlashi lozim boʻlgan zarar koʻrish ehtimoli oʻtib ketgan boʻlsa ham, sugʻurta qildiruvchi bu majburiyatdan ozod boʻlmaydi. [ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Sugʻurta qildiruvchining talabiga binoan sugʻurtalovchi bosh polisning taʼsir doirasida boʻladigan mol-mulkning alohida turkumlari boʻyicha sugʻurta polislarini berishi shart. Sugʻurta polisining mazmuni bosh polisga nomuvofiq boʻlgan taqdirda, sugʻurta polisi afzal koʻriladi.

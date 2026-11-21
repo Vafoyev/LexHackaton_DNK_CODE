@@ -1,0 +1,7 @@
+# MK-2022 9-modda: Ushbu Kodeksda nazarda tutilgan muddatlarni hisoblash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6257640](https://lex.uz/docs/-6257288#-6257640)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Ushbu Kodeksda, jamoa kelishuvlarida, jamoa shartnomasida yoki mehnat shartnomasida belgilangan muddatlar kalendar sana bilan, yillar, oylar, haftalar, kunlar yoki soatlar bilan hisoblanadigan vaqt davrining tugashi bilan yoxud yuz berishi kerak boʻlgan voqeani koʻrsatgan holda aniqlanadi. Ushbu Kodeksda mehnat huquqlari va majburiyatlarining yuzaga kelishi yoki bekor boʻlishi bilan bogʻlanadigan muddatlarni hisoblash uning boshlanishi belgilangan kalendar sanadan keyingi kundan eʼtiboran boshlanadi. Yillar, oylar, haftalar bilan hisoblanadigan muddatlar muddatning soʻnggi yili, oyi, haftasining tegishli sanasida tugaydi. Agar oylar bilan hisoblanadigan muddatning oxiri muddatning oʻtishi boshlangan oyga nisbatan kunlari koʻproq yoki kamroq boʻlgan oyga toʻgʻri kelsa, muddat tugaydigan oyning oxirgi kuni muddat tugaydigan kun deb hisoblanadi. Kalendar yillar, oylar, haftalar yoki kunlar bilan hisoblanadigan muddatga ishlanmaydigan kunlar ham qoʻshiladi. Agar muddatning soʻnggi kuni ishlanmaydigan kunga toʻgʻri kelsa, undan keyin keladigan birinchi ish kuni muddat tugaydigan kun deb hisoblanadi. 2-bob. Mehnat toʻgʻrisidagi qonunchilik va mehnat haqidagi boshqa huquqiy hujjatlar

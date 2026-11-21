@@ -1,0 +1,7 @@
+# FK-UZ-2 776-modda: Hisobvaraqda turgan pul mablagʻlarini tasarruf etish huquqini tasdiqlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-190802](https://lex.uz/docs/-180552#-190802)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Mijoz nomidan hisobvaraqdagi mablagʻlarni oʻtkazish va berish haqida koʻrsatma beradigan shaxslarning huquqlari mijoz tomonidan bankka qonunda nazarda tutilgan, qonunga muvofiq bank qoidalari hamda bank hisobvaragʻi shartnomasi bilan belgilangan hujjatlarni taqdim etish yoʻli bilan tasdiqlanadi. Mijoz uchinchi shaxslarning talabiga muvofiq, shu jumladan mijozning ushbu shaxslar oldidagi majburiyatlarini bajarishi bilan bogʻliq talabiga muvofiq pul mablagʻlarini hisobvaraqdan oʻchirish haqida farmoyish berishi mumkin. Bank tegishli talab qoʻyilgan vaqtda uni qoʻyishga haqli boʻlgan shaxsni aniqlash va bunday talabning xarakteri va asoslarini belgilash imkonini beradigan zarur maʼlumotlar bu farmoyishlarda yozma ravishda koʻrsatilgan taqdirda ularni qabul qiladi. Bank hisobvaragʻi shartnomasida hisobvaraqda turgan pul mablagʻlarini tasarruf etish huquqini elektron toʻlov vositalaridan hamda ularda mijozning oʻz imzosi, kodlari, parollari hamda farmoyish tegishli vakolati boʻlgan shaxs tomonidan berilganligini tasdiqlaydigan boshqa vositalarning oʻxshatmalaridan foydalanilgan boshqa hujjatlar bilan tasdiqlash nazarda tutilgan boʻlishi mumkin.

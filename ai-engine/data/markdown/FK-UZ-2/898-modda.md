@@ -1,0 +1,7 @@
+# FK-UZ-2 898-modda: Ashyoni tashkilotlarning kiyimxonalarida saqlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195852](https://lex.uz/docs/-180552#-195852)
+**Bog'liq havolalar:** 897-modda
+
+## Norma matni:
+Agar tashkilotlarning kiyimxonalarida ashyolarni haq evaziga saqlash haqida ashyoni saqlashga topshirish vaqtida kelishib qoʻyilgan yoki boshqa ochiq usulda shartlashilgan boʻlmasa, ularda ashyo saqlash bepul hisoblanadi. Ashyo kiyimxonada saqlash uchun qabul qilib olinganligini tasdiqlash uchun saqlovchi yuk topshiruvchiga nomerli jeton yoki ashyo saqlash uchun qabul qilib olinganligini tasdiqlovchi boshqa belgi beradi. Kiyimxonaga topshirilgan ashyo jeton taqdim etuvchiga beriladi. Bunda saqlovchi jeton taqdim etuvchining ashyoni olishga vakolatlarini tekshirishi shart emas. Biroq, omonat saqlovchi jeton uni taqdim etuvchiga qarashli ekanligiga shubhalansa, ashyoni jeton taqdim etuvchiga qaytarib berishni toʻxtatib turishga haqli. Yuk topshiruvchi jetonni yoʻqotib qoʻygan, lekin uning ashyolarni kiyimxonaga topshirganligi yoki ashyolarning unga tegishliligi saqlovchida shubha tugʻdirmagan yoxud yuk topshiruvchi tomonidan isbotlangan hollarda ham saqlovchi kiyimxonadagi ashyoni berishga haqli. Tashkilotlarning ashyolar kiyimxonalarda but saqlanishi uchun javobgarligi, shuningdek talab qilib olinmagan ashyolarni saqlash muddatlari ushbu Kodeks 897-moddasining toʻrtinchi va beshinchi qismlarida koʻrsatilgan qoidalar boʻyicha belgilanadi.

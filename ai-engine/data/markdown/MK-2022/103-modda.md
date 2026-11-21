@@ -1,0 +1,7 @@
+# MK-2022 103-modda: Mehnat shartnomasining tushunchasi va taraflari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6260037](https://lex.uz/docs/-6257288#-6260037)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.03.00 Mehnat munosabatlari taraflari va ularning vakillari; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.07.00 Mehnat shartnomasi (kontrakt)] Mehnat shartnomasi xodim va ish beruvchi oʻrtasidagi taraflarning oʻzaro huquqlari hamda majburiyatlarini belgilovchi kelishuv boʻlib, unga muvofiq xodim ish beruvchining manfaatini koʻzlab, ushbu kelishuvda belgilangan mehnat vazifasini uning rahbarligi va nazorati ostida shaxsan bajarish, ichki mehnat qoidalariga rioya etish majburiyatini, ish beruvchi esa xodimga shartlashilgan mehnat vazifasi boʻyicha ish berish, xodimga ish haqini oʻz vaqtida hamda toʻliq miqdorda toʻlash, mehnat toʻgʻrisidagi qonunchilikda, mehnat haqidagi boshqa huquqiy hujjatlarda va ushbu kelishuvda nazarda tutilgan mehnat sharoitlarini taʼminlash majburiyatini oʻz zimmasiga oladi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.03.00 Mehnat munosabatlari taraflari va ularning vakillari] Xodim va ish beruvchi mehnat shartnomasining taraflaridir.

@@ -169,4 +169,13 @@ func TestAPI_D10_VoiceAndGlanceableEndpoints(t *testing.T) {
 	if !ok || vqRes["answer"] == nil || vqRes["cited_articles"] == nil {
 		t.Errorf("Ovozli savol javobi to'liq emas: %v", respVQ.Data)
 	}
+
+	// 4. WebSocket Voice Endpoint Check (/api/v1/ws/voice)
+	reqWS, _ := http.NewRequest("GET", "/api/v1/ws/voice", nil)
+	rrWS := httptest.NewRecorder()
+	router.ServeHTTP(rrWS, reqWS)
+	// Without websocket upgrade headers, it must return 400 Bad Request
+	if rrWS.Code != http.StatusBadRequest {
+		t.Errorf("Expected 400 Bad Request for non-upgrade websocket request, got %d", rrWS.Code)
+	}
 }

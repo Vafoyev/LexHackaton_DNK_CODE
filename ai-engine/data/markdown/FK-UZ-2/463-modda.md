@@ -1,0 +1,7 @@
+# FK-UZ-2 463-modda: Sotib oluvchining davlat ehtiyojlari uchun tovarlar yetkazib berish shartnomasini tuzishdan bosh tortishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183577](https://lex.uz/docs/-180552#-183577)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Sotib oluvchi biriktirish haqidagi bildirish xatida koʻrsatilgan tovarlardan hamda ularni yetkazib berish shartnomasini tuzishdan toʻliq yoki qisman bosh tortish huquqiga ega. Bunday holda mahsulot yetkazib beruvchi (ijrochi) bu haqda darhol davlat buyurtmachisiga maʼlum qilishi lozim va davlat buyurtmachisidan boshqa sotib oluvchini oʻziga biriktirish toʻgʻrisida bildirish xati berishni talab qilish huquqiga ega. Davlat buyurtmachisi mahsulot yetkazib beruvchi (ijrochi)ning bildirish xatini olgan kundan boshlab kechi bilan oʻttiz kun ichida yo mahsulot yetkazib beruvchi (ijrochi)ga boshqa sotib oluvchini biriktirish toʻgʻrisida bildirish xati beradi, yoki mahsulot yetkazib beruvchi (ijrochi)ga tovarlarni kim olishi koʻrsatilgan joʻnatish raznaryadkasini yuboradi, yoxud tovarlarni qabul qilish va haqini toʻlashga roziligini xabar qiladi. Davlat buyurtmachisi ushbu moddaning ikkinchi qismida nazarda tutilgan majburiyatlarini bajarmagan taqdirda, mahsulot yetkazib beruvchi (ijrochi) yo davlat buyurtmachisidan tovarlarni qabul qilish va haqini toʻlashni talab qilish, yoki tovarlarni oʻz ixtiyori bilan realizatsiya qilib, tovarlarni realizatsiya qilish bilan bogʻliq oqilona xarajatlarni davlat buyurtmachisiga yuklash huquqiga ega.

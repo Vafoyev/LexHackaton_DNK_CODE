@@ -1,0 +1,7 @@
+# 670-I 27-modda: But boʻlmagan tovarlarni yetkazib berganlik uchun javobgarlik
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-18942#-20220](https://lex.uz/docs/-18942#-20220)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.03.00 Majburiyatlarni buzganlik uchun javobgarlik] But boʻlmagan tovarlar yetkazib berilgan taqdirda sotib oluvchi (buyurtmachi): tovarlarni butlab berishni talab qilishga haqli. Yetkazib beruvchi sotib oluvchining (buyurtmachining) talabini olgan paytdan boshlab, agar taraflarning kelishuvida oʻzga muddat belgilangan boʻlmasa, oʻn besh kunlik muddat ichida tovarlarni butlab berishi shart; bundan buyon tovarlar butlab berilgunga qadar ularning haqini toʻlashdan bosh tortishga, agar tovarlarning haqi toʻlab qoʻyilgan boʻlsa, belgilangan tartibda toʻlangan summalar qaytarilishini talab qilishga haqli; yetishmayotgan qismlar qiymatini qoʻshgan holda, yetkazib beruvchidan but boʻlmagan tovarlar qiymatining 20 foizi miqdorida jarima undirishga haqli. [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.03.00 Majburiyatlarni buzganlik uchun javobgarlik] Tovarlarni yetkazib beruvchi belgilangan muddatda tovarlarni butlab bermasa, sotib oluvchi (buyurtmachi) but boʻlmagan tovarlarni qaytarib berishga hamda but boʻlmagan tovarlarni but tovarlarga almashtirishni talab qilishga haqlidir.

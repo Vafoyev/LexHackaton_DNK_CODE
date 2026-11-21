@@ -1,0 +1,7 @@
+# FK-UZ-2 1141-modda: Meros qoldiruvchining mehnatga qobiliyatsiz boqimlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-199039](https://lex.uz/docs/-180552#-199039)
+**Bog'liq havolalar:** 1138-modda
+
+## Norma matni:
+Meros qoldiruvchining vafotiga qadar kamida bir yil uning qaramogʻida boʻlgan va u bilan birgalikda yashagan mehnatga qobiliyatsiz shaxslar qonun boʻyicha merosxoʻrlar jumlasiga kiradi. Qonun boʻyicha boshqa merosxoʻrlar boʻlgan taqdirda, mehnatga qobiliyatsiz boqimlar vorislikka chaqirilayotgan navbatning merosxoʻrlari bilan birgalikda meros oladilar. Ushbu Kodeksning 1136 –– 1138-moddalarida koʻrsatilgan qonun boʻyicha merosxoʻrlar jumlasiga mansub boʻlgan, biroq vorislikka chaqiriladigan navbatning merosxoʻrlari doirasiga kirmaydigan mehnatga qobiliyatsiz shaxslar, meros qoldiruvchi bilan birgalikda yashagan-yashamaganliklaridan qatʼi nazar, agar meros qoldiruvchining vafotiga qadar kamida bir yil uning qaramogʻida turgan boʻlsalar, ana shu vorislikka chaqiriladigan navbatning merosxoʻrlari bilan birgalikda meros oladilar. Qonun boʻyicha boshqa merosxoʻrlar boʻlgan taqdirda, ushbu modda asosida vorislikka chaqiriladigan shaxslarning hammasi birgalikda koʻpi bilan merosning toʻrtdan bir qismini meros qilib oladilar. Qoʻshimcha maʼlumot uchun Oliy sud plenumining 2011-yil 20-iyuldagi 5-son “Sudlar tomonidan meros huquqiga oid qonunchilikning qoʻllanilishi toʻgʻrisida”gi qarorining 16, 17-bandlari .

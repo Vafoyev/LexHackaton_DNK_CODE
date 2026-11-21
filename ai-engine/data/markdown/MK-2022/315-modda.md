@@ -1,0 +1,7 @@
+# MK-2022 315-modda: Intizomiy jazoning amal qilish muddati, tugallanishi va olib tashlanishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6265035](https://lex.uz/docs/-6257288#-6265035)
+**Bog'liq havolalar:** 24-modda, 161-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.05.00.00 Mehnat intizomi / 05.05.04.00 Intizomiy javobgarlik / 05.05.04.01 Intizomiy jazolar] Intizomiy jazoning amal qilish muddati u qoʻllanilgan kundan eʼtiboran bir yildan oshmasligi kerak. Agar intizomiy jazo qoʻllanilgan kundan eʼtiboran bir yil ichida xodimga yangi intizomiy jazo qoʻllanilmasa, u intizomiy jazoga tortilmagan deb hisoblanadi. Bunda intizomiy jazo ish beruvchining buyrugʻi chiqmasidan avtomatik tarzda tugallanadi. Ish beruvchi intizomiy jazoni oʻz tashabbusiga koʻra, xodimning bevosita rahbarining, kasaba uyushmasi qoʻmitasining iltimosnomasiga, shuningdek xodimning iltimosiga koʻra, bir yil oʻtguniga qadar muddatidan oldin olib tashlash huquqiga ega. Intizomiy jazoni muddatidan oldin olib tashlash ish beruvchining buyrugʻi bilan rasmiylashtiriladi. mazkur Kodeksning 24-moddasi . Ushbu moddada nazarda tutilgan intizomiy jazo tugallanishi va olib tashlash qoidalari ish beruvchining tashabbusi bilan ushbu Kodeks 161-moddasi ikkinchi qismining 4 va 5-bandlariga muvofiq mehnat shartnomasi bekor qilingan holda qoʻllanilmaydi. 19-bob. Mehnat shartnomasi taraflarining moddiy javobgarligi 1-§. Umumiy qoidalar

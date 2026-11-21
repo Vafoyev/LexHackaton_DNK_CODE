@@ -49,9 +49,13 @@ type DocumentBrief struct {
 type FlaggedClause struct {
 	ClauseNumber       string               `json:"clause_number"`
 	ClauseText         string               `json:"clause_text"`
-	RiskLevel          string               `json:"risk_level"` // RED, YELLOW, GREEN
+	OriginalQuote      string               `json:"original_quote"`      // Asl matn (Qizil)
+	ProblematicQuote   string               `json:"problematic_quote"`   // Asl xavfli matn (Qizil)
+	RiskLevel          string               `json:"risk_level"`          // RED, YELLOW, GREEN
 	LawReference       *FlaggedLawReference `json:"law_reference,omitempty"`
-	SuggestedAmendment string               `json:"suggested_amendment"`
+	SuggestedRevision  string               `json:"suggested_revision"`  // Tavsiya matn (Yashil)
+	SuggestedRedline   string               `json:"suggested_redline"`   // Tavsiya matn (Yashil)
+	SuggestedAmendment string               `json:"suggested_amendment"` // Tavsiya matn (Yashil)
 }
 
 type FlaggedLawReference struct {
@@ -396,22 +400,28 @@ func (s *Service) GetAnalysis(ctx context.Context, analysisID, orgID string) (*A
 				vf.Category = vf.RiskCategory
 				vf.RiskLevel = vf.Severity
 				vf.SuggestedRedline = vf.SuggestedRevision
+				vf.ProblematicQuote = vf.OriginalQuote
+				vf.SuggestedRedline = vf.SuggestedRevision
 				vf.IssueTitle = vf.Explanation
 				vf.IssueExplanation = vf.Explanation
 				det.Findings = append(det.Findings, vf)
 
-				// Fill CONTRACTS.md flagged_clauses schema
+				// Fill CONTRACTS.md flagged_clauses schema with full Red (Original) and Green (Suggested) fields
 				if vf.Severity == "RED" || vf.Severity == "YELLOW" {
 					det.FlaggedClauses = append(det.FlaggedClauses, FlaggedClause{
-						ClauseNumber: vf.ClauseNumber,
-						ClauseText:   vf.OriginalQuote,
-						RiskLevel:    vf.Severity,
+						ClauseNumber:       vf.ClauseNumber,
+						ClauseText:         vf.OriginalQuote,
+						OriginalQuote:      vf.OriginalQuote,
+						ProblematicQuote:   vf.OriginalQuote,
+						RiskLevel:          vf.Severity,
 						LawReference: &FlaggedLawReference{
 							LawTitle:    lawCode,
 							Article:     lawArt,
 							LexUzURL:    officialURL,
 							Explanation: vf.Explanation,
 						},
+						SuggestedRevision:  vf.SuggestedRevision,
+						SuggestedRedline:   vf.SuggestedRevision,
 						SuggestedAmendment: vf.SuggestedRevision,
 					})
 				}

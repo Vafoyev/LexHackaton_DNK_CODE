@@ -1,0 +1,7 @@
+# FK-UZ-2 930-modda: Sugʻurta shartnomasi shartlarini sugʻurta qoidalarida belgilab qoʻyish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196205](https://lex.uz/docs/-180552#-196205)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Sugʻurta shartnomasini tuzish shartlari sugʻurtalovchi yoxud sugʻurtalovchilar birlashmasi tomonidan qabul qilingan, maʼqullangan yoki tasdiqlangan tegishli turdagi sugʻurtaning standart qoidalari (sugʻurta qoidalari)da belgilab qoʻyilishi mumkin. Sugʻurta qoidalarida mavjud boʻlgan va sugʻurta shartnomasi (polisi) matniga kiritilmagan shartlar, agar shartnomada (polisda) shunday qoidalar qoʻllanilishi toʻgʻridan-toʻgʻri koʻrsatilgan va qoidalarning oʻzi shartnoma (polis) bilan bitta hujjatda yoki uning orqa tomonida bayon qilingan yoxud unga ilova qilingan boʻlsa, sugʻurta qiluvchi (naf oluvchi) uchun majburiydir. Ilova qilingan taqdirda, shartnomani tuzish paytida sugʻurta qildiruvchiga sugʻurta qoidalari topshirilgani shartnomada yozuv bilan tasdiqlab qoʻyilishi lozim. Sugʻurta shartnomasi tuzilayotganda sugʻurta qildiruvchi va sugʻurtalovchi sugʻurta qoidalarining ayrim bandlarini oʻzgartirish yoki chiqarib tashlash va qoidalarda boʻlmagan bandlarni shartnomaga kiritish toʻgʻrisida kelishishlari mumkin. Sugʻurta qildiruvchi (naf oluvchi) oʻz manfaatlarini himoya qilib, sugʻurta shartnomasida (polisida) koʻrsatib oʻtilgan tegishli turdagi sugʻurta qoidalarini, hatto agar bu qoidalar ushbu moddaga koʻra uning uchun majburiy boʻlmasa ham, vaj qilib keltirishga haqli.

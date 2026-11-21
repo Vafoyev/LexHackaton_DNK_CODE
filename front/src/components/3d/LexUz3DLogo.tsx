@@ -214,48 +214,20 @@ export const LexUz3DLogo: React.FC<LexUz3DLogoProps> = ({
 
   return (
     <div
-      className={`relative rounded-3xl bg-gradient-to-b from-slate-900/50 via-slate-950/70 to-slate-950 border border-sky-500/30 shadow-2xl overflow-hidden flex items-center justify-center group ${heightClasses} ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`relative rounded-3xl bg-gradient-to-b from-slate-900/30 via-slate-950/50 to-slate-950/80 border border-sky-500/20 shadow-2xl overflow-hidden flex items-center justify-center ${heightClasses} ${className}`}
     >
       {/* 3D Canvas Container */}
-      <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+      <div ref={containerRef} className="w-full h-full pointer-events-none" />
 
       {/* Loading Skeleton */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm">
           <div className="flex items-center gap-2 text-xs font-mono text-sky-400">
             <RotateCw className="w-4 h-4 animate-spin" />
-            <span>3D Lex.uz GLTF Yuklanmoqda...</span>
+            <span>Yuklanmoqda...</span>
           </div>
         </div>
       )}
-
-      {/* 3D Emblema Badge */}
-      <div className="absolute top-3 left-3.5 pointer-events-none flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-sky-500/40 text-[10px] font-mono text-sky-400 shadow-md">
-        <Sparkles className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
-        <span className="font-bold">Lex.uz 3D GLTF</span>
-      </div>
-
-      {/* Interactive Controls Overlay */}
-      {showControls && (
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-slate-900/90 border border-slate-800 p-1 rounded-xl shadow-lg backdrop-blur-md">
-          <button
-            type="button"
-            onClick={() => setIsRotating(!isRotating)}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-[11px] flex items-center gap-1 cursor-pointer"
-            title={isRotating ? "Aylanishni to'xtatish" : "Avto-aylantirish"}
-          >
-            {isRotating ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5 text-emerald-400" />}
-            <span className="font-mono text-[10px]">{isRotating ? "Pauza" : "Play"}</span>
-          </button>
-        </div>
-      )}
-
-      {/* Hover prompt hint */}
-      <div className="absolute bottom-3 left-3.5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-[10px] text-slate-400 font-mono hidden sm:block">
-        🖱️ Sichqonchani harakatlantirib 360° tomosha qiling
-      </div>
     </div>
   );
 };

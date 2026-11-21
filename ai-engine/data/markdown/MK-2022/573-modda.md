@@ -1,0 +1,7 @@
+# MK-2022 573-modda: Yarashtiruv-vositachilik tartib-taomillari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6269405](https://lex.uz/docs/-6257288#-6269405)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.11.00.00 Mehnat nizolari / 05.11.02.00 Jamoa mehnat nizolari] Jamoaviy mehnat nizosini hal etish (tartibga solish) tartibi quyidagi bosqichlardan iborat: nizoni yarashtirish komissiyasi tomonidan koʻrib chiqishdan; nizoni mediator ishtirokida koʻrib chiqishdan; nizoni mehnat arbitrajida koʻrib chiqishdan. Jamoaviy mehnat nizosi taraflarining hech biri yarashtiruv tartib-taomilida ishtirok etishdan bosh tortishga haqli emas. Jamoaviy mehnat nizosi taraflarining vakillari, yarashtirish komissiyasi, mediator, mehnat arbitraji, jamoaviy mehnat nizolarini tartibga solish boʻyicha davlat organi yuzaga kelgan jamoaviy mehnat nizosini hal etish uchun qonunchilikda nazarda tutilgan barcha imkoniyatlardan foydalanishi shart. Yarashtiruv-vositachilik tartib-taomillari ushbu paragrafda nazarda tutilgan muddatlarda oʻtkaziladi. Zarur boʻlgan taqdirda, yarashtiruv-vositachilik tartib-taomillarini oʻtkazish uchun nazarda tutilgan muddatlar jamoaviy mehnat nizosi taraflarining roziligiga koʻra uzaytirilishi mumkin. Muddatni uzaytirish toʻgʻrisidagi qaror yarashtirish komissiyasi majlisining bayonnomasi bilan rasmiylashtiriladi.

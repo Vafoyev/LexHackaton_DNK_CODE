@@ -1,0 +1,7 @@
+# FK-UZ-2 413-modda: But boʻlmagan tovarni topshirish oqibatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-182649](https://lex.uz/docs/-180552#-182649)
+**Bog'liq havolalar:** 27-modda
+
+## Norma matni:
+But boʻlmagan tovar topshirilgan taqdirda, sotib oluvchi oʻz ixtiyoriga koʻra sotuvchidan: xarid narxini mutanosib ravishda kamaytirishni; tovarni oqilona muddatda butlashni talab qilish huquqiga ega. Agar sotuvchi oqilona muddatda sotib oluvchining tovarni butlash toʻgʻrisidagi talabini bajarmasa, sotib oluvchi oʻz ixtiyoriga koʻra: butlanmagan tovarni but tovarga almashtirishni talab qilishga; oldi-sotdi shartnomasini bajarishdan bosh tortishga va tovar uchun toʻlangan pul summasini qaytarib berishni, shuningdek yetkazilgan zararni qoplashni talab qilishga haqli. Agar oldi-sotdi shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa va u majburiyatning mohiyatidan kelib chiqmasa, ushbu moddaning birinchi va ikkinchi qismlarida nazarda tutilgan oqibatlar sotuvchining sotib oluvchiga but tovarlarni topshirish majburiyati buzilgan hollarda ham qoʻllaniladi. “Xoʻjalik yurituvchi subyektlar faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunning 27-moddasi . Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy Xoʻjalik Sudi Plenumining 2007-yil 28-dekabrdagi 174-son “Sifati tegishli darajada boʻlmagan mahsulot (tovar)larni yetkazib berish bilan bogʻliq nizolarni hal etish boʻyicha sud amaliyoti toʻgʻrisida”gi qarori .

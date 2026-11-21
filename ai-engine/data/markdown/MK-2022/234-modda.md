@@ -1,0 +1,7 @@
+# MK-2022 234-modda: Har yilgi mehnat taʼtilini pulli kompensatsiya bilan almashtirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263207](https://lex.uz/docs/-6257288#-6263207)
+**Bog'liq havolalar:** 217-modda, 234-modda, 483-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.08 Foydalanilmagan taʼtillar uchun kompensatsiya toʻlash] Mehnat shartnomasi bekor qilinganda xodimga barcha foydalanilmagan har yilgi asosiy va qoʻshimcha mehnat taʼtillari uchun pulli kompensatsiya toʻlanadi. Xodimlarga ish davrida ularning xohishiga koʻra har yilgi mehnat taʼtili uchun taʼtilning ushbu Kodeksning 217-moddasida belgilangan eng kam davomiyligidan tashqari pulli kompensatsiya toʻlanishi mumkin. Pulli kompensatsiya toʻlashda yakshanba kuni inobatga olinmaydi. (234-modda Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuniga asosan uchinchi qism bilan toʻldirilgan — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son) Oʻn sakkiz yoshga toʻlmagan xodimlarga, I yoki II guruh nogironligi boʻlgan xodimlarga beriladigan ijtimoiy taʼtillarning barcha turlaridan, har yilgi uzaytirilgan asosiy mehnat taʼtillaridan, shuningdek ushbu Kodeksning 481 va 483-moddalarida nazarda tutilgan qoʻshimcha taʼtillardan asli holida foydalaniladi hamda mehnat davrida ularni pulli kompensatsiya bilan almashtirishga yoʻl qoʻyilmaydi.

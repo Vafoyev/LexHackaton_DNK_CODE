@@ -1,0 +1,7 @@
+# MK-2022 241-modda: Ish haqi saqlanmaydigan taʼtil tushunchasi va uni berishning umumiy tartibi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263708](https://lex.uz/docs/-6257288#-6263708)
+**Bog'liq havolalar:** 241-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.07 Ish haqi saqlanmagan holda beriladigan taʼtillar] Ish haqi saqlanmaydigan taʼtil deganda xodimning ish oʻrni (lavozimi) saqlanib qolgan holda haq toʻlanmaydigan taʼtil tushuniladi. Xodimning yozma arizasiga koʻra unga ish haqi saqlanmaydigan taʼtil berilishi mumkin boʻlib, uning davomiyligi xodim va ish beruvchi oʻrtasidagi kelishuvga koʻra belgilanadi, lekin u oʻn ikki oylik davr mobaynida jami uch oydan ortiq boʻlmasligi kerak. (241-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son) Agar qonunchilikda boshqacha qoida nazarda tutilmagan boʻlsa, karantin choralari amalga oshirilayotgan, favqulodda holat joriy etilgan davrda va butun aholining yoki uning bir qismining hayotiga yoxud normal yashash sharoitlariga tahdid soluvchi boshqa hollarda xodimning yozma arizasiga koʻra ish haqi saqlanmaydigan taʼtilning uzluksiz yoki jamlangan davomiyligi koʻpaytirilishi, biroq koʻpi bilan olti oygacha koʻpaytirilishi mumkin.

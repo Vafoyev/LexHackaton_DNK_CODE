@@ -1,0 +1,7 @@
+# MK-2022 7-modda: Mehnat huquqlari taʼminlanishining va mehnat majburiyatlari bajarilishining kafolatlanganligi prinsipi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6257631](https://lex.uz/docs/-6257288#-6257631)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.12.00.00 Mehnatga oid qonunchilik hujjatlariga rioya etilishi yuzasidan nazorat. Mehnatga oid qonun hujjatlarini buzilganligi uchun javobgarlik / 05.12.02.00 Mehnat qonunchilik hujjatlarini buzilganligi uchun javobgarlik] Mehnat toʻgʻrisidagi qonunchilik quyidagilarni taʼminlaydigan vositalar va usullar majmuini mustahkamlaydi: xodimlarning va ish beruvchilarning mehnat toʻgʻrisidagi qonunchilikda hamda mehnat haqidagi boshqa huquqiy hujjatlarda, shuningdek mehnat shartnomasida belgilangan mehnat sohasidagi huquqlari amalga oshirilishini; mehnat toʻgʻrisidagi qonunchilikda hamda mehnat haqidagi boshqa huquqiy hujjatlarda, shuningdek mehnat shartnomasida belgilangan majburiyatlarning ish beruvchilar va xodimlar tomonidan bajarilishini; xodimlar va ish beruvchilarning mehnat huquqlari himoya qilinishini hamda buzilgan huquqlari tiklanishini; xodimlarning mehnat huquqlari, mehnat toʻgʻrisidagi qonunchilik buzilganligi uchun ish beruvchining javobgarligini, shuningdek oʻz mehnat majburiyatlarini buzganligi uchun xodimning javobgarligini.

@@ -1,0 +1,7 @@
+# FK-UZ-1 248-modda: Pul majburiyati boʻyicha talablarni qondirish navbati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-6821692](https://lex.uz/docs/-111189#-6821692)
+**Bog'liq havolalar:** 248-modda
+
+## Norma matni:
+Amalga oshirilgan toʻlov summasi pul majburiyatini batamom bajarish uchun yetarli boʻlmaganda, boshqa kelishuv boʻlmasa, u eng avvalo, kreditorning ijroni olishga qaratilgan chiqimlarini, soʻngra foizlarni, uning qolgan qismi esa — qarzning asosiy summasini uzadi, bundan ushbu moddaning ikkinchi qismida nazarda tutilgan hollar mustasno. Agar amalga oshirilgan toʻlov summasi qarz oluvchi jismoniy shaxsga yoki qarz oluvchi tadbirkorlik subyektiga ajratilgan mikroqarz yoki kredit boʻyicha majburiyatlarni bajarish uchun yetarli boʻlmasa, qarz oluvchining qarzi quyidagi navbatda qoplanadi: 1) asosiy qarz boʻyicha muddati oʻtgan qarzdorlik va muddati oʻtgan foiz toʻlovlari mutanosib ravishda; 2) joriy davr uchun hisoblangan foizlar va joriy davr uchun asosiy qarz boʻyicha qarzdorlik; 3) neustoyka (jarima, penya); 4) kreditorning qarzdorlikni uzish bilan bogʻliq boʻlgan boshqa xarajatlari. (248-moddaning matni Oʻzbekiston Respublikasining 2024-yil 27-fevraldagi OʻRQ-914-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 28.02.2024-y., 03/24/914/0161-son — 2024-yil 1-yanvardan eʼtiboran yuzaga kelgan munosabatlarga nisbatan ham tatbiq etiladi) mazkur Kodeksning 94, 95 , 234, 235 , 245 , 247, 248-moddalari .

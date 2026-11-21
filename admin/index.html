@@ -3,428 +3,282 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LexGuard AI — Admin & B2B Analytics Portal</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z'/></svg>">
+  <title>LexGuard AI — Platform Operator Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: rgba(17, 24, 39, 0.85);
-      --border: rgba(99, 102, 241, 0.25);
-      --primary: #6366f1;
-      --primary-light: #818cf8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    
+    * {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background-image:
-        radial-gradient(ellipse at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+      background: #020617;
+      color: #f8fafc;
+      background-image: 
+        radial-gradient(ellipse at 15% 10%, rgba(14, 165, 233, 0.12) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 60%);
+      background-attachment: fixed;
     }
-    header {
-      background: rgba(15, 23, 42, 0.9);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-badge {
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
-    }
-    h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
-    .subtitle { font-size: 12px; color: var(--text-muted); }
-    .status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #34d399;
-      font-weight: 600;
-    }
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 10px #10b981;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-    main {
-      flex: 1;
-      padding: 32px;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .grid-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
-    }
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      backdrop-filter: blur(8px);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(99, 102, 241, 0.5);
-    }
-    .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .stat-value { font-size: 32px; font-weight: 800; color: #fff; margin: 8px 0; }
-    .stat-sub { font-size: 12px; display: flex; align-items: center; gap: 4px; }
-    .text-success { color: var(--success); }
-    .text-warning { color: var(--warning); }
-    .text-danger { color: var(--danger); }
-    .text-primary { color: var(--primary-light); }
 
-    .content-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
+    .liquid-glass {
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12);
     }
-    @media (max-width: 960px) {
-      .content-grid { grid-template-columns: 1fr; }
-    }
-    .section-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #fff;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-    th {
-      text-align: left;
-      padding: 10px 12px;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      font-weight: 600;
-    }
-    td {
-      padding: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: #e2e8f0;
-    }
-    tr:hover td { background: rgba(99, 102, 241, 0.04); }
-    .badge-chip {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
-    .badge-warning { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-    .badge-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-    .badge-info { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; }
 
-    .nav-links {
-      display: flex;
-      gap: 12px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: #fff;
-    }
-    .btn-primary:hover { background: #4f46e5; }
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      color: #fff;
-    }
-    .btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
-    footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 20px 32px;
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .liquid-glass-accent {
+      backdrop-filter: blur(28px) saturate(190%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(14, 165, 233, 0.1) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      box-shadow: 0 12px 36px rgba(14, 165, 233, 0.15);
     }
   </style>
 </head>
-<body>
-  <header>
-    <div class="logo-area">
-      <div class="logo-badge">🛡️</div>
-      <div>
-        <h1>LexGuard AI — B2B Admin & Nazorat Portali</h1>
-        <div class="subtitle">D-10 Enterprise Dashboard · Anti-Hallucination Monitoring</div>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ================= TOPBAR (1-SO'ZLI MINIMALIST CHROME) ================= -->
+  <header class="sticky top-0 z-50 liquid-glass border-b border-white/10 px-6 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 px-2.5 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center p-[2px] shadow-lg shadow-sky-500/20">
+          <div class="w-full h-full bg-slate-950/80 rounded-[10px] px-2 flex items-center justify-center">
+            <span class="text-xs font-black text-sky-400">LG</span>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-black tracking-tight text-white">
+              LexGuard <span class="text-sky-400">Operator</span>
+            </h1>
+            <span class="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30 uppercase">
+              Nazorat
+            </span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div style="display: flex; gap: 16px; align-items: center;">
-      <div class="status-badge" id="system-status">
-        <span class="pulse-dot"></span>
-        <span>Tizim: FAOL (Online)</span>
-      </div>
-      <div class="nav-links">
-        <a href="http://localhost:3000" class="btn btn-outline" target="_blank">🌐 Web Frontend</a>
-        <a href="http://localhost:8080/healthz" class="btn btn-outline" target="_blank">🩺 Healthz API</a>
+
+      <!-- 1-SO'ZLI NAVIGATION TABS -->
+      <nav class="flex items-center gap-1 p-1 liquid-glass rounded-2xl border border-white/10 text-xs font-bold">
+        <button onclick="switchTab('health')" id="tab-health" class="px-3.5 py-1.5 rounded-xl liquid-glass-accent text-white flex items-center gap-1.5 transition-all">
+          <i data-lucide="activity" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>Salomatlik</span>
+        </button>
+        <button onclick="switchTab('traffic')" id="tab-traffic" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white flex items-center gap-1.5 transition-all">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
+          <span>Trafik</span>
+        </button>
+        <button onclick="switchTab('graph')" id="tab-graph" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white flex items-center gap-1.5 transition-all">
+          <i data-lucide="network" class="w-3.5 h-3.5"></i>
+          <span>Qonunlar</span>
+        </button>
+        <button onclick="switchTab('review')" id="tab-review" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white flex items-center gap-1.5 transition-all">
+          <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Ko'rik</span>
+          <span class="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px]">2</span>
+        </button>
+      </nav>
+
+      <!-- LIVE SYSTEM STATUS PILL -->
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl liquid-glass border border-emerald-500/30 text-xs font-mono text-emerald-300">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>KLUSTER ONLAYN</span>
       </div>
     </div>
   </header>
 
-  <main>
-    <!-- Asosiy Metrikalar -->
-    <div class="grid-stats">
-      <div class="stat-card">
-        <div class="stat-label">Jami Tahlillar</div>
-        <div class="stat-value" id="stat-total">1,248</div>
-        <div class="stat-sub text-success">↑ 14% o'tgan haftaga nisbatan</div>
+  <!-- ================= ASOSIY OPERATOR SAHIFASI ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-8 space-y-8">
+
+    <!-- KPI STATS TILES -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-2">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <span>Jami Tahlillar</span>
+          <i data-lucide="file-check" class="w-4 h-4 text-sky-400"></i>
+        </div>
+        <p class="text-2xl font-black text-white font-mono" id="stat-analyses">1,482</p>
+        <span class="text-[11px] text-emerald-400 font-mono">↑ 18% bugun</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">O'rtacha Salomatlik Indeksi</div>
-        <div class="stat-value text-primary" id="stat-score">76.4<span style="font-size: 18px; font-weight: normal;">/100</span></div>
-        <div class="stat-sub text-primary">0-100 Radial Gauge Me'yori</div>
+
+      <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-2">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <span>O'rtacha Tahlil Tezligi</span>
+          <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <p class="text-2xl font-black text-white font-mono">1.8s</p>
+        <span class="text-[11px] text-sky-400 font-mono">Go + gRPC High Speed</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Kritik Huquqiy Xavflar (Qizil)</div>
-        <div class="stat-value text-danger" id="stat-risks">38</div>
-        <div class="stat-sub text-danger">⚠️ FK 326/707 penya asimmetriyasi</div>
+
+      <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-2">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <span>Lex.uz Qonunlar Grafigi</span>
+          <i data-lucide="git-merge" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <p class="text-2xl font-black text-white font-mono">3,850</p>
+        <span class="text-[11px] text-emerald-400 font-mono">Bog'langan moddalar</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">B2B Tashkilotlar & Filiallar</div>
-        <div class="stat-value text-success" id="stat-orgs">42</div>
-        <div class="stat-sub text-success">Faol korporativ obunalar</div>
+
+      <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-2">
+        <div class="flex items-center justify-between text-slate-400 text-xs">
+          <span>Inson Ko'rigi (Review)</span>
+          <i data-lucide="help-circle" class="w-4 h-4 text-purple-400"></i>
+        </div>
+        <p class="text-2xl font-black text-white font-mono">2 ta</p>
+        <span class="text-[11px] text-amber-400 font-mono">Kutayotgan bandlar</span>
       </div>
     </div>
 
-    <!-- Markaziy Qism -->
-    <div class="content-grid">
-      <!-- Chap: So'nggi Shartnomalar Monitoringi -->
-      <div>
-        <div class="section-card">
-          <div class="section-title">
-            <span>📋 So'nggi Tahlil Qilingan Shartnomalar</span>
-            <span style="font-size: 12px; color: var(--text-muted);">Real-time B2B Stream</span>
+    <!-- TAB 1: SYSTEM HEALTH (XIZMATLAR SALOMATLIGI) -->
+    <section id="section-health" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="server" class="w-4 h-4 text-sky-400"></i>
+          <span>Xizmatlar Salomatligi & Telemetriya</span>
+        </h2>
+        <button onclick="refreshHealth()" class="text-xs text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 cursor-pointer">
+          <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+          <span>Yangilash</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- 1. Go Backend -->
+        <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">Go Backend (Modular Monolith)</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">UP (8080)</span>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Shartnoma Nomi</th>
-                <th>Tashkilot</th>
-                <th>Xavf Indeksi</th>
-                <th>Holat</th>
-                <th>Sana</th>
-              </tr>
-            </thead>
-            <tbody id="contracts-table">
-              <tr>
-                <td><strong>IT Xizmat Ko'rsatish #442</strong></td>
-                <td>Smart Tech MCHJ</td>
-                <td><span class="badge-chip badge-warning">64 / 100</span></td>
-                <td><span class="badge-chip badge-warning">COMMERCIAL</span></td>
-                <td>Bugun, 10:24</td>
-              </tr>
-              <tr>
-                <td><strong>Logistika va Tashish #109</strong></td>
-                <td>SilkRoad Express</td>
-                <td><span class="badge-chip badge-danger">32 / 100</span></td>
-                <td><span class="badge-chip badge-danger">LEGAL_RISK</span></td>
-                <td>Bugun, 09:41</td>
-              </tr>
-              <tr>
-                <td><strong>Litsenziya Kelishuvi v3.1</strong></td>
-                <td>FinCore Innovations</td>
-                <td><span class="badge-chip badge-success">88 / 100</span></td>
-                <td><span class="badge-chip badge-success">BALANCED</span></td>
-                <td>Kecha, 18:30</td>
-              </tr>
-              <tr>
-                <td><strong>Dasturiy Ta'minot Ishlab Chiqish</strong></td>
-                <td>DNK Code Solutions</td>
-                <td><span class="badge-chip badge-success">92 / 100</span></td>
-                <td><span class="badge-chip badge-success">SAFE</span></td>
-                <td>Kecha, 16:15</td>
-              </tr>
-            </tbody>
-          </table>
+          <p class="text-[11px] text-slate-400">REST API, SSE Event Broadcaster, MinIO Storage va JWT Auth</p>
+          <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span>Latency: <strong class="text-white">4ms</strong></span>
+            <span>Uptime: <strong class="text-emerald-400">99.98%</strong></span>
+          </div>
         </div>
 
-        <div class="section-card">
-          <div class="section-title">
-            <span>⚖️ 10 Deterministik Qoidalar Holati (Anti-Hallucination)</span>
-            <span class="badge-chip badge-info">Closed-World RAG</span>
+        <!-- 2. Python AI Engine -->
+        <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">Python AI Engine (gRPC)</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">UP (50051)</span>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-danger">● R01:</span> Penya Miqdori Asimmetriyasi (FK 326)
-            </div>
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-danger">● R02:</span> Bir Tomonlama Bekor Qilish (FK 382)
-            </div>
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-warning">● R03:</span> Sudlov Hududi Manipulyatsiyasi
-            </div>
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-warning">● R04:</span> Fors-major & O'RQ-547 PII Cheklovi
-            </div>
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-success">● R05:</span> To'lov Muddatlari Cheklovi
-            </div>
-            <div style="background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px;">
-              <span class="text-success">● R06-R10:</span> Intellektual Mulk & Maxfiylik
-            </div>
+          <p class="text-[11px] text-slate-400">Legal Knowledge Graph, Multi-Hop Resolution va Active Self-Correction</p>
+          <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span>Inference: <strong class="text-white">120ms</strong></span>
+            <span>gRPC: <strong class="text-emerald-400">Binar 0-copy</strong></span>
+          </div>
+        </div>
+
+        <!-- 3. PostgreSQL + pgvector -->
+        <div class="liquid-glass p-5 rounded-3xl border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">PostgreSQL 16 + pgvector</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold">UP (5432)</span>
+          </div>
+          <p class="text-[11px] text-slate-400">HNSW Cosine Vector Index, BM25 Lexical GIN Index, SKIP LOCKED Pool</p>
+          <div class="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-400">
+            <span>Connections: <strong class="text-white">14/200</strong></span>
+            <span>Storage: <strong class="text-sky-400">2.4 GB</strong></span>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- O'ng: Tizim Sog'ligi va Integratsiyalar -->
-      <div>
-        <div class="section-card">
-          <div class="section-title">
-            <span>🔌 Davlat Integratsiyalari</span>
-            <span class="badge-chip badge-info">D-06 Sandbox</span>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <div>
-                <strong>Lex.uz Qonunchilik</strong>
-                <div style="font-size: 11px; color: var(--text-muted);">FK 326/707, O'RQ-547</div>
-              </div>
-              <span class="badge-chip badge-success">FAOL (Mock)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <div>
-                <strong>OneID Autentifikatsiya</strong>
-                <div style="font-size: 11px; color: var(--text-muted);">OAuth2 / JSHSHIR</div>
-              </div>
-              <span class="badge-chip badge-success">FAOL (Mock)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05);">
-              <div>
-                <strong>E-IMZO Raqamli Imzo</strong>
-                <div style="font-size: 11px; color: var(--text-muted);">PKI / ESP Verifier</div>
-              </div>
-              <span class="badge-chip badge-success">FAOL (Mock)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <strong>Soliq.uz B2B Reestr</strong>
-                <div style="font-size: 11px; color: var(--text-muted);">STIR & Kontragent</div>
-              </div>
-              <span class="badge-chip badge-success">FAOL (Mock)</span>
-            </div>
-          </div>
-        </div>
+    <!-- TAB 2: LEGAL KNOWLEDGE GRAPH KO'RINIShI -->
+    <section id="section-graph" class="space-y-4 hidden">
+      <h2 class="text-base font-bold text-white flex items-center gap-2">
+        <i data-lucide="git-fork" class="w-4 h-4 text-emerald-400"></i>
+        <span>Legal Knowledge Graph — Bog'langan Qonunlar Zanjiri</span>
+      </h2>
 
-        <div class="section-card">
-          <div class="section-title">
-            <span>⚙️ Infratuzilma Holati</span>
-            <button class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;" onclick="checkHealth()">Yangilash</button>
+      <div class="liquid-glass p-6 rounded-3xl border border-white/10 space-y-4">
+        <p class="text-xs text-slate-400">
+          Qonun moddalari o'zaro istisnolari va majburiyatlari bilan bog'langan. AI moddalarni yakka emas, butun zanjir bilan o'rganadi:
+        </p>
+
+        <div class="p-4 rounded-2xl bg-slate-950/70 border border-white/10 space-y-3 font-mono text-xs">
+          <div class="flex items-center gap-2 text-rose-400 font-bold">
+            <span>[Tugun 1]</span> FK 707-modda (Xizmat shartnomasidan bir tomonlama voz kechish)
           </div>
-          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 12px;">
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Go Modular Monolith:</span>
-              <span class="text-success" id="infra-backend">UP (:8080)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">PostgreSQL 16 + pgvector:</span>
-              <span class="text-success" id="infra-db">READY (:5432)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Redis 7 Kesh:</span>
-              <span class="text-success" id="infra-redis">READY (:6379)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">MinIO S3 Storage:</span>
-              <span class="text-success" id="infra-minio">READY (:9000)</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="color: var(--text-muted);">Web Frontend (Three.js):</span>
-              <span class="text-success" id="infra-frontend">UP (:3000)</span>
-            </div>
+          <div class="pl-6 border-l-2 border-sky-500/40 space-y-2 text-slate-300">
+            <div class="text-sky-300">↳ Bog'lanish: <span class="text-slate-400">governed_by_freedom_limits</span> → <strong>FK 354-modda (Shartnoma erkinligi)</strong></div>
+            <div class="text-emerald-300">↳ Oqibat: <span class="text-slate-400">requires_damages_compensation</span> → <strong>FK 324-modda (Zararni qoplash sharti)</strong></div>
+          </div>
+          <div class="p-3 rounded-xl bg-sky-500/10 text-sky-200 border border-sky-500/20 text-[11px]">
+            ⚡ <strong>AI Xulosasi:</strong> Buyurtmachi shartnomani bekor qilish huquqiga ega bo'lsa-da, Ijrochining amaldagi barcha xarajatlarini to'lashi QONUNAN SHART!
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- TAB 3: HUMAN-IN-THE-LOOP REVIEW QUEUE -->
+    <section id="section-review" class="space-y-4 hidden">
+      <h2 class="text-base font-bold text-white flex items-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+        <span>Human-in-the-Loop Ko'rik Navbati (Shubhali Bandlar)</span>
+      </h2>
+
+      <div class="liquid-glass p-6 rounded-3xl border border-white/10 space-y-4">
+        <div class="p-4 rounded-2xl bg-slate-950/60 border border-amber-500/30 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-amber-300">Hujjat: IT_Xizmat_Shartnomasi.docx (Band 9.4)</span>
+            <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-mono">REVIEW_REQUIRED</span>
+          </div>
+          <p class="text-xs text-slate-300">"Nizolar faqat London xalqaro arbitraj sudida ko'rib chiqiladi."</p>
+          <p class="text-[11px] text-slate-400">AI Xavfi: O'zbekiston yurisdiksiyasidan tashqari sudlovlik. Kichik biznes uchun nomutanosib sud xarajatlari xavfi.</p>
+          <div class="flex items-center gap-2 pt-2">
+            <button class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all">Tasdiqlash (Qonuniy Xavf)</button>
+            <button class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all">Rad etish (Ruxsatli)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer>
-    <div>🛡️ LexGuard AI 3.0 · B2B Admin & Compliance Portal · Toshkent, 2026</div>
-    <div>O'RQ-547, O'RQ-1115, O'RQ-1125 Talablariga Muvozanatlangan</div>
-  </footer>
-
   <script>
-    async function checkHealth() {
-      try {
-        const res = await fetch('/healthz');
-        if (res.ok) {
-          document.getElementById('system-status').innerHTML = '<span class="pulse-dot"></span><span>Tizim: FAOL (Online)</span>';
-        }
-      } catch (e) {
-        // Fallback for standalone view
+    lucide.createIcons();
+
+    function switchTab(tab) {
+      document.getElementById('section-health').classList.add('hidden');
+      document.getElementById('section-graph').classList.add('hidden');
+      document.getElementById('section-review').classList.add('hidden');
+
+      document.querySelectorAll('nav button').forEach(b => {
+        b.className = "px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white flex items-center gap-1.5 transition-all";
+      });
+
+      if (tab === 'health') {
+        document.getElementById('section-health').classList.remove('hidden');
+        document.getElementById('tab-health').className = "px-3.5 py-1.5 rounded-xl liquid-glass-accent text-white flex items-center gap-1.5 transition-all";
+      } else if (tab === 'graph') {
+        document.getElementById('section-graph').classList.remove('hidden');
+        document.getElementById('tab-graph').className = "px-3.5 py-1.5 rounded-xl liquid-glass-accent text-white flex items-center gap-1.5 transition-all";
+      } else if (tab === 'review') {
+        document.getElementById('section-review').classList.remove('hidden');
+        document.getElementById('tab-review').className = "px-3.5 py-1.5 rounded-xl liquid-glass-accent text-white flex items-center gap-1.5 transition-all";
       }
     }
-    // Auto check on load
-    window.addEventListener('DOMContentLoaded', checkHealth);
+
+    async function refreshHealth() {
+      try {
+        const res = await fetch('/api/v1/healthz');
+        if (res.ok) {
+          const data = await res.json();
+          alert('Backend Salomatligi: ' + data.status);
+        }
+      } catch (e) {
+        console.log('Lokal demo rejim');
+      }
+    }
   </script>
 </body>
 </html>

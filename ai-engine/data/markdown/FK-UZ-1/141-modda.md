@@ -1,0 +1,7 @@
+# FK-UZ-1 141-modda: Ishonchnomaning bekor boʻlishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-153618](https://lex.uz/docs/-111189#-153618)
+**Bog'liq havolalar:** 139-modda, 141-modda, 57-modda, 30-modda, 31-modda, 33-modda, 36-modda
+
+## Norma matni:
+Ishonchnomaning amal qilishi quyidagi hollarda bekor boʻladi: 1) ishonchnoma muddatining tamom boʻlishi; mazkur Kodeksning 139-moddasi . 2) ishonchnoma bergan shaxsning uni bekor qilishi; 3) ishonchnoma berilgan shaxsning bosh tortishi; mazkur Kodeksning 141-moddasining ikkinchi qismi . 4) nomidan ishonchnoma berilgan yuridik shaxs faoliyatining toʻxtatilishi; mazkur Kodeksning 49 , 53 , 57-moddalari . 5) nomiga ishonchnoma berilgan yuridik shaxs faoliyatining toʻxtatilishi; mazkur Kodeksning 49 , 53 , 57-moddalari . 6) ishonchnoma bergan fuqaroning muomalaga layoqatsiz, muomala layoqati cheklangan yoki bedarak yoʻqolgan deb hisoblanishi, yoxud uning vafot etishi; 7) ishonchnoma olgan fuqaroning muomalaga layoqatsiz, muomalaga layoqati cheklangan yoki bedarak yoʻqolgan deb hisoblanishi, yoxud uning vafot etishi. Ishonchnoma bergan shaxs istagan vaqtda ishonchnomani bekor qilishi, ishonchnoma berilgan shaxs esa — undan voz kechishi mumkin. Bu huquqdan voz kechish haqidagi bitim haqiqiy emas. Ishonchnomaning amal qilishi bekor boʻlishi bilan uni boshqa shaxsga oʻtkazish ham oʻz kuchini yoʻqotadi. mazkur Kodeksning 30-moddasi birinchi qismi , 31-moddasining birinchi qismi , 33-moddasining birinchi qismi , 36-moddasining birinchi , toʻrtinchi qismlari .

@@ -1,0 +1,7 @@
+# MK-2022 181-modda: Ish vaqtining tushunchasi va turlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6262088](https://lex.uz/docs/-6257288#-6262088)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Xodim ichki mehnat tartib qoidalariga, smenalarga boʻlinib ishlash (ish) jadvallariga, boshqa ichki hujjatlarga yoki mehnat shartnomasi shartlariga muvofiq mehnat majburiyatlarini qaysi vaqt mobaynida bajarishi kerak boʻlsa, oʻsha vaqt ish vaqtidir. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.01 Ish vaqtining muddati] Ish vaqtiga quyidagilar kiradi: xodim mehnat majburiyatlarini haqiqatda bajargan vaqt; ushbu Kodeksda nazarda tutilgan vaqt davrlari (xodimning aybisiz bekor turib qolingan vaqt, texnologiya hamda ishlab chiqarish va mehnatni tashkil etish bilan bogʻliq boʻlgan tanaffuslar, bolani ovqatlantirish uchun tanaffuslar va boshqalar), shuningdek mehnat toʻgʻrisidagi qonunchilikda hamda mehnat haqidagi boshqa huquqiy hujjatlarda nazarda tutilgan boshqa vaqt davrlari, shu jumladan asosiy va tayyorgarlik-yakuniy ishlarni bajarish vaqti (kiyim, materiallar, asbob-uskunalar olish, texnika, hujjatlar bilan tanishish, ish oʻrnini tayyorlash va tozalash, tayyor mahsulotni topshirish va boshqalar). Ish vaqtining turlari quyidagilardan iboratdir: ish vaqtining normal davomiyligi; ish vaqtining qisqartirilgan davomiyligi; toʻliqsiz ish vaqti.

@@ -1,0 +1,7 @@
+# MK-2022 42-modda: Xodimlarning vakilligi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6258431](https://lex.uz/docs/-6257288#-6258431)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 01.00.00.00 Konstitutsiyaviy tuzum / 01.17.00.00 Nodavlat notijorat tashkilotlari (shuningdek, 03.03.10.03ga qarang) / 01.17.06.00 Kasaba uyushmalari; 2. 03.00.00.00 Fuqarolik qonunchiligi / 03.06.00.00 Vakillik. Ishonchnoma; 3. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.03.00 Mehnat munosabatlari taraflari va ularning vakillari] Tashkilotda yoki jismoniy shaxs boʻlgan ish beruvchida xodimlarning vakilligini hamda ularning huquqlari va manfaatlarini himoya qilishni boshlangʻich darajada kasaba uyushmasi qoʻmitasi amalga oshiradi. Xodimlarning va ish beruvchilarning manfaatlarini aynan bitta vakillik organi ifoda etishi hamda himoya qilishi mumkin emas. [ OKOZ: 1. 01.00.00.00 Konstitutsiyaviy tuzum / 01.17.00.00 Nodavlat notijorat tashkilotlari (shuningdek, 03.03.10.03ga qarang) / 01.17.06.00 Kasaba uyushmalari] Xodimlar vakilligini, ularning huquq va manfaatlarini himoya qilishni quyidagilar amalga oshiradi: hududiy va tarmoq darajalarida — tegishli kasaba uyushmalari, ularning birlashmalari va boʻlinmalari (bundan buyon matnda hududiy va tarmoq kasaba uyushmalari birlashmalari deb yuritiladi); respublika darajasida — respublika kasaba uyushmalari birlashmalari.

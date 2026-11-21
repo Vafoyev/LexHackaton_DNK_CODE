@@ -1,0 +1,14 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "finetuned_task": "Uzbek Law Contract Safety & Multi-hop Cross Reference",
+  "dataset_samples": 3234,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "target_modules": [
+    "q_proj",
+    "v_proj",
+    "k_proj",
+    "o_proj"
+  ],
+  "status": "ready_for_production"
+}

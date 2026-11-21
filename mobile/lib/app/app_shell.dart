@@ -87,7 +87,7 @@ class _AppShellState extends State<AppShell>
     if (focusCamera) {
       DirectScanLauncher.captureCameraAndAnalyze(context);
     } else {
-      DirectScanLauncher.pickFileAndAnalyze(context);
+      ScanUploadSheet.show(context);
     }
   }
 
@@ -145,6 +145,25 @@ class _AppShellState extends State<AppShell>
               fit: StackFit.expand,
               children: [
                 widget.navigationShell,
+                Positioned(
+                  left: 14,
+                  right: 14,
+                  bottom: bottomPad + 10,
+                  child: _IphoneFloatingGlassNavBar(
+                    currentIndex: widget.navigationShell.currentIndex,
+                    lang: lang,
+                    script: script,
+                    isDark: isDark,
+                    scanMenuOpen: _scanMenuOpen,
+                    rolePrimary: c.rolePrimary,
+                    gradientStart: c.roleGradientStart,
+                    gradientEnd: c.roleGradientEnd,
+                    roleGlow: c.roleGlow,
+                    textSecondary: c.textSecondary,
+                    onSelect: _go,
+                    onScan: _toggleScanMenu,
+                  ),
+                ),
                 AnimatedBuilder(
                   animation: Listenable.merge([_scanAnim, _pulseAnim]),
                   builder: (context, _) {
@@ -326,25 +345,6 @@ class _AppShellState extends State<AppShell>
                     );
                   },
                 ),
-                Positioned(
-                  left: 14,
-                  right: 14,
-                  bottom: bottomPad + 10,
-                  child: _IphoneFloatingGlassNavBar(
-                    currentIndex: widget.navigationShell.currentIndex,
-                    lang: lang,
-                    script: script,
-                    isDark: isDark,
-                    scanMenuOpen: _scanMenuOpen,
-                    rolePrimary: c.rolePrimary,
-                    gradientStart: c.roleGradientStart,
-                    gradientEnd: c.roleGradientEnd,
-                    roleGlow: c.roleGlow,
-                    textSecondary: c.textSecondary,
-                    onSelect: _go,
-                    onScan: _toggleScanMenu,
-                  ),
-                ),
               ],
             ),
           ),
@@ -392,11 +392,9 @@ class _RadialScanOrbState extends State<_RadialScanOrb> {
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
+      onTap: widget.onTap,
       onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) {
-        setState(() => _pressed = false);
-        widget.onTap();
-      },
+      onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedScale(
         scale: _pressed ? 0.86 : 1.0,

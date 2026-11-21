@@ -29,7 +29,7 @@ class AppStrings {
   static String t(
     AppLang lang,
     String key, {
-    UzbekScript script = UzbekScript.reformed,
+    UzbekScript script = UzbekScript.standard,
   }) {
     final map = switch (lang) {
       AppLang.uz => _uz,
