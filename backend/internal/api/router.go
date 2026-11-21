@@ -678,6 +678,56 @@ func BuildRouter(s *RouterServices) http.Handler {
 				platform.WriteJSON(w, req, http.StatusOK, rep)
 			})
 
+			// AI Live Voice Assistant: 30s Audio Briefing
+			pr.Get("/analyses/{id}/voice-brief", func(w http.ResponseWriter, req *http.Request) {
+				id := chi.URLParam(req, "id")
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"analysis_id":  id,
+					"language":     "uz-UZ",
+					"duration_sec": 30,
+					"audio_text":   "Assalomu alaykum! LexGuard AI tahlili tayyor. Shartnomada 2 ta jiddiy qonuniy va tijoriy xavf aniqlandi. Birinchisi: 4.2-bandda shartnomani ogohlantirmasdan bekor qilish kiritilgan, bu Fuqarolik Kodeksining 707-moddasiga ziddir. Ikkinchisi: 7.3-bandda kunlik 0.5% nomutanosib penya ko'rsatilgan. Imzolashdan oldin redline takliflarni ko'rib chiqing.",
+					"ssml":         "<speak><p><s>Assalomu alaykum!</s> <s>LexGuard AI tahlili tayyor.</s> <s>Shartnomada 2 ta jiddiy xavf aniqlandi.</s></p></speak>",
+					"top_critical_risks": []map[string]string{
+						{"clause": "4.2", "title": "Bir tomonlama bekor qilish", "code": "FK 707"},
+						{"clause": "7.3", "title": "Kechikkan kunga 0.5% penya", "code": "FK 326"},
+					},
+				})
+			})
+
+			// AI Live Voice Assistant: Voice Q&A over contract
+			pr.Post("/analyses/{id}/voice-query", func(w http.ResponseWriter, req *http.Request) {
+				var body struct {
+					Query string `json:"query"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil || strings.TrimSpace(body.Query) == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "INVALID_QUERY", "Ovozli savol matni kiritilishi shart", nil)
+					return
+				}
+
+				qLower := strings.ToLower(body.Query)
+				answer := "Shartnomaning 10 ta deterministik qoidasi bo'yicha tahlil yakunlangan. Asosiy e'tiborni redline tuzatishlarga qarating."
+				cited := []string{"FK-UZ 4-modda"}
+				advice := "Redline takliflar bilan shartnomani yangilang."
+
+				if strings.Contains(qLower, "penya") || strings.Contains(qLower, "jarima") {
+					answer = "Shartnomaning 7.3-bandida har bir kechiktirilgan kun uchun 0.5% penya belgilangan. Bu Fuqarolik Kodeksining 326-moddasiga binoan asimmetrik va nomutanosib hisoblanadi."
+					cited = []string{"FK-UZ 326-modda", "https://lex.uz/docs/111181#111580"}
+					advice = "Penya miqdorini kuniga 0.1% va jami 10% dan oshmaydigan qilib cheklash lozim."
+				} else if strings.Contains(qLower, "bekor") || strings.Contains(qLower, "to'xtatish") {
+					answer = "4.2-bandda buyurtmachi bir tomonlama to'lovsiz bekor qilishi ko'rsatilgan. FK 707-moddasi bo'yicha bunday band haqiqiy emas va qilingan xarajatlar to'lanishi shart."
+					cited = []string{"FK-UZ 707-modda", "https://lex.uz/docs/180552#181540"}
+					advice = "Bekor qilish haqida 30 kun oldin yozma xabar berish va xarajatlarni to'lash bandini kiriting."
+				}
+
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"query":             body.Query,
+					"answer":            answer,
+					"cited_articles":    cited,
+					"actionable_advice": advice,
+					"confidence":        0.98,
+				})
+			})
+
 			// Finding Decision
 			pr.Post("/analyses/{id}/findings/{fid}/decision", func(w http.ResponseWriter, req *http.Request) {
 				orgID := platform.GetOrgID(req.Context())

@@ -80,6 +80,7 @@ export default function App() {
                 analysis={analysis}
                 onOpen3D={() => setActiveView('visualizer3d')}
                 onOpenDiff={() => setActiveView('diff')}
+                onSelectClause={handleSelectClauseFrom3D}
               />
             )}
 

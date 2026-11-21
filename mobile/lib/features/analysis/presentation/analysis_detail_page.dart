@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
+import '../../../core/widgets/glanceable_voice_radar.dart';
 import '../../../core/widgets/risk_badges.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
@@ -99,6 +100,26 @@ class _AnalysisDetailPageState extends State<AnalysisDetailPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          GlanceableRiskGauge(
+                            analysis: analysis,
+                            onTapFinding: (f) => ClauseDetailSheet.show(
+                              context,
+                              finding: f,
+                              analysis: analysis,
+                              onDecision: (decision) {
+                                context
+                                    .read<ContractsCubit>()
+                                    .setFindingDecision(
+                                      analysisId: analysis.id,
+                                      findingId: f.id,
+                                      decision: decision,
+                                    );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          MobileVoiceAssistantBar(analysis: analysis),
+                          const SizedBox(height: 12),
                           GlassCard(
                             radius: 24,
                             padding: const EdgeInsets.all(16),

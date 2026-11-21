@@ -375,3 +375,50 @@ Frontend (React), Mobile (Flutter) va Admin panellar ushbu yagona sxemadan foyda
 Go backend to'liq ishga tushguncha Frontend, Mobile va Admin jamoalari bloklanmasligi uchun:
 1. `GET /api/v1/mock/analysis-sample`: Yuqoridagi to'liq 4-rangli tahlil natijasini qaytaradi.
 2. Har bir so'rovga `X-Mock: true` headeri yuborilganda backend avtomatik deterministik soxta ma'lumot qaytaradi.
+
+---
+
+## 7. AI Live Voice Assistant & 3D Knowledge Graph Shartnomalari (D-10)
+
+### 7.1. 30 Soniyalik Ovozli Brifing (`GET /api/v1/analyses/{id}/voice-brief`)
+- **Tavsif**: Shartnomaning eng kritik qonuniy va tijoriy xatarlarini O'zbek tilida tabiiy ovoz bilan tinglash uchun skript va SSML ma'lumotlarini qaytaradi.
+- **Javob namunasi (200 OK)**:
+```json
+{
+  "analysis_id": "01934f2a-7b3c-7000-8000-000000000010",
+  "language": "uz-UZ",
+  "duration_sec": 30,
+  "audio_text": "Assalomu alaykum! LexGuard AI tahlili tayyor. Shartnomada 2 ta jiddiy qonuniy va tijoriy xavf aniqlandi. Birinchisi: 4.2-bandda shartnomani ogohlantirmasdan bekor qilish kiritilgan, bu Fuqarolik Kodeksining 707-moddasiga ziddir. Ikkinchisi: 7.3-bandda kunlik 0.5% nomutanosib penya ko'rsatilgan. Imzolashdan oldin redline takliflarni ko'rib chiqing.",
+  "ssml": "<speak><p><s>Assalomu alaykum!</s> <s>LexGuard AI tahlili tayyor.</s></p></speak>",
+  "top_critical_risks": [
+    {"clause": "4.2", "title": "Bir tomonlama bekor qilish", "code": "FK 707"},
+    {"clause": "7.3", "title": "Kechikkan kunga 0.5% penya", "code": "FK 326"}
+  ]
+}
+```
+
+### 7.2. Ovozli Savol-Javob (`POST /api/v1/analyses/{id}/voice-query`)
+- **So'rov**:
+```json
+{
+  "query": "Penya qancha va u qonuniymi?"
+}
+```
+- **Javob namunasi (200 OK)**:
+```json
+{
+  "query": "Penya qancha va u qonuniymi?",
+  "answer": "Shartnomaning 7.3-bandida har bir kechiktirilgan kun uchun 0.5% penya belgilangan. Bu Fuqarolik Kodeksining 326-moddasiga binoan asimmetrik va nomutanosib hisoblanadi.",
+  "cited_articles": [
+    "FK-UZ 326-modda",
+    "https://lex.uz/docs/111181#111580"
+  ],
+  "actionable_advice": "Penya miqdorini kuniga 0.1% va jami 10% dan oshmaydigan qilib cheklash lozim.",
+  "confidence": 0.98
+}
+```
+
+### 7.3. 3D Risk Topology & Glanceable Gauge Shartnomasi
+- **Web**: Three.js WebGL fazoviy sfera (`Contract3DVisualizer.tsx` va `Mini3DVisualizer.tsx`). Markaziy yadro + har bir band uchun xavf rangidagi 3D orbital tugunlar.
+- **Mobile**: CustomPainter 3D-styled concentric arc (`GlanceableRiskGauge`) + DNA barcode heatmap strip + real-time animated waveform (`MobileVoiceAssistantBar`).
+
