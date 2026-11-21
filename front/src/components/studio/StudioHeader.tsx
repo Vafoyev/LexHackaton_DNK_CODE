@@ -37,11 +37,11 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
           <button
             onClick={onReset}
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
-            title="Yangi shartnoma yuklash"
+            className="p-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+            title="Boshqa shartnoma yuklash"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Chiqish</span>
+            <span>Yangi Shartnoma</span>
           </button>
 
           <div>

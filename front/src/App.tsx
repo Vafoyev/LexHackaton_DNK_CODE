@@ -13,8 +13,8 @@ import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
 function MainApp() {
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
-  const [activeView, setActiveView] = useState<'xulosa' | 'diff' | '3D' | 'dashboard'>('dashboard');
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(SAMPLE_IT_SERVICE_CONTRACT);
+  const [activeView, setActiveView] = useState<'xulosa' | 'diff' | '3D' | 'dashboard'>('xulosa');
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
