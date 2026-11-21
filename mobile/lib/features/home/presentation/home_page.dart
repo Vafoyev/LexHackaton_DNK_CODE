@@ -8,11 +8,14 @@ import '../../../core/l10n/uzbek_alphabet.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
 import '../../../core/widgets/language_picker_sheet.dart';
+import '../../../core/widgets/lex_modal_sheet.dart';
 import '../../../core/widgets/risk_badges.dart';
+import '../../../core/widgets/theme_reveal_scope.dart';
 import '../../analysis/presentation/clause_detail_sheet.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
-import '../../scanner_upload/presentation/scan_upload_sheet.dart';
+import '../../profile/presentation/plans_modal_sheet.dart';
+import '../../scanner_upload/presentation/direct_scan_launcher.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
 class HomePage extends StatelessWidget {
@@ -27,67 +30,73 @@ class HomePage extends StatelessWidget {
     final script = session.uzbekScript;
     final isBusiness = session.segment == AccountSegment.business;
 
+    final lawNews = [
+      _LawNewsItem(
+        code: AppStrings.t(lang, 'news_1_code', script: script),
+        tag: AppStrings.t(lang, 'news_1_date', script: script),
+        title: AppStrings.t(lang, 'news_1_title', script: script),
+        body: AppStrings.t(lang, 'news_1_body', script: script),
+        icon: CupertinoIcons.sparkles,
+        highlight: true,
+      ),
+      _LawNewsItem(
+        code: AppStrings.t(lang, 'news_2_code', script: script),
+        tag: AppStrings.t(lang, 'news_2_date', script: script),
+        title: AppStrings.t(lang, 'news_2_title', script: script),
+        body: AppStrings.t(lang, 'news_2_body', script: script),
+        icon: CupertinoIcons.checkmark_shield_fill,
+      ),
+      _LawNewsItem(
+        code: AppStrings.t(lang, 'news_3_code', script: script),
+        tag: AppStrings.t(lang, 'news_3_date', script: script),
+        title: AppStrings.t(lang, 'news_3_title', script: script),
+        body: AppStrings.t(lang, 'news_3_body', script: script),
+        icon: CupertinoIcons.lock_shield_fill,
+      ),
+      _LawNewsItem(
+        code: AppStrings.t(lang, 'news_4_code', script: script),
+        tag: AppStrings.t(lang, 'news_4_date', script: script),
+        title: AppStrings.t(lang, 'news_4_title', script: script),
+        body: AppStrings.t(lang, 'news_4_body', script: script),
+        icon: CupertinoIcons.doc_text_fill,
+      ),
+    ];
+
     return SafeArea(
       bottom: false,
       child: CustomScrollView(
         slivers: [
-          // Top iOS Utility & Role Bar
+          // Top Brand & Utility Bar
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
             sliver: SliverToBoxAdapter(
               child: Row(
                 children: [
-                  Flexible(
-                    child: GlassPill(
-                      key: const Key('role_switch_pill'),
-                      onTap: () => _showRoleQuickSwitch(
-                        context,
-                        session.segment,
-                        lang,
-                        script,
+                  Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [c.roleGradientStart, c.roleGradientEnd],
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: c.rolePrimary,
-                            ),
-                          ),
-                          const SizedBox(width: 7),
-                          Flexible(
-                            child: Text(
-                              isBusiness
-                                  ? AppStrings.t(
-                                      lang,
-                                      'business_b2b',
-                                      script: script,
-                                    )
-                                  : AppStrings.t(
-                                      lang,
-                                      'individual_b2c',
-                                      script: script,
-                                    ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.w700,
-                                color: c.textPrimary,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            CupertinoIcons.chevron_down,
-                            size: 13,
-                            color: c.textSecondary,
-                          ),
-                        ],
-                      ),
+                    ),
+                    child: const Icon(
+                      CupertinoIcons.shield_lefthalf_fill,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'LexGuard AI',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                      color: c.textPrimary,
                     ),
                   ),
                   const Spacer(),
@@ -100,7 +109,7 @@ class HomePage extends StatelessWidget {
                         Text(
                           lang.code,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w700,
                             color: c.textPrimary,
                           ),
@@ -115,51 +124,60 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 6),
-                  GlassPill(
-                    key: const Key('theme_toggle_pill'),
-                    padding: const EdgeInsets.all(8),
-                    onTap: () =>
-                        context.read<SessionCubit>().toggleThemeMode(),
-                    child: Icon(
-                      session.themeMode == ThemeMode.dark
-                          ? CupertinoIcons.sun_max_fill
-                          : CupertinoIcons.moon_fill,
-                      size: 15,
-                      color: c.textPrimary,
-                    ),
+                  LexThemeTogglePill(
+                    isDark: session.themeMode == ThemeMode.dark,
                   ),
                 ],
               ),
             ),
           ),
 
-          // Apple Large Title & Account Subtitle
+          // Account Title + Role Design System Pill
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(18, 6, 18, 14),
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 14),
             sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    AppStrings.adaptUz(session.organizationName, lang, script),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.7,
-                      color: c.textPrimary,
+                  Expanded(
+                    child: Text(
+                      AppStrings.adaptUz(session.organizationName, lang, script),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -0.7,
+                        color: c.textPrimary,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    AppStrings.adaptUz(session.authProviderLabel, lang, script),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w500,
-                      color: c.textSecondary,
+                  const SizedBox(width: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: c.rolePrimary.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(
+                        color: c.rolePrimary.withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: Text(
+                      isBusiness
+                          ? AppStrings.t(lang, 'business_b2b', script: script)
+                          : AppStrings.t(
+                              lang,
+                              'individual_b2c',
+                              script: script,
+                            ),
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w800,
+                        color: c.rolePrimary,
+                      ),
                     ),
                   ),
                 ],
@@ -167,304 +185,348 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Apple Wallet Style Executive Gradient Glass Quota Card
+          // Dual-Role Executive Status Card (Sapphire vs Emerald+Gold)
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: RepaintBoundary(
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 350),
-                  curve: Curves.easeOutCubic,
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [c.roleGradientStart, c.roleGradientEnd],
-                    ),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.25),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: c.roleGlow,
-                        blurRadius: 24,
-                        offset: const Offset(0, 10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(26),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 350),
+                    curve: Curves.easeOutCubic,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(26),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [c.roleGradientStart, c.roleGradientEnd],
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 9,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.18),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Text(
-                                AppStrings.t(
-                                  lang,
-                                  'trial_badge',
-                                  script: script,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${AppStrings.t(lang, 'today_limit', script: script)}: ${session.quota.todayUsed}/${session.quota.todayLimit}',
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '${session.quota.remainingTotal} / ${session.quota.totalLimit}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -0.8,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              AppStrings.t(
-                                lang,
-                                'remaining_analyses',
-                                script: script,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 13.5,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: LinearProgressIndicator(
-                          value: session.quota.totalLimit == 0
-                              ? 0
-                              : session.quota.totalUsed /
-                                  session.quota.totalLimit,
-                          minHeight: 6,
-                          backgroundColor: Colors.white.withValues(alpha: 0.22),
-                          color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: c.roleGlow,
+                          blurRadius: 24,
+                          offset: const Offset(0, 10),
                         ),
-                      ),
-                      const SizedBox(height: 14),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () => ScanUploadSheet.show(context),
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.viewfinder,
-                                      size: 16,
-                                      color: c.rolePrimaryDark,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Flexible(
-                                      child: Text(
-                                        AppStrings.t(
-                                          lang,
-                                          'scan',
-                                          script: script,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 12.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: c.rolePrimaryDark,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: -32,
+                          top: -36,
+                          child: Container(
+                            width: 148,
+                            height: 148,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (isBusiness
+                                      ? const Color(0xFFFBBF24)
+                                      : const Color(0xFF7DD3FC))
+                                  .withValues(alpha: 0.16),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () => context.go('/profile'),
-                              borderRadius: BorderRadius.circular(14),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.16),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.28),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: (isBusiness
+                                              ? const Color(0xFFFBBF24)
+                                              : Colors.white)
+                                          .withValues(
+                                        alpha: isBusiness ? 0.22 : 0.18,
+                                      ),
+                                      borderRadius: BorderRadius.circular(999),
+                                      border: Border.all(
+                                        color: (isBusiness
+                                                ? const Color(0xFFFDE68A)
+                                                : Colors.white)
+                                            .withValues(alpha: 0.35),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      AppStrings.adaptUz(
+                                        session.quota.planName,
+                                        lang,
+                                        script,
+                                      ),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      CupertinoIcons.sparkles,
-                                      size: 15,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Flexible(
-                                      child: Text(
-                                        AppStrings.t(
-                                          lang,
-                                          'plans',
-                                          script: script,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontSize: 12.5,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                        ),
+                                  const Spacer(),
+                                  InkWell(
+                                    onTap: () => PlansModalSheet.show(context),
+                                    borderRadius: BorderRadius.circular(999),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 11,
+                                        vertical: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.16),
+                                        borderRadius:
+                                            BorderRadius.circular(999),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            CupertinoIcons.sparkles,
+                                            size: 13,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            AppStrings.t(
+                                              lang,
+                                              'plans',
+                                              script: script,
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 18),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    '${session.quota.remainingTotal} / ${session.quota.totalLimit}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: -1.0,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 9),
+                                  Expanded(
+                                    child: Text(
+                                      AppStrings.t(
+                                        lang,
+                                        'remaining_analyses',
+                                        script: script,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${AppStrings.t(lang, 'today_limit', script: script)}: ${session.quota.todayUsed}/${session.quota.todayLimit}',
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(999),
+                                child: LinearProgressIndicator(
+                                  value: session.quota.totalLimit == 0
+                                      ? 0
+                                      : session.quota.totalUsed /
+                                          session.quota.totalLimit,
+                                  minHeight: 6,
+                                  backgroundColor:
+                                      Colors.white.withValues(alpha: 0.22),
+                                  color: isBusiness
+                                      ? const Color(0xFFFDE68A)
+                                      : Colors.white,
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
 
-          // Control Center Glass Services Grid
+          // Result Statuses Guide (Qizil, Sariq, Yashil, Rangsiz) — straight from Loyiha DOCX §4
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
             sliver: SliverToBoxAdapter(
-              child: Text(
-                AppStrings.t(lang, 'quick_services', script: script),
-                style: TextStyle(
-                  fontSize: 16.5,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.3,
-                  color: c.textPrimary,
+              child: _StatusGuideCard(
+                lang: lang,
+                script: script,
+                onTapMore: () => _showStatusGuideDetail(
+                  context,
+                  lang: lang,
+                  script: script,
                 ),
               ),
             ),
           ),
+
+          // Law Updates / Legal News Section
           SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 22, 16, 8),
             sliver: SliverToBoxAdapter(
-              child: GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.0,
+              child: Row(
                 children: [
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.doc_on_doc_fill,
-                    label: AppStrings.t(lang, 'svc_upload', script: script),
-                    onTap: () => ScanUploadSheet.show(context),
-                  ),
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.camera_fill,
-                    label: AppStrings.t(lang, 'svc_camera', script: script),
-                    onTap: () =>
-                        ScanUploadSheet.show(context, focusCamera: true),
-                  ),
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.checkmark_shield_fill,
-                    label: AppStrings.t(lang, 'svc_notarial', script: script),
-                    onTap: () => _launchNotarialQuick(context),
-                  ),
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.envelope_fill,
-                    label: AppStrings.t(lang, 'svc_claim', script: script),
-                    onTap: () => _openLatestProtocol(context, contracts),
-                  ),
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.chat_bubble_2_fill,
-                    label: AppStrings.t(lang, 'svc_mediation', script: script),
-                    onTap: () => _showInfoSheet(
-                      context,
-                      lang: lang,
-                      script: script,
-                      title: AppStrings.t(
-                        lang,
-                        'mediation_title',
-                        script: script,
-                      ),
-                      body: AppStrings.t(
-                        lang,
-                        'mediation_body',
-                        script: script,
+                  Expanded(
+                    child: Text(
+                      AppStrings.t(lang, 'law_updates_title', script: script),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 17.5,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.4,
+                        color: c.textPrimary,
                       ),
                     ),
                   ),
-                  _GlassServiceTile(
-                    icon: CupertinoIcons.person_2_fill,
-                    label: AppStrings.t(lang, 'svc_lawyer', script: script),
-                    onTap: () => _showInfoSheet(
-                      context,
-                      lang: lang,
-                      script: script,
-                      title: AppStrings.t(lang, 'lawyer_title', script: script),
-                      body: AppStrings.t(lang, 'lawyer_body', script: script),
+                  TextButton(
+                    onPressed: () => context.go('/laws'),
+                    child: Text(
+                      AppStrings.t(lang, 'see_all', script: script),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: c.rolePrimary,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
+          SliverToBoxAdapter(
+            child: SizedBox(
+              height: 138,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: lawNews.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final news = lawNews[index];
+                  return _LawNewsCard(
+                    item: news,
+                    onTap: () => _showNewsDetail(
+                      context,
+                      item: news,
+                      lang: lang,
+                      script: script,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // Quick Legal Services (B2B focused — keeps Individual home ultra-focused)
+          if (isBusiness) ...[
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 22, 16, 10),
+              sliver: SliverToBoxAdapter(
+                child: Text(
+                  AppStrings.t(lang, 'quick_services', script: script),
+                  style: TextStyle(
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.4,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverToBoxAdapter(
+                child: GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 2.35,
+                  children: [
+                    _QuickServiceCard(
+                      icon: CupertinoIcons.checkmark_shield_fill,
+                      label: AppStrings.t(lang, 'svc_notarial', script: script)
+                          .replaceAll('\n', ' '),
+                      onTap: () => _launchNotarialQuick(context),
+                    ),
+                    _QuickServiceCard(
+                      icon: CupertinoIcons.envelope_fill,
+                      label: AppStrings.t(lang, 'svc_claim', script: script)
+                          .replaceAll('\n', ' '),
+                      onTap: () => _openLatestProtocol(context, contracts),
+                    ),
+                    _QuickServiceCard(
+                      icon: CupertinoIcons.chat_bubble_2_fill,
+                      label: AppStrings.t(lang, 'svc_mediation', script: script)
+                          .replaceAll('\n', ' '),
+                      onTap: () => _showInfoSheet(
+                        context,
+                        lang: lang,
+                        script: script,
+                        title: AppStrings.t(
+                          lang,
+                          'mediation_title',
+                          script: script,
+                        ),
+                        body: AppStrings.t(
+                          lang,
+                          'mediation_body',
+                          script: script,
+                        ),
+                      ),
+                    ),
+                    _QuickServiceCard(
+                      icon: CupertinoIcons.person_2_fill,
+                      label: AppStrings.t(lang, 'svc_lawyer', script: script)
+                          .replaceAll('\n', ' '),
+                      onTap: () => _showInfoSheet(
+                        context,
+                        lang: lang,
+                        script: script,
+                        title:
+                            AppStrings.t(lang, 'lawyer_title', script: script),
+                        body: AppStrings.t(lang, 'lawyer_body', script: script),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
 
           // Recent Checks Header
           SliverPadding(
@@ -478,9 +540,9 @@ class HomePage extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 16.5,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.w800,
-                        letterSpacing: -0.3,
+                        letterSpacing: -0.4,
                         color: c.textPrimary,
                       ),
                     ),
@@ -500,7 +562,7 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Frosted Glass Recent Analyses List
+          // Recent Analyses List
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList.builder(
@@ -519,10 +581,10 @@ class HomePage extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(9),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: c.rolePrimary.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(13),
                               ),
                               child: Icon(
                                 CupertinoIcons.doc_text_fill,
@@ -530,7 +592,7 @@ class HomePage extends StatelessWidget {
                                 color: c.rolePrimary,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 11),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -544,7 +606,7 @@ class HomePage extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14.5,
                                       fontWeight: FontWeight.w700,
                                       color: c.textPrimary,
                                     ),
@@ -555,7 +617,7 @@ class HomePage extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: 11.5,
+                                      fontSize: 12,
                                       color: c.textSecondary,
                                     ),
                                   ),
@@ -579,137 +641,10 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Quiet O'RQ-1115 Footnote + Floating Navbar Clearance
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 6, 20, 114),
-            sliver: SliverToBoxAdapter(
-              child: Text(
-                AppStrings.t(lang, 'orq_1115_banner', script: script),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11,
-                  height: 1.35,
-                  color: c.textSecondary,
-                ),
-              ),
-            ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 110),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showRoleQuickSwitch(
-    BuildContext context,
-    AccountSegment current,
-    AppLang lang,
-    UzbekScript script,
-  ) {
-    final c = context.lexColors;
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(14),
-        child: GlassCard(
-          radius: 28,
-          blurSigma: 26,
-          tintColor: c.glassFillStrong,
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                AppStrings.t(lang, 'role_switch_title', script: script),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: c.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                key: const Key('quick_switch_individual'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFF0066FF),
-                  child: Icon(
-                    CupertinoIcons.person_fill,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-                title: Text(
-                  AppStrings.t(lang, 'role_individual_title', script: script),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: c.textPrimary,
-                  ),
-                ),
-                trailing: current == AccountSegment.individual
-                    ? const Icon(
-                        CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF0066FF),
-                      )
-                    : null,
-                onTap: () {
-                  context
-                      .read<SessionCubit>()
-                      .setSegment(AccountSegment.individual);
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              const SizedBox(height: 6),
-              ListTile(
-                key: const Key('quick_switch_business'),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFF047857),
-                  child: Icon(
-                    CupertinoIcons.building_2_fill,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-                title: Text(
-                  AppStrings.t(lang, 'role_business_title', script: script),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: c.textPrimary,
-                  ),
-                ),
-                trailing: current == AccountSegment.business
-                    ? const Icon(
-                        CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF047857),
-                      )
-                    : null,
-                onTap: () {
-                  context
-                      .read<SessionCubit>()
-                      .setSegment(AccountSegment.business);
-                  Navigator.of(ctx).pop();
-                },
-              ),
-              const SizedBox(height: 8),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                  context.read<SessionCubit>().returnToRoleSelect();
-                  context.go('/role-select');
-                },
-                child: Text(
-                  AppStrings.t(lang, 'switch_role_screen', script: script),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -729,12 +664,105 @@ class HomePage extends StatelessWidget {
 
   void _openLatestProtocol(BuildContext context, ContractsState contracts) {
     if (contracts.analyses.isEmpty) {
-      ScanUploadSheet.show(context);
+      DirectScanLauncher.pickFileAndAnalyze(context);
       return;
     }
     ExportPreviewSheet.showCommentsAndProtocol(
       context,
       contracts.analyses.first,
+    );
+  }
+
+  void _showNewsDetail(
+    BuildContext context, {
+    required _LawNewsItem item,
+    required AppLang lang,
+    required UzbekScript script,
+  }) {
+    final c = context.lexColors;
+    showLexModalSheet<void>(
+      context: context,
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: c.rolePrimary.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  item.code,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: c.rolePrimary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                item.tag,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: c.textSecondary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            item.title,
+            style: TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.4,
+              color: c.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            item.body,
+            style: TextStyle(
+              fontSize: 14.5,
+              height: 1.45,
+              color: c.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    context.go('/laws');
+                  },
+                  child: Text(
+                    AppStrings.t(lang, 'nav_laws', script: script),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: Text(
+                    AppStrings.t(lang, 'ok_btn', script: script),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -746,39 +774,148 @@ class HomePage extends StatelessWidget {
     required String body,
   }) {
     final c = context.lexColors;
-    showModalBottomSheet<void>(
+    showLexModalSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(14),
-        child: GlassCard(
-          radius: 26,
-          tintColor: c.glassFillStrong,
-          padding: const EdgeInsets.all(20),
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w800,
+              color: c.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            body,
+            style: TextStyle(
+              fontSize: 14.5,
+              height: 1.45,
+              color: c.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 18),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(AppStrings.t(lang, 'ok_btn', script: script)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showStatusGuideDetail(
+    BuildContext context, {
+    required AppLang lang,
+    required UzbekScript script,
+  }) {
+    final c = context.lexColors;
+    final items = [
+      (
+        dot: c.redText,
+        title: AppStrings.t(lang, 'status_red_title', script: script),
+        body: AppStrings.t(lang, 'status_red_detail', script: script),
+      ),
+      (
+        dot: c.yellowText,
+        title: AppStrings.t(lang, 'status_yellow_title', script: script),
+        body: AppStrings.t(lang, 'status_yellow_detail', script: script),
+      ),
+      (
+        dot: c.greenText,
+        title: AppStrings.t(lang, 'status_green_title', script: script),
+        body: AppStrings.t(lang, 'status_green_detail', script: script),
+      ),
+      (
+        dot: c.grayText,
+        title: AppStrings.t(lang, 'status_gray_title', script: script),
+        body: AppStrings.t(lang, 'status_gray_detail', script: script),
+      ),
+    ];
+
+    showLexModalSheet<void>(
+      context: context,
+      builder: (ctx) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(ctx).height * 0.78,
+        ),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                title,
+                AppStrings.t(lang, 'status_guide_title', script: script),
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 21,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -0.5,
                   color: c.textPrimary,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
+              for (int i = 0; i < items.length; i++) ...[
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: c.grayBg,
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: items[i].dot,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 9),
+                          Expanded(
+                            child: Text(
+                              items[i].title,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w800,
+                                color: c.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 7),
+                      Text(
+                        items[i].body,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          height: 1.45,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (i < items.length - 1) const SizedBox(height: 10),
+              ],
+              const SizedBox(height: 12),
               Text(
-                body,
+                AppStrings.t(lang, 'status_guide_footer', script: script),
                 style: TextStyle(
-                  fontSize: 13.5,
-                  height: 1.45,
+                  fontSize: 12,
+                  height: 1.4,
                   color: c.textSecondary,
                 ),
               ),
               const SizedBox(height: 16),
               FilledButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(ctx).pop(),
                 child: Text(AppStrings.t(lang, 'ok_btn', script: script)),
               ),
             ],
@@ -789,8 +926,249 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _GlassServiceTile extends StatelessWidget {
-  const _GlassServiceTile({
+class _StatusGuideCard extends StatelessWidget {
+  const _StatusGuideCard({
+    required this.lang,
+    required this.script,
+    required this.onTapMore,
+  });
+
+  final AppLang lang;
+  final UzbekScript script;
+  final VoidCallback onTapMore;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.lexColors;
+    final rows = [
+      (
+        dot: c.redText,
+        title: AppStrings.t(lang, 'status_red_title', script: script),
+        desc: AppStrings.t(lang, 'status_red_short', script: script),
+      ),
+      (
+        dot: c.yellowText,
+        title: AppStrings.t(lang, 'status_yellow_title', script: script),
+        desc: AppStrings.t(lang, 'status_yellow_short', script: script),
+      ),
+      (
+        dot: c.greenText,
+        title: AppStrings.t(lang, 'status_green_title', script: script),
+        desc: AppStrings.t(lang, 'status_green_short', script: script),
+      ),
+      (
+        dot: c.grayText,
+        title: AppStrings.t(lang, 'status_gray_title', script: script),
+        desc: AppStrings.t(lang, 'status_gray_short', script: script),
+      ),
+    ];
+
+    return GlassCard(
+      radius: 22,
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      onTap: onTapMore,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  AppStrings.t(lang, 'status_guide_title', script: script),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+              Text(
+                AppStrings.t(lang, 'status_guide_more', script: script),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w700,
+                  color: c.rolePrimary,
+                ),
+              ),
+              const SizedBox(width: 2),
+              Icon(
+                CupertinoIcons.chevron_forward,
+                size: 13,
+                color: c.rolePrimary,
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          for (int i = 0; i < rows.length; i++) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Container(
+                    width: 9,
+                    height: 9,
+                    decoration: BoxDecoration(
+                      color: rows[i].dot,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        rows[i].title,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w800,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        rows[i].desc,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.2,
+                          height: 1.32,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (i < rows.length - 1) const SizedBox(height: 9),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LawNewsItem {
+  const _LawNewsItem({
+    required this.code,
+    required this.tag,
+    required this.title,
+    required this.body,
+    required this.icon,
+    this.highlight = false,
+  });
+
+  final String code;
+  final String tag;
+  final String title;
+  final String body;
+  final IconData icon;
+  final bool highlight;
+}
+
+class _LawNewsCard extends StatelessWidget {
+  const _LawNewsCard({
+    required this.item,
+    required this.onTap,
+  });
+
+  final _LawNewsItem item;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.lexColors;
+    final accent = item.highlight ? c.roleAccent : c.rolePrimary;
+
+    return SizedBox(
+      width: 236,
+      child: GlassCard(
+        radius: 22,
+        padding: const EdgeInsets.all(14),
+        borderColor: item.highlight
+            ? accent.withValues(alpha: 0.35)
+            : c.glassBorder,
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: accent.withValues(alpha: 0.13),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    item.code,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: accent,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  item.tag,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: c.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: Text(
+                item.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  height: 1.25,
+                  letterSpacing: -0.2,
+                  color: c.textPrimary,
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Icon(item.icon, size: 13, color: c.rolePrimary),
+                const SizedBox(width: 5),
+                Text(
+                  'Lex.uz',
+                  style: TextStyle(
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color: c.rolePrimary,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  CupertinoIcons.chevron_forward,
+                  size: 13,
+                  color: c.textSecondary,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickServiceCard extends StatelessWidget {
+  const _QuickServiceCard({
     required this.icon,
     required this.label,
     required this.onTap,
@@ -805,30 +1183,31 @@ class _GlassServiceTile extends StatelessWidget {
     final c = context.lexColors;
     return GlassCard(
       radius: 20,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: c.rolePrimary.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(13),
             ),
-            child: Icon(icon, size: 21, color: c.rolePrimary),
+            child: Icon(icon, size: 20, color: c.rolePrimary),
           ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-              height: 1.15,
-              color: c.textPrimary,
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                height: 1.18,
+                color: c.textPrimary,
+              ),
             ),
           ),
         ],

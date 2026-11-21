@@ -7,6 +7,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
 import '../../../core/widgets/language_picker_sheet.dart';
+import '../../../core/widgets/theme_reveal_scope.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
@@ -22,128 +23,75 @@ class RoleSelectPage extends StatelessWidget {
 
     return Scaffold(
       key: const Key('role_select_screen'),
-      backgroundColor: Colors.transparent,
+      backgroundColor: c.canvasBg,
       body: AmbientGlassBackdrop(
         child: SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
+              final w = constraints.maxWidth;
+              final hPad = (w * 0.065).clamp(20.0, 32.0);
+              final titleSize = (w * 0.085).clamp(30.0, 38.0);
+
+              return Align(
+                alignment: Alignment.topCenter,
                 child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minHeight: constraints.maxHeight - 38),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 480),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              GlassPill(
-                                onTap: () => context.go('/onboarding'),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 7,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.chevron_back,
-                                      size: 14,
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(hPad, 12, hPad, 8),
+                        child: Row(
+                          children: [
+                            GlassPill(
+                              onTap: () => context.go('/onboarding'),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              child: Icon(
+                                CupertinoIcons.chevron_back,
+                                size: 17,
+                                color: c.textPrimary,
+                              ),
+                            ),
+                            const Spacer(),
+                            GlassPill(
+                              key: const Key('lang_picker_pill'),
+                              onTap: () => LanguagePickerSheet.show(context),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    lang.code,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
                                       color: c.textPrimary,
                                     ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      AppStrings.t(
-                                        lang,
-                                        'back',
-                                        script: script,
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: c.textPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              GlassPill(
-                                key: const Key('lang_picker_pill'),
-                                onTap: () => LanguagePickerSheet.show(context),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      lang.code,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                        color: c.textPrimary,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Icon(
-                                      CupertinoIcons.chevron_down,
-                                      size: 12,
-                                      color: c.textSecondary,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              GlassPill(
-                                key: const Key('theme_toggle_pill'),
-                                onTap: () => context
-                                    .read<SessionCubit>()
-                                    .toggleThemeMode(),
-                                padding: const EdgeInsets.all(8),
-                                child: Icon(
-                                  session.themeMode == ThemeMode.dark
-                                      ? CupertinoIcons.sun_max_fill
-                                      : CupertinoIcons.moon_fill,
-                                  size: 16,
-                                  color: c.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 54,
-                                height: 54,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      c.roleGradientStart,
-                                      c.roleGradientEnd,
-                                    ],
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: c.roleGlow,
-                                      blurRadius: 18,
-                                      offset: const Offset(0, 7),
-                                    ),
-                                  ],
-                                ),
-                                child: const Icon(
-                                  CupertinoIcons.shield_lefthalf_fill,
-                                  color: Colors.white,
-                                  size: 28,
-                                ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    CupertinoIcons.chevron_down,
+                                    size: 12,
+                                    color: c.textSecondary,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 16),
+                            ),
+                            const SizedBox(width: 8),
+                            LexThemeTogglePill(
+                              isDark: session.themeMode == ThemeMode.dark,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.fromLTRB(hPad, 24, hPad, 28),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
                               Text(
                                 AppStrings.t(
                                   lang,
@@ -151,95 +99,70 @@ class RoleSelectPage extends StatelessWidget {
                                   script: script,
                                 ),
                                 style: TextStyle(
-                                  fontSize: 27,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.7,
-                                  height: 1.15,
+                                  fontSize: titleSize,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -1.0,
+                                  height: 1.12,
                                   color: c.textPrimary,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                AppStrings.t(lang, 'role_sub', script: script),
-                                style: TextStyle(
-                                  fontSize: 13.5,
-                                  height: 1.4,
-                                  color: c.textSecondary,
+                              const SizedBox(height: 28),
+                              _CleanRoleCard(
+                                key: const Key('role_card_individual'),
+                                title: AppStrings.t(
+                                  lang,
+                                  'role_individual_title',
+                                  script: script,
                                 ),
+                                subtitle: AppStrings.t(
+                                  lang,
+                                  'role_individual_sub',
+                                  script: script,
+                                ),
+                                icon: CupertinoIcons.person_fill,
+                                primaryColor: const Color(0xFF0066FF),
+                                gradientColors: const [
+                                  Color(0xFF0046C7),
+                                  Color(0xFF0A84FF),
+                                ],
+                                onTap: () {
+                                  context
+                                      .read<SessionCubit>()
+                                      .selectRole(AccountSegment.individual);
+                                  context.go('/login');
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              _CleanRoleCard(
+                                key: const Key('role_card_business'),
+                                title: AppStrings.t(
+                                  lang,
+                                  'role_business_title',
+                                  script: script,
+                                ),
+                                subtitle: AppStrings.t(
+                                  lang,
+                                  'role_business_sub',
+                                  script: script,
+                                ),
+                                icon: CupertinoIcons.building_2_fill,
+                                primaryColor: const Color(0xFF047857),
+                                gradientColors: const [
+                                  Color(0xFF064E3B),
+                                  Color(0xFF059669),
+                                ],
+                                onTap: () {
+                                  context
+                                      .read<SessionCubit>()
+                                      .selectRole(AccountSegment.business);
+                                  context.go('/login');
+                                },
                               ),
                             ],
                           ),
-                          const SizedBox(height: 24),
-                          _ExecutiveRoleCard(
-                            key: const Key('role_card_individual'),
-                            title: AppStrings.t(
-                              lang,
-                              'role_individual_title',
-                              script: script,
-                            ),
-                            badgeText: 'OneID · Mock',
-                            subtitle: AppStrings.t(
-                              lang,
-                              'role_individual_sub',
-                              script: script,
-                            ),
-                            icon: CupertinoIcons.person_crop_circle_fill,
-                            primaryColor: const Color(0xFF0066FF),
-                            gradientColors: const [
-                              Color(0xFF0046C7),
-                              Color(0xFF0A84FF),
-                            ],
-                            onTap: () {
-                              context
-                                  .read<SessionCubit>()
-                                  .selectRole(AccountSegment.individual);
-                              context.go('/login');
-                            },
-                          ),
-                          const SizedBox(height: 14),
-                          _ExecutiveRoleCard(
-                            key: const Key('role_card_business'),
-                            title: AppStrings.t(
-                              lang,
-                              'role_business_title',
-                              script: script,
-                            ),
-                            badgeText: 'E-IMZO · Mock',
-                            subtitle: AppStrings.t(
-                              lang,
-                              'role_business_sub',
-                              script: script,
-                            ),
-                            icon: CupertinoIcons.building_2_fill,
-                            primaryColor: const Color(0xFF047857),
-                            gradientColors: const [
-                              Color(0xFF064E3B),
-                              Color(0xFF059669),
-                            ],
-                            onTap: () {
-                              context
-                                  .read<SessionCubit>()
-                                  .selectRole(AccountSegment.business);
-                              context.go('/login');
-                            },
-                          ),
-                          const SizedBox(height: 22),
-                          Text(
-                            AppStrings.t(
-                              lang,
-                              'orq_1115_banner',
-                              script: script,
-                            ),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 11.5,
-                              height: 1.35,
-                              color: c.textSecondary,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               );
@@ -251,11 +174,10 @@ class RoleSelectPage extends StatelessWidget {
   }
 }
 
-class _ExecutiveRoleCard extends StatelessWidget {
-  const _ExecutiveRoleCard({
+class _CleanRoleCard extends StatelessWidget {
+  const _CleanRoleCard({
     super.key,
     required this.title,
-    required this.badgeText,
     required this.subtitle,
     required this.icon,
     required this.primaryColor,
@@ -264,7 +186,6 @@ class _ExecutiveRoleCard extends StatelessWidget {
   });
 
   final String title;
-  final String badgeText;
   final String subtitle;
   final IconData icon;
   final Color primaryColor;
@@ -277,16 +198,15 @@ class _ExecutiveRoleCard extends StatelessWidget {
     return GlassCard(
       onTap: onTap,
       radius: 26,
-      padding: const EdgeInsets.all(18),
-      borderColor: primaryColor.withValues(alpha: 0.25),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      borderColor: primaryColor.withValues(alpha: 0.22),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 58,
+            height: 58,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -294,66 +214,49 @@ class _ExecutiveRoleCard extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: primaryColor.withValues(alpha: 0.26),
-                  blurRadius: 14,
+                  color: primaryColor.withValues(alpha: 0.24),
+                  blurRadius: 16,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: Icon(icon, color: Colors.white, size: 26),
+            child: Icon(icon, color: Colors.white, size: 28),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: primaryColor.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    badgeText,
-                    style: TextStyle(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.2,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 21,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: -0.3,
+                    letterSpacing: -0.4,
                     color: c.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 12.5,
-                    height: 1.4,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                     color: c.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 6),
-          Padding(
-            padding: const EdgeInsets.only(top: 14),
-            child: Icon(
-              CupertinoIcons.chevron_right_circle_fill,
-              size: 24,
-              color: primaryColor,
-            ),
+          const SizedBox(width: 8),
+          Icon(
+            CupertinoIcons.chevron_forward,
+            size: 20,
+            color: primaryColor,
           ),
         ],
       ),

@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
+import '../../../core/widgets/lex_modal_sheet.dart';
+import '../../../core/widgets/lex_toast.dart';
 import '../../../core/widgets/risk_badges.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
-import '../../scanner_upload/presentation/scan_upload_sheet.dart';
+import '../../scanner_upload/presentation/direct_scan_launcher.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
 class DocumentsPage extends StatelessWidget {
@@ -18,7 +20,9 @@ class DocumentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
-    final lang = context.watch<SessionCubit>().state.lang;
+    final session = context.watch<SessionCubit>().state;
+    final lang = session.lang;
+    final script = session.uzbekScript;
     final state = context.watch<ContractsCubit>().state;
     final items = state.filteredAnalyses;
 
@@ -33,18 +37,18 @@ class DocumentsPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    AppStrings.t(lang, 'docs_title'),
+                    AppStrings.t(lang, 'docs_title', script: script),
                     style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.7,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.8,
                       color: c.textPrimary,
                     ),
                   ),
                 ),
                 GlassPill(
-                  onTap: () => ScanUploadSheet.show(context),
-                  padding: const EdgeInsets.all(8),
+                  onTap: () => DirectScanLauncher.pickFileAndAnalyze(context),
+                  padding: const EdgeInsets.all(9),
                   child: Icon(
                     CupertinoIcons.add,
                     size: 18,
@@ -57,14 +61,16 @@ class DocumentsPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: GlassCard(
-              radius: 16,
+              radius: 18,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
               child: TextField(
                 onChanged: (v) =>
                     context.read<ContractsCubit>().setSearchQuery(v),
+                style: TextStyle(fontSize: 14.5, color: c.textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'Shartnoma nomi yoki fayl qidirish...',
-                  hintStyle: TextStyle(fontSize: 13.5, color: c.textSecondary),
+                  hintText:
+                      AppStrings.t(lang, 'docs_search_hint', script: script),
+                  hintStyle: TextStyle(fontSize: 14, color: c.textSecondary),
                   prefixIcon: Icon(
                     CupertinoIcons.search,
                     size: 18,
@@ -82,14 +88,14 @@ class DocumentsPage extends StatelessWidget {
             child: Row(
               children: [
                 _FilterGlassChip(
-                  label: 'Barchasi',
+                  label: AppStrings.t(lang, 'filter_all', script: script),
                   selected: state.typeFilter == null,
                   onTap: () =>
                       context.read<ContractsCubit>().setTypeFilter(null),
                 ),
                 const SizedBox(width: 6),
                 _FilterGlassChip(
-                  label: 'Xizmat',
+                  label: AppStrings.t(lang, 'filter_service', script: script),
                   selected: state.typeFilter == ContractType.service,
                   onTap: () => context
                       .read<ContractsCubit>()
@@ -97,7 +103,7 @@ class DocumentsPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 _FilterGlassChip(
-                  label: 'Yetkazib berish',
+                  label: AppStrings.t(lang, 'filter_supply', script: script),
                   selected: state.typeFilter == ContractType.supply,
                   onTap: () => context
                       .read<ContractsCubit>()
@@ -105,7 +111,7 @@ class DocumentsPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 6),
                 _FilterGlassChip(
-                  label: 'Notarial (R6)',
+                  label: AppStrings.t(lang, 'filter_notarial', script: script),
                   selected: state.typeFilter == ContractType.realEstateSale,
                   onTap: () => context
                       .read<ContractsCubit>()
@@ -114,7 +120,7 @@ class DocumentsPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Expanded(
             child: items.isEmpty
                 ? Center(
@@ -131,25 +137,32 @@ class DocumentsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'Hujjat topilmadi',
+                            AppStrings.t(lang, 'docs_empty', script: script),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
                               color: c.textPrimary,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
                           FilledButton.icon(
-                            onPressed: () => ScanUploadSheet.show(context),
-                            icon: const Icon(CupertinoIcons.viewfinder, size: 17),
-                            label: const Text('Yangi shartnoma tekshirish'),
+                            onPressed: () =>
+                                DirectScanLauncher.pickFileAndAnalyze(context),
+                            icon: const Icon(CupertinoIcons.add, size: 17),
+                            label: Text(
+                              AppStrings.t(
+                                lang,
+                                'docs_new_check',
+                                script: script,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 112),
+                    padding: const EdgeInsets.fromLTRB(16, 2, 16, 114),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       final item = items[index];
@@ -157,25 +170,66 @@ class DocumentsPage extends StatelessWidget {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: GlassCard(
                           radius: 22,
-                          padding: const EdgeInsets.all(14),
+                          padding: const EdgeInsets.all(15),
                           onTap: () => context.push('/analysis/${item.id}'),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          c.rolePrimary.withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(13),
+                                    ),
+                                    child: Icon(
+                                      CupertinoIcons.doc_text_fill,
+                                      size: 19,
+                                      color: c.rolePrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 11),
                                   Expanded(
-                                    child: Text(
-                                      item.title,
-                                      style: TextStyle(
-                                        fontSize: 14.5,
-                                        fontWeight: FontWeight.w700,
-                                        color: c.textPrimary,
-                                      ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          AppStrings.adaptUz(
+                                            item.title,
+                                            lang,
+                                            script,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w800,
+                                            color: c.textPrimary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          '${item.fileName} · ${item.formatLabel}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: c.textSecondary,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   IconButton(
-                                    tooltip: 'O‘chirish',
+                                    tooltip: AppStrings.t(
+                                      lang,
+                                      'delete',
+                                      script: script,
+                                    ),
                                     icon: Icon(
                                       CupertinoIcons.trash,
                                       size: 18,
@@ -185,13 +239,6 @@ class DocumentsPage extends StatelessWidget {
                                         _confirmDelete(context, item),
                                   ),
                                 ],
-                              ),
-                              Text(
-                                '${item.fileName} · ${item.languageLabel} · Saqlash: ${item.retentionDays} kun',
-                                style: TextStyle(
-                                  fontSize: 11.5,
-                                  color: c.textSecondary,
-                                ),
                               ),
                               const SizedBox(height: 10),
                               RiskColorSummaryRow(analysis: item),
@@ -211,28 +258,64 @@ class DocumentsPage extends StatelessWidget {
     BuildContext context,
     ContractAnalysis item,
   ) async {
-    final confirmed = await showCupertinoDialog<bool>(
+    final c = context.lexColors;
+    final session = context.read<SessionCubit>().state;
+    final lang = session.lang;
+    final script = session.uzbekScript;
+    final confirmed = await showLexModalSheet<bool>(
       context: context,
-      builder: (ctx) => CupertinoAlertDialog(
-        title: const Text('Hujjatni o‘chirish'),
-        content: Text(
-          '"${item.title}" hujjati qurilma va serverdan o‘chiriladi (3.2 maxfiylik qoidasi).',
-        ),
-        actions: [
-          CupertinoDialogAction(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Bekor qilish'),
+      builder: (ctx) => Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            AppStrings.t(lang, 'delete_doc_title', script: script),
+            style: TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.w900,
+              color: c.textPrimary,
+            ),
           ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('O‘chirish'),
+          const SizedBox(height: 8),
+          Text(
+            '"${AppStrings.adaptUz(item.title, lang, script)}" ${AppStrings.t(lang, 'delete_doc_body', script: script)}',
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.45,
+              color: c.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(ctx).pop(false),
+                  child: Text(AppStrings.t(lang, 'cancel', script: script)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(backgroundColor: c.redText),
+                  onPressed: () => Navigator.of(ctx).pop(true),
+                  child: Text(AppStrings.t(lang, 'delete', script: script)),
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
     if (confirmed == true && context.mounted) {
       await context.read<ContractsCubit>().deleteAnalysis(item.id);
+      if (context.mounted) {
+        LexToast.show(
+          context,
+          AppStrings.t(lang, 'toast_deleted', script: script),
+          type: LexToastType.info,
+        );
+      }
     }
   }
 }
@@ -258,7 +341,7 @@ class _FilterGlassChip extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 12.5,
           fontWeight: FontWeight.w700,
           color: selected ? Colors.white : c.textPrimary,
         ),

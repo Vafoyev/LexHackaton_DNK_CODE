@@ -7,6 +7,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
 import '../../../core/widgets/language_picker_sheet.dart';
+import '../../../core/widgets/theme_reveal_scope.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     if (_currentPage < 2) {
       _pageController.animateToPage(
         _currentPage + 1,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 280),
         curve: Curves.easeOutCubic,
       );
     } else {
@@ -52,60 +53,56 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     return Scaffold(
       key: const Key('onboarding_screen'),
-      backgroundColor: Colors.transparent,
+      backgroundColor: c.canvasBg,
       body: AmbientGlassBackdrop(
         child: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                child: Column(
-                  children: [
-                    Row(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final w = constraints.maxWidth;
+              final h = constraints.maxHeight;
+              final hPad = (w * 0.065).clamp(20.0, 32.0);
+              final iconSize = (h * 0.12).clamp(76.0, 108.0);
+              final titleSize = (w * 0.082).clamp(28.0, 36.0);
+              final bodySize = (w * 0.044).clamp(16.0, 19.0);
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(hPad, 12, hPad, 22),
+                    child: Column(
                       children: [
-                        GlassPill(
-                          key: const Key('lang_picker_pill'),
-                          onTap: () => LanguagePickerSheet.show(context),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                lang.code,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: c.textPrimary,
-                                ),
+                        Row(
+                          children: [
+                            GlassPill(
+                              key: const Key('lang_picker_pill'),
+                              onTap: () => LanguagePickerSheet.show(context),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    lang.code,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: c.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    CupertinoIcons.chevron_down,
+                                    size: 12,
+                                    color: c.textSecondary,
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 4),
-                              Icon(
-                                CupertinoIcons.chevron_down,
-                                size: 12,
-                                color: c.textSecondary,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        GlassPill(
-                          key: const Key('theme_toggle_pill'),
-                          padding: const EdgeInsets.all(8),
-                          onTap: () =>
-                              context.read<SessionCubit>().toggleThemeMode(),
-                          child: Icon(
-                            session.themeMode == ThemeMode.dark
-                                ? CupertinoIcons.sun_max_fill
-                                : CupertinoIcons.moon_fill,
-                            size: 15,
-                            color: c.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
+                            ),
+                            const SizedBox(width: 8),
+                            LexThemeTogglePill(
+                              isDark: session.themeMode == ThemeMode.dark,
+                            ),
+                            const Spacer(),
+                            TextButton(
                               key: const Key('onboarding_skip_btn'),
                               onPressed: _finishOnboarding,
                               child: Text(
@@ -114,12 +111,157 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   'onboarding_skip',
                                   script: script,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 12.5,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
-                                  color: c.rolePrimary,
+                                  color: c.textSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: PageView(
+                            controller: _pageController,
+                            onPageChanged: (idx) =>
+                                setState(() => _currentPage = idx),
+                            children: [
+                              _MinimalSlide(
+                                icon: CupertinoIcons.doc_text_search,
+                                iconSize: iconSize,
+                                title: AppStrings.t(
+                                  lang,
+                                  'onb_1_title',
+                                  script: script,
+                                ),
+                                body: AppStrings.t(
+                                  lang,
+                                  'onb_1_body',
+                                  script: script,
+                                ),
+                                titleSize: titleSize,
+                                bodySize: bodySize,
+                                accentWidget: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _ColorDot(c.redText),
+                                    const SizedBox(width: 10),
+                                    _ColorDot(c.yellowText),
+                                    const SizedBox(width: 10),
+                                    _ColorDot(c.greenText),
+                                  ],
+                                ),
+                              ),
+                              _MinimalSlide(
+                                icon: CupertinoIcons.lock_shield_fill,
+                                iconSize: iconSize,
+                                title: AppStrings.t(
+                                  lang,
+                                  'onb_2_title',
+                                  script: script,
+                                ),
+                                body: AppStrings.t(
+                                  lang,
+                                  'onb_2_body',
+                                  script: script,
+                                ),
+                                titleSize: titleSize,
+                                bodySize: bodySize,
+                              ),
+                              _MinimalSlide(
+                                icon: CupertinoIcons.doc_checkmark_fill,
+                                iconSize: iconSize,
+                                title: AppStrings.t(
+                                  lang,
+                                  'onb_3_title',
+                                  script: script,
+                                ),
+                                body: AppStrings.t(
+                                  lang,
+                                  'onb_3_body',
+                                  script: script,
+                                ),
+                                titleSize: titleSize,
+                                bodySize: bodySize,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(3, (index) {
+                            final active = index == _currentPage;
+                            return AnimatedContainer(
+                              duration: const Duration(milliseconds: 220),
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              height: 7,
+                              width: active ? 28 : 7,
+                              decoration: BoxDecoration(
+                                color: active
+                                    ? c.rolePrimary
+                                    : c.textSecondary.withValues(alpha: 0.24),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                            );
+                          }),
+                        ),
+                        const SizedBox(height: 22),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 58,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  c.roleGradientStart,
+                                  c.roleGradientEnd,
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: c.rolePrimary.withValues(alpha: 0.28),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                key: const Key('onboarding_next_btn'),
+                                onTap: _nextSlide,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _currentPage == 2
+                                          ? AppStrings.t(
+                                              lang,
+                                              'onboarding_start',
+                                              script: script,
+                                            )
+                                          : AppStrings.t(
+                                              lang,
+                                              'onboarding_next',
+                                              script: script,
+                                            ),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    const Icon(
+                                      CupertinoIcons.arrow_right,
+                                      color: Colors.white,
+                                      size: 19,
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -127,213 +269,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: PageView(
-                        controller: _pageController,
-                        onPageChanged: (idx) =>
-                            setState(() => _currentPage = idx),
-                        children: [
-                          _SlideContainer(
-                            icon: CupertinoIcons.doc_text_search,
-                            title: AppStrings.t(
-                              lang,
-                              'onb_1_title',
-                              script: script,
-                            ),
-                            body: AppStrings.t(
-                              lang,
-                              'onb_1_body',
-                              script: script,
-                            ),
-                            extra: Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: [
-                                _MiniColorPill(
-                                  AppStrings.t(lang, 'red_label', script: script),
-                                  c.redText,
-                                  c.redBg,
-                                ),
-                                _MiniColorPill(
-                                  AppStrings.t(
-                                    lang,
-                                    'yellow_label',
-                                    script: script,
-                                  ),
-                                  c.yellowText,
-                                  c.yellowBg,
-                                ),
-                                _MiniColorPill(
-                                  AppStrings.t(
-                                    lang,
-                                    'gray_label',
-                                    script: script,
-                                  ),
-                                  c.grayText,
-                                  c.grayBg,
-                                ),
-                                _MiniColorPill(
-                                  AppStrings.t(
-                                    lang,
-                                    'green_label',
-                                    script: script,
-                                  ),
-                                  c.greenText,
-                                  c.greenBg,
-                                ),
-                              ],
-                            ),
-                          ),
-                          _SlideContainer(
-                            icon: CupertinoIcons.lock_shield_fill,
-                            title: AppStrings.t(
-                              lang,
-                              'onb_2_title',
-                              script: script,
-                            ),
-                            body: AppStrings.t(
-                              lang,
-                              'onb_2_body',
-                              script: script,
-                            ),
-                            extra: GlassCard(
-                              radius: 14,
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.checkmark_shield_fill,
-                                    size: 18,
-                                    color: c.greenText,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      '31205941234567 -> [JSHSHIR_1]',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontFamily: 'monospace',
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w700,
-                                        color: c.textPrimary,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          _SlideContainer(
-                            icon: CupertinoIcons.doc_checkmark_fill,
-                            title: AppStrings.t(
-                              lang,
-                              'onb_3_title',
-                              script: script,
-                            ),
-                            body: AppStrings.t(
-                              lang,
-                              'onb_3_body',
-                              script: script,
-                            ),
-                            extra: GlassCard(
-                              radius: 14,
-                              padding: const EdgeInsets.all(10),
-                              child: Text(
-                                AppStrings.t(
-                                  lang,
-                                  'orq_1115_banner',
-                                  script: script,
-                                ),
-                                style: TextStyle(
-                                  fontSize: 11.5,
-                                  color: c.textSecondary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(3, (index) {
-                        final active = index == _currentPage;
-                        return AnimatedContainer(
-                          duration: const Duration(milliseconds: 220),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          height: 7,
-                          width: active ? 26 : 8,
-                          decoration: BoxDecoration(
-                            color: active
-                                ? c.rolePrimary
-                                : c.textSecondary.withValues(alpha: 0.28),
-                            borderRadius: BorderRadius.circular(999),
-                          ),
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 16),
-                    InkWell(
-                      key: const Key('onboarding_next_btn'),
-                      onTap: _nextSlide,
-                      borderRadius: BorderRadius.circular(18),
-                      child: Ink(
-                        height: 52,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [c.roleGradientStart, c.roleGradientEnd],
-                          ),
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: c.roleGlow,
-                              blurRadius: 18,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                _currentPage == 2
-                                    ? AppStrings.t(
-                                        lang,
-                                        'onboarding_start',
-                                        script: script,
-                                      )
-                                    : AppStrings.t(
-                                        lang,
-                                        'onboarding_next',
-                                        script: script,
-                                      ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(
-                              CupertinoIcons.arrow_right,
-                              color: Colors.white,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),
@@ -341,89 +280,104 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-class _SlideContainer extends StatelessWidget {
-  const _SlideContainer({
+class _MinimalSlide extends StatelessWidget {
+  const _MinimalSlide({
     required this.icon,
+    required this.iconSize,
     required this.title,
     required this.body,
-    required this.extra,
+    required this.titleSize,
+    required this.bodySize,
+    this.accentWidget,
   });
 
   final IconData icon;
+  final double iconSize;
   final String title;
   final String body;
-  final Widget extra;
+  final double titleSize;
+  final double bodySize;
+  final Widget? accentWidget;
 
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
     return Center(
-      child: SingleChildScrollView(
-        child: GlassCard(
-          radius: 28,
-          padding: const EdgeInsets.all(22),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(18),
-                  gradient: LinearGradient(
-                    colors: [c.roleGradientStart, c.roleGradientEnd],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: iconSize,
+              height: iconSize,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(iconSize * 0.28),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [c.roleGradientStart, c.roleGradientEnd],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: c.rolePrimary.withValues(alpha: 0.24),
+                    blurRadius: 28,
+                    offset: const Offset(0, 12),
                   ),
-                ),
-                child: Icon(icon, color: Colors.white, size: 30),
+                ],
               ),
-              const SizedBox(height: 18),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                  color: c.textPrimary,
-                ),
+              child: Icon(icon, color: Colors.white, size: iconSize * 0.48),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: titleSize,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.9,
+                height: 1.12,
+                color: c.textPrimary,
               ),
-              const SizedBox(height: 10),
-              Text(
+            ),
+            const SizedBox(height: 14),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 320),
+              child: Text(
                 body,
+                textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 13.5,
-                  height: 1.48,
+                  fontSize: bodySize,
+                  fontWeight: FontWeight.w500,
+                  height: 1.4,
                   color: c.textSecondary,
                 ),
               ),
-              const SizedBox(height: 16),
-              extra,
+            ),
+            if (accentWidget != null) ...[
+              const SizedBox(height: 22),
+              accentWidget!,
             ],
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _MiniColorPill extends StatelessWidget {
-  const _MiniColorPill(this.text, this.fg, this.bg);
+class _ColorDot extends StatelessWidget {
+  const _ColorDot(this.color);
 
-  final String text;
-  final Color fg;
-  final Color bg;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      width: 12,
+      height: 12,
       decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: fg),
+        color: color,
+        shape: BoxShape.circle,
       ),
     );
   }
