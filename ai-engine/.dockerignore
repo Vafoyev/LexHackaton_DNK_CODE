@@ -1,0 +1,10 @@
+# Virtual env, kesh va testlar image ga kirmasin
+.venv/
+**/__pycache__/
+*.pyc
+tests/
+test_ai_engine.py
+# Faqat o'qitish/scraping uchun kerak bo'lgan xom ma'lumotlar (runtime faqat uzbek_legal_corpus_unified.json va *.jsonl ni o'qiydi)
+data/raw/
+data/markdown/
+data/articles/

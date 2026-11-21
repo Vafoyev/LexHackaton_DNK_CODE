@@ -12,8 +12,24 @@ import json
 from typing import Dict, List, Optional, Any
 from collections import defaultdict
 
+from app.config import CORPUS_PATH
+
+# "FK 707", "FK-UZ 707", "MK 130" kabi qisqa havolalar uchun qonun -> manba kodlari
+_LAW_ALIASES = {
+    "fk": ("FK-UZ-1", "FK-UZ-2"),
+    "fkuz": ("FK-UZ-1", "FK-UZ-2"),
+    "mk": ("MK-2022",),
+    "mk2022": ("MK-2022",),
+    "670i": ("670-I",),
+    "221i": ("221-I",),
+    "orq547": ("ORQ-547",), "orq482": ("ORQ-482",), "orq792": ("ORQ-792",),
+    "orq850": ("ORQ-850",), "orq684": ("ORQ-684",),
+}
+_CURATED_RELATIONS_EXCLUDE = {"internal_reference", "civil_code_cross_part"}
+
+
 class LegalKnowledgeGraph:
-    def __init__(self, corpus_path: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/uzbek_legal_corpus_unified.json"):
+    def __init__(self, corpus_path: str = str(CORPUS_PATH)):
         self.corpus_path = corpus_path
         self.nodes: Dict[str, Dict[str, Any]] = {}
         self.edges: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
@@ -154,27 +170,46 @@ class LegalKnowledgeGraph:
             self.nodes[node_547]["remedy_clause"] = "Taraflar bir-birlariga taqdim etiladigan barcha shaxsiy va maxfiy ma'lumotlarning himoyasini O'RQ-547 qonuniga muvofiq qat'iy kafolatlaydilar va roziliksiz tarqatmaydilar."
             self.nodes[node_547]["is_imperative"] = True
 
-    def resolve_chain(self, root_code: str) -> Dict[str, Any]:
+    def find_node_id(self, ref: str) -> Optional[str]:
         """
-        Berilgan modda bo'yicha bog'langan barcha normalar zanjirini (Multi-Hop) yechadi.
+        Havolani tugun ID siga aylantiradi. Qabul qilinadigan shakllar:
+        "FK-UZ-2_707", "FK-UZ-2 707-modda", "FK 707", "707-modda", "ORQ-547_15".
+        Raqam bo'yicha qidiruvda aniq moslik talab qilinadi ("7-modda" "107-modda" ga mos kelmaydi).
         """
-        # Node ID ni topish
-        node_id = None
-        for n in self.nodes:
-            if root_code.lower() == n.lower() or root_code.lower() in self.nodes[n].get("code", "").lower() or root_code.lower() == self.nodes[n].get("article_number", "").lower():
-                node_id = n
-                break
-        
-        if not node_id and ("fk" in root_code.lower() or "modda" in root_code.lower()):
-            num = re.sub(r'[^\d]', '', root_code)
-            if num:
-                for prefix in ["FK-UZ-1_", "FK-UZ-2_", "MK-2022_", "670-I_", "ORQ-547_"]:
-                    cand = f"{prefix}{num}"
-                    if cand in self.nodes:
-                        node_id = cand
-                        break
+        if not ref:
+            return None
+        ref = ref.strip()
+        if ref in self.nodes:
+            return ref
+        for nid, data in self.nodes.items():
+            if ref.lower() == nid.lower() or ref.lower() == data.get("code", "").lower():
+                return nid
 
-        if not node_id or node_id not in self.nodes:
+        m = re.fullmatch(r"\s*([A-Za-z][A-Za-z0-9\-]*)?[\s_]*?(\d+)(?:[-\s]*modda)?\s*", ref)
+        if not m:
+            return None
+        law, num = m.group(1), m.group(2)
+        if law:
+            key = re.sub(r"[^a-z0-9]", "", law.lower())
+            sources = _LAW_ALIASES.get(key)
+            if not sources:
+                # "FK-UZ-2" kabi to'liq manba kodi
+                sources = tuple(s for s in {d["source_code"] for d in self.nodes.values()} if re.sub(r"[^a-z0-9]", "", s.lower()) == key)
+        else:
+            sources = ("FK-UZ-1", "FK-UZ-2", "670-I", "MK-2022", "221-I", "ORQ-547")
+        for src in sources:
+            nid = f"{src}_{num}"
+            if nid in self.nodes:
+                return nid
+        return None
+
+    def resolve_chain(self, root_code: str, max_depth: int = 2, max_nodes: int = 8) -> Dict[str, Any]:
+        """
+        Berilgan modda bo'yicha bog'langan normalar zanjirini (Multi-Hop, BFS) yechadi.
+        Qo'lda tuzilgan (curated) bog'lanishlar avtomatik "havola" qirralaridan ustun qo'yiladi.
+        """
+        node_id = self.find_node_id(root_code)
+        if not node_id:
             return {
                 "found": False,
                 "chain": [],
@@ -182,21 +217,42 @@ class LegalKnowledgeGraph:
                 "suggested_redline": ""
             }
 
+        def chain_item(nid: str, relation: str = "", note: str = "") -> Dict[str, Any]:
+            item = {k: v for k, v in self.nodes[nid].items() if k != "full_text"}
+            item["relation"] = relation
+            item["note"] = note
+            return item
+
         root_data = self.nodes[node_id]
-        chain = [root_data]
+        chain = [chain_item(node_id, "root")]
         chain_notes = [f"{root_data['code']}: {root_data['summary']}"]
-
-        # Zanjir bo'yicha qo'shni normalarni tekshirish (1-va 2-darajali chuqurlik)
         visited = {node_id}
-        for edge in self.edges.get(node_id, []):
-            target_id = edge["target"]
-            if target_id in self.nodes and target_id not in visited:
-                visited.add(target_id)
-                target_data = self.nodes[target_id]
-                chain.append(target_data)
-                chain_notes.append(f"Bog'liq norma ({target_data['code']}): {edge.get('note', target_data['summary'])}")
+        frontier = [node_id]
 
-        combined_explanation = " ".join(chain_notes)
+        for depth in range(max_depth):
+            next_frontier = []
+            for src in frontier:
+                edges = sorted(
+                    self.edges.get(src, []),
+                    key=lambda e: e.get("relation") in _CURATED_RELATIONS_EXCLUDE,  # curated birinchi
+                )
+                for edge in edges:
+                    tgt = edge["target"]
+                    if tgt in visited or tgt not in self.nodes:
+                        continue
+                    # 2-darajada faqat curated qirralar (aks holda zanjir shovqinga to'ladi)
+                    if depth > 0 and edge.get("relation") in _CURATED_RELATIONS_EXCLUDE:
+                        continue
+                    if len(chain) >= max_nodes:
+                        break
+                    visited.add(tgt)
+                    note = edge.get("note", "") or self.nodes[tgt]["summary"]
+                    chain.append(chain_item(tgt, edge.get("relation", "reference"), note))
+                    chain_notes.append(f"Bog'liq norma ({self.nodes[tgt]['code']}): {note}")
+                    next_frontier.append(tgt)
+            frontier = next_frontier
+            if not frontier:
+                break
 
         return {
             "found": True,
@@ -204,66 +260,33 @@ class LegalKnowledgeGraph:
             "root_title": root_data["title"],
             "url": root_data["url"],
             "chain": chain,
-            "combined_explanation": combined_explanation,
+            "combined_explanation": " ".join(chain_notes),
             "suggested_redline": root_data.get("remedy_clause", "")
         }
 
-    def evaluate_clause_text(self, text: str) -> Optional[Dict[str, Any]]:
+    def evaluate_clause_text(self, text: str, doc_type: str = "ANY") -> Optional[Dict[str, Any]]:
         """
-        Shartnoma bandi matnini tahlil qilib, qonuniy xavfni va bog'liq moddalar zanjirini aniqlaydi.
+        Orqaga moslik uchun: band matnini qoidalar katalogi bo'yicha baholab, eng muhim topilmani
+        resolve_chain formatida qaytaradi. Yangi kod `app.analyzer.ClauseAnalyzer` dan foydalanishi kerak.
         """
-        lower = text.lower()
-        
-        # 1. Bekor qilish / voz kechish
-        if any(w in lower for w in ["bir tomonlama", "bekor qilish", "voz kechish", "xabardor qilmasdan", "istalgan vaqtda"]):
-            if "xarajat" not in lower or "qoplamasdan" in lower or "javobgarsiz" in lower:
-                res = self.resolve_chain("FK-UZ-2_707")
-                res["risk_level"] = "RED"
-                res["category"] = "LEGAL"
-                res["issue_title"] = "Asossiz bir tomonlama bekor qilish huquqi"
-                return res
+        from app.analyzer import ClauseIn, analyzer  # kech import: aylanma bog'liqlikdan qochish
 
-        # 2. Neustoyka / penya / jarima
-        if any(w in lower for w in ["penya", "jarima", "neustoyka"]):
-            res = self.resolve_chain("FK-UZ-1_326")
-            res["risk_level"] = "YELLOW"
-            res["category"] = "COMMERCIAL"
-            res["issue_title"] = "Nomutanosib yuqori penya yoki jarima miqdori"
-            return res
-
-        # 3. Notarial shakl talabi
-        if any(w in lower for w in ["ko'chmas mulk", "avtomobil", "ijara", "oldi-sotdi"]) and "notarial" not in lower:
-            res = self.resolve_chain("FK-UZ-1_110")
-            res["risk_level"] = "RED"
-            res["category"] = "LEGAL"
-            res["issue_title"] = "Notarial shaklga rioya qilish talabi"
-            return res
-
-        # 4. Predmet va hajm yo'qligi
-        if any(w in lower for w in ["predmet", "xizmatlar ro'yxati", "hajmi"]) and any(w in lower for w in ["belgilanmagan", "keyin kelishiladi", "aniqlanmagan"]):
-            res = self.resolve_chain("FK-UZ-1_364")
-            res["risk_level"] = "RED"
-            res["category"] = "LEGAL"
-            res["issue_title"] = "Shartnomaning muhim shartlari noaniq"
-            return res
-
-        # 5. Shaxsiy ma'lumotlar / Maxfiylik
-        if any(w in lower for w in ["shaxsiy ma'lumot", "maxfiylik", "konfidensial", "roziliksiz"]):
-            res = self.resolve_chain("ORQ-547_15")
-            res["risk_level"] = "YELLOW"
-            res["category"] = "COMPLIANCE"
-            res["issue_title"] = "Shaxsiy ma'lumotlar va maxfiylik kafolati talabi"
-            return res
-
-        # 6. Mehnat / Shtat munosabatlari niqoblangan fuqarolik shartnomasi
-        if any(w in lower for w in ["ish vaqti", "ichki mehnat tartibi", "intizomiy jazo", "ta'til"]) and any(w in lower for w in ["xizmat ko'rsatish", "pudrat", "o'zini o'zi band"]):
-            res = self.resolve_chain("MK-2022_11")
-            res["risk_level"] = "RED"
-            res["category"] = "LEGAL"
-            res["issue_title"] = "Fuqarolik-huquqiy shartnoma ostida mehnat munosabatlarini yashirish xavfi"
-            return res
-
-        return None
+        report = analyzer.analyze_clause(ClauseIn("eval", "", text), doc_type)
+        if not report.findings:
+            return None
+        f = report.findings[0]
+        return {
+            "found": True,
+            "root_article": f.cited_article,
+            "root_title": f.multi_hop_chain[0]["title"] if f.multi_hop_chain else "",
+            "url": f.lex_uz_url,
+            "chain": f.multi_hop_chain,
+            "combined_explanation": f.issue_explanation,
+            "suggested_redline": f.suggested_redline,
+            "risk_level": f.risk_level,
+            "category": f.category,
+            "issue_title": f.issue_title,
+        }
 
 # Singleton instance
 legal_graph = LegalKnowledgeGraph()

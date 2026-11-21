@@ -22,6 +22,9 @@ from typing import Dict, Any, List, Optional
 from app.knowledge_graph import legal_graph
 from app.vector_store import legal_vector_store
 from app.ocr import ocr_processor
+from app import service
+from app.voice import answer_voice_query, build_voice_brief
+from app.chat import answer_chat
 
 PORT = int(os.getenv("HTTP_PORT", "8000"))
 
@@ -732,22 +735,8 @@ def find_similar_articles(art_code: str = "", text: str = "", top_k: int = 5) ->
 
     target_node = None
     if art_code:
-        normalized = art_code.strip()
-        for nid, data in legal_graph.nodes.items():
-            if (nid.lower() == normalized.lower() or
-                data.get("code", "").lower() == normalized.lower() or
-                data.get("article_number", "").lower() == normalized.lower()):
-                target_node = data
-                break
-
-        if not target_node:
-            num = re.sub(r'[^\d]', '', normalized)
-            if num:
-                for prefix in ["FK-UZ-1_", "FK-UZ-2_", "MK-2022_", "670-I_", "ORQ-547_"]:
-                    cand = f"{prefix}{num}"
-                    if cand in legal_graph.nodes:
-                        target_node = legal_graph.nodes[cand]
-                        break
+        node_id = legal_graph.find_node_id(art_code)
+        target_node = legal_graph.nodes.get(node_id) if node_id else None
 
     if target_node:
         source_meta = {
@@ -852,32 +841,35 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # ── Health Endpoint ───────────────────────────────────────────────────
         elif path == "/health":
-            total_edges = sum(len(edges) for edges in legal_graph.edges.values())
-            data = {
-                "status": "UP",
-                "service": "lexguard-ai-engine",
-                "version": "4.2.0",
-                "indexed_articles": len(legal_graph.nodes),
-                "knowledge_graph_edges": total_edges,
-                "vector_vocabulary_terms": len(legal_vector_store.doc_freqs),
-                "active_training_pairs": 3234
-            }
             self._set_headers(200)
-            self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
+            self.wfile.write(json.dumps(service.health(), ensure_ascii=False).encode("utf-8"))
             return
 
         # ── Corpus Stats ──────────────────────────────────────────────────────
         elif path == "/api/v1/corpus-stats":
-            data = {
-                "total_laws": 10,
-                "total_articles": len(legal_graph.nodes),
-                "cross_reference_edges": sum(len(edges) for edges in legal_graph.edges.values()),
-                "fine_tuning_pairs": 3234,
-                "sharegpt_dialogues": 2062,
-                "corpus_path": "/ai-engine/data/uzbek_legal_corpus_unified.json"
-            }
             self._set_headers(200)
+            self.wfile.write(json.dumps(service.corpus_stats(), ensure_ascii=False).encode("utf-8"))
+            return
+
+        # ── Law changes ───────────────────────────────────────────────────────
+        elif path == "/api/v1/law-changes":
+            try:
+                data = service.law_changes_request(
+                    int(query_params.get("limit", [10])[0]), query_params.get("source", [""])[0],
+                    query_params.get("since", [""])[0], query_params.get("only_used", ["false"])[0].lower() == "true",
+                )
+                self._set_headers(200)
+            except ValueError:
+                data = {"detail": "limit raqam, since YYYY-MM-DD bo'lishi kerak."}
+                self._set_headers(422)
             self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
+            return
+
+        # ── Rules Catalog ─────────────────────────────────────────────────────
+        elif path == "/api/v1/rules":
+            rules = service.rules_catalog()
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"count": len(rules), "rules": rules}, ensure_ascii=False).encode("utf-8"))
             return
 
         # ── Search Laws (BM25) ────────────────────────────────────────────────
@@ -938,101 +930,26 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
             return
 
         elif path == "/api/v1/analyze-clauses":
-            clauses = req_data.get("clauses", [])
-            findings = []
-
-            for c in clauses:
-                c_id = c.get("clause_id", "")
-                c_num = c.get("clause_number", "")
-                c_text = c.get("text", "")
-
-                eval_res = legal_graph.evaluate_clause_text(c_text)
-                if not eval_res or not eval_res.get("found"):
-                    hits = legal_vector_store.search(c_text, top_k=1)
-                    if hits and hits[0]["score"] > 18.0:
-                        top_hit = hits[0]
-                        chain_res = legal_graph.resolve_chain(top_hit["article_number"])
-                        eval_res = {
-                            "found": True,
-                            "root_article": f"{top_hit['source_code']} {top_hit['article_number']}",
-                            "root_title": top_hit["title"],
-                            "url": top_hit["official_url"],
-                            "risk_level": "YELLOW",
-                            "category": "COMPLIANCE",
-                            "issue_title": f"{top_hit['title']} talablariga nomuvofiqlik ehtimoli",
-                            "combined_explanation": f"Ushbu band {top_hit['source_code']} {top_hit['article_number']} doirasidagi talablarga mos kelishi tekshirilishi lozim. {top_hit['snippet']}",
-                            "suggested_redline": f"Band matni O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirilishi tavsiya etiladi.",
-                            "chain": chain_res.get("chain", [])
-                        }
-
-                if eval_res and eval_res.get("found"):
-                    findings.append({
-                        "clause_id": c_id,
-                        "clause_number": c_num,
-                        "risk_level": eval_res.get("risk_level", "YELLOW"),
-                        "category": eval_res.get("category", "LEGAL"),
-                        "issue_title": eval_res.get("issue_title", "Qonuniy nomutanosiblik"),
-                        "problematic_quote": c_text,
-                        "issue_explanation": eval_res.get("combined_explanation", ""),
-                        "cited_article": eval_res.get("root_article", ""),
-                        "suggested_redline": eval_res.get("suggested_redline", ""),
-                        "balance_label": "Ijrochiga nomutanosib og'ir",
-                        "lex_uz_url": eval_res.get("url", "https://lex.uz"),
-                        "multi_hop_chain": eval_res.get("chain", [])
-                    })
-
-            response_data = {
-                "analysis_id": req_data.get("analysis_id", "analysis-001"),
-                "total_clauses": len(clauses),
-                "findings_count": len(findings),
-                "findings": findings
-            }
+            response_data = service.analyze_request(
+                req_data.get("analysis_id", "analysis-001"),
+                [{"clause_id": c.get("clause_id", ""), "clause_number": c.get("clause_number", ""), "text": c.get("text", "")}
+                 for c in req_data.get("clauses", [])],
+                req_data.get("document_type", "B2B_SERVICE"),
+                req_data.get("party_role", ""),
+            )
             self._set_headers(200)
             self.wfile.write(json.dumps(response_data, ensure_ascii=False).encode("utf-8"))
             return
 
         elif path == "/api/v1/self-correct":
-            clause_text = req_data.get("clause_text", "")
-            candidates = req_data.get("candidate_articles", [])
-
-            # 1. Candidate moddalar tekshiruvi
-            resolved_finding = None
-            for cand in candidates:
-                res = legal_graph.resolve_chain(cand)
-                if res.get("found"):
-                    resolved_finding = {
-                        "resolved": True,
-                        "corrected_article": res.get("root_article", cand),
-                        "explanation": f"Nomzod zanjiri bo'yicha tuzatildi: {res.get('combined_explanation')}",
-                        "suggested_redline": res.get("suggested_redline")
-                    }
-                    break
-
-            if not resolved_finding:
-                eval_res = legal_graph.evaluate_clause_text(clause_text)
-                if eval_res and eval_res.get("found"):
-                    resolved_finding = {
-                        "resolved": True,
-                        "corrected_article": eval_res.get("root_article"),
-                        "explanation": eval_res.get("combined_explanation"),
-                        "suggested_redline": eval_res.get("suggested_redline")
-                    }
-                else:
-                    hits = legal_vector_store.search(clause_text, top_k=1)
-                    if hits:
-                        hit = hits[0]
-                        resolved_finding = {
-                            "resolved": True,
-                            "corrected_article": f"{hit['source_code']} {hit['article_number']}",
-                            "explanation": f"Leksik tahlil asosida muqobil norma topildi: {hit['title']}. {hit['snippet']}",
-                            "suggested_redline": "Band matnini ushbu norma talablariga moslashtirish tavsiya etiladi."
-                        }
-                    else:
-                        resolved_finding = {
-                            "resolved": False,
-                            "message": "Bog'langan qonun topilmadi, huquqshunos ko'rigi talab etiladi."
-                        }
-
+            resolved_finding = service.self_correct_request(
+                req_data.get("clause_text", ""),
+                req_data.get("previous_cited_article", ""),
+                req_data.get("verification_error", ""),
+                req_data.get("candidate_articles", []),
+                req_data.get("document_type", ""),
+                req_data.get("party_role", ""),
+            )
             self._set_headers(200)
             self.wfile.write(json.dumps(resolved_finding, ensure_ascii=False).encode("utf-8"))
             return
@@ -1054,15 +971,33 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
             return
 
         elif path == "/api/v1/voice-brief":
-            top_risks = req_data.get("top_risks", [])
-            script = f"Assalomu alaykum! LexGuard AI tahlil xulosasi tayyor. Shartnomada jami {len(top_risks)} ta huquqiy xavf aniqlandi."
-            resp = {
-                "audio_script_uz": script,
-                "ssml": f'<speak><prosody rate="medium"><s>{script}</s></prosody></speak>',
-                "duration_sec": max(8, len(script.split()) * 60 // 130)
-            }
+            resp = build_voice_brief(req_data.get("top_risks", []), req_data.get("summary_text", ""))
             self._set_headers(200)
             self.wfile.write(json.dumps(resp, ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/balance":
+            clauses = [{"clause_id": str(c.get("clause_id", i)), "clause_number": c.get("clause_number", ""), "text": c.get("text", "")}
+                       for i, c in enumerate(req_data.get("clauses", []), 1)]
+            if not clauses:
+                self._set_headers(422)
+                self.wfile.write(json.dumps({"detail": "Kamida bitta band kerak."}, ensure_ascii=False).encode("utf-8"))
+                return
+            self._set_headers(200)
+            self.wfile.write(json.dumps(service.balance_request(clauses, req_data.get("document_type", ""), req_data.get("party_role", "")), ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/chat":
+            message = str(req_data.get("message", "")).strip()
+            self._set_headers(200 if message else 422)
+            body = answer_chat(message) if message else {"detail": "Xabar bo'sh bo'lmasligi kerak."}
+            self.wfile.write(json.dumps(body, ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/voice-query":
+            answer = answer_voice_query(req_data.get("query", ""), legal_graph, legal_vector_store)
+            self._set_headers(200 if answer else 422)
+            self.wfile.write(json.dumps({"query": req_data.get("query", ""), "answer": answer}, ensure_ascii=False).encode("utf-8"))
             return
 
         else:

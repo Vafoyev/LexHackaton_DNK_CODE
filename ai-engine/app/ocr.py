@@ -138,6 +138,24 @@ class DocumentOCRProcessor:
             logger.error(f"DOCX o'qishda xatolik: {e}")
             return "", 0.0
 
+    # Band boshi belgilari. Ko'p darajali raqamlash ("1.1.", "2.3.1"), "N-modda", "Band N" — har doim band boshi.
+    # Bitta darajali "1." ham band boshi. "1)" odatda band ichidagi ro'yxat elementi: hujjatda boshqa raqamlash
+    # umuman bo'lmasagina (asosiy raqamlash "1)" bo'lsa) yangi band boshlaydi.
+    _STRONG_HEADER_RE = re.compile(
+        r"^(?:\d{1,2}(?:\.\d{1,2})+\.?|\d+\s*[-–]\s*(?:modda|band|bob|qism)|(?:modda|band|bob|qism)[\s.:]+\d+)(?=[\s.:]|$)",
+        re.IGNORECASE,
+    )
+    _SINGLE_HEADER_RE = re.compile(r"^\d{1,3}\.(?=\s)")
+    _LIST_ITEM_RE = re.compile(r"^\d{1,3}\)(?=\s)")
+    _DATE_LINE_RE = re.compile(r"^\d{1,2}[./]\d{1,2}[./]\d{2,4}")
+
+    def _is_clause_header(self, line: str, seen_primary: bool = False) -> bool:
+        if self._DATE_LINE_RE.match(line):
+            return False
+        if self._STRONG_HEADER_RE.match(line) or self._SINGLE_HEADER_RE.match(line):
+            return True
+        return bool(self._LIST_ITEM_RE.match(line)) and not seen_primary and len(line) < 120
+
     def segment_clauses(self, full_text: str) -> List[Dict[str, Any]]:
         """
         Shartnoma matnini yuridik bandlarga (1.1, 1.2, 1-modda, 2-band kabi) ajratadi.
@@ -153,11 +171,7 @@ class DocumentOCRProcessor:
         current_lines = []
         page_num = 1
         clause_counter = 1
-
-        clause_header_pattern = re.compile(
-            r'^(?:(?:\d+[\.\)]\s*){1,3}|(?:[0-9]+[-.][0-9]+)|(?:(?:modda|band|bob|qism)[\s.:]+[0-9]+)|(?:[0-9]+[-–]modda))',
-            re.IGNORECASE
-        )
+        seen_primary = False
 
         for line in lines:
             line_str = line.strip()
@@ -169,7 +183,9 @@ class DocumentOCRProcessor:
                 page_num = int(page_match.group(1))
                 continue
 
-            if clause_header_pattern.match(line_str) and len(line_str) < 120:
+            if self._is_clause_header(line_str, seen_primary):
+                if not self._LIST_ITEM_RE.match(line_str):
+                    seen_primary = True
                 # Flush previous clause
                 if current_lines:
                     clause_text = " ".join(current_lines).strip()

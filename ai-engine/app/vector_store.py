@@ -1,33 +1,34 @@
 """
-LexGuard AI — Hybrid Vector & Lexical Legal Search Engine
-Vazifasi: 2,058 ta Lex.uz moddalari bo'yicha tezkor gibrid (BM25 + TF-IDF) qidiruv
-va har qanday shartnoma bandiga mos O'zbekiston qonunlarini 100% aniqlik bilan topish.
+LexGuard AI — Leksik qidiruv (BM25, inverted index)
+Vazifasi: 2,058 ta Lex.uz moddasi bo'yicha tezkor qidiruv. Matn normalizatsiyasi (apostrof/kirill variantlari)
+va yengil stemming (o'zbekcha qo'shimchalar) `text_utils` orqali bajariladi.
 """
 
-import os
-import re
-import math
 import json
-from collections import Counter
-from typing import List, Dict, Any, Tuple
+import math
+import os
+from collections import Counter, defaultdict
+from typing import Any, Dict, List, Tuple
+
+from app.config import CORPUS_PATH
+from app.text_utils import tokenize
+
+K1 = 1.5
+B = 0.75
+
 
 class LegalVectorStore:
-    def __init__(self, corpus_path: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/uzbek_legal_corpus_unified.json"):
+    def __init__(self, corpus_path: str = str(CORPUS_PATH)):
         self.corpus_path = corpus_path
         self.documents: List[Dict[str, Any]] = []
-        self.doc_tokens: List[List[str]] = []
+        self.doc_index: Dict[str, int] = {}
+        self.postings: Dict[str, List[Tuple[int, int]]] = defaultdict(list)  # term -> [(doc_idx, tf)]
         self.doc_freqs: Dict[str, int] = Counter()
         self.doc_lengths: List[int] = []
-        self.avg_doc_len: float = 0.0
+        self.avg_doc_len: float = 1.0
         self.num_docs: int = 0
-        
-        self._build_index()
 
-    def _tokenize(self, text: str) -> List[str]:
-        # Oddiy va tezkor o'zbekcha so'zlarni ajratish
-        clean = re.sub(r'[^\w\s]', ' ', text.lower())
-        tokens = [w for w in clean.split() if len(w) > 2]
-        return tokens
+        self._build_index()
 
     def _build_index(self):
         if not os.path.exists(self.corpus_path):
@@ -38,77 +39,78 @@ class LegalVectorStore:
             self.documents = json.load(f)
 
         self.num_docs = len(self.documents)
-        print(f"[VectorStore] {self.num_docs} ta qonun moddasi indekslanmoqda...")
-
         total_length = 0
-        for doc in self.documents:
-            # Sarlavha, raqam va matnni birlashtirib indekslash (sarlavhaga 3x vazn beriladi)
-            full_content = f"{doc.get('article_number', '')} {doc.get('title', '')} {doc.get('title', '')} {doc.get('title', '')} {doc.get('full_text', '')}"
-            tokens = self._tokenize(full_content)
-            self.doc_tokens.append(tokens)
-            doc_len = len(tokens)
-            self.doc_lengths.append(doc_len)
-            total_length += doc_len
+        for idx, doc in enumerate(self.documents):
+            self.doc_index[doc.get("id")] = idx
+            # sarlavhaga 3x vazn beriladi
+            title = doc.get("title", "")
+            content = f"{doc.get('article_number', '')} {title} {title} {title} {doc.get('full_text', '')}"
+            tokens = tokenize(content)
+            self.doc_lengths.append(len(tokens))
+            total_length += len(tokens)
+            for term, tf in Counter(tokens).items():
+                self.postings[term].append((idx, tf))
+                self.doc_freqs[term] += 1
 
-            # DF (Document Frequency) hisoblash
-            unique_tokens = set(tokens)
-            for t in unique_tokens:
-                self.doc_freqs[t] += 1
+        self.avg_doc_len = total_length / self.num_docs if self.num_docs else 1.0
+        print(f"[VectorStore] {self.num_docs} ta modda, {len(self.doc_freqs)} ta noyob termin indekslandi.")
 
-        self.avg_doc_len = total_length / self.num_docs if self.num_docs > 0 else 1.0
-        print(f"[VectorStore] Indekslash tugallandi: {self.num_docs} ta modda, {len(self.doc_freqs)} ta noyob leksik termin!")
+    def _idf(self, term: str) -> float:
+        df = self.doc_freqs[term]
+        return math.log(1.0 + (self.num_docs - df + 0.5) / (df + 0.5))
+
+    def _term_score(self, idf: float, tf: int, doc_len: int) -> float:
+        return idf * ((tf * (K1 + 1)) / (tf + K1 * (1 - B + B * (doc_len / self.avg_doc_len))))
+
+    def _hit(self, idx: int, score: float) -> Dict[str, Any]:
+        doc = self.documents[idx]
+        return {
+            "id": doc.get("id"),
+            "article_number": doc.get("article_number"),
+            "title": doc.get("title"),
+            "source_code": doc.get("source_code"),
+            "score": round(score, 4),
+            "official_url": doc.get("official_url"),
+            "snippet": doc.get("full_text", "")[:350],
+            "cross_references": doc.get("cross_references", []),
+        }
 
     def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
-        """
-        BM25 algoritmi bo'yicha eng mos qonun moddalarini qidiradi.
-        """
+        """BM25 bo'yicha eng mos moddalar."""
         if self.num_docs == 0:
             return []
-
-        query_tokens = self._tokenize(query)
+        query_tokens = tokenize(query)
         if not query_tokens:
             return []
 
-        scores: List[float] = [0.0] * self.num_docs
-        k1 = 1.5
-        b = 0.75
-
-        for token in query_tokens:
-            if token not in self.doc_freqs:
+        scores: Dict[int, float] = defaultdict(float)
+        for term in query_tokens:  # takroriy so'rov terminlari og'irlikni oshiradi (avvalgi xatti-harakat bilan bir xil)
+            if term not in self.postings:
                 continue
+            idf = self._idf(term)
+            for idx, tf in self.postings[term]:
+                scores[idx] += self._term_score(idf, tf, self.doc_lengths[idx])
 
-            # IDF
-            df = self.doc_freqs[token]
-            idf = math.log(1.0 + (self.num_docs - df + 0.5) / (df + 0.5))
+        ranked = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)[:top_k]
+        return [self._hit(idx, sc) for idx, sc in ranked if sc > 0.05]
 
-            for idx, d_tokens in enumerate(self.doc_tokens):
-                tf = d_tokens.count(token)
-                if tf == 0:
-                    continue
+    def score_document(self, query: str, doc_id: str) -> float:
+        """Berilgan bitta modda so'rovga qanchalik mos ekanini (BM25) qaytaradi."""
+        idx = self.doc_index.get(doc_id)
+        if idx is None:
+            return 0.0
+        wanted = Counter(tokenize(query))
+        score = 0.0
+        for term, qtf in wanted.items():
+            if term not in self.postings:
+                continue
+            idf = self._idf(term)
+            for d_idx, tf in self.postings[term]:
+                if d_idx == idx:
+                    score += qtf * self._term_score(idf, tf, self.doc_lengths[idx])
+                    break
+        return score
 
-                d_len = self.doc_lengths[idx]
-                score = idf * ((tf * (k1 + 1)) / (tf + k1 * (1 - b + b * (d_len / self.avg_doc_len))))
-                scores[idx] += score
-
-        # Top-K natijalarni saralash
-        ranked_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
-        
-        results = []
-        for idx in ranked_indices:
-            if scores[idx] > 0.05:
-                doc = self.documents[idx]
-                results.append({
-                    "id": doc.get("id"),
-                    "article_number": doc.get("article_number"),
-                    "title": doc.get("title"),
-                    "source_code": doc.get("source_code"),
-                    "score": round(scores[idx], 4),
-                    "official_url": doc.get("official_url"),
-                    "snippet": doc.get("full_text", "")[:350],
-                    "cross_references": doc.get("cross_references", [])
-                })
-
-        return results
 
 # Singleton instance
 legal_vector_store = LegalVectorStore()
@@ -119,12 +121,11 @@ if __name__ == "__main__":
         "Kechiktirilgan har bir kun uchun 1 foiz penya undiriladi",
         "Ko'chmas mulk oldi-sotdi shartnomasini notariusda tasdiqlash",
         "Xodimni sinov muddati bilan ishga qabul qilish",
-        "Shaxsiy ma'lumotlarni chet elga uzatish"
+        "Shaxsiy ma'lumotlarni chet elga uzatish",
     ]
 
     for q in test_queries:
         print(f"\nQIDIRUV: '{q}'")
-        hits = legal_vector_store.search(q, top_k=2)
-        for h in hits:
+        for h in legal_vector_store.search(q, top_k=2):
             print(f"  [{h['score']}] {h['source_code']} {h['article_number']}: {h['title']}")
             print(f"      Havola: {h['official_url']}")
