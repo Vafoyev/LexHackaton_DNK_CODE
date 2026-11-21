@@ -1,16 +1,5 @@
 import React from 'react';
-import { 
-  ArrowLeft, 
-  Download, 
-  FileText, 
-  Cpu, 
-  BookOpen, 
-  Sparkles, 
-  CheckCircle2, 
-  ShieldCheck, 
-  User, 
-  Building 
-} from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { AnalysisResult } from '../../types/contract';
 import { exportToDocx, exportToPDF } from '../../utils/export';
 import { useAuth } from '../../context/AuthContext';
@@ -96,35 +85,32 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         <div className="flex items-center gap-1 p-1 bg-slate-900 rounded-2xl border border-slate-800 shadow-inner">
           <button
             onClick={() => setActiveView('reader')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeView === 'reader'
                 ? 'bg-slate-800 text-white shadow-sm'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Shartnoma Varaqi</span>
+            Shartnoma Varaqi
           </button>
 
           <button
             onClick={() => setActiveView('diff')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeView === 'diff'
                 ? 'bg-slate-800 text-white shadow-sm'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Redline Diff</span>
+            Redline Diff
           </button>
 
           <button
             onClick={onOpen3D}
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-sky-400 hover:text-sky-300 hover:bg-slate-800/60 transition-all cursor-pointer"
           >
-            <Cpu className="w-3.5 h-3.5" />
+            <img src="/lex_uz.svg" alt="3D" className="h-3 w-auto object-contain brightness-125" />
             <span>3D Xarita</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping"></span>
           </button>
         </div>
 
@@ -132,20 +118,18 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => exportToDocx(analysis)}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs font-semibold border border-slate-700 hover:border-sky-500/40 flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-300 text-xs font-semibold border border-slate-700 hover:border-sky-500/40 transition-all cursor-pointer"
             title="Word (.docx) yuklab olish"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Word</span>
+            DOCX
           </button>
 
           <button
             onClick={() => exportToPDF(analysis)}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-semibold border border-slate-700 hover:border-emerald-500/40 flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-semibold border border-slate-700 hover:border-emerald-500/40 transition-all cursor-pointer"
             title="Audit PDF yuklab olish"
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">PDF</span>
+            PDF
           </button>
         </div>
       </div>

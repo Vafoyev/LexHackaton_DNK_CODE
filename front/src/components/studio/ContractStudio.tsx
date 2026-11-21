@@ -6,7 +6,6 @@ import { ClauseInspector } from './ClauseInspector';
 import { ThreeDModal } from './ThreeDModal';
 import { SideBySideDiffViewer } from '../diff/SideBySideDiffViewer';
 import { LiveVoiceAssistant } from '../voice/LiveVoiceAssistant';
-import { Sparkles, Check, Wand2 } from 'lucide-react';
 
 interface ContractStudioProps {
   analysis: AnalysisResult;
@@ -90,9 +89,8 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
 
             <button
               onClick={handleAutoFixAll}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105 shrink-0"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/20 flex items-center justify-center gap-1.5 transition-all cursor-pointer hover:scale-105 shrink-0"
             >
-              <Wand2 className="w-3.5 h-3.5" />
               <span>Barcha Xavflarni Avto-Tuzatish</span>
             </button>
           </div>

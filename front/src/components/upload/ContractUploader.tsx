@@ -1,19 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { 
-  UploadCloud, 
-  FileText, 
-  CheckCircle2, 
-  AlertCircle, 
-  Sparkles, 
-  ArrowRight, 
-  ShieldCheck, 
-  Loader2,
-  User,
-  Building,
-  Home,
-  Car,
-  Briefcase
-} from 'lucide-react';
+import { AlertCircle, ArrowRight } from 'lucide-react';
 import { calculateSHA256, formatBytes } from '../../utils/crypto';
 import { ProgressEvent } from '../../types/contract';
 import { useAuth } from '../../context/AuthContext';
@@ -84,29 +70,22 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Rejim Indikatori (Jismoniy shaxs / Yuridik shaxs) */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800">
-        <div className="flex items-center gap-2.5">
-          <div className={`p-2 rounded-xl ${
-            isIndividual ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-          }`}>
-            {isIndividual ? <User className="w-5 h-5" /> : <Building className="w-5 h-5" />}
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-white uppercase tracking-wider">
+              {isIndividual ? 'JISMONIY SHAXS REJIMI' : 'YURIDIK SHAXS (B2B) REJIMI'}
+            </span>
+            <span className={`text-[10px] font-mono px-2 py-0.2 rounded-full font-bold ${
+              isIndividual ? 'bg-sky-500/20 text-sky-300' : 'bg-emerald-500/20 text-emerald-300'
+            }`}>
+              {isIndividual ? 'FUQARO · JShShIR' : 'KOMPANIYA · STIR'}
+            </span>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white uppercase tracking-wider">
-                {isIndividual ? 'JISMONIY SHAXS REJIMI' : 'YURIDIK SHAXS (B2B) REJIMI'}
-              </span>
-              <span className={`text-[10px] font-mono px-2 py-0.2 rounded-full font-bold ${
-                isIndividual ? 'bg-sky-500/20 text-sky-300' : 'bg-emerald-500/20 text-emerald-300'
-              }`}>
-                {isIndividual ? 'FUQARO · JShShIR' : 'KOMPANIYA · STIR'}
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">
-              {isIndividual 
-                ? 'Fuqarolik shartnomalari (Ijara, Oldi-sotdi, Xizmat) bo‘yicha O‘zbekiston FK asosida tahlil' 
-                : 'Korporativ tijoriy shartnomalar (Yetkazib berish, IT xizmat, Pudrat) bo‘yicha B2B audit'}
-            </p>
-          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            {isIndividual 
+              ? 'Fuqarolik shartnomalari (Ijara, Oldi-sotdi, Xizmat) bo‘yicha O‘zbekiston FK asosida tahlil' 
+              : 'Korporativ tijoriy shartnomalar (Yetkazib berish, IT xizmat, Pudrat) bo‘yicha B2B audit'}
+          </p>
         </div>
 
         <span className="text-[11px] font-mono text-slate-400 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800">
@@ -120,7 +99,6 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
           {/* Matn qismi */}
           <div className="lg:col-span-6 space-y-2.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-[10px] font-mono font-bold">
-              <Sparkles className="w-3.5 h-3.5" />
               <span>O‘ZBEKISTON RESPUBLIKASI LEX.UZ MILLIY BAZASI</span>
             </div>
 
@@ -133,8 +111,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-slate-400">
-              <span className="flex items-center gap-1.5 text-emerald-400">
-                <ShieldCheck className="w-4 h-4" /> 100% Qonuniy asos
+              <span className="text-emerald-400 font-bold">
+                100% Qonuniy asos
               </span>
               <span>·</span>
               <span className="text-sky-300">
@@ -214,8 +192,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         ) : selectedFile ? (
           /* Holat: Fayl tanlangan */
           <div className="space-y-6 max-w-md mx-auto">
-            <div className={`w-16 h-16 rounded-2xl mx-auto flex items-center justify-center ${isIndividual ? 'bg-sky-500/20 text-sky-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
-              <FileText className="w-8 h-8" />
+            <div className={`w-16 h-16 rounded-2xl mx-auto flex items-center justify-center p-3 ${isIndividual ? 'bg-sky-500/20 border border-sky-500/30' : 'bg-emerald-500/20 border border-emerald-500/30'}`}>
+              <img src="/lex_uz.svg" alt="Lex.uz" className="h-6 w-auto object-contain brightness-125" />
             </div>
 
             <div>
@@ -251,12 +229,8 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         ) : (
           /* Holat: Bo'sh yuklash maydoni */
           <div className="space-y-5">
-            <div className={`w-16 h-16 rounded-3xl mx-auto flex items-center justify-center transition-transform hover:scale-110 shadow-lg ${
-              isIndividual 
-                ? 'bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-sky-500/20' 
-                : 'bg-gradient-to-tr from-emerald-500 to-teal-600 text-white shadow-emerald-500/20'
-            }`}>
-              <UploadCloud className="w-8 h-8" />
+            <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center p-2 bg-slate-800/80 border border-slate-700 shadow-inner">
+              <img src="/lex_uz.svg" alt="Lex.uz" className="h-6 w-auto object-contain brightness-125" />
             </div>
 
             <div className="space-y-1.5">
@@ -274,12 +248,11 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`px-5 py-2.5 rounded-xl text-white font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer hover:scale-105 ${
+                className={`px-5 py-2.5 rounded-xl text-white font-bold text-xs shadow-md transition-all cursor-pointer hover:scale-105 ${
                   isIndividual ? 'bg-sky-600 hover:bg-sky-500' : 'bg-emerald-600 hover:bg-emerald-500'
                 }`}
               >
-                <UploadCloud className="w-4 h-4" />
-                <span>Kompyuterdan Tanlash</span>
+                Kompyuterdan Tanlash
               </button>
 
               <span className="text-xs text-slate-500">yoki</span>
@@ -287,10 +260,9 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               <button
                 type="button"
                 onClick={startDemoAnalysis}
-                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 hover:border-sky-500/50 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 hover:border-sky-500/50 transition-all cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-sky-400" />
-                <span>{isIndividual ? 'Namunaviy Ijara Shartnomasini Sinash' : 'Namunaviy B2B Shartnomani Sinash'}</span>
+                {isIndividual ? 'Namunaviy Ijara Shartnomasini Sinash' : 'Namunaviy B2B Shartnomani Sinash'}
               </button>
             </div>
 
@@ -313,10 +285,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800 flex items-center gap-1">
-                  <Home className="w-3 h-3" /> UY-JOY IJARASI
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800 font-bold">
+                  UY-JOY IJARASI
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Kvartira / Bino Ijara Shartnomasi
@@ -331,10 +303,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 flex items-center gap-1">
-                  <Car className="w-3 h-3" /> OLDI-SOTDI
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 font-bold">
+                  OLDI-SOTDI
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Avtomobil / Mulk Oldi-Sotdi Bitimi
@@ -349,10 +321,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
-                  <Briefcase className="w-3 h-3" /> XIZMAT / MEHNAT
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">
+                  XIZMAT / MEHNAT
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Fuqarolik-Huquqiy Xizmat Shartnomasi
@@ -369,10 +341,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold">
                   B2B SERVICE
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 IT Xizmat Ko'rsatish Shartnomasi
@@ -387,10 +359,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 font-bold">
                   COMMERCIAL LEASE
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Tijoriy Bino Ijarasi Shartnomasi
@@ -405,10 +377,10 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
               className="p-4 rounded-2xl bg-slate-900/50 hover:bg-slate-900/90 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition-all group shadow-sm"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800 font-bold">
                   SUPPLY SALE
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all" />
+                <span className="text-slate-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-all text-xs font-bold">→</span>
               </div>
               <h4 className="text-xs font-bold text-white mb-1">
                 Uskunalar Yetkazib Berish Shartnomasi

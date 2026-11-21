@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  ShieldCheck, 
-  Cpu, 
-  Sparkles, 
-  Scale, 
-  BookOpen, 
-  User, 
   LogIn, 
   LogOut, 
-  Building, 
-  Zap, 
-  ChevronDown,
-  CreditCard,
-  FileBadge
+  ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { EntityType } from '../../types/auth';
@@ -48,13 +38,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onReset}
             className="flex items-center gap-3 cursor-pointer group shrink-0"
           >
-            <div className={`relative w-10 h-10 rounded-xl p-[2px] transition-transform duration-300 group-hover:scale-105 shadow-lg ${
+            <div className={`relative h-10 px-2.5 rounded-xl p-[2px] transition-transform duration-300 group-hover:scale-105 shadow-lg flex items-center justify-center ${
               isIndividual
                 ? 'bg-gradient-to-tr from-sky-600 via-blue-500 to-cyan-400 shadow-sky-500/20'
                 : 'bg-gradient-to-tr from-emerald-600 via-teal-500 to-green-400 shadow-emerald-500/20'
             }`}>
-              <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-                <ShieldCheck className={`w-6 h-6 ${isIndividual ? 'text-sky-400' : 'text-emerald-400'}`} />
+              <div className="w-full h-full bg-slate-900 rounded-[10px] px-2 flex items-center justify-center">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-5 w-auto object-contain brightness-125" />
               </div>
             </div>
             <div>
@@ -71,61 +61,46 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
-                Lex.uz Qonuniy Audit & 3D Risk Visualizer
+                Lex.uz 3D Qonuniy Audit Platformasi
               </p>
             </div>
           </div>
 
-          {/* Lex.uz Rasmiy Integratsiya & 3D Ko'rish */}
-          <div className="hidden md:flex items-center gap-2">
-            <a
-              href="https://lex.uz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/90 border border-slate-800/90 hover:border-sky-500/40 transition-all group shadow-sm"
-              title="O‘zbekiston Respublikasi Qonunchilik ma’lumotlari milliy bazasi (Lex.uz)"
+          {/* Lex.uz 3D Model Ko'rish Tugmasi */}
+          {onOpen3D && (
+            <button
+              type="button"
+              onClick={onOpen3D}
+              className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-sky-500/10 hover:scale-105"
+              title="3D Lex.uz GLTF modelini ko'rish"
             >
-              <span className="text-[10px] text-slate-400 group-hover:text-slate-200 font-mono font-medium">Baza:</span>
-              <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
-            </a>
-
-            {onOpen3D && (
-              <button
-                type="button"
-                onClick={onOpen3D}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm shadow-sky-500/10 hover:scale-105"
-                title="3D Lex.uz GLTF modelini ko'rish"
-              >
-                <Cpu className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
-                <span>3D Lex.uz</span>
-              </button>
-            )}
-          </div>
+              <img src="/lex_uz.svg" alt="Lex.uz 3D" className="h-3.5 w-auto object-contain brightness-125" />
+              <span>3D Lex.uz</span>
+            </button>
+          )}
 
           {/* MARKAZIY SHAXS TURINI ALMASHTIRGICH (JISMONIY / YURIDIK) */}
           <div className="flex items-center p-1 bg-slate-900/90 rounded-2xl border border-slate-800 shadow-inner">
             <button
               onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 isIndividual
                   ? 'bg-gradient-to-r from-sky-600 to-brand-600 text-white shadow-md shadow-sky-600/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <User className="w-3.5 h-3.5" />
-              <span>Jismoniy shaxs</span>
+              Jismoniy shaxs
             </button>
 
             <button
               onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 !isIndividual
                   ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-600/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Building className="w-3.5 h-3.5" />
-              <span>Yuridik shaxs</span>
+              Yuridik shaxs
             </button>
           </div>
 
@@ -134,38 +109,35 @@ export const Navbar: React.FC<NavbarProps> = ({
             <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800 shadow-inner">
               <button
                 onClick={() => setActiveView('dashboard')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeView === 'dashboard'
                     ? 'bg-slate-800 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <Scale className="w-3.5 h-3.5" />
-                <span>Executive Xulosa</span>
+                Executive Xulosa
               </button>
 
               <button
                 onClick={() => setActiveView('visualizer3d')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeView === 'visualizer3d'
                     ? 'bg-slate-800 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <Cpu className="w-3.5 h-3.5 text-sky-400" />
-                <span>3D Sfera</span>
+                3D Sfera
               </button>
 
               <button
                 onClick={() => setActiveView('diff')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                   activeView === 'diff'
                     ? 'bg-slate-800 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Diff</span>
+                Diff
               </button>
             </nav>
           )}
@@ -199,7 +171,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30' 
                       : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                   }`}>
-                    {isIndividual ? <User className="w-4 h-4" /> : <Building className="w-4 h-4" />}
+                    {user?.full_name ? user.full_name.charAt(0).toUpperCase() : (isIndividual ? 'J' : 'Y')}
                   </div>
                   <div className="hidden sm:block">
                     <div className="flex items-center gap-1.5">
@@ -238,23 +210,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="mt-2.5 p-2 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
                         {isIndividual ? (
                           <div className="flex items-center justify-between text-[11px]">
-                            <span className="text-slate-400 flex items-center gap-1">
-                              <CreditCard className="w-3 h-3 text-sky-400" /> JShShIR:
-                            </span>
+                            <span className="text-slate-400">JShShIR:</span>
                             <span className="text-sky-300 font-mono font-bold">{user?.jshshir || '30101901234567'}</span>
                           </div>
                         ) : (
                           <>
                             <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400 flex items-center gap-1">
-                                <FileBadge className="w-3 h-3 text-emerald-400" /> STIR (INN):
-                              </span>
+                              <span className="text-slate-400">STIR (INN):</span>
                               <span className="text-emerald-300 font-mono font-bold">{user?.tin || '305123456'}</span>
                             </div>
                             <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-400 flex items-center gap-1">
-                                <Building className="w-3 h-3 text-emerald-400" /> Tashkilot:
-                              </span>
+                              <span className="text-slate-400">Tashkilot:</span>
                               <span className="text-slate-200 font-semibold truncate max-w-[120px]">{user?.org_name || 'MCHJ'}</span>
                             </div>
                           </>
