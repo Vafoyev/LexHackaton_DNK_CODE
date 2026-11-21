@@ -216,15 +216,20 @@ func (b *SSEBroadcaster) Broadcast(analysisID, eventType string, data interface{
 // ---------------- SERVICE ----------------
 
 type Service struct {
-	db          *pgxpool.Pool
-	docRepo     *documents.Repository
-	corpusRepo  *legalcorpus.Repository
-	billingSvc  *billing.Service
-	rulesEngine *rules.RulesEngine
-	aiProvider  ai.Provider
-	arbiter     *verification.Arbiter
-	llmGate     *privacy.ExternalLLMGate
-	broadcaster *SSEBroadcaster
+	db                *pgxpool.Pool
+	docRepo           *documents.Repository
+	corpusRepo        *legalcorpus.Repository
+	billingSvc        *billing.Service
+	rulesEngine       *rules.RulesEngine
+	aiProvider        ai.Provider
+	arbiter           *verification.Arbiter
+	llmGate           *privacy.ExternalLLMGate
+	broadcaster       *SSEBroadcaster
+	externalAIEnabled bool
+}
+
+func (s *Service) SetExternalAIEnabled(enabled bool) {
+	s.externalAIEnabled = enabled
 }
 
 func NewService(

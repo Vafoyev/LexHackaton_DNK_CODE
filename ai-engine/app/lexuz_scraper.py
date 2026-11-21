@@ -74,7 +74,9 @@ LEX_SOURCES = {
 }
 
 class LexUzScraper:
-    def __init__(self, output_dir: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data"):
+    def __init__(self, output_dir: str | None = None):
+        if not output_dir:
+            output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
         self.output_dir = output_dir
         self.raw_dir = os.path.join(output_dir, "raw")
         self.articles_dir = os.path.join(output_dir, "articles")

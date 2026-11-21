@@ -25,6 +25,8 @@ from proto import legal_ai_pb2 as pb2
 from proto import legal_ai_pb2_grpc as pb2_grpc
 
 from app.knowledge_graph import legal_graph
+from app.local_model_runtime import local_neural_runtime
+from app.notarial_classifier import classify_document_form
 from app.vector_store import legal_vector_store
 from app.ocr import ocr_processor
 
@@ -73,40 +75,59 @@ class LegalAIServiceImpl(pb2_grpc.LegalAIServiceServicer):
             stage_name="knowledge_graph_indexing"
         )
 
+        full_doc_text = "\n".join(c.text for c in clauses)
+        doc_form = classify_document_form(full_doc_text, request.document_type)
+        doc_has_notarial_proof = doc_form["detected_form"] == "NOTARIAL_DOCUMENT"
+
         processed = 0
         for idx, c in enumerate(clauses):
             c_text = c.text
-            # Knowledge Graph tekshiruvi
-            eval_res = legal_graph.evaluate_clause_text(c_text)
+            # Knowledge Graph tekshiruvi (Kirill/Lotin normalizatsiyasi + xorijiy qonun fail-closed + notarial kontekst)
+            eval_res = legal_graph.evaluate_clause_text(c_text, doc_has_notarial_proof=doc_has_notarial_proof)
 
-            # Agar to'g'ridan-to'g'ri tushmasa, BM25 qidiruv
+            # Local PyTorch Multi-Task Neural Model (yangi parafraza/imlo xatoli bandlar uchun)
+            if not eval_res or not eval_res.get("found"):
+                nn_res = local_neural_runtime.predict_clause(c_text, min_confidence=0.78)
+                if nn_res and nn_res.get("found"):
+                    eval_res = nn_res
+
+            # Agar to'g'ridan-to'g'ri tushmasa, qat'iy chegara (> 22.0) + Allowlist Verifier bilan BM25
             if not eval_res or not eval_res.get("found"):
                 hits = legal_vector_store.search(c_text, top_k=1)
-                if hits and hits[0]["score"] > 18.0:
+                if hits and hits[0]["score"] > 22.0:
                     top_hit = hits[0]
-                    chain_res = legal_graph.resolve_chain(top_hit["article_number"])
-                    eval_res = {
-                        "found": True,
-                        "root_article": f"{top_hit['source_code']} {top_hit['article_number']}",
-                        "root_title": top_hit["title"],
-                        "url": top_hit["official_url"],
-                        "risk_level": "YELLOW",
-                        "category": "COMPLIANCE",
-                        "issue_title": f"{top_hit['title']} talablariga nomuvofiqlik ehtimoli",
-                        "combined_explanation": f"Ushbu band {top_hit['source_code']} {top_hit['article_number']} doirasidagi talablarga muvofiqlashtirilishi lozim. {top_hit['snippet']}",
-                        "suggested_redline": f"Band matni O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirilishi tavsiya etiladi."
-                    }
+                    cited = f"{top_hit['source_code']} {top_hit['article_number']}"
+                    if legal_graph.verify_citation(cited):
+                        eval_res = {
+                            "found": True,
+                            "root_article": cited,
+                            "root_title": top_hit["title"],
+                            "url": top_hit["official_url"],
+                            "risk_level": "YELLOW",
+                            "category": "COMMERCIAL",
+                            "balance_label": "Muvozanatli",
+                            "issue_title": f"{top_hit['title']} bo'yicha e'tibor talab etiladi",
+                            "combined_explanation": f"Ushbu band {cited} («{top_hit['title']}») talablariga nisbatan tekshirilishi tavsiya etiladi. {top_hit['snippet']}",
+                            "suggested_redline": f"Band matnini O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirish tavsiya etiladi."
+                        }
 
             if eval_res and eval_res.get("found"):
+                risk_level = eval_res.get("risk_level", "YELLOW")
+                cited_article = eval_res.get("root_article", "")
+                # Zero-Hallucination Guard: Iqtibossiz RED hech qachon chiqmaydi
+                if risk_level == "RED" and not legal_graph.verify_citation(cited_article):
+                    risk_level = "UNKNOWN"
+                    cited_article = ""
+
                 raw_finding = pb2.RawFinding(
                     clause_id=c.clause_id,
-                    risk_level=eval_res.get("risk_level", "YELLOW"),
+                    risk_level=risk_level,
                     category=eval_res.get("category", "LEGAL"),
                     issue_title=eval_res.get("issue_title", "Qonuniy nomutanosiblik"),
                     issue_explanation=eval_res.get("combined_explanation", ""),
-                    cited_article=eval_res.get("root_article", ""),
+                    cited_article=cited_article,
                     suggested_redline=eval_res.get("suggested_redline", ""),
-                    balance_label="Ijrochiga og'ir" if eval_res.get("risk_level") == "RED" else "Muvozanatli"
+                    balance_label=eval_res.get("balance_label", "Muvozanatli")
                 )
 
                 progress = int(10 + (idx + 1) / max(total_clauses, 1) * 80)
@@ -157,9 +178,11 @@ class LegalAIServiceImpl(pb2_grpc.LegalAIServiceServicer):
                     corrected_finding=finding
                 )
 
-        # 2. To'g'ridan-to'g'ri matn bo'yicha baholash
+        # 2. To'g'ridan-to'g'ri matn bo'yicha baholash (xorijiy qonun -> fail-closed!)
         eval_res = legal_graph.evaluate_clause_text(clause_text)
         if eval_res and eval_res.get("found"):
+            if eval_res.get("risk_level") == "UNKNOWN" or not eval_res.get("root_article"):
+                return pb2.SelfCorrectionResponse(resolved=False)
             finding = pb2.RawFinding(
                 clause_id="",
                 risk_level=eval_res.get("risk_level", "YELLOW"),
@@ -168,32 +191,34 @@ class LegalAIServiceImpl(pb2_grpc.LegalAIServiceServicer):
                 issue_explanation=eval_res.get("combined_explanation", ""),
                 cited_article=eval_res.get("root_article", ""),
                 suggested_redline=eval_res.get("suggested_redline", ""),
-                balance_label="Muvozanatli"
+                balance_label=eval_res.get("balance_label", "Muvozanatli")
             )
             return pb2.SelfCorrectionResponse(
                 resolved=True,
                 corrected_finding=finding
             )
 
-        # 3. BM25 eng yaqin qonunni topish
+        # 3. BM25 eng yaqin qonunni topish — faqat qat'iy chegara (>= 12.0) va allowlist tasdiqi bilan!
         hits = legal_vector_store.search(clause_text, top_k=1)
-        if hits:
+        if hits and hits[0]["score"] >= 12.0:
             hit = hits[0]
-            chain_res = legal_graph.resolve_chain(hit["article_number"])
-            finding = pb2.RawFinding(
-                clause_id="",
-                risk_level="YELLOW",
-                category="COMPLIANCE",
-                issue_title=f"{hit['title']} (Refleksiya natijasi)",
-                issue_explanation=f"Leksik tahlil va semantik zanjir asosida yangi norma aniqlandi: {hit['source_code']} {hit['article_number']}. {chain_res.get('combined_explanation', hit['snippet'])}",
-                cited_article=f"{hit['source_code']} {hit['article_number']}",
-                suggested_redline=chain_res.get("suggested_redline", f"O'zR {hit['article_number']} talablariga muvofiqlashtirish tavsiya etiladi."),
-                balance_label="Muvozanatli"
-            )
-            return pb2.SelfCorrectionResponse(
-                resolved=True,
-                corrected_finding=finding
-            )
+            cited = f"{hit['source_code']} {hit['article_number']}"
+            if legal_graph.verify_citation(cited):
+                chain_res = legal_graph.resolve_chain(hit["id"] or cited)
+                finding = pb2.RawFinding(
+                    clause_id="",
+                    risk_level="YELLOW",
+                    category="COMPLIANCE",
+                    issue_title=f"{hit['title']} (Refleksiya natijasi)",
+                    issue_explanation=f"Leksik tahlil va semantik zanjir asosida tasdiqlangan norma aniqlandi: {cited}. {chain_res.get('combined_explanation', hit['snippet'])}",
+                    cited_article=cited,
+                    suggested_redline=chain_res.get("suggested_redline", f"O'zR {hit['article_number']} talablariga muvofiqlashtirish tavsiya etiladi."),
+                    balance_label="Muvozanatli"
+                )
+                return pb2.SelfCorrectionResponse(
+                    resolved=True,
+                    corrected_finding=finding
+                )
 
         return pb2.SelfCorrectionResponse(resolved=False)
 
@@ -255,13 +280,13 @@ class LegalAIServiceImpl(pb2_grpc.LegalAIServiceServicer):
             if not query:
                 continue
 
-            # Answer synthesis
+            # Answer synthesis (faqat ishonchli BM25 >= 10.0 natijada javob beradi, aks holda taxmin qilmaydi)
             hits = legal_vector_store.search(query, top_k=1)
-            if hits:
+            if hits and hits[0]["score"] >= 10.0:
                 top_hit = hits[0]
                 ans_text = f"O'zbekiston Respublikasi {top_hit['source_code']} {top_hit['article_number']} («{top_hit['title']}») bo'yicha: {top_hit['snippet'][:300]}."
             else:
-                ans_text = "Ushbu savol bo'yicha qonunlar bazasidan ma'lumot topilmadi. Yurist maslahati tavsiya etiladi."
+                ans_text = "Ushbu savol bo'yicha rasmiy Lex.uz bazasidan aniq norma topilmadi. Hamkor advokat maslahati tavsiya etiladi."
 
             # Stream words as chunks
             words = ans_text.split()

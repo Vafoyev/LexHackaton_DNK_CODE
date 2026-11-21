@@ -8,15 +8,18 @@ yuqori sifatli JSONL datasetlarini yaratish.
 import os
 import re
 import json
+from pathlib import Path
 from typing import List, Dict, Any
+
+_DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 class LegalDatasetGenerator:
     def __init__(
         self,
-        unified_corpus_path: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/uzbek_legal_corpus_unified.json",
-        output_alpaca: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/legal_instructions_train.jsonl",
-        output_sharegpt: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/legal_sharegpt_train.jsonl",
-        output_eval: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/legal_cross_ref_eval.jsonl"
+        unified_corpus_path: str = str(_DATA_DIR / "uzbek_legal_corpus_unified.json"),
+        output_alpaca: str = str(_DATA_DIR / "legal_instructions_train.jsonl"),
+        output_sharegpt: str = str(_DATA_DIR / "legal_sharegpt_train.jsonl"),
+        output_eval: str = str(_DATA_DIR / "legal_cross_ref_eval.jsonl"),
     ):
         self.corpus_path = unified_corpus_path
         self.output_alpaca = output_alpaca

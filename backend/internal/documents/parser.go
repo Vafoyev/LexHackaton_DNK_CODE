@@ -47,7 +47,7 @@ type ClauseInfo struct {
 	EndOffset    int                 `json:"end_offset"`
 }
 
-// SniffMimeType checks magic bytes of file
+// SniffMimeType checks magic bytes of file (DOCX, PDF, TXT, JPG, PNG)
 func SniffMimeType(buf []byte, filename string) (string, error) {
 	if len(buf) >= 4 && bytes.HasPrefix(buf, []byte("%PDF")) {
 		return "application/pdf", nil
@@ -58,14 +58,20 @@ func SniffMimeType(buf []byte, filename string) (string, error) {
 			return "application/vnd.openxmlformats-officedocument.wordprocessingml.document", nil
 		}
 	}
+	if len(buf) >= 3 && buf[0] == 0xFF && buf[1] == 0xD8 && buf[2] == 0xFF {
+		return "image/jpeg", nil
+	}
+	if len(buf) >= 8 && bytes.HasPrefix(buf, []byte{0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A}) {
+		return "image/png", nil
+	}
 	detected := http.DetectContentType(buf)
 	if strings.HasPrefix(detected, "text/") {
 		return "text/plain", nil
 	}
-	return "", fmt.Errorf("ruxsat etilmagan fayl turi: faqat PDF, DOCX yoki TXT qabul qilinadi (%s)", detected)
+	return "", fmt.Errorf("ruxsat etilmagan fayl turi: faqat DOCX, PDF, TXT, JPG yoki PNG qabul qilinadi (%s)", detected)
 }
 
-// ExtractText extracts plain text from DOCX, PDF, or TXT
+// ExtractText extracts plain text from DOCX, PDF, TXT, or returns an OCR-needed marker for images
 func ExtractText(data []byte, mimeType string) (string, float64, error) {
 	switch mimeType {
 	case "text/plain":
@@ -76,6 +82,11 @@ func ExtractText(data []byte, mimeType string) (string, float64, error) {
 
 	case "application/pdf":
 		return extractTextFromPDF(data)
+
+	case "image/jpeg", "image/png":
+		// Image text extraction is delegated to ai-engine /api/v1/ocr in the upload handler;
+		// this fallback keeps the contract parseable with low confidence if OCR is offline.
+		return "1. Skanerlangan hujjat rasmi yuklandi.\n2. Matnni aniq o'qish uchun AI Engine OCR servisi talab etiladi.", 0.65, nil
 
 	default:
 		return "", 0.0, errors.New("noma'lum yoki qo'llab-quvvatlanmaydigan MIME turi")

@@ -40,8 +40,8 @@ func NewRedactor() *Redactor {
 		rePassport: regexp.MustCompile(`\b[A-Z]{2}\s*\d{7}\b`),
 		// STIR/INN: 9 digits
 		reStir: regexp.MustCompile(`\b\d{9}\b`),
-		// Uzbekistan and international phone numbers
-		rePhone: regexp.MustCompile(`(?:\+?998[\s\-]?)?(?:\(?\d{2}\)?[\s\-]?)?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}\b`),
+		// Uzbekistan and international phone numbers (requires +998/998 or valid operator code so contract sums like "1 000 000" are never masked)
+		rePhone: regexp.MustCompile(`(?:\+?998[\s\-]?\(?\d{2}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}|\b(?:9[01345789]|33|50|55|71|77|88)[\s\-]\d{3}[\s\-]?\d{2}[\s\-]?\d{2})\b`),
 		// Email
 		reEmail: regexp.MustCompile(`[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}`),
 		// Bank card: 16 digits

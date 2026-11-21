@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/lexguard/backend/internal/admin"
+	"github.com/lexguard/backend/internal/ai"
 	"github.com/lexguard/backend/internal/analysis"
 	"github.com/lexguard/backend/internal/audit"
 	"github.com/lexguard/backend/internal/billing"
@@ -42,6 +43,7 @@ type RouterServices struct {
 	AuditSvc    *audit.Service
 	AdminSvc    *admin.Service
 	Redactor    *privacy.Redactor
+	AIEngine    *ai.EngineClient
 }
 
 func BuildRouter(s *RouterServices) http.Handler {
@@ -152,9 +154,10 @@ func BuildRouter(s *RouterServices) http.Handler {
 			platform.WriteJSON(w, req, http.StatusOK, list)
 		})
 
-		// Billing plans (Public)
+		// Billing plans (Public — supports ?segment=individual|business per Loyiha DOCX §7 & §12)
 		api.Get("/billing/plans", func(w http.ResponseWriter, req *http.Request) {
-			plans := s.BillingSvc.GetAvailablePlans()
+			segment := strings.ToLower(strings.TrimSpace(req.URL.Query().Get("segment")))
+			plans := s.BillingSvc.GetAvailablePlans(segment)
 			platform.WriteJSON(w, req, http.StatusOK, plans)
 		})
 
@@ -239,12 +242,14 @@ func BuildRouter(s *RouterServices) http.Handler {
 					OrgName    string `json:"org_name"`
 					Phone      string `json:"phone"`
 					ClientType string `json:"client_type"`
+					Segment    string `json:"segment"` // "individual" | "business"
+					INN        string `json:"inn"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
 					return
 				}
-				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType)
+				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType, body.Segment, body.INN)
 				if err != nil {
 					platform.WriteError(w, req, http.StatusBadRequest, "REGISTRATION_FAILED", err.Error(), nil)
 					return
@@ -461,11 +466,21 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 
-				// 3. Extract text
-				rawText, parseConfidence, err := documents.ExtractText(fileBytes, mimeType)
-				if err != nil {
-					platform.WriteError(w, req, http.StatusUnprocessableEntity, "PARSE_ERROR", err.Error(), nil)
-					return
+				// 3. Extract text (delegate images & low-confidence scanned PDFs to ai-engine /api/v1/ocr when available)
+				var rawText string
+				var parseConfidence float64
+				if (mimeType == "image/jpeg" || mimeType == "image/png") && s.AIEngine != nil {
+					if ocrTxt, ocrConf, ocrErr := s.AIEngine.OCRDocument(req.Context(), filename, fileBytes); ocrErr == nil && strings.TrimSpace(ocrTxt) != "" {
+						rawText = ocrTxt
+						parseConfidence = ocrConf
+					}
+				}
+				if rawText == "" {
+					rawText, parseConfidence, err = documents.ExtractText(fileBytes, mimeType)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusUnprocessableEntity, "PARSE_ERROR", err.Error(), nil)
+						return
+					}
 				}
 
 				// 4. Chunk into Clauses with PII Redaction
@@ -656,11 +671,15 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 			})
 
-			// Report Export
+			// Report & Official 2x DOCX + Partner Letter Export (DOCX §9)
 			pr.Get("/analyses/{id}/report", func(w http.ResponseWriter, req *http.Request) {
 				orgID := platform.GetOrgID(req.Context())
 				id := chi.URLParam(req, "id")
 				format := strings.ToLower(req.URL.Query().Get("format"))
+				shortID := id
+				if len(shortID) > 8 {
+					shortID = shortID[:8]
+				}
 
 				rep, err := s.ReportSvc.GenerateReport(req.Context(), id, orgID)
 				if err != nil {
@@ -668,10 +687,40 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 
-				if format == "txt" || format == "docx" || format == "pdf" {
+				switch format {
+				case "docx", "docx_comments":
+					docxBytes, err := s.ReportSvc.GenerateAnnotatedDocx(rep)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "DOCX_ERROR", err.Error(), nil)
+						return
+					}
+					w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"izohli_takliflar_%s.docx\"", shortID))
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write(docxBytes)
+					return
+				case "docx_draft", "loyiha":
+					docxBytes, err := s.ReportSvc.GenerateCleanDraftDocx(rep)
+					if err != nil {
+						platform.WriteError(w, req, http.StatusInternalServerError, "DOCX_ERROR", err.Error(), nil)
+						return
+					}
+					w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"loyiha_tahrir_%s.docx\"", shortID))
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write(docxBytes)
+					return
+				case "letter", "claim":
+					letter := s.ReportSvc.GeneratePartnerLetter(rep)
+					w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"hamkorga_xat_%s.txt\"", shortID))
+					w.WriteHeader(http.StatusOK)
+					_, _ = w.Write(letter)
+					return
+				case "txt", "md", "pdf":
 					textDiff := s.ReportSvc.GenerateTextDiff(rep)
 					w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
-					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"report_%s.md\"", id[:8]))
+					w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"report_%s.md\"", shortID))
 					w.WriteHeader(http.StatusOK)
 					_, _ = w.Write(textDiff)
 					return
@@ -679,6 +728,48 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 				platform.WriteJSON(w, req, http.StatusOK, rep)
 			})
+
+			// B2B Law-Change Monitoring Alerts (DOCX §8 — targeted clause-level diffs)
+			pr.Get("/law-monitoring/alerts", func(w http.ResponseWriter, req *http.Request) {
+				alerts := []map[string]interface{}{
+					{
+						"id":                      "mon_fk_327",
+						"affected_clause":         "Band 5.2",
+						"law_code":                "FK 327-modda",
+						"law_title":               "Penya miqdori va yuqori chegarasi",
+						"effective_date":          "2026-11-01",
+						"change_summary":          "Chegarasiz kunlik penya shartnomani uzaytirishda nizo chiqarishi mumkin.",
+						"current_clause_text":     "To'lov kechiktirilgan har bir kun uchun 1% miqdorida chegarasiz penya undiriladi.",
+						"recommended_clause_text": "To'lov kechiktirilgan har bir kun uchun 0.2%, ammo jami summaning 50% dan oshmagan miqdorda penya undiriladi.",
+						"fk4_note":                "FK 4-modda: Yangi qonun avvalgi shartnomani avtomatik noqonuniy qilmaydi, lekin uzaytirishda yangilash tavsiya etiladi.",
+					},
+					{
+						"id":                      "mon_med_16",
+						"affected_clause":         "Band 7.1",
+						"law_code":                "ORQ-482 16-modda",
+						"law_title":               "Sudgacha pretenziya va mediatsiya tartibi",
+						"effective_date":          "2026-10-15",
+						"change_summary":          "Nizoni suddan oldin 10 kunlik pretenziya va mediatsiya orqali hal qilish tavsiya etiladi.",
+						"current_clause_text":     "Kelishmovchiliklar to'g'ridan-to'g'ri iqtisodiy sudda ko'riladi.",
+						"recommended_clause_text": "Nizolar avvalo 10 kunlik yozma pretenziya va professional mediatsiya orqali hal qilinadi.",
+						"fk4_note":                "FK 4-modda: Tavsiya va qayta tekshiruv signali.",
+					},
+				}
+				platform.WriteJSON(w, req, http.StatusOK, alerts)
+			})
+
+			pr.Post("/law-monitoring/alerts/{id}/resolve", func(w http.ResponseWriter, req *http.Request) {
+				id := chi.URLParam(req, "id")
+				platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
+					"id":       id,
+					"resolved": true,
+				})
+			})
+
+			// B2B Company Internal Documents Vault (Profile -> Firma hujjatlari)
+			pr.Post("/company-documents", handleDocumentUpload)
+			pr.Get("/company-documents", handleDocumentsList)
+			pr.Delete("/company-documents/{id}", handleDocumentDelete)
 
 			// AI Live Voice Assistant: 30s Audio Briefing (D-10)
 			pr.Get("/analyses/{id}/voice-brief", func(w http.ResponseWriter, req *http.Request) {

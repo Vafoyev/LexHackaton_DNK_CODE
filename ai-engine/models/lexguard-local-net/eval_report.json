@@ -1,0 +1,17 @@
+{
+  "model_name": "LexGuard-LocalNet-v1 (PyTorch Multi-Task Neural Model)",
+  "trained_locally_on": "CPU",
+  "training_seconds": 16.97,
+  "train_samples": 1524,
+  "eval_samples": 590,
+  "data_leakage_contracts": 0,
+  "closed_world_articles": 14,
+  "trainable_parameters": 1188377,
+  "model_size_mb": 4.66,
+  "best_epoch": 2,
+  "eval_loss": 0.716,
+  "eval_risk_accuracy_pct": 100.0,
+  "eval_article_accuracy_pct": 100.0,
+  "eval_form_accuracy_pct": 100.0,
+  "combined_score_pct": 100.0
+}

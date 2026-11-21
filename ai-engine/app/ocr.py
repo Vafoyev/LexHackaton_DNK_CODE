@@ -39,10 +39,18 @@ class DocumentOCRProcessor:
         confidence_score = 0.95
 
         mime_type_lower = (mime_type or "").lower()
+        is_image_magic = (
+            file_bytes.startswith(b"\x89PNG\r\n\x1a\n")
+            or file_bytes.startswith(b"\xff\xd8\xff")
+            or file_bytes.startswith(b"BM")
+            or file_bytes.startswith(b"II*\x00")
+            or file_bytes.startswith(b"MM\x00*")
+            or (len(file_bytes) >= 12 and file_bytes[:4] == b"RIFF" and file_bytes[8:12] == b"WEBP")
+        )
 
         if "pdf" in mime_type_lower or file_bytes.startswith(b"%PDF"):
             full_text, confidence_score = self._extract_from_pdf(file_bytes)
-        elif any(img_type in mime_type_lower for img_type in ["image", "png", "jpeg", "jpg", "tiff", "bmp", "webp"]):
+        elif is_image_magic or any(img_type in mime_type_lower for img_type in ["image", "png", "jpeg", "jpg", "tiff", "bmp", "webp"]):
             full_text, confidence_score = self._extract_from_image(file_bytes)
         elif "docx" in mime_type_lower or file_bytes.startswith(b"PK\x03\x04"):
             full_text, confidence_score = self._extract_from_docx(file_bytes)
@@ -117,8 +125,13 @@ class DocumentOCRProcessor:
             from PIL import Image
             import pytesseract
             img = Image.open(io.BytesIO(file_bytes))
-            text = pytesseract.image_to_string(img, lang="uzb+rus+eng")
-            return text.strip(), 0.90
+            for lang in ("uzb+rus+eng", "rus+eng", "eng"):
+                try:
+                    text = pytesseract.image_to_string(img, lang=lang)
+                    return text.strip(), 0.90
+                except Exception:
+                    continue
+            return pytesseract.image_to_string(img).strip(), 0.85
         except Exception as e:
             logger.error(f"Rasm OCR da xatolik: {e}")
             return f"[OCR xatoligi: {str(e)}]", 0.40

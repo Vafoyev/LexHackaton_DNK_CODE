@@ -1,7 +1,7 @@
 """
 LexGuard AI — Hybrid Server (Zero-Dependency Standard Library HTTP + FastAPI + Knowledge Graph + gRPC)
 Vazifasi: Go backend va frontend so'rovlariga Lex.uz ning 2,058 ta qonunlari va
-Knowledge Graph multi-hop zanjirlari orqali 100% aniqlik bilan xizmat ko'rsatish.
+Knowledge Graph multi-hop zanjirlari orqali closed-world verifikatsiya bilan xizmat ko'rsatish.
 Tashqi kutubxonalarsiz (Zero-Dependency) ham, Docker (FastAPI) da ham birdek ishlaydi.
 """
 
@@ -18,6 +18,9 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from typing import Dict, Any
 
 from app.knowledge_graph import legal_graph
+from app.local_model_runtime import local_neural_runtime
+from app.notarial_classifier import classify_document_form
+from app.slm_runtime import slm_runtime
 from app.vector_store import legal_vector_store
 from app.ocr import ocr_processor
 
@@ -49,7 +52,10 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
                 "indexed_articles": len(legal_graph.nodes),
                 "knowledge_graph_edges": total_edges,
                 "vector_vocabulary_terms": len(legal_vector_store.doc_freqs),
-                "active_training_pairs": 3234
+                "active_training_pairs": 3234,
+                "local_neural_model_ready": local_neural_runtime.is_ready,
+                "local_neural_eval_metrics": local_neural_runtime.eval_metrics,
+                "slm_adapter_ready": slm_runtime.adapter_ready
             }
             self._set_headers(200)
             self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
@@ -62,8 +68,26 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
                 "cross_reference_edges": sum(len(edges) for edges in legal_graph.edges.values()),
                 "fine_tuning_pairs": 3234,
                 "sharegpt_dialogues": 2062,
-                "corpus_path": "/ai-engine/data/uzbek_legal_corpus_unified.json"
+                "corpus_path": legal_graph.corpus_path
             }
+            self._set_headers(200)
+            self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/verify-citation":
+            article = query_params.get("article", [""])[0]
+            chain = legal_graph.resolve_chain(article)
+            if not chain.get("found"):
+                data = {"verified": False, "status": "UNKNOWN", "message": "Manba tasdiqlanmadi («0» xulosa)."}
+            else:
+                data = {
+                    "verified": True,
+                    "status": "VERIFIED",
+                    "root_article": chain.get("root_article"),
+                    "root_title": chain.get("root_title"),
+                    "url": chain.get("url"),
+                    "chain_depth": len(chain.get("chain", []))
+                }
             self._set_headers(200)
             self.wfile.write(json.dumps(data, ensure_ascii=False).encode("utf-8"))
             return
@@ -103,8 +127,17 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
         except Exception:
             req_data = {}
 
+        if path == "/api/v1/classify-form":
+            res = classify_document_form(req_data.get("text", ""), req_data.get("document_type", ""))
+            self._set_headers(200)
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode("utf-8"))
+            return
+
         if path == "/api/v1/analyze-clauses":
             clauses = req_data.get("clauses", [])
+            full_doc_text = "\n".join(c.get("text", "") for c in clauses)
+            doc_form = classify_document_form(full_doc_text, req_data.get("document_type", ""))
+            doc_has_notarial_proof = doc_form["detected_form"] == "NOTARIAL_DOCUMENT"
             findings = []
 
             for c in clauses:
@@ -112,43 +145,57 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
                 c_num = c.get("clause_number", "")
                 c_text = c.get("text", "")
 
-                eval_res = legal_graph.evaluate_clause_text(c_text)
+                eval_res = legal_graph.evaluate_clause_text(c_text, doc_has_notarial_proof=doc_has_notarial_proof)
+                if not eval_res or not eval_res.get("found"):
+                    nn_res = local_neural_runtime.predict_clause(c_text, min_confidence=0.78)
+                    if nn_res and nn_res.get("found"):
+                        eval_res = nn_res
                 if not eval_res or not eval_res.get("found"):
                     hits = legal_vector_store.search(c_text, top_k=1)
-                    if hits and hits[0]["score"] > 18.0:
+                    if hits and hits[0]["score"] > 22.0:
                         top_hit = hits[0]
-                        chain_res = legal_graph.resolve_chain(top_hit["article_number"])
-                        eval_res = {
-                            "found": True,
-                            "root_article": f"{top_hit['source_code']} {top_hit['article_number']}",
-                            "root_title": top_hit["title"],
-                            "url": top_hit["official_url"],
-                            "risk_level": "YELLOW",
-                            "category": "COMPLIANCE",
-                            "issue_title": f"{top_hit['title']} talablariga nomuvofiqlik ehtimoli",
-                            "combined_explanation": f"Ushbu band {top_hit['source_code']} {top_hit['article_number']} doirasidagi talablarga mos kelishi tekshirilishi lozim. {top_hit['snippet']}",
-                            "suggested_redline": f"Band matni O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirilishi tavsiya etiladi.",
-                            "chain": chain_res.get("chain", [])
-                        }
+                        cited = f"{top_hit['source_code']} {top_hit['article_number']}"
+                        if legal_graph.verify_citation(cited):
+                            chain_res = legal_graph.resolve_chain(top_hit["id"] or cited)
+                            eval_res = {
+                                "found": True,
+                                "root_article": cited,
+                                "root_title": top_hit["title"],
+                                "url": top_hit["official_url"],
+                                "risk_level": "YELLOW",
+                                "category": "COMMERCIAL",
+                                "balance_label": "Muvozanatli",
+                                "issue_title": f"{top_hit['title']} bo'yicha e'tibor talab etiladi",
+                                "combined_explanation": f"Ushbu band {cited} («{top_hit['title']}») talablariga nisbatan tekshirilishi tavsiya etiladi. {top_hit['snippet']}",
+                                "suggested_redline": f"Band matnini O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirish tavsiya etiladi.",
+                                "chain": chain_res.get("chain", [])
+                            }
 
                 if eval_res and eval_res.get("found"):
+                    risk_level = eval_res.get("risk_level", "YELLOW")
+                    cited_article = eval_res.get("root_article", "")
+                    if risk_level == "RED" and not legal_graph.verify_citation(cited_article):
+                        risk_level = "UNKNOWN"
+                        cited_article = ""
+
                     findings.append({
                         "clause_id": c_id,
                         "clause_number": c_num,
-                        "risk_level": eval_res.get("risk_level", "YELLOW"),
+                        "risk_level": risk_level,
                         "category": eval_res.get("category", "LEGAL"),
                         "issue_title": eval_res.get("issue_title", "Qonuniy nomutanosiblik"),
                         "problematic_quote": c_text,
                         "issue_explanation": eval_res.get("combined_explanation", ""),
-                        "cited_article": eval_res.get("root_article", ""),
+                        "cited_article": cited_article,
                         "suggested_redline": eval_res.get("suggested_redline", ""),
-                        "balance_label": "Ijrochiga nomutanosib og'ir",
-                        "lex_uz_url": eval_res.get("url", "https://lex.uz"),
+                        "balance_label": eval_res.get("balance_label", "Muvozanatli"),
+                        "lex_uz_url": eval_res.get("url", "") if cited_article else "",
                         "multi_hop_chain": eval_res.get("chain", [])
                     })
 
             response_data = {
                 "analysis_id": req_data.get("analysis_id", "analysis-001"),
+                "document_form": doc_form,
                 "total_clauses": len(clauses),
                 "findings_count": len(findings),
                 "findings": findings
@@ -177,26 +224,35 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
             if not resolved_finding:
                 eval_res = legal_graph.evaluate_clause_text(clause_text)
                 if eval_res and eval_res.get("found"):
-                    resolved_finding = {
-                        "resolved": True,
-                        "corrected_article": eval_res.get("root_article"),
-                        "explanation": eval_res.get("combined_explanation"),
-                        "suggested_redline": eval_res.get("suggested_redline")
-                    }
-                else:
-                    hits = legal_vector_store.search(clause_text, top_k=1)
-                    if hits:
-                        hit = hits[0]
+                    if eval_res.get("risk_level") == "UNKNOWN" or not eval_res.get("root_article"):
                         resolved_finding = {
-                            "resolved": True,
-                            "corrected_article": f"{hit['source_code']} {hit['article_number']}",
-                            "explanation": f"Leksik tahlil asosida muqobil norma topildi: {hit['title']}. {hit['snippet']}",
-                            "suggested_redline": "Band matnini ushbu norma talablariga moslashtirish tavsiya etiladi."
+                            "resolved": False,
+                            "message": "Band O'zbekiston qonunchiligi qamrovidan tashqarida (Tekshirilmadi -> hamkor advokat)."
                         }
                     else:
                         resolved_finding = {
+                            "resolved": True,
+                            "corrected_article": eval_res.get("root_article"),
+                            "explanation": eval_res.get("combined_explanation"),
+                            "suggested_redline": eval_res.get("suggested_redline")
+                        }
+                else:
+                    hits = legal_vector_store.search(clause_text, top_k=1)
+                    if hits and hits[0]["score"] >= 12.0:
+                        hit = hits[0]
+                        cited = f"{hit['source_code']} {hit['article_number']}"
+                        if legal_graph.verify_citation(cited):
+                            chain_res = legal_graph.resolve_chain(hit["id"] or cited)
+                            resolved_finding = {
+                                "resolved": True,
+                                "corrected_article": cited,
+                                "explanation": f"Leksik tahlil asosida tasdiqlangan norma topildi: {hit['title']}. {chain_res.get('combined_explanation', hit['snippet'])}",
+                                "suggested_redline": chain_res.get("suggested_redline", f"Band matnini O'zR {hit['article_number']} talablariga moslashtirish tavsiya etiladi.")
+                            }
+                    if not resolved_finding:
+                        resolved_finding = {
                             "resolved": False,
-                            "message": "Bog'langan qonun topilmadi, huquqshunos ko'rigi talab etiladi."
+                            "message": "Tasdiqlangan qonun manbasi topilmadi — tizim taxmin qilmaydi (Tekshirilmadi -> hamkor advokat)."
                         }
 
             self._set_headers(200)

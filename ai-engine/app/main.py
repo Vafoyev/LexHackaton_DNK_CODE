@@ -17,6 +17,9 @@ from pydantic import BaseModel
 import uvicorn
 
 from app.knowledge_graph import legal_graph
+from app.local_model_runtime import local_neural_runtime
+from app.notarial_classifier import classify_document_form
+from app.slm_runtime import slm_runtime
 from app.vector_store import legal_vector_store
 from app.ocr import ocr_processor
 from app.grpc_server import serve_grpc
@@ -106,6 +109,9 @@ def health_check():
         "knowledge_graph_edges": total_edges,
         "vector_vocabulary_terms": len(legal_vector_store.doc_freqs),
         "active_training_pairs": 3234,
+        "local_neural_model_ready": local_neural_runtime.is_ready,
+        "local_neural_eval_metrics": local_neural_runtime.eval_metrics,
+        "slm_adapter_ready": slm_runtime.adapter_ready,
         "grpc_active": grpc_server_instance is not None
     }
 
@@ -153,65 +159,119 @@ def get_multi_hop_chain(article_code: str):
         raise HTTPException(status_code=404, detail=f"'{article_code}' bo'yicha norma zanjiri topilmadi.")
     return res
 
+@app.get("/api/v1/verify-citation")
+def verify_citation(article: str = Query(..., description="Tekshiriladigan modda kodi (masalan: FK-UZ-2 707-modda)")):
+    """
+    Closed-World Allowlist Verifier: modda Lex.uz bazamizda haqiqatan mavjudligini tasdiqlaydi.
+    """
+    chain = legal_graph.resolve_chain(article)
+    if not chain.get("found"):
+        return {"verified": False, "status": "UNKNOWN", "message": "Manba tasdiqlanmadi («0» xulosa)."}
+    return {
+        "verified": True,
+        "status": "VERIFIED",
+        "root_article": chain.get("root_article"),
+        "root_title": chain.get("root_title"),
+        "url": chain.get("url"),
+        "chain_depth": len(chain.get("chain", [])),
+    }
+
+
+class ClassifyFormRequest(BaseModel):
+    text: str
+    document_type: str = ""
+
+
+@app.post("/api/v1/classify-form")
+def classify_form(req: ClassifyFormRequest):
+    """
+    3-qavatli Notarial vs Oddiy Shartnoma aniqlash endpointi.
+    """
+    return classify_document_form(req.text, req.document_type)
+
+
 @app.post("/api/v1/analyze-clauses")
 def analyze_clauses(req: AnalysisRequest):
     """
-    Shartnoma bandlarini Legal Knowledge Graph va Vector Store orqali
-    ko'p bosqichli tahlil qilish (Red/Green Redlines + Multi-Hop Cross-References).
+    Shartnoma bandlarini Legal Knowledge Graph, 3-Layer Notarial Classifier,
+    Vector Store va Anti-Hallucination Closed-World Verifier orqali tahlil qilish.
     """
+    full_doc_text = "\n".join(c.text for c in req.clauses)
+    doc_form = classify_document_form(full_doc_text, req.document_type)
+    doc_has_notarial_proof = doc_form["detected_form"] == "NOTARIAL_DOCUMENT"
+
     findings = []
-    
+
     for c in req.clauses:
-        # 1. Ekspert Knowledge Graph orqali tekshirish
-        eval_res = legal_graph.evaluate_clause_text(c.text)
-        
-        # 2. Agar bevosita ekspert qoidasiga tushmasa, BM25 Vector Store orqali qidirish
+        # 1. Ekspert Knowledge Graph (Kirill/Lotin normalizatsiyasi + Xorijiy qonun fail-closed + Notarial kontekst)
+        eval_res = legal_graph.evaluate_clause_text(c.text, doc_has_notarial_proof=doc_has_notarial_proof)
+
+        # 2. Local PyTorch Multi-Task Neural Model (yangi parafraza/imlo xatoli bandlar uchun, Closed-World Verifier bilan!)
+        if not eval_res or not eval_res.get("found"):
+            nn_res = local_neural_runtime.predict_clause(c.text, min_confidence=0.78)
+            if nn_res and nn_res.get("found"):
+                eval_res = nn_res
+
+        # 3. Agar ekspert va neyron model ham aniq topmasa, qat'iy chegara (score > 22.0) bilan BM25 + Allowlist Verifier
         if not eval_res or not eval_res.get("found"):
             hits = legal_vector_store.search(c.text, top_k=1)
-            if hits and hits[0]["score"] > 18.0:
+            if hits and hits[0]["score"] > 22.0:
                 top_hit = hits[0]
-                chain_res = legal_graph.resolve_chain(top_hit["article_number"])
-                eval_res = {
-                    "found": True,
-                    "root_article": f"{top_hit['source_code']} {top_hit['article_number']}",
-                    "root_title": top_hit["title"],
-                    "url": top_hit["official_url"],
-                    "risk_level": "YELLOW",
-                    "category": "COMPLIANCE",
-                    "issue_title": f"{top_hit['title']} talablariga nomuvofiqlik ehtimoli",
-                    "combined_explanation": f"Ushbu band {top_hit['source_code']} {top_hit['article_number']} («{top_hit['title']}») doirasidagi imperativ talablarga mos kelishi tekshirilishi lozim. {top_hit['snippet']}",
-                    "suggested_redline": f"Band matni O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirilishi tavsiya etiladi.",
-                    "chain": chain_res.get("chain", [])
-                }
+                cited = f"{top_hit['source_code']} {top_hit['article_number']}"
+                if legal_graph.verify_citation(cited):
+                    chain_res = legal_graph.resolve_chain(top_hit["id"] or cited)
+                    eval_res = {
+                        "found": True,
+                        "root_article": cited,
+                        "root_title": top_hit["title"],
+                        "url": top_hit["official_url"],
+                        "risk_level": "YELLOW",
+                        "category": "COMMERCIAL",
+                        "balance_label": "Muvozanatli",
+                        "issue_title": f"{top_hit['title']} bo'yicha e'tibor talab etiladi",
+                        "combined_explanation": f"Ushbu band {cited} («{top_hit['title']}») talablariga nisbatan tekshirilishi tavsiya etiladi. {top_hit['snippet']}",
+                        "suggested_redline": f"Band matnini O'zbekiston qonunchiligining {top_hit['article_number']} talablariga muvofiqlashtirish tavsiya etiladi.",
+                        "chain": chain_res.get("chain", []),
+                    }
 
         if eval_res and eval_res.get("found"):
+            risk_level = eval_res.get("risk_level", "YELLOW")
+            cited_article = eval_res.get("root_article", "")
+            # Zero-Hallucination Guard: Iqtibossiz RED hech qachon chiqmaydi (DOCX §4)
+            if risk_level == "RED" and not legal_graph.verify_citation(cited_article):
+                risk_level = "UNKNOWN"
+                cited_article = ""
+
             findings.append(FindingOutput(
                 clause_id=c.clause_id,
                 clause_number=c.clause_number,
-                risk_level=eval_res.get("risk_level", "YELLOW"),
+                risk_level=risk_level,
                 category=eval_res.get("category", "LEGAL"),
                 issue_title=eval_res.get("issue_title", "Qonuniy nomutanosiblik"),
                 problematic_quote=c.text,
                 issue_explanation=eval_res.get("combined_explanation", ""),
-                cited_article=eval_res.get("root_article", ""),
+                cited_article=cited_article,
                 suggested_redline=eval_res.get("suggested_redline", ""),
-                balance_label="Ijrochiga nomutanosib og'ir",
-                lex_uz_url=eval_res.get("url", "https://lex.uz"),
-                multi_hop_chain=eval_res.get("chain", [])
+                balance_label=eval_res.get("balance_label", "Muvozanatli"),
+                lex_uz_url=eval_res.get("url", "") if cited_article else "",
+                multi_hop_chain=eval_res.get("chain", []),
             ))
 
     return {
         "analysis_id": req.analysis_id,
+        "document_form": doc_form,
         "total_clauses": len(req.clauses),
         "findings_count": len(findings),
-        "findings": findings
+        "findings": findings,
     }
+
 
 @app.post("/api/v1/self-correct")
 def self_correct(req: SelfCorrectionRequest):
     """
-    Active Self-Correction: Agar modda verifikatsiyadan o'tmasa,
-    AI Knowledge Graph va candidate moddalar orqali qayta tahlil qiladi.
+    Active Self-Correction (Fail-Closed):
+    Faqat Lex.uz allowlist bazasida mavjud va yuqori moslikka ega modda topilgandagina tuzatadi.
+    Aks holda taxmin qilmaydi (resolved=False -> «Tekshirilmadi» -> hamkor advokat).
     """
     # 1. Candidate moddalarni tekshirish
     for cand in req.candidate_articles:
@@ -220,35 +280,42 @@ def self_correct(req: SelfCorrectionRequest):
             return {
                 "resolved": True,
                 "corrected_article": res.get("root_article", cand),
-                "explanation": f"Candidate zanjir bo'yicha tuzatildi: {res.get('combined_explanation')}",
-                "suggested_redline": res.get("suggested_redline")
+                "explanation": f"Candidate zanjir bo'yicha tasdiqlandi: {res.get('combined_explanation')}",
+                "suggested_redline": res.get("suggested_redline"),
             }
 
-    # 2. Matn bo'yicha ekspert graf
+    # 2. Matn bo'yicha ekspert graf (xorijiy qonun -> fail-closed!)
     eval_res = legal_graph.evaluate_clause_text(req.clause_text)
     if eval_res and eval_res.get("found"):
+        if eval_res.get("risk_level") == "UNKNOWN" or not eval_res.get("root_article"):
+            return {
+                "resolved": False,
+                "message": "Band O'zbekiston qonunchiligi qamrovidan tashqarida (Tekshirilmadi -> hamkor advokat).",
+            }
         return {
             "resolved": True,
             "corrected_article": eval_res.get("root_article"),
             "explanation": eval_res.get("combined_explanation"),
-            "suggested_redline": eval_res.get("suggested_redline")
+            "suggested_redline": eval_res.get("suggested_redline"),
         }
-    
-    # 3. Vector store orqali eng yaqin qonunni topish
+
+    # 3. BM25 qidiruv — faqat qat'iy ishonch chegarasi (>= 12.0) va allowlist tasdiqi bilan!
     hits = legal_vector_store.search(req.clause_text, top_k=1)
-    if hits:
+    if hits and hits[0]["score"] >= 12.0:
         hit = hits[0]
-        chain_res = legal_graph.resolve_chain(hit["article_number"])
-        return {
-            "resolved": True,
-            "corrected_article": f"{hit['source_code']} {hit['article_number']}",
-            "explanation": f"Leksik tahlil asosida muqobil norma topildi: {hit['title']}. {chain_res.get('combined_explanation', hit['snippet'])}",
-            "suggested_redline": chain_res.get("suggested_redline", f"Band matnini O'zR {hit['article_number']} talablariga moslashtirish tavsiya etiladi.")
-        }
-    
+        cited = f"{hit['source_code']} {hit['article_number']}"
+        if legal_graph.verify_citation(cited):
+            chain_res = legal_graph.resolve_chain(hit["id"] or cited)
+            return {
+                "resolved": True,
+                "corrected_article": cited,
+                "explanation": f"Leksik tahlil asosida tasdiqlangan norma topildi: {hit['title']}. {chain_res.get('combined_explanation', hit['snippet'])}",
+                "suggested_redline": chain_res.get("suggested_redline", f"Band matnini O'zR {hit['article_number']} talablariga moslashtirish tavsiya etiladi."),
+            }
+
     return {
         "resolved": False,
-        "message": "Bog'langan qonun topilmadi, huquqshunos ko'rigi talab etiladi (UNKNOWN)."
+        "message": "Tasdiqlangan qonun manbasi topilmadi — tizim taxmin qilmaydi (Tekshirilmadi -> hamkor advokat).",
     }
 
 @app.post("/api/v1/ocr")
@@ -263,6 +330,7 @@ async def ocr_document(file: UploadFile = File(...)):
         "confidence_score": res["confidence_score"],
         "total_clauses": len(res["clauses"]),
         "clauses": res["clauses"],
+        "full_text": res["full_text"],
         "full_text_sample": res["full_text"][:500]
     }
 

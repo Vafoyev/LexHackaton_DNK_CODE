@@ -1,0 +1,38 @@
+{
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "finetuned_task": "Uzbek Law RAFT Contract Audit (Strict JSON + 3-Color + Notarial Classifier + Anti-Hallucination)",
+  "train_samples": 1524,
+  "eval_samples": 590,
+  "risk_distribution_train": {
+    "UNKNOWN": 138,
+    "GREEN": 898,
+    "YELLOW": 242,
+    "RED": 246
+  },
+  "task_distribution_train": {
+    "clause_audit": 1045,
+    "document_form_classification": 479
+  },
+  "verified_citations_train": 612,
+  "data_leakage_contracts": 0,
+  "assistant_only_loss_masking": true,
+  "qlora_4bit": false,
+  "epochs": 3,
+  "batch_size": 4,
+  "learning_rate": 0.00015,
+  "lr_scheduler": "cosine",
+  "neftune_noise_alpha": 5.0,
+  "max_seq_len": 1024,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "status": "quality_gate_passed_ready_for_gpu"
+}

@@ -1,18 +1,25 @@
 """
 LexGuard AI — Hybrid Vector & Lexical Legal Search Engine
-Vazifasi: 2,058 ta Lex.uz moddalari bo'yicha tezkor gibrid (BM25 + TF-IDF) qidiruv
-va har qanday shartnoma bandiga mos O'zbekiston qonunlarini 100% aniqlik bilan topish.
+Vazifasi: 2,058 ta Lex.uz moddalari bo'yicha tezkor BM25 qidiruv
+(O'zbek kirill, eski lotin va yangi lotin normalizatsiyasi bilan).
 """
 
 import os
 import re
 import math
 import json
+from pathlib import Path
 from collections import Counter
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
+
+from app.normalizer import normalize_uzbek
+
+DEFAULT_CORPUS_PATH = str(
+    Path(os.getenv("LEGAL_CORPUS_PATH", Path(__file__).resolve().parent.parent / "data" / "uzbek_legal_corpus_unified.json"))
+)
 
 class LegalVectorStore:
-    def __init__(self, corpus_path: str = "/Users/baxrom/ish_full/LexHackaton_DNK_CODE/ai-engine/data/uzbek_legal_corpus_unified.json"):
+    def __init__(self, corpus_path: str = DEFAULT_CORPUS_PATH):
         self.corpus_path = corpus_path
         self.documents: List[Dict[str, Any]] = []
         self.doc_tokens: List[List[str]] = []
@@ -24,9 +31,9 @@ class LegalVectorStore:
         self._build_index()
 
     def _tokenize(self, text: str) -> List[str]:
-        # Oddiy va tezkor o'zbekcha so'zlarni ajratish
-        clean = re.sub(r'[^\w\s]', ' ', text.lower())
-        tokens = [w for w in clean.split() if len(w) > 2]
+        norm = normalize_uzbek(text)
+        clean = re.sub(r"[^\w\s']", " ", norm)
+        tokens = [w.strip("'") for w in clean.split() if len(w.strip("'")) > 2]
         return tokens
 
     def _build_index(self):

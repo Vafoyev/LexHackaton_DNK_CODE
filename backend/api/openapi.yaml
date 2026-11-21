@@ -327,6 +327,80 @@ paths:
         '200':
           description: Signature verified and recorded
 
+  /billing/plans:
+    get:
+      summary: List official B2C (Fuqaro) or B2B (Yuridik shaxs) tariff plans
+      parameters:
+        - name: segment
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [individual, business]
+      responses:
+        '200':
+          description: Tariff catalog filtered by user segment
+
+  /analyses/{id}/report:
+    get:
+      summary: Export contract audit report (Annotated DOCX, Clean Draft LOYIHA DOCX, Neutral Partner Letter, or Markdown)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [docx_comments, docx_draft, letter, md]
+            default: md
+      responses:
+        '200':
+          description: Exported DOCX binary, text letter, or markdown report
+
+  /company-documents:
+    get:
+      summary: List B2B company internal documents uploaded for continuous Lex.uz law monitoring
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Company document vault entries
+    post:
+      summary: Upload/register a B2B company internal document for automatic law-change monitoring
+      security:
+        - BearerAuth: []
+      responses:
+        '201':
+          description: Document registered in company vault
+
+  /law-monitoring/alerts:
+    get:
+      summary: List active Lex.uz legislation change alerts affecting B2B company documents (with Before/After clause diff)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Active law monitoring alerts
+
+  /law-monitoring/alerts/{id}/resolve:
+    post:
+      summary: Mark a Lex.uz law-change alert as reviewed/resolved
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Alert marked resolved
+
 components:
   securitySchemes:
     BearerAuth:

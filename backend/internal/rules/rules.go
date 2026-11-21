@@ -196,6 +196,27 @@ func (e *RulesEngine) AnalyzeDocument(clauses map[string]string, fullDocText str
 		})
 	}
 
+	// 6. R5_DISPUTE_MEDIATION_MISSING (Mediatsiya qonuni 16-modda — 10 kunlik sudgacha pretenziya va mediatsiya)
+	if !strings.Contains(docLower, "mediatsiya") && !strings.Contains(docLower, "pretenziya") && !strings.Contains(docLower, "медиац") && !strings.Contains(docLower, "претензи") {
+		allFindings = append(allFindings, RuleFinding{
+			RuleCode:          "R5_DISPUTE_MEDIATION_MISSING",
+			RiskCategory:      CategoryCommercial,
+			Severity:          SeverityYellow,
+			ClauseNumber:      "UMUMIY",
+			OriginalQuote:     "Shartnomada nizolarni sudgacha hal qilish (pretenziya) va mediatsiya bosqichi nazarda tutilmagan.",
+			SuggestedRevision: "Shartnoma bo‘yicha kelib chiqqan nizolar avvalo 10 kalendar kunlik yozma pretenziya va O‘zbekiston Respublikasining «Mediatsiya to‘g‘risida»gi Qonuniga muvofiq professional mediatsiya tartibida hal qilinadi; kelishuvga erishilmasa, iqtisodiy sudga murojaat qilinadi.",
+			LegalSource: LegalReference{
+				Code:        "ORQ-482",
+				Article:     "16-modda",
+				NormNature:  "DISPOSITIVE",
+				OfficialURL: "https://lex.uz/docs/3805227",
+				Explanation: "Sudgacha pretenziya va mediatsiya bosqichi nizolarni tez va kam xarajat bilan hal qilish imkonini beradi.",
+			},
+			Explanation:     "Qonunga mos, lekin e'tibor kerak: agar sudgacha 10 kunlik pretenziya va mediatsiya qo'shilmasa, har qanday kichik nizo to'g'ridan-to'g'ri sud xarajati va vaqt yo'qotishiga olib keladi.",
+			ConfidenceScore: 0.94,
+		})
+	}
+
 	return allFindings
 }
 

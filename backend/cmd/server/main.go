@@ -91,6 +91,7 @@ func main() {
 		dbPool, docRepo, corpusRepo, billingSvc,
 		rulesEngine, aiProvider, arbiter, llmGate, broadcaster,
 	)
+	analysisSvc.SetExternalAIEnabled(cfg.ExternalAIEnabled)
 	reportSvc := report.NewService(analysisSvc)
 	signingSvc := signing.NewService(dbPool)
 	adminSvc := admin.NewService(dbPool)
@@ -116,6 +117,7 @@ func main() {
 		AuditSvc:    auditSvc,
 		AdminSvc:    adminSvc,
 		Redactor:    redactor,
+		AIEngine:    aiEngineClient,
 	}
 	handler := api.BuildRouter(routerServices)
 

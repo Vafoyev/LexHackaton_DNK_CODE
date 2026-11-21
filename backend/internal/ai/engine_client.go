@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"strings"
@@ -30,18 +31,18 @@ type AnalysisEngineRequest struct {
 
 // FindingOutput is the structured finding returned by AI Engine
 type FindingOutput struct {
-	ClauseID          string                   `json:"clause_id"`
-	ClauseNumber      string                   `json:"clause_number"`
-	RiskLevel         string                   `json:"risk_level"`
-	Category          string                   `json:"category"`
-	IssueTitle        string                   `json:"issue_title"`
-	ProblematicQuote  string                   `json:"problematic_quote"` // Asl matn (Qizil)
-	IssueExplanation  string                   `json:"issue_explanation"`
-	CitedArticle      string                   `json:"cited_article"`
-	SuggestedRedline  string                   `json:"suggested_redline"` // Tavsiya matn (Yashil)
-	BalanceLabel      string                   `json:"balance_label"`
-	LexUzURL          string                   `json:"lex_uz_url"`
-	MultiHopChain     []map[string]interface{} `json:"multi_hop_chain,omitempty"`
+	ClauseID         string                   `json:"clause_id"`
+	ClauseNumber     string                   `json:"clause_number"`
+	RiskLevel        string                   `json:"risk_level"`
+	Category         string                   `json:"category"`
+	IssueTitle       string                   `json:"issue_title"`
+	ProblematicQuote string                   `json:"problematic_quote"` // Asl matn (Qizil)
+	IssueExplanation string                   `json:"issue_explanation"`
+	CitedArticle     string                   `json:"cited_article"`
+	SuggestedRedline string                   `json:"suggested_redline"` // Tavsiya matn (Yashil)
+	BalanceLabel     string                   `json:"balance_label"`
+	LexUzURL         string                   `json:"lex_uz_url"`
+	MultiHopChain    []map[string]interface{} `json:"multi_hop_chain,omitempty"`
 }
 
 // AnalysisEngineResponse is the response from /api/v1/analyze-clauses
@@ -54,10 +55,10 @@ type AnalysisEngineResponse struct {
 
 // SelfCorrectionRequest is sent when verification detects invalid/hallucinated citation
 type SelfCorrectionRequest struct {
-	ClauseText            string   `json:"clause_text"`
-	PreviousCitedArticle  string   `json:"previous_cited_article"`
-	VerificationError     string   `json:"verification_error"`
-	CandidateArticles     []string `json:"candidate_articles,omitempty"`
+	ClauseText           string   `json:"clause_text"`
+	PreviousCitedArticle string   `json:"previous_cited_article"`
+	VerificationError    string   `json:"verification_error"`
+	CandidateArticles    []string `json:"candidate_articles,omitempty"`
 }
 
 // SelfCorrectionResponse is returned by /api/v1/self-correct
@@ -206,12 +207,16 @@ func (c *EngineClient) AnalyzeClause(ctx context.Context, req RedactedClauseRequ
 	if err == nil && engineResp != nil && len(engineResp.Findings) > 0 {
 		f := engineResp.Findings[0]
 
-		parts := strings.SplitN(f.CitedArticle, " ", 2)
-		lawCode := "FK-UZ"
-		article := f.CitedArticle
-		if len(parts) == 2 {
-			lawCode = parts[0]
-			article = parts[1]
+		lawCode := ""
+		article := strings.TrimSpace(f.CitedArticle)
+		if article != "" {
+			parts := strings.SplitN(article, " ", 2)
+			if len(parts) == 2 {
+				lawCode = parts[0]
+				article = parts[1]
+			} else {
+				lawCode = "FK-UZ"
+			}
 		}
 
 		draft := &DraftSuggestion{
@@ -243,4 +248,66 @@ func (c *EngineClient) AnalyzeClause(ctx context.Context, req RedactedClauseRequ
 	}
 
 	return nil, nil, errors.New("ai engine analysis failed and no fallback configured")
+}
+
+// OCRResponse is returned by ai-engine /api/v1/ocr
+type OCRResponse struct {
+	Filename        string  `json:"filename"`
+	ConfidenceScore float64 `json:"confidence_score"`
+	TotalClauses    int     `json:"total_clauses"`
+	FullTextSample  string  `json:"full_text_sample"`
+	Clauses         []struct {
+		ClauseNumber string `json:"clause_number"`
+		Text         string `json:"text"`
+	} `json:"clauses"`
+}
+
+// OCRDocument forwards an image or scanned PDF to Python ai-engine /api/v1/ocr
+func (c *EngineClient) OCRDocument(ctx context.Context, filename string, fileBytes []byte) (string, float64, error) {
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	part, err := writer.CreateFormFile("file", filename)
+	if err != nil {
+		return "", 0, err
+	}
+	if _, err := part.Write(fileBytes); err != nil {
+		return "", 0, err
+	}
+	if err := writer.Close(); err != nil {
+		return "", 0, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/api/v1/ocr", &body)
+	if err != nil {
+		return "", 0, err
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return "", 0, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", 0, fmt.Errorf("ocr endpoint returned %d", resp.StatusCode)
+	}
+
+	var parsed OCRResponse
+	if err := json.NewDecoder(resp.Body).Decode(&parsed); err != nil {
+		return "", 0, err
+	}
+	var sb strings.Builder
+	for _, cl := range parsed.Clauses {
+		if strings.TrimSpace(cl.Text) != "" {
+			sb.WriteString(cl.ClauseNumber)
+			sb.WriteString(". ")
+			sb.WriteString(strings.TrimSpace(cl.Text))
+			sb.WriteString("\n")
+		}
+	}
+	text := strings.TrimSpace(sb.String())
+	if text == "" {
+		text = strings.TrimSpace(parsed.FullTextSample)
+	}
+	return text, parsed.ConfidenceScore, nil
 }

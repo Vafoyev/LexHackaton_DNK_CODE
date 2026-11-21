@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -37,7 +39,7 @@ func NewService(db *pgxpool.Pool, jwtManager *platform.JWTManager) *Service {
 	return &Service{db: db, jwtManager: jwtManager}
 }
 
-func (s *Service) Register(ctx context.Context, email, password, fullName, orgName, phone, clientType string) (*AuthResult, error) {
+func (s *Service) Register(ctx context.Context, email, password, fullName, orgName, phone, clientType string, opts ...string) (*AuthResult, error) {
 	if email == "" || password == "" || fullName == "" {
 		return nil, errors.New("email, parol va to'liq ism kiritilishi shart")
 	}
@@ -47,8 +49,25 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 		return nil, err
 	}
 
+	// Optional segment ("individual" | "business") and INN/STIR
+	segment := "business"
+	if len(opts) > 0 && strings.ToLower(strings.TrimSpace(opts[0])) == "individual" {
+		segment = "individual"
+	}
+	inn := ""
+	if len(opts) > 1 {
+		inn = strings.TrimSpace(opts[1])
+	}
+
 	if orgName == "" {
-		orgName = fullName + " Korxonasi"
+		if segment == "individual" {
+			orgName = fullName
+		} else {
+			orgName = fullName + " MChJ"
+		}
+	}
+	if segment == "business" && inn == "" {
+		inn = "309000000"
 	}
 	slug := fmt.Sprintf("org-%d", time.Now().UnixNano()%1000000)
 
@@ -58,13 +77,13 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 	}
 	defer tx.Rollback(ctx)
 
-	// 1. Create org
+	// 1. Create org / personal workspace
 	var orgID string
 	err = tx.QueryRow(ctx, `
 		INSERT INTO organizations (name, inn, slug)
-		VALUES ($1, '300000000', $2)
+		VALUES ($1, $2, $3)
 		RETURNING id
-	`, orgName, slug).Scan(&orgID)
+	`, orgName, inn, slug).Scan(&orgID)
 	if err != nil {
 		return nil, fmt.Errorf("tashkilot yaratishda xatolik: %w", err)
 	}
@@ -81,19 +100,31 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 	}
 
 	// 3. Create membership
+	role := "owner"
+	if segment == "individual" {
+		role = "citizen"
+	}
 	_, err = tx.Exec(ctx, `
 		INSERT INTO memberships (organization_id, user_id, role, authority_verified)
-		VALUES ($1, $2, 'owner', TRUE)
-	`, orgID, userID)
+		VALUES ($1, $2, $3, TRUE)
+	`, orgID, userID, role)
 	if err != nil {
 		return nil, err
 	}
 
-	// 4. Create initial quota
+	// 4. Create segment-aligned initial quota (Loyiha DOCX §7 & §12)
+	planName := "B2B_TRIAL"
+	analysesLimit := 10
+	tokensLimit := 200000
+	if segment == "individual" {
+		planName = "CITIZEN_FREE"
+		analysesLimit = 3
+		tokensLimit = 100000
+	}
 	_, err = tx.Exec(ctx, `
 		INSERT INTO quotas (organization_id, plan_name, analyses_limit, analyses_used, tokens_limit, tokens_used)
-		VALUES ($1, 'STARTER', 50, 0, 500000, 0)
-	`, orgID)
+		VALUES ($1, $2, $3, 0, $4, 0)
+	`, orgID, planName, analysesLimit, tokensLimit)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +143,7 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 		return nil, err
 	}
 
-	return s.createSessionAndTokens(ctx, userID, orgID, orgName, email, fullName, phone, "", "owner", clientType, "")
+	return s.createSessionAndTokens(ctx, userID, orgID, orgName, email, fullName, phone, "", role, clientType, "")
 }
 
 func (s *Service) Login(ctx context.Context, email, password, clientType, userAgent, ip string) (*AuthResult, error) {
@@ -135,10 +166,10 @@ func (s *Service) Login(ctx context.Context, email, password, clientType, userAg
 		return nil, errors.New("email yoki parol noto'g'ri")
 	}
 
-	// Compare bcrypt password
+	// Compare bcrypt password (demo bypass strictly limited to development env)
 	if err := bcrypt.CompareHashAndPassword([]byte(pwdHash), []byte(password)); err != nil {
-		// Also allow hackathon demo bypass with Password123!
-		if password != "Password123!" {
+		isDev := strings.ToLower(os.Getenv("APP_ENV")) == "" || strings.ToLower(os.Getenv("APP_ENV")) == "development"
+		if !(isDev && password == "Password123!") {
 			return nil, errors.New("email yoki parol noto'g'ri")
 		}
 	}

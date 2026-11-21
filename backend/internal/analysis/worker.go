@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lexguard/backend/internal/ai"
+	"github.com/lexguard/backend/internal/privacy"
 	"github.com/lexguard/backend/internal/rules"
 	"github.com/lexguard/backend/internal/verification"
 )
@@ -183,20 +184,42 @@ func (wp *WorkerPool) executePipeline(ctx context.Context, analysisID string) er
 			candidateNames = append(candidateNames, fmt.Sprintf("%s %s: %s", art.SourceCode, art.ArticleNumber, art.Title))
 		}
 
-		// AI Provider draft
+		// AI Provider draft — strictly gated by O'RQ-547 / O'RQ-1125 ExternalLLMGate
 		var llmDraft *ai.DraftSuggestion
 		if execMode == "HYBRID_AI" {
-			draft, metrics, err := wp.svc.aiProvider.AnalyzeClause(ctx, ai.RedactedClauseRequest{
-				ClauseNumber:      c.ClauseNumber,
-				RedactedText:      c.RedactedText,
-				ContractDate:      contractDate.Format("2006-01-02"),
-				DocType:           docType,
-				CandidateArticles: candidateNames,
-			})
-			if err == nil && draft != nil {
-				llmDraft = draft
-				if metrics != nil {
-					totalTokens += metrics.TotalTokens
+			externalConsent := false
+			_ = wp.svc.db.QueryRow(ctx, `
+				SELECT COALESCE(bool_or(granted), FALSE)
+				FROM consents
+				WHERE organization_id = $1 AND consent_type = 'EXTERNAL_AI'
+			`, orgID).Scan(&externalConsent)
+
+			allowed := true
+			if wp.svc.llmGate != nil {
+				ok, gateErr := wp.svc.llmGate.CanTransmitToExternalLLM(
+					privacy.DataClassification(classStr),
+					externalConsent,
+					wp.svc.externalAIEnabled,
+				)
+				if !ok {
+					allowed = false
+					log.Printf("[GATE] External LLM blocked for analysis %s: %v (falling back to local deterministic rules)\n", analysisID, gateErr)
+				}
+			}
+
+			if allowed {
+				draft, metrics, err := wp.svc.aiProvider.AnalyzeClause(ctx, ai.RedactedClauseRequest{
+					ClauseNumber:      c.ClauseNumber,
+					RedactedText:      c.RedactedText,
+					ContractDate:      contractDate.Format("2006-01-02"),
+					DocType:           docType,
+					CandidateArticles: candidateNames,
+				})
+				if err == nil && draft != nil {
+					llmDraft = draft
+					if metrics != nil {
+						totalTokens += metrics.TotalTokens
+					}
 				}
 			}
 		}
