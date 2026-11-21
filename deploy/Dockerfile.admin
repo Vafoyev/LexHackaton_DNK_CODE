@@ -26,7 +26,7 @@ RUN if [ -f package.json ]; then \
 # If no dist directory, treat as static HTML
 RUN if [ ! -d dist ] && [ ! -d build ]; then \
         mkdir -p dist && \
-        if [ -f index.html ]; then cp -r . dist/; \
+        if [ -f index.html ]; then cp index.html dist/; \
         else echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>LexGuard Admin</title></head><body><h1>LexGuard AI — Admin Portal</h1><p>Building...</p></body></html>' > dist/index.html; fi; \
     fi
 
