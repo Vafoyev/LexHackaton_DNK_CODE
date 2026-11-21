@@ -75,15 +75,15 @@ export const ContractStudio: React.FC<ContractStudioProps> = ({
         {fixedCount < riskyCount && (
           <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-sky-950/40 to-slate-900 border border-sky-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-lg">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">
-                <Sparkles className="w-4 h-4" />
+              <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shrink-0">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
               </div>
               <div>
                 <p className="text-xs font-bold text-white">
                   Shartnomada {riskyCount} ta noqonuniy va asimmetrik band aniqlandi ({fixedCount} tasi tuzatildi)
                 </p>
                 <p className="text-[11px] text-slate-400">
-                  O‘zbekiston Fuqarolik Kodeksi talablari asosida barcha bandlarni bitta bosishda tuzatishingiz mumkin.
+                  Lex.uz milliy qonunchilik bazasi va O‘zR Fuqarolik Kodeksi talablari asosida barcha bandlarni bir bosishda avto-tuzatishingiz mumkin.
                 </p>
               </div>
             </div>

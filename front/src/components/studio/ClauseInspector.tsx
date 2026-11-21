@@ -165,15 +165,18 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
 
         {/* Lex.uz Qonun Havolasi */}
         {finding?.legal_basis && (
-          <div className="p-3 rounded-2xl bg-slate-950/70 border border-slate-800 flex items-start justify-between gap-3">
-            <div className="space-y-0.5">
-              <span className="text-[10px] font-mono uppercase text-sky-400 font-bold block flex items-center gap-1">
-                <BookOpen className="w-3 h-3" /> Qonuniy Manba:
-              </span>
-              <p className="text-slate-200 font-semibold text-xs">
+          <div className="p-3.5 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950/30 border border-sky-500/30 flex items-start justify-between gap-3 shadow-md shadow-sky-950/20">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110 drop-shadow-sm" />
+                <span className="text-[10px] font-mono uppercase text-sky-400 font-bold tracking-wider">
+                  Rasmiy Qonuniy Asos
+                </span>
+              </div>
+              <p className="text-white font-bold text-xs">
                 {finding.legal_basis.article}
               </p>
-              <span className="text-[10px] text-slate-400">
+              <span className="text-[10px] text-slate-300 block">
                 {finding.legal_basis.source_title} ({finding.legal_basis.norm_nature})
               </span>
             </div>
@@ -182,9 +185,10 @@ export const ClauseInspector: React.FC<ClauseInspectorProps> = ({
               href={finding.legal_basis.lex_uz_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 border border-sky-500/30 shrink-0 transition-colors cursor-pointer"
+              className="p-2 px-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 shrink-0 transition-all cursor-pointer hover:scale-105 flex items-center gap-1.5 text-[11px] font-bold"
               title="Lex.uz rasmiy bazasida ochish"
             >
+              <span>Lex.uz</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>

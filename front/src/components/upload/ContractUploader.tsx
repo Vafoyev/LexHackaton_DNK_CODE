@@ -113,6 +113,36 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
         </span>
       </div>
 
+      {/* Lex.uz Rasmiy Qonunchilik Bazasiga Integratsiya Banneri */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 px-4 rounded-2xl bg-gradient-to-r from-sky-950/30 via-slate-900 to-slate-900 border border-sky-500/25 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shrink-0">
+            <img src="/lex_uz.svg" alt="Lex.uz Logo" className="h-5 w-auto object-contain brightness-110" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-white">Lex.uz Milliy Qonunchilik Bazasi Bilan 100% Integratsiya</span>
+              <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 uppercase">
+                Rasmiy Manba
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              O‘zR Fuqarolik, Mehnat va Soliq kodekslarining amaldagi barcha moddalari bo‘yicha avtomatik tekshiruv.
+            </p>
+          </div>
+        </div>
+
+        <a
+          href="https://lex.uz"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 text-[11px] font-bold text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-sky-500/40"
+        >
+          <span>lex.uz portali</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </a>
+      </div>
+
       {/* Asosiy Yuklash Maydoni */}
       <div
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}

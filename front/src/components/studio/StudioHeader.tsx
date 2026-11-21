@@ -78,6 +78,18 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             </span>
             <span className="text-[10px] text-slate-400 uppercase font-mono">Xavfsiz</span>
           </div>
+
+          {/* Lex.uz Moslik nishoni */}
+          <a
+            href="https://lex.uz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/40 transition-all text-[10px] text-slate-300"
+            title="Lex.uz qonunchilik bazasi bilan sinxronlangan"
+          >
+            <img src="/lex_uz.svg" alt="Lex.uz" className="h-3.5 w-auto object-contain brightness-110" />
+            <span className="font-mono text-sky-400 font-bold">Moslashtirilgan</span>
+          </a>
         </div>
 
         {/* O'rta: Asosiy Ko'rinish Almashtirgich (Reader vs Diff vs 3D) */}

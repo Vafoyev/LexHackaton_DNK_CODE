@@ -132,6 +132,15 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
           <div className="pt-4 text-slate-600 font-mono text-[10px]">__________________ (Imzo / E-IMZO)</div>
         </div>
       </div>
+
+      {/* Lex.uz audit muhri */}
+      <div className="mt-8 pt-4 border-t border-dashed border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+        <div className="flex items-center gap-1.5">
+          <span>Qonunchilik asosi:</span>
+          <img src="/lex_uz.svg" alt="Lex.uz" className="h-3 w-auto object-contain brightness-110" />
+        </div>
+        <span>LexGuard AI Raqamli Audit Tekshiruvi · O‘RQ-547</span>
+      </div>
     </div>
   );
 };

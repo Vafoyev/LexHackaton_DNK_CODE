@@ -393,6 +393,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </span>
           )}
         </div>
+
+        {/* Lex.uz & Qonuniylik kafolati */}
+        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-center gap-2 text-[10px] text-slate-500">
+          <span>Qonuniy asos:</span>
+          <img src="/lex_uz.svg" alt="Lex.uz" className="h-3.5 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity" />
+          <span>· Soliq.uz · OneID standartlariga mos</span>
+        </div>
       </div>
     </div>
   );

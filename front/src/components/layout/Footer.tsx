@@ -17,7 +17,10 @@ export const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-slate-200 font-semibold mb-2 text-xs uppercase tracking-wider">Qonuniy Asoslar</h4>
+            <div className="flex items-center gap-2 mb-2">
+              <img src="/lex_uz.svg" alt="Lex.uz" className="h-4 w-auto object-contain brightness-110" />
+              <h4 className="text-slate-200 font-semibold text-xs uppercase tracking-wider">Qonuniy Asoslar</h4>
+            </div>
             <ul className="space-y-1.5 text-[11px]">
               <li>
                 <a href="https://lex.uz/docs/111181" target="_blank" rel="noreferrer" className="hover:text-sky-400 flex items-center gap-1 transition-colors">
