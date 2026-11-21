@@ -126,6 +126,8 @@ func BuildRouter(s *RouterServices) http.Handler {
 		})
 
 		// Public Rules & Legal Sources
+		api.HandleFunc("/ws/voice", HandleVoiceWebSocket(s.AnalysisSvc))
+
 		api.Get("/rules", func(w http.ResponseWriter, req *http.Request) {
 			activeRules := s.RulesEngine.GetActiveRules()
 			summary := make([]map[string]interface{}, 0)
