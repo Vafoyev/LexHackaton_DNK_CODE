@@ -1,0 +1,7 @@
+# ORQ-792 3-modda: Asosiy tushunchalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-6213382#-8491854](https://lex.uz/uz/docs/-6213382#-8491854)
+**Bog'liq havolalar:** 12-modda
+
+## Norma matni:
+Ushbu Qonunda quyidagi asosiy tushunchalar qoʻllaniladi: raqamli mahsulotlar — intellektual mulk obyektlarining elektron koʻchirma nusxalari (raqamli tovarlar), shuningdek elektron axborot muhitida moddiy natijaga ega boʻlmagan muayyan harakatlarni bajarish yoki muayyan faoliyatni amalga oshirish, shu jumladan “bulutli texnologiyalar”ni (raqamli xizmatlarni) olishga hamda ularga obuna boʻlishga doir xizmatlar; elektron savdo maydonchasi — tovarlar (ishlar, xizmatlar) oldi-sotdisini masofadan turib amalga oshirish imkonini beruvchi axborot tizimi; elektron savdo maydonchasining operatori — elektron tijorat ishtirokchilariga elektron savdo maydonchasi xizmatlarini koʻrsatuvchi yuridik shaxs; elektron tijorat — tovarlarning (ishlarning, xizmatlarning) tadbirkorlik faoliyati doirasida axborot tizimlaridan foydalangan holda elektron savdo maydonchasi orqali tuzilgan shartnomaga muvofiq amalga oshiriladigan oldi-sotdisi; elektron tijorat operatori — elektron tijoratda elektron hujjatlar va elektron xabarlar aylanishi bilan bogʻliq xizmatlar koʻrsatuvchi yuridik shaxs; Makur qonunning 11-12-moddalari . elektron tijorat subyektlari — elektron tijorat ishtirokchilari va (yoki) elektron tijorat operatorlari. 2026-yil 12-dekabrdan kuchga kiradigan o‘zgarishlarga qarang

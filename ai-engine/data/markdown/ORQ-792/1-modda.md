@@ -1,0 +1,7 @@
+# ORQ-792 1-modda: Ushbu Qonunning maqsadi va qoʻllanilish sohasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-6213382#-6221058](https://lex.uz/uz/docs/-6213382#-6221058)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 12.00.00.00 Axborot va axborotlashtirish / 12.03.00.00 Axborot resurslari. Axborot resurslaridan foydalanish / 12.03.02.00 Axborotni hujjatlashtirish. Elektron hujjat aylanishi / 12.03.02.02 Elektron tijorat (Кучини йўқотган)] Ushbu Qonunning maqsadi elektron tijorat sohasidagi munosabatlarni tartibga solishdan iborat. [ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.02.00 Davlat ehtiyojlari. Davlat xaridlari; 2. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.05.00.00 Birja faoliyati / 09.05.01.00 Birjalar va ularning faoliyatini tashkil etishning umumiy qoidalari. Birjalarning ixtisoslashuvi] Ushbu Qonunning amal qilishi: tovarlarning (ishlarning, xizmatlarning) davlat xaridlari toʻgʻrisidagi qonunchilikka muvofiq amalga oshiriladigan davlat xaridlariga; Oʻzbekiston Respublikasi Prezidentining “Tovarlar (ishlar, xizmatlar)ning davlat va korporativ xaridlarini amalga oshirishning zamonaviy shakl va uslublarini yanada joriy etish chora-tadbirlari toʻgʻrisida” 2017-yil 23-avgustdagi PQ-3237-son qarori . birja faoliyati uchun litsenziyalarga ega boʻlgan birjalarda tuziladigan kelishuvlarga nisbatan tatbiq etilmaydi.

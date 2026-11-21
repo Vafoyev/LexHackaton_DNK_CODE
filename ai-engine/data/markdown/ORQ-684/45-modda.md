@@ -1,0 +1,7 @@
+# ORQ-684 45-modda: Odob-axloq qoidalari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-5382974#-5385662](https://lex.uz/docs/-5382974#-5385662)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.02.00 Davlat ehtiyojlari. Davlat xaridlari] Davlat buyurtmachilari, davlat xaridlari elektron tizimining operatori, ixtisoslashgan tashkilotlar, ekspert tashkilotlari davlat xaridlarini amalga oshirish uchun quyidagilarni nazarda tutuvchi Odob-axloq qoidalarini qabul qiladi: manfaatlar toʻqnashuvining oldini olish chora-tadbirlari; tegishli xodimlarning kasbiy tayyorgarligini amalga oshirish tartib-taomillari va unga doir talablar. Odob-axloq qoidalarida davlat buyurtmachilari, davlat xaridlari elektron tizimining operatori, ixtisoslashgan tashkilotlar, ekspert tashkilotlari xodimlarining, xarid komissiyasi aʼzolarining kasbga doir va xizmatdan tashqari faoliyatida odob-axloqning yagona prinsiplari va qoidalari, kasbiy tayyorgarligiga doir talablar belgilanadi. Davlat buyurtmachisining va davlat xaridlari elektron tizimi operatorining masʼul shaxslari, ixtisoslashgan va ekspert tashkilotlarining xodimlari, xarid komissiyasi aʼzolari, shuningdek ekspertlar tomonidan ishtirokchilar hamda ijrochilardan moddiy va nomoddiy boyliklarni olish taqiqlanadi. Odob-axloq qoidalari davlat buyurtmachilarining yoki ularning yuqori turuvchi organlarining rasmiy veb-saytlarida eʼlon qilinishi lozim.

@@ -1,0 +1,7 @@
+# FK-UZ-2 609-modda: Vaqtincha yashovchilar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-186512](https://lex.uz/docs/-180552#-186512)
+**Bog'liq havolalar:** 609-modda
+
+## Norma matni:
+Ijaraga oluvchi va u bilan birga doimiy yashaydigan fuqarolar umumiy kelishuvga binoan va ijaraga beruvchini oldindan xabardor qilgan holda vaqtincha yashovchilarga (foydalanuvchilarga) uy-joyda bepul yashab turishlari uchun ruxsat etishga haqlidirlar. Basharti, qonunchilikning jon boshiga toʻgʻri keladigan uy-joy maydoni normasi haqidagi talablariga rioya etilmasa, ijaraga beruvchi vaqtincha yashovchilarning yashab turishlarini taqiqlab qoʻyishi mumkin. Vaqtincha yashovchilarning yashab turish muddati olti oydan oshmasligi kerak. (609-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Vaqtincha yashovchilar uy-joydan foydalanishda mustaqil huquqqa ega boʻlmaydilar. Ularning xatti-harakatlari uchun ijaraga beruvchi oldida ijaraga oluvchi javobgardir. Vaqtincha yashovchilar ular bilan kelishilgan yashab turish muddati oʻtganidan keyin, agarda bunday muddat kelishilmagan boʻlsa, ijaraga oluvchi yoki u bilan birga doimiy yashaydigan har qanday fuqaro tomonidan tegishli talab qoʻyilgan kundan eʼtiboran koʻpi bilan yetti kun ichida uy-joyni boʻshatishlari shart.

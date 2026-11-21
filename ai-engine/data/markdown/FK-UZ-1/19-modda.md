@@ -1,0 +1,7 @@
+# FK-UZ-1 19-modda: Fuqaroning ismi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-150456](https://lex.uz/docs/-111189#-150456)
+**Bog'liq havolalar:** 1171-modda, 70-modda
+
+## Norma matni:
+Agar qonundan yoki milliy odatdan boshqacha tartib kelib chiqmasa, fuqaro oʻz familiyasi va nomidan, shuningdek otasining ismi bilan huquq va burchlarga ega boʻladi hamda ularni amalga oshiradi. Qonunda nazarda tutilgan hollarda va tartibda fuqaro taxallusdan (toʻqilgan ismdan) foydalanishi mumkin. Fuqaro qonunda belgilangan tartibda oʻz ismini oʻzgartirishga haqli. Fuqaroning oʻz ismini oʻzgartirishi avvalgi ismi bilan olgan huquq va burchlarini bekor qilish yoki oʻzgartirish uchun asos boʻlmaydi. Fuqaro oʻz ismini oʻzgartirganligi haqida qarzdorlari va kreditorlariga xabar berish uchun zarur choralarni koʻrishi shart va u mazkur shaxslarda fuqaroning ismi oʻzgarganligi haqida maʼlumot yoʻqligi tufayli kelib chiqishi mumkin boʻlgan oqibatlar xavfini oʻz zimmasiga oladi. Ismini oʻzgartirgan fuqaro oʻzining avvalgi ismiga rasmiylashtirilgan hujjatlarga oʻz hisobidan tegishli oʻzgartirishlar kiritilishini talab qilishga haqli. Fuqaro tugʻilgan vaqtida olgan ismini, shuningdek oʻzgartirilgan ismini fuqarolik holati hujjatlarini qayd etish uchun belgilangan tartibda roʻyxatdan oʻtkazishi kerak. Boshqa shaxs ismidan foydalanib huquq va burchlarga ega boʻlishga yoʻl qoʻyilmaydi. mazkur Kodeksning 17, 18 , 20 , 99 , 1171-moddalari , Oʻzbekiston Respublikasining Oila kodeksi 69, 70-moddalari .

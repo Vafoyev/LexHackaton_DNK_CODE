@@ -1,0 +1,7 @@
+# FK-UZ-2 1033-modda: Intellektual mulk obyektlariga shaxsiy nomulkiy va mulkiy huquqlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-197262](https://lex.uz/docs/-180552#-197262)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Intellektual faoliyat natijalarining mualliflari ana shu natijalarga nisbatan shaxsiy nomulkiy va mulkiy huquqlarga ega boʻladilar. Shaxsiy nomulkiy huquqlar muallifga uning mulkiy huquqlaridan qatʼi nazar, tegishli boʻladi va uning intellektual faoliyat natijalariga boʻlgan mulkiy huquqlari boshqa shaxsga oʻtgan taqdirda uning oʻzida saqlanib qoladi. Fuqarolik muomalasi ishtirokchilarining, tovarlar, ishlar yoki xizmatlarning xususiy alomatlarini aks ettiruvchi vositalar (bundan buyon matnda — xususiy alomatlarni aks ettiruvchi vositalar)ga nisbatan huquq egalariga bu vositalar borasida mulkiy huquqlar tegishli boʻladi. [ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Mualliflik huquqi (intellektual faoliyat natijasining muallifi deb eʼtirof etilish huquqi) shaxsiy nomulkiy huquq hisoblanadi va ijodiy mehnati bilan intellektual faoliyat natijasini yaratgan shaxsgagina tegishli boʻladi. Mualliflik huquqi boshqa shaxsga oʻtkazilmaydi va berilmaydi. Agar natija ikki yoki undan ortiq shaxsning birgalikdagi ijodiy mehnati bilan yaratilgan boʻlsa, ular hammualliflar hisoblanadilar. Intellektual mulkning ayrim obyektlariga nisbatan qonunda asarning toʻlaligicha hammualliflari deb hisoblanadigan shaxslar doirasi cheklab qoʻyilishi mumkin.

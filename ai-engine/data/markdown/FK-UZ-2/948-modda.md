@@ -1,0 +1,7 @@
+# FK-UZ-2 948-modda: Sugʻurta shartnomasining muddatidan ilgari bekor boʻlishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196287](https://lex.uz/docs/-180552#-196287)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Sugʻurta shartnomasi, agar u kuchga kirganidan keyin sugʻurta hodisasi yuz berishi ehtimoli yoʻqolgan va sugʻurta xavfining mavjud boʻlishi sugʻurta hodisasidan boshqa holatlar boʻyicha tugagan boʻlsa, tuzilgan muddati kelishidan oldin bekor boʻladi. Quyidagilar shunday holatlar jumlasiga kiradi, chunonchi: sugʻurtalangan mol-mulkning yuz bergan sugʻurta hodisasidan boshqa sabablarga koʻra nobud boʻlishi; tadbirkorlik xavfini yoki ana shu faoliyat bilan bogʻliq fuqaroviy javobgarlik xavfini sugʻurtalagan shaxsning tadbirkorlik faoliyatini belgilangan tartibda toʻxtatishi. Sugʻurta shartnomasi ushbu moddaning birinchi qismida koʻrsatilgan holatlar boʻyicha muddatidan oldin bekor boʻlganda, sugʻurtalovchi sugʻurta mukofotining bir qismini sugʻurta amal qilgan vaqtga mutanosib ravishda olish huquqiga ega. Sugʻurta qildiruvchi (naf oluvchi), agar voz kechish paytiga kelib sugʻurta hodisaning yuz berish ehtimoli ushbu moddaning birinchi qismida koʻrsatilgan holatlar boʻyicha yoʻqolmagan boʻlsa, sugʻurta shartnomasini bajarishdan istagan paytida voz kechishga haqli. Sugʻurta qildiruvchi (naf oluvchi) sugʻurta shartnomasidan muddatidan ilgari voz kechgan taqdirda, sugʻurtalovchiga toʻlangan sugʻurta mukofoti, agar shartnomada boshqacha tartib nazarda tutilmagan boʻlsa, qaytarib berilmaydi.

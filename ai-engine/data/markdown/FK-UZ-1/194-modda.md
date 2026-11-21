@@ -1,0 +1,7 @@
+# FK-UZ-1 194-modda: Topilma bilan bogʻliq xarajatlarni toʻlash va ashyoni topib olgan shaxsni taqdirlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154045](https://lex.uz/docs/-111189#-154045)
+**Bog'liq havolalar:** 193-modda
+
+## Norma matni:
+Ashyoni topib olgan hamda uni olishga haqli boʻlgan shaxsga qaytarib bergan shaxs ana shu shaxsdan, ashyo davlat mulkiga yoki fuqarolarning oʻzini oʻzi boshqarish organi mulkiga oʻtgan hollarda esa — tegishli davlat organi yoki fuqarolarning oʻzini oʻzi boshqarish organidan ashyoni saqlash, topshirish yoki sotish bilan bogʻliq xarajatlarni, shuningdek ashyoni olishga haqli boʻlgan shaxsni topish uchun ketgan xarajatlarni undirish huquqiga ega. Ashyoni topib olgan shaxs uni olishga haqli boʻlgan shaxsdan topilma uchun ashyo qiymatining yigirma foiziga qadar miqdorida mukofot talab qilishga haqlidir. Basharti, topib olingan hujjatlar yoki oʻzga ashyolar ularni olishga haqli boʻlgan shaxsning oʻzi uchungina qimmatga ega boʻlsa, mukofot miqdori shu shaxs bilan kelishuv asosida, kelishuvga erishib boʻlmagan taqdirda esa — sud orqali belgilanadi. Topilgan ashyoni qaytarib berishni talab qilishga haqli boʻlgan shaxs topilma uchun koʻpchilik oʻrtasida mukofot vaʼda qilgan boʻlsa, u koʻpchilik oʻrtasida vaʼda qilingan mukofotni oʻsha shartlarga muvofiq toʻlaydi. Basharti, ashyoni topib olgan shaxs topilma haqida xabar qilmagan boʻlsa yoki uni yashirishga uringan boʻlsa, mukofot olish huquqi vujudga kelmaydi. mazkur Kodeksning 191 — 193-moddalari .

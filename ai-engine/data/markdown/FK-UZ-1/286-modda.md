@@ -1,0 +1,7 @@
+# FK-UZ-1 286-modda: Garov toʻgʻrisidagi shartnoma boʻyicha huquqlardan boshqa shaxs foydasiga voz kechish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154822](https://lex.uz/docs/-111189#-154822)
+**Bog'liq havolalar:** 321-modda, 385-modda, 17-modda
+
+## Norma matni:
+Garovga oluvchi talabdan boshqa shaxs foydasiga voz kechish yoʻli bilan kreditorning huquqlarini boshqa shaxsga berish haqidagi qoidalarga (ushbu Kodeksning 313-321-moddalari ) rioya qilgan holda garov toʻgʻrisidagi shartnoma boʻyicha oʻz huquqlarini boshqa shaxsga berishga haqli. Garovga oluvchining garov toʻgʻrisidagi shartnoma boʻyicha oʻz huquqlaridan boshqa shaxs foydasiga voz kechishi, agar garov bilan taʼminlangan asosiy majburiyat boʻyicha qarzdordan talab qilish huquqidan ham oʻsha shaxs foydasiga voz kechilgan boʻlsa, haqiqiy boʻladi. Agar boshqacha hol isbotlangan boʻlmasa, ipoteka toʻgʻrisidagi shartnoma boʻyicha huquqlardan boshqa shaxs foydasiga voz kechilishi ipoteka bilan taʼminlangan majburiyat boʻyicha huquqlardan boshqa shaxs foydasiga voz kechilishini ham anglatadi. mazkur Kodeksning 202, 203 , 264, 265 , 267 , 269 , 274 — 279 , 380 — 385-moddalari , Oʻzbekiston Respublikasining “Garov toʻgʻrisida”gi Qonunining 17-moddasi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.01 (Кучини йўқотган) Umumiy qoidalar / 03.10.99.00 (Кучини йўқотган) Garov]

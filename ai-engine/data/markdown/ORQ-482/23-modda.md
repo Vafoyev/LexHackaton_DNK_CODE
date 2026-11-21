@@ -1,0 +1,7 @@
+# ORQ-482 23-modda: Mediatsiya tartib-taomilini amalga oshirish muddati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-3805227#-3806921](https://lex.uz/uz/docs/-3805227#-3806921)
+**Bog'liq havolalar:** 23-modda
+
+## Norma matni:
+[ OKOZ: 1. 17.00.00.00 Odil sudlov / 17.06.00.00 Iqtisodiy protsessual qonunchilik / 17.07.00.00 Mediatsiya] Mediatsiya tartib-taomilini amalga oshirish muddati mediatsiya tartib-taomilini amalga oshirish toʻgʻrisidagi kelishuvda belgilanadi. Bunda mediator va taraflar mediatsiya tartib-taomili oʻttiz kundan ortiq boʻlmagan muddatda tugallanishi uchun barcha mumkin boʻlgan choralarni koʻrishi kerak. Zarur boʻlgan taqdirda, mediatsiya tartib-taomilini amalga oshirish muddati taraflarning oʻzaro roziligi bilan oʻttiz kungacha uzaytirilishi mumkin, bundan ushbu moddaning ikkinchi qismida nazarda tutilgan hollar mustasno. (23-moddaning birinchi qismi Oʻzbekiston Respublikasining 2019-yil 30-iyuldagi OʻRQ-551-sonli Qonuni tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 30.07.2019-y., 03/19/551/3493-son) Sud hujjatlari va boshqa organlar hujjatlarini ijro etish jarayonida mediatsiya tartib-taomilini amalga oshirish muddati koʻpi bilan oʻn besh kunni tashkil etadi. (23-modda Oʻzbekiston Respublikasining 2019-yil 30-iyuldagi OʻRQ-551-sonli Qonuniga asosan ikkinchi qism bilan toʻldirilgan — Qonun hujjatlari maʼlumotlari milliy bazasi, 30.07.2019-y., 03/19/551/3493-son)

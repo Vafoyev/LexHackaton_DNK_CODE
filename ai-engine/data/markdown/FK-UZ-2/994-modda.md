@@ -1,0 +1,7 @@
+# FK-UZ-2 994-modda: Oʻn toʻrt yoshdan oʻn sakkiz yoshgacha boʻlgan voyaga yetmaganlar tomonidan yetkazilgan zarar uchun javobgarlik
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196641](https://lex.uz/docs/-180552#-196641)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Oʻn toʻrt yoshdan oʻn sakkiz yoshgacha boʻlgan voyaga yetmaganlar yetkazilgan zarar uchun umumiy asoslarda mustaqil javobgar boʻladilar. Oʻn toʻrt yoshdan oʻn sakkiz yoshgacha boʻlgan voyaga yetmaganning zararni qoplash uchun yetarli mol-mulki yoki boshqa daromad manbalari boʻlmagan taqdirda, zarar toʻligʻicha yoki uning yetishmagan qismi voyaga yetmaganning ota-onasi (farzandlikka oluvchilari) yoki vasiyi tomonidan, agar ular zarar oʻzlarining aybi bilan yetkazilmaganligini isbotlay olmasalar, toʻlanishi lozim. Agar homiylikka muhtoj oʻn toʻrt yoshdan oʻn sakkiz yoshgacha boʻlgan voyaga yetmagan tegishli tarbiyalash, davolash muassasasida, aholini ijtimoiy himoya qilish muassasasida yoki qonunga koʻra uning homiysi hisoblanuvchi boshqa shunga oʻxshash muassasada turgan boʻlsa, bu muassasalar, agar zarar ularning aybi bilan yetkazilmaganligini isbotlay olmasalar, zararni toʻligʻicha yoki uning yetishmaydigan qismini toʻlashlari shart. Zarar yetkazgan voyaga yetganida yoxud u voyaga yetmasidan unda mol-mulk yoki zararni toʻlash uchun yetarli daromad manbalari paydo boʻlganida yoxud u voyaga yetmasidan muomala layoqatiga ega boʻlganida ota-ona (farzandlikka oluvchilar), homiy va tegishli muassasaning zararni toʻlash boʻyicha majburiyati tugaydi.

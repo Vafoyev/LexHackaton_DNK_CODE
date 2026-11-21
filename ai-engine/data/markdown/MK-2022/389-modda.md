@@ -1,0 +1,7 @@
+# MK-2022 389-modda: Ayrim toifadagi xodimlar mehnatini huquqiy jihatdan tartibga solishning oʻziga xos xususiyatlari tasnifi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266391](https://lex.uz/docs/-6257288#-6266391)
+**Bog'liq havolalar:** 27-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.12.00 Ayrim toifadagi xodimlar uchun kafolatlar va kompensatsiyalar] Ayrim toifadagi xodimlar mehnatini huquqiy jihatdan tartibga solishning oʻziga xos xususiyatlari quyidagi mezonlar boʻyicha tasniflanadi: 1) mehnat munosabatlarining subyektlari (ayollar, oilaviy vazifalarni bajarish bilan mashgʻul shaxslar, nogironligi boʻlgan shaxslar, voyaga yetmaganlar) boʻyicha; 2) mehnat faoliyatining sohalari, tarmoqlari va turlari (pedagoglar va tibbiyot xodimlari, transport xodimlari va boshqalar) boʻyicha; 3) mehnat sharoitlarining ogʻirligiga va (yoki) zararliligiga qarab; 4) tabiiy-iqlim sharoitlariga qarab; 5) xodim va ish beruvchi oʻrtasidagi mehnat munosabatlarining xususiyatlari (kasanachilar, masofadan turib ishlovchi xodimlar va boshqalar) boʻyicha. Mehnat toʻgʻrisidagi qonunchilikka va mehnat haqidagi boshqa huquqiy hujjatlarga muvofiq ayrim toifadagi xodimlar mehnatini huquqiy jihatdan tartibga solishning oʻziga xos xususiyatlarini tasniflashning boshqa mezonlari ham nazarda tutilishi mumkin. Oʻzbekiston Respublikasi “Mehnatni muhofaza qilish toʻgʻrisida”gi Qonunning 27-moddasi .

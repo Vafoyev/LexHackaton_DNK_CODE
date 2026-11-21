@@ -1,0 +1,7 @@
+# FK-UZ-2 547-modda: Ijaraga beruvchining ijaraga olingan mol-mulkni saqlash majburiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-184444](https://lex.uz/docs/-180552#-184444)
+**Bog'liq havolalar:** 547-modda
+
+## Norma matni:
+Agar qonunchilik yoki shartnomada boshqacha tartib nazarda tutilgan boʻlmasa, ijaraga beruvchi ijaraga topshirilgan mol-mulkni oʻz hisobidan kapital taʼmirlashi shart. (547-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Ijaraga oluvchi javobgar boʻlmagan holatlar natijasida kelib chiqqan shoshilinch zarurat tufayli oʻtkaziladigan taʼmirlashni ijaraga beruvchi oʻz hisobidan amalga oshirishi shart. Kapital taʼmirlash mulk ijarasi shartnomasida belgilangan muddatda, agar bu muddat shartnomada belgilanmagan yoki shoshilinch zarurat tufayli oʻtkazilsa, oqilona muddatda amalga oshirilmogʻi lozim. Ijaraga beruvchining kapital taʼmirlash majburiyatini bajarmasligi ijaraga oluvchiga oʻz xohishiga koʻra: shartnomada belgilangan yoxud shoshilinch zarurat taqozo etayotgan kapital taʼmirlashni amalga oshirib, taʼmirlash qiymatini ijaraga beruvchidan undirib olish yoxud mol-mulkdan foydalanganlik uchun toʻlanadigan haq hisobiga oʻtkazish; haqni tegishincha kamaytirishni talab qilish; shartnomani muddatidan oldin bekor qilish va zararning qoplanishini talab qilish huquqini beradi.

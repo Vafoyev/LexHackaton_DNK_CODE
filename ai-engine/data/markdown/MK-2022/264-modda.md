@@ -1,0 +1,7 @@
+# MK-2022 264-modda: Tungi vaqtdagi mehnat uchun haq toʻlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6264064](https://lex.uz/docs/-6257288#-6264064)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.04 Ish vaqtidan tashqari ish] Quyidagi hollarda tungi vaqtdagi mehnat uchun haq toʻlash kamida bir yarim baravar miqdorida amalga oshiriladi: mehnatga haq toʻlashning vaqtbay tizimida — tungi vaqtdagi ishning har bir soati uchun 1,5 yoki undan ortiq koeffitsiyentni qoʻllagan holda; mehnatga haq toʻlashning ishbay tizimida — tegishli razryadga (malakaga) ega boʻlgan vaqtbay ishlovchining soatlik tarif stavkasining (maoshining) ellik foizi yoki undan ortiq miqdorida ishbay ish haqi va qoʻshimcha toʻlov toʻliq toʻlanadi. Vazirlar Mahkamasining 2019-yil 16-sentabrdagi 775-sonli “Mehnatga haq toʻlash yagona tarif setkasini yanada takomillashtirish toʻgʻrisida”gi qarori . [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.03.00.00 Mehnatga haq toʻlash / 05.03.03.00 Tarif setkalari. Mansab okladlari] Tungi vaqtdagi ish uchun oshirilgan miqdorda haq toʻlash tarif stavkalariga (maoshlarga) kiritilmaydi. Tungi vaqtdagi, shuningdek koʻp smenali rejimdagi ish uchun ish haqiga doir qoʻshimcha toʻlovning aniq miqdori jamoa shartnomasida, ish beruvchi tomonidan kasaba uyushmasi qoʻmitasi bilan kelishuvga koʻra qabul qilinadigan ichki hujjatlarda yoxud mehnat shartnomasida belgilanadi.

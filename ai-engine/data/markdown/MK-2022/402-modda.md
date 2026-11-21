@@ -1,0 +1,7 @@
+# MK-2022 402-modda: Oʻn ikki yoshga toʻlmagan bolalarning yoki oʻn olti yoshga toʻlmagan nogironligi boʻlgan bolaning ota-onasidan birining (ota-ona oʻrnini bosuvchi shaxsning) ish haqi saqlanmagan holda taʼtil olish huquqi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266486](https://lex.uz/docs/-6257288#-6266486)
+**Bog'liq havolalar:** 402-modda, 242-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.29.00 Taʼtillar / 05.02.29.07 Ish haqi saqlanmagan holda beriladigan taʼtillar] Oʻn ikki yoshga toʻlmagan ikki nafar va undan ortiq bolaning yoki oʻn olti yoshga toʻlmagan nogironligi boʻlgan bolaning ota-onasidan biriga (ota-ona oʻrnini bosuvchi shaxsga), ularning xohishiga koʻra, har yili ish haqi saqlanmagan holda davomiyligi oʻn toʻrt kalendar kungacha boʻlgan taʼtil beriladi. (402-moddaning birinchi qismi Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son) mazkur Kodeksning 241-242-moddasi . Ushbu moddaning birinchi qismida nazarda tutilgan taʼtil yillik mehnat taʼtiliga qoʻshib berilishi yoki ish beruvchi bilan kelishib belgilanadigan davrda ushbu taʼtildan alohida (toʻliq yoxud qismlarga boʻlib), lekin faqat joriy ish yili davomida foydalanilishi mumkin. Ushbu taʼtilni keyingi ish yiliga koʻchirishga yoʻl qoʻyilmaydi.

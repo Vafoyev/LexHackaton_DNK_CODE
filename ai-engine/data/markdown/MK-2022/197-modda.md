@@ -1,0 +1,7 @@
+# MK-2022 197-modda: Ayrim toifadagi xodimlar ish vaqti rejimining oʻziga xos xususiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6262542](https://lex.uz/docs/-6257288#-6262542)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Ayrim toifadagi xodimlar (oʻrindoshlar, yakka tartibdagi tadbirkorlarda yollanib ishlaydigan shaxslar, uy ishchilari va masofadan turib ishlaydigan xodimlar, shuningdek vaxta usulida ishlaydigan shaxslar va boshqalar) ish vaqti rejimining oʻziga xos xususiyatlari ushbu Kodeksning VI boʻlimida belgilangan. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.04.00 Zararli va ogʻir mehnat sharoitlari. Mehnatning alohida holatlari; 2. 14.00.00.00 Sogʻliqni saqlash. Jismoniy tarbiya. Sport. Turizm / 14.01.00.00 Sogʻliqni saqlash / 14.01.08.00 Aholining sanitariya-epidemiologik sogʻlomligi / 14.01.08.02 Sanitariya va gigiyena meʼyorlari hamda qoidalari] Transport, aloqa xodimlarining, qutqaruvchilarning, shaxsiy kompyuterlarda, videodispley terminallarida, tashkiliy texnikada ishlaydigan shaxslarning va ishi oʻziga xos xususiyatlarga ega boʻlgan boshqa xodimlarning ish vaqti rejimi qonunchilikda, shuningdek sanitariya normalari va qoidalarida nazarda tutilgan talablar hisobga olingan holda belgilanadi. Oʻzbekiston Respublikasining “Aholining sanitariya-epidemiologik osoyishtaligi toʻgʻrisida”gi Qonuni .

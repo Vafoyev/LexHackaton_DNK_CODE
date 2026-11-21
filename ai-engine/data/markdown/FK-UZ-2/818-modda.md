@@ -1,0 +1,7 @@
+# FK-UZ-2 818-modda: Topshiriq shartnomasi boʻyicha haq toʻlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195269](https://lex.uz/docs/-180552#-195269)
+**Bog'liq havolalar:** 818-modda, 356-modda, 290-modda
+
+## Norma matni:
+Agar qonunchilikda yoki topshiriq shartnomasida nazarda tutilgan boʻlsa, topshiriq beruvchi ishonchli vakilga haq toʻlashi shart. (818-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Agar topshiriq shartnomasi ikkala taraf yoki ulardan birining tadbirkorlik faoliyatini amalga oshirishi bilan bogʻliq boʻlsa, topshiriq beruvchi, agar shartnomada boshqa hol nazarda tutilgan boʻlmasa, ishonchli vakilga haq toʻlashi shart. Haq toʻlash nazarda tutilgan topshiriq shartnomasida toʻlanadigan haqning miqdori va uni toʻlash haqidagi shartlar boʻlmasa, haq ushbu Kodeks 356-moddasining toʻrtinchi qismiga muvofiq shunga oʻxshash xizmatlar uchun odatda qabul qilingan narxlar boʻyicha belgilanadi va topshiriq bajarilganidan keyin toʻlanadi. Vakil talab qilingan hamma harakatlarni tegishli darajada amalga oshirgan, biroq topshiriq u aybdor boʻlmagan holda bajarilmay qolgan taqdirda ham haq toʻlanishi kerak. Tijorat vakili sifatida ish olib boruvchi ishonchli vakil ushbu Kodeksning 290-moddasiga muvofiq, topshiriq beruvchiga topshirilishi kerak boʻlgan oʻz qoʻlidagi ashyolarni topshiriq shartnomasi boʻyicha oʻz talablarini taʼminlash uchun ushlab turishga haqli.

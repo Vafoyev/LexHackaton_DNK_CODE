@@ -1,0 +1,7 @@
+# FK-UZ-2 952-modda: Sugʻurta hodisasidan koʻriladigan zararni kamaytirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-196348](https://lex.uz/docs/-180552#-196348)
+**Bog'liq havolalar:** 952-modda
+
+## Norma matni:
+Mulkiy sugʻurta shartnomasida nazarda tutilgan sugʻurta hodisasi yuz berganida, sugʻurta qildiruvchi ehtimol tutilgan zararni kamaytirish uchun oqilona va mumkin boʻlgan choralarni koʻrishi shart. Sugʻurta qildiruvchi bunday choralarni koʻrar ekan, agar oʻziga maʼlum qilingan boʻlsa, sugʻurtalovchining koʻrsatmalariga amal qilishi lozim. Zararni kamaytirish maqsadida qilingan, sugʻurtalovchi qoplashi lozim boʻlgan xarajatlar, agar bunday xarajatlar zarur boʻlgan boʻlsa yoki sugʻurtalovchining koʻrsatmalarini bajarish uchun qilingan boʻlsa, tegishli choralar foydasiz boʻlib chiqsa ham, sugʻurtalovchi tomonidan qoplanishi lozim. Bunday xarajatlar sugʻurta summasining sugʻurta qiymatiga nisbatiga mutanosib ravishda, boshqa zararlarni qoplash bilan birgalikda ular sugʻurta summasidan oshib ketishi mumkinligidan qatʼi nazar, qoplanadi. (952-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2026-yil 22-iyundagi OʻRQ 1154-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 23.06.2026-y., 03/26/1154/0618-son) Sugʻurta qiluvchi ehtimol tutilgan zararni kamaytirish uchun qasddan choralar koʻrmagani oqibatida koʻrilgan zararni qoplashdan sugʻurtalovchi ozod qilinadi.

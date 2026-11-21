@@ -1,0 +1,7 @@
+# MK-2022 63-modda: Jamoaviy muzokaralar jarayonida yuzaga kelgan ixtiloflarni hal etish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6258913](https://lex.uz/docs/-6257288#-6258913)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Agar jamoaviy muzokaralar jarayonida jamoaviy muzokaralar taraflari muzokaralar predmeti boʻlgan ayrim masalalar yuzasidan kelishuvga erisha olmagan boʻlsa, ular ixtiloflarga sabab boʻlmagan masalalarga doir kelishuvni rasmiylashtiradi va bir vaqtning oʻzida kelishuvga erishib boʻlmagan masalalar boʻyicha ixtiloflar bayonnomasini tuzadi. Agar jamoaviy muzokaralar jarayonida muzokaralar predmeti boʻlgan barcha masalalar yuzasidan kelishilgan qaror qabul qilinmagan boʻlsa ham muzokaralar taraflari ixtiloflar bayonnomasini tuzadi. Ixtiloflar bayonnomasida taraflarning ixtiloflarni bartaraf etish uchun zarur boʻlgan choralar va jamoaviy muzokaralarni qayta tiklash muddatlari toʻgʻrisidagi kelishib olingan takliflari koʻrsatiladi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.11.00.00 Mehnat nizolari / 05.11.02.00 Jamoa mehnat nizolari] Taraflar jamoaviy muzokaralarni qayta tiklash chogʻida hal qila olmagan ixtiloflarni hal etishga (tartibga solishga) doir nizolar ushbu Kodeksda jamoaviy mehnat nizolarini hal etish uchun belgilangan tartibda koʻrib chiqiladi. mazkur Kodeksning 34-bobi , Oʻzbekiston Respublikasi Prezidentining 2020-yil 17-iyundagi PQ-4754-sonli “Nizolarni muqobil hal etishning mexanizmlarini yanada takomillashtirish chora-tadbirlari toʻgʻrisida”gi qarori .

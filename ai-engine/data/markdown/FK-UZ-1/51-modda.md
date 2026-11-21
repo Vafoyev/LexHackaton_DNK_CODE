@@ -1,0 +1,7 @@
+# FK-UZ-1 51-modda: Topshirish hujjati va taqsimlash balansi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-152052](https://lex.uz/docs/-111189#-152052)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Topshirish hujjati va taqsimlash balansi qayta tashkil etilgan yuridik shaxsning barcha kreditorlari va qarzdorlariga nisbatan barcha majburiyatlari boʻyicha, shu jumladan taraflar bahslashayotgan majburiyatlar boʻyicha ham, huquqiy vorislik toʻgʻrisidagi qoidalarni oʻz ichiga olgan boʻlishi kerak. Topshirish hujjati va taqsimlash balansi yuridik shaxs muassislari (ishtirokchilari) tomonidan yoki yuridik shaxslarni qayta tashkil etish toʻgʻrisida qaror qabul qilgan organ tomonidan tasdiqlanadi hamda taʼsis hujjatlari bilan birga yangidan vujudga kelgan yuridik shaxslarni davlat roʻyxatidan oʻtkazish yoki mavjud yuridik shaxslarning taʼsis hujjatlariga oʻzgartishlar kiritish uchun taqdim etiladi. Taʼsis hujjatlari bilan birga tegishincha topshirish hujjatini yoki taqsimlash balansini taqdim etmaslik, shuningdek ularda qayta tashkil etilgan yuridik shaxsning majburiyatlari boʻyicha huquqiy vorislik toʻgʻrisidagi qoidalarning yoʻqligi yangidan vujudga kelgan yuridik shaxslarni davlat roʻyxatidan oʻtkazishning rad etilishiga olib keladi. [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.03.00.00 Yuridik shaxslar / 03.03.02.00 Yuridik shaxslarni tashkil etish, qayta tashkil etish va tugatish. Yuridik shaxslarni davlat roʻyxatiga olish]

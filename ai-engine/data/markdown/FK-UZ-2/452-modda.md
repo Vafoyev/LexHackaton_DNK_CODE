@@ -1,0 +1,7 @@
+# FK-UZ-2 452-modda: But boʻlmagan tovarlar yetkazib berish oqibatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183353](https://lex.uz/docs/-180552#-183353)
+**Bog'liq havolalar:** 413-modda, 452-modda, 27-modda, 14-modda
+
+## Norma matni:
+Mahsulot yetkazib berish shartnomasining shartlari, qonunchilikning talablari yoki tovarlarning but boʻlishiga qoʻyiladigan odatdagi talablarni buzgan holda tovarlar yetkazib berganida sotib oluvchi (oluvchi) mahsulot yetkazib beruvchiga ushbu Kodeksning 413-moddasida nazarda tutilgan talablarni qoʻyishga haqli, mahsulot yetkazib beruvchi yetkazib berilgan tovarlarning but emasligi toʻgʻrisida sotib oluvchidan bildirish olganidan keyin tovarlarni darhol butlagan yoki ularni but tovarlar bilan almashtirgan hollar bundan mustasno. (452-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Tovarlarni chakana narxlarda sotayotgan sotib oluvchi (oluvchi), agar mahsulot yetkazib berish shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, isteʼmolchi tomonidan qaytarilgan but boʻlmagan tovarlarni oqilona muddat ichida but tovarlar bilan almashtirishni talab qilishga haqli. “Xoʻjalik yurituvchi subyektlar faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunning 27-moddasi , 1996-yil 26-apreldagi 221-I-son “Isteʼmolchilarning huquqlarini himoya qilish toʻgʻrisida”gi Qonunining 14-moddasi .

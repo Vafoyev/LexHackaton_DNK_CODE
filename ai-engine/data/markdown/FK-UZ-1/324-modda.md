@@ -1,0 +1,7 @@
+# FK-UZ-1 324-modda: Qarzdorning zararni toʻlash majburiyati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-155276](https://lex.uz/docs/-111189#-155276)
+**Bog'liq havolalar:** 324-modda, 339-modda
+
+## Norma matni:
+Qarzdor majburiyatni bajarmaganligi yoki lozim darajada bajarmaganligi tufayli kreditorga yetkazilgan zararni toʻlashi shart. Agar qonunchilikda yoki shartnomada oʻzgacha tartib nazarda tutilgan boʻlmasa, zararni aniqlashda majburiyat bajarilishi kerak boʻlgan joyda, qarzdor kreditorning talablarini ixtiyoriy qanoatlantirgan kunda, bordi-yu, talab ixtiyoriy qanoatlantirilgan boʻlmasa, — daʼvo qoʻzgʻatilgan kunda mavjud boʻlgan narxlar eʼtiborga olinadi. Sud vaziyatga qarab, zararni toʻlash haqidagi talabni qaror chiqarilgan kunda mavjud boʻlgan narxlarni eʼtiborga olgan holda qanoatlantirishi mumkin. (324-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Boy berilgan foydani aniqlashda kreditor tomonidan uni olish uchun koʻrilgan choralar va shu maqsadda koʻrilgan tayyorgarliklar hisobga olinadi. sud amaliyoti. mazkur Kodeksning 14 , 236 — 258 , 325 — 339-moddalari . Qoʻshimcha maʼlumot uchun Oliy xoʻjalik sudi Plenumining 28.02.2003-yildagi “Oʻzbekiston Respublikasi Fuqarolik kodeksining talabdan boshqa shaxs foydasiga voz kechish huquqi bilan bogʻliq normalarini qoʻllashning ayrim masalalari toʻgʻrisida”gi 110-son qarorining 11-bandining ikkinchi xatboshisi .

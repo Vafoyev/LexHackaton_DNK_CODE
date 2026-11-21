@@ -1,0 +1,7 @@
+# MK-2022 409-modda: Uch yoshgacha boʻlgan bolasi bor xodim bilan mehnat shartnomasini bekor qilishdagi kafolatlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6266526](https://lex.uz/docs/-6257288#-6266526)
+**Bog'liq havolalar:** 161-modda
+
+## Norma matni:
+Uch yoshgacha bolasi bor ayol yoxud uch yoshgacha boʻlgan bolani yolgʻiz tarbiyalayotgan ota (vasiy) bilan mehnat shartnomasini ish beruvchining tashabbusiga koʻra bekor qilishga faqat ushbu Kodeks 161-moddasi ikkinchi qismining 1 , 4 va 5-bandlarida nazarda tutilgan asoslar boʻyicha yoʻl qoʻyiladi. [ OKOZ: 1. 06.00.00.00 Ijtimoiy taʼminot va ijtimoiy sugʻurta toʻgʻrisidagi qonunchilik. Ijtimoiy himoya / 06.07.00.00 Nafaqalar. Kompensatsiya toʻlovlari / 06.07.01.00 Nafaqalar / 06.07.01.07 Voyaga etmagan bolalari boʻlgan oilalarga beriladigan nafaqalar] Ushbu moddaning birinchi qismida koʻrsatilgan xodimlar bilan mehnat shartnomasi bekor qilinganda ularning bola parvarishlash nafaqasini olish huquqi saqlanib qoladi. Bolasi uch yoshga toʻlguniga qadar bola parvarishlash taʼtilida boʻlgan xodim bilan mehnat shartnomasini xodimning malakasi yetarli emasligi oqibatida egallab turgan lavozimiga yoki bajarayotgan ishiga loyiq emasligi munosabati bilan ish beruvchining tashabbusiga koʻra ushbu Kodeks 161-moddasi ikkinchi qismining 3-bandiga muvofiq bekor qilishga xodim taʼtildan chiqqan kundan eʼtiboran bir yil ichida yoʻl qoʻyilmaydi.

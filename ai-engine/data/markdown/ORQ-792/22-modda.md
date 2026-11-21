@@ -1,0 +1,7 @@
+# ORQ-792 22-modda: Elektron tijorat sohasida toʻlovlarni amalga oshirish usullari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-6213382#-6221314](https://lex.uz/uz/docs/-6213382#-6221314)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.11.00.00 Majburiyatlarning alohida turlari / 03.11.16.00 Bank hisobvaragʻi; 2. 12.00.00.00 Axborot va axborotlashtirish / 12.03.00.00 Axborot resurslari. Axborot resurslaridan foydalanish / 12.03.02.00 Axborotni hujjatlashtirish. Elektron hujjat aylanishi / 12.03.02.02 Elektron tijorat (Кучини йўқотган)] Elektron tijorat sohasida toʻlovlar quyidagi usullar bilan amalga oshiriladi: naqd pul mablagʻlari bilan — naqd pul mablagʻlari toʻlov vositasi tarzida virtual terminallar (“E-POS”) orqali qabul qilinganligini tasdiqlaydigan hujjatlarni hamda sotuvchi va sotilgan tovarlar (ishlar, xizmatlar) toʻgʻrisidagi axborotni oʻzida aks ettiradigan hujjatlarni xaridorga taqdim etish orqali; pul mablagʻlarini bank hisobvaragʻidan oʻtkazish orqali — pul mablagʻlarini bank hisobvaragʻidan (shu jumladan bank kartalarining hisobvaragʻidan) oʻtkazish vositasida, shu jumladan shaxsiy kabinet (masofadan xizmat koʻrsatish tizimi) orqali yoki toʻlov tashkilotining tizimi orqali oʻtkazish vositasida; elektron pullardan foydalangan holda — elektron pullar tizimida ochilgan elektron hamyondagi pul mablagʻlarini oʻtkazish vositasida.

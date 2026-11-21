@@ -1,0 +1,7 @@
+# MK-2022 238-modda: Jamoa kelishuvlarida yoxud jamoa shartnomasida yoki mehnat haqidagi boshqa huquqiy hujjatlarda ijtimoiy taʼtillarni belgilash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6263427](https://lex.uz/docs/-6257288#-6263427)
+**Bog'liq havolalar:** 239-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.05.00 Jamoa shartnomasi. Jamoa kelishuvlari] Jamoa kelishuvlarida yoxud jamoa shartnomasida yoki mehnat haqidagi boshqa huquqiy hujjatlarda quyidagilar nazarda tutilishi mumkin: xodimlarga qonunchilikda belgilanmagan boshqa ijtimoiy taʼtillarni berish (nikoh tuzilganligi munosabati bilan, bola tugʻilishi munosabati bilan bolaning otasiga, xodimning yaqin qarindoshi vafot etganligi munosabati bilan va boshqalar); ijtimoiy taʼtillar davomiyligini ularning qonunchilikda belgilangan davomiyligiga nisbatan koʻpaytirish. mazkur Kodeksning 236 –– 239-moddalari . Jamoa kelishuvlarida yoxud jamoa shartnomasida yoki mehnat haqidagi boshqa huquqiy hujjatlarda ushbu moddaning birinchi qismida nazarda tutilgan taʼtillarda boʻlgan xodimlarning oʻrtacha oylik ish haqi yoki uning bir qismi saqlanib qolishi nazarda tutilishi mumkin. Ushbu moddaning birinchi qismida nazarda tutilgan ijtimoiy taʼtillarning davomiyligi, shuningdek mazkur taʼtillarni navbatdagi har yilgi mehnat taʼtilini olish huquqini beradigan ish stajiga kiritish toʻgʻrisidagi masala xodimlarga ushbu taʼtillar berilishini belgilovchi hujjatlarda tartibga solinishi kerak.

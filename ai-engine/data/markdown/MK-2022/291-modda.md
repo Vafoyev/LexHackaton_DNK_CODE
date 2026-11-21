@@ -1,0 +1,7 @@
+# MK-2022 291-modda: Ishlab chiqarishdagi baxtsiz hodisa yoki kasb kasalligi natijasida xodimda vaqtincha mehnatga qobiliyatsizlik yuz bergan taqdirda xarajatlarni kompensatsiya qilish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6264586](https://lex.uz/docs/-6257288#-6264586)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.07.00.00 Mehnatni muhofaza qilish / 05.07.05.00 Baxtsiz hodisalar. Ularni tekshirish va hisobga olish tartibi; 2. 06.00.00.00 Ijtimoiy taʼminot va ijtimoiy sugʻurta toʻgʻrisidagi qonunchilik. Ijtimoiy himoya / 06.07.00.00 Nafaqalar. Kompensatsiya toʻlovlari / 06.07.01.00 Nafaqalar / 06.07.01.01 Vaqtincha mehnatga qobiliyatsizlik nafaqasi] Agar vaqtincha mehnatga qobiliyatsizlik ishlab chiqarishdagi baxtsiz hodisa yoki kasb kasalligi natijasida yuz bersa, ish beruvchi xodimga vaqtincha mehnatga qobiliyatsizlik nafaqasini toʻlash bilan birga uning tibbiy, ijtimoiy va kasbiy reabilitatsiya uchun qilgan xarajatlarining oʻrnini tegishli hujjatlar (cheklar, maʼlumotnomalar va boshqalar) bilan tasdiqlangan, haqiqatda qilingan xarajatlar miqdoridan kam boʻlmagan miqdorda qoplaydi. Vazirlar Mahkamasining 2024-yil 31-maydagi 314-sonli qarori bilan tasdiqlangan Vaqtinchalik mehnatga layoqatsizlik, homiladorlik va tugʻish boʻyicha nafaqalarni hamda yangi tugʻilgan bolani farzandlikka olgan yoki unga vasiy qilib belgilangan xodimga nafaqani tayinlash hamda toʻlash tartibi toʻgʻrisidagi nizom .

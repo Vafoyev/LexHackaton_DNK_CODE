@@ -1,0 +1,7 @@
+# ORQ-850 12-modda: Tovarning monopol past narxi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6518381#-6519618](https://lex.uz/docs/-6518381#-6519618)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 09.00.00.00 Tadbirkorlik va xoʻjalik faoliyati / 09.17.00.00 Savdo / 09.17.03.00 Savdoda narxni tartibga solish (shakllantirish) (shuningdek, 09.14.02.02ga qarang)] Tovar yoki moliya bozorida ustun mavqega ega boʻlgan xoʻjalik yurituvchi subyekt tomonidan tovarning tannarxidan past darajada va mazkur tovarni sotishdan zarar keltiradigan darajada belgilanadigan, natijada raqobat cheklanishiga olib keladigan narx tovarning monopol past narxidir. [ OKOZ: 1. 10.00.00.00 Tashqi iqtisodiy faoliyat. Bojxona ishi / 10.01.00.00 Tashqi iqtisodiy faoliyat sohasidagi umumiy qoidalar / 10.01.04.00 Eksport va import / 10.01.04.01 Eksport] Mazkur moddaning talablari eksport narxlariga nisbatan tatbiq etilmaydi. [ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.01.00.00 Oʻzbekiston Respublikasi Vazirlar Mahkamasi (shuningdek, 01.11.00.00ga qarang) / 02.01.02.00 Vazirlar Mahkamasi vakolatlari] Tovarning monopol past narxi Oʻzbekiston Respublikasi Vazirlar Mahkamasi tomonidan belgilangan tartibda aniqlanadi. Vazirlar Mahkamasining 2024-yil 1-maydagi 256-sonli “ Tovar va moliya bozorlarida monopoliyaga qarshi tartibga solishga doir normativ-huquqiy hujjatlarni tasdiqlash tugʻrisida ”gi qarori .

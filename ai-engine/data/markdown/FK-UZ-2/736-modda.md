@@ -1,0 +1,7 @@
+# FK-UZ-2 736-modda: Qarz oluvchi tomonidan qarz shartnomasini buzish oqibatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-190181](https://lex.uz/docs/-180552#-190181)
+**Bog'liq havolalar:** 734-modda, 327-modda, 736-modda
+
+## Norma matni:
+Agar qonunchilikda yoki qarz shartnomasida boshqacha tartib nazarda tutilgan boʻlmasa, qarz oluvchi qarz summasini vaqtida qaytarmagan hollarda ushbu Kodeksning 734-moddasi birinchi qismida nazarda tutilgan foizlar toʻlangan boʻlishidan qatʼi nazar, qarz qaytarib berilishi kerak boʻlgan kundan boshlab to u qarz beruvchiga qaytarib berilgan kungacha bu summa yuzasidan ushbu Kodeksning 327-moddasi birinchi va ikkinchi qismlarida nazarda tutilgan miqdorda foizlar toʻlanishi kerak. (736-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Agar qarz shartnomasida qarzni qismlab (boʻlib-boʻlib) qaytarish nazarda tutilgan boʻlsa, qarz oluvchi qarzning navbatdagi qismini qaytarish uchun belgilangan muddatni buzgan taqdirda, qarz beruvchi qarzning qolgan barcha summasini tegishli foizlar bilan birga muddatidan oldin qaytarishni talab qilishga haqli. Agar qarz shartnomasida qarz boʻyicha foizlarni qarzning oʻzini qaytarish muddatidan oldin toʻlash nazarda tutilgan boʻlsa, bu majburiyat buzilgan taqdirda, qarz beruvchi qarz oluvchidan qarz summasini tegishli foizlari bilan birga muddatidan oldin qaytarishni talab qilishga haqli. sud amaliyoti.

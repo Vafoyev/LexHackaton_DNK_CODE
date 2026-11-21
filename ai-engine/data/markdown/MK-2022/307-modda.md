@@ -1,0 +1,7 @@
+# MK-2022 307-modda: Komissiya aʼzosini rad etish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6264881](https://lex.uz/docs/-6257288#-6264881)
+**Bog'liq havolalar:** 304-modda
+
+## Norma matni:
+Oʻziga nisbatan xizmat tekshiruvi oʻtkazilayotgan xodim ushbu Kodeks 304-moddasining uchinchi qismida nazarda tutilgan asoslardan biri mavjud boʻlgan taqdirda komissiya aʼzosini rad etish toʻgʻrisida yozma shaklda arz qilishga haqli. Komissiya aʼzosini rad etish asoslangan boʻlishi kerak va komissiya xizmat tekshiruvi natijalari haqida dalolatnoma qabul qilguniga qadar xizmat tekshiruvining har qanday bosqichida arz qilinishi mumkin. Komissiya aʼzosini rad etish toʻgʻrisidagi ariza xizmat tekshiruvi oʻtkazish toʻgʻrisida qaror qabul qilgan ish beruvchiga beriladi. Rad etish haqidagi arizaga doir qarorni xizmat tekshiruvi oʻtkazishni tayinlagan mansabdor shaxs (organ) rad etish haqidagi ariza berilgan paytdan eʼtiboran bir ish kunidan kechiktirmay qabul qilishi kerak. Ushbu qaror qabul qilingan kundan keyingi ish kunidan kechiktirmay xodim va komissiya aʼzolari eʼtiboriga yetkazilishi kerak. Ushbu Kodeks 304-moddasining uchinchi qismida nazarda tutilgan asoslardan biri mavjud boʻlsa, komissiya aʼzosi darhol oʻzini oʻzi rad etishi shart. Xodimning komissiya aʼzosini rad etish toʻgʻrisidagi arizasi qanoatlantirilgan taqdirda yoki ushbu komissiya aʼzosi oʻzini oʻzi rad etganda ish beruvchi komissiyaning yangi aʼzosini tayinlaydi.

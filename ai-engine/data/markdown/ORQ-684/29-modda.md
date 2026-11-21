@@ -1,0 +1,7 @@
+# ORQ-684 29-modda: Davlat xaridlarini rejalashtirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-5382974#-5385378](https://lex.uz/docs/-5382974#-5385378)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.02.00 Davlat ehtiyojlari. Davlat xaridlari; 2. 07.00.00.00 Moliya va kredit toʻgʻrisidagi qonunchilik. Bank faoliyati / 07.28.00.00 Investitsiyalar va xorijdan mablagʻ jalb qilish (shuningdek, 07.05.04.00, 09.12.03.00, 10.01.05.00larga qarang) / 07.28.06.00 Investitsiya dasturlari va loyihalar / 07.28.06.01 Investitsiya dasturlari] Davlat xaridlarini rejalashtirish davlat buyurtmachisi tomonidan amalga oshiriladi va xaridlarni tizimlashtirishdan, davlat xaridlarini rejalashtirish hamda budjet va investitsiya jarayonlaridagi rejalashtirish, shuningdek xoʻjalik faoliyatini rejalashtirish oʻrtasida oʻzaro aloqani taʼminlashdan iborat boʻladi. Davlat xaridlarining yillik reja-jadvali budjet buyurtmachilari tomonidan joriy yilning 25-martiga qadar maxsus axborot portalida joylashtiriladi. Kelgusi yil uchun davlat xaridlarining yillik reja-jadvallari korporativ buyurtmachilar tomonidan joriy yilning 25-dekabriga qadar maxsus axborot portalida joylashtiriladi. Kelgusi chorak uchun davlat xaridlarining choraklik reja-jadvallari davlat buyurtmachilari tomonidan joriy chorak oxirgi oyining 25 sanasiga qadar maxsus axborot portalida joylashtiriladi.

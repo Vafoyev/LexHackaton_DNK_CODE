@@ -1,0 +1,7 @@
+# FK-UZ-2 656-modda: Maishiy pudrat shartnomasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-188955](https://lex.uz/docs/-180552#-188955)
+**Bog'liq havolalar:** 656-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Tadbirkorlik faoliyatini amalga oshirayotgan pudratchi maishiy pudrat shartnomasi boʻyicha buyurtmachi-fuqaroning topshirigʻi bilan uning maishiy yoxud boshqa shaxsiy ehtiyojlarini qondirishga qaratilgan maʼlum ishlarni bajarish majburiyatini, buyurtmachi esa ishni qabul qilish va haqini toʻlash majburiyatini oladi. Agar qonunchilik yoxud shartnomada, shu jumladan buyurtmachi qoʻshilgan formulyarlar yoki boshqa standart shakllarning shartlarida boshqacha tartib nazarda tutilmagan boʻlsa, pudratchi buyurtmachiga patta yoki buyurtma qabul qilinganligini tasdiqlaydigan boshqa hujjatni bergan paytdan boshlab maishiy pudrat shartnomasi tuzilgan hisoblanadi. (656-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Mazkur hujjatlarning buyurtmachida boʻlmasligi, uni maishiy pudrat shartnomasi tuzilganligini yoki uning shartlarini tasdiqlovchi guvohlar koʻrsatmalarini vaj qilib keltirish huquqidan mahrum qilmaydi. Maishiy pudrat shartnomasi ommaviy shartnomalar jumlasiga kiradi.

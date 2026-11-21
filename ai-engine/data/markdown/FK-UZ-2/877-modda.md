@@ -1,0 +1,7 @@
+# FK-UZ-2 877-modda: Omonat saqlash shartnomasining shakli
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195659](https://lex.uz/docs/-180552#-195659)
+**Bog'liq havolalar:** 108-modda, 877-modda
+
+## Norma matni:
+Omonat saqlash shartnomasi yozma ravishda tuzilishi kerak boʻlgan hollarda (ushbu Kodeksning 108-moddasi ) agar ashyoning saqlashga qabul qilinganligi omonat saqlovchi tomonidan yuk topshiruvchiga saqlash tilxati, pattasi, guvohnomasini, omonat saqlovchi imzolagan boshqa hujjatni berish yoʻli bilan tasdiqlangan boʻlsa, shartnomaning yozma shakliga rioya qilingan hisoblanadi. Agar ashyo saqlash uchun favqulodda holatlarda (yongʻin, tabiiy ofat, toʻsatdan kasal boʻlish, hujum xavfi va boshqalar) topshirilgan boʻlsa, shartnomaning yozma shakliga rioya qilish talab etilmaydi. Omonat saqlash shartnomasi omonat saqlovchi tomonidan yuk topshiruvchiga, agar bunga qonunchilikda yoʻl qoʻyilsa yoki u saqlashning ushbu turi uchun odatdagi hol boʻlsa, ashyolar saqlash uchun qabul qilinganligini tasdiqlaydigan nomerli jeton (nomer) yoki boshqa belgi berish yoʻli bilan tuzilishi mumkin. (877-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Omonat saqlash shartnomasining oddiy yozma shakliga rioya qilmaslik saqlashga qabul qilingan ashyo bilan omonat saqlovchi qaytargan ashyoning aynan oʻziligi xususida nizo chiqqan taqdirda, taraflarni guvohlarning koʻrsatmalarini vaj qilib keltirish huquqidan mahrum etmaydi.

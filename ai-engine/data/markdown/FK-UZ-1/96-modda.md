@@ -1,0 +1,7 @@
+# FK-UZ-1 96-modda: Qimmatli qogʻozlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-152904](https://lex.uz/docs/-111189#-152904)
+**Bog'liq havolalar:** 96-modda, 741-modda, 769-modda, 807-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Mulkiy huquqlarni belgilangan shaklga va majburiy rekvizitlarga amal qilgan holda tasdiqlovchi hujjatlar qimmatli qogʻozlar hisoblanib, ularni taqdim etgan taqdirdagina mazkur huquqlarni amalga oshirish yoki boshqa shaxslarga berish mumkin boʻladi. Qimmatli qogʻozlar boshqa shaxsga berilishi bilan ular tomonidan tasdiqlanadigan hamma huquqlar ham oʻsha shaxsga oʻtadi. Qimmatli qogʻozlar jumlasiga quyidagilar kiradi: obligatsiya, veksel, chek, depozit va jamgʻarma sertifikatlari, konosament, aksiya hamda qonunchilik bilan qimmatli qogʻozlar jumlasiga kiritilgan boshqa hujjatlar kiradi. (96-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) mazkur Kodeksning 86 , 740, 741-moddalari , 769-moddasining toʻrtinchi qismi , 770 , 807-moddalari , Oʻzbekiston Respublikasining “Qimmatli qogʻozlar bozori toʻgʻrisida”gi Qonuni . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.04.00.00 Fuqarolik qonunchiligi obyektlari / 03.04.04.00 Nomoddiy neʼmatlar] 8-BOB NOMODDIY NEʼMATLAR

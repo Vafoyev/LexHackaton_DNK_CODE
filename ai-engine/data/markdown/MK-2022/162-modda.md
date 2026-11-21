@@ -1,0 +1,7 @@
+# MK-2022 162-modda: Xodim bilan tuzilgan mehnat shartnomasini bekor qilishga olib kelishi mumkin boʻlgan mehnat majburiyatlarining bir marta qoʻpol ravishda buzilishlari roʻyxatini belgilash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6261574](https://lex.uz/docs/-6257288#-6261574)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.22.00 Mehnat shartnomasi (kontrakti)ning bekor qilinishi / 05.02.22.03 Mehnat shartnomasi (kontrakt)ni bekor qilish tartibi] Xodim bilan tuzilgan mehnat shartnomasini bekor qilishga olib kelishi mumkin boʻlgan mehnat majburiyatlarining bir marta qoʻpol ravishda buzilishlari roʻyxati: ichki mehnat tartibi qoidalari; ushbu Kodeksda nazarda tutilgan hollarda tashkilot mulkdori va rahbari oʻrtasida tuzilgan mehnat shartnomasi, shuningdek xodim va ish beruvchi oʻrtasidagi mehnat shartnomasi; oʻziga nisbatan intizom toʻgʻrisidagi ustavlar va nizomlarning amal qilishi tatbiq etiladigan ayrim toifadagi xodimlarga nisbatan qoʻllaniladigan intizom toʻgʻrisidagi ustavlar hamda nizomlar bilan belgilanadi. Xodim bilan tuzilgan mehnat shartnomasini bekor qilishga olib kelishi mumkin boʻlgan mehnat majburiyatlarining bir marta qoʻpol ravishda buzilishlari roʻyxatini belgilashda nojoʻya xatti-harakatning ogʻir-yengilligidan hamda bunday nojoʻya xatti-harakat keltirib chiqarishi mumkin boʻlgan oqibatlardan kelib chiqish lozim.

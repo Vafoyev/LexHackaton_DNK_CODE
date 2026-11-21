@@ -1,0 +1,7 @@
+# MK-2022 207-modda: Dam olish kunlari (har haftalik uzluksiz dam olish)
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6262811](https://lex.uz/docs/-6257288#-6262811)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.26.00 Dam olish vaqti] Xodimlarga har haftada dam olish kunlari beriladi. Besh kunlik ish haftasida xodimlarga haftada ikki dam olish kuni, olti kunlik ish haftasida esa bir dam olish kuni beriladi. Aynan bitta ish beruvchida mehnat shartnomasi asosida mehnat faoliyatini amalga oshirayotgan xodimlar uchun bajariladigan ishning oʻziga xos xususiyatlariga qarab ish haftasining har xil turlari belgilanishi mumkin. Besh kunlik va olti kunlik ish haftasida umumiy dam olish kuni yakshanbadir. Besh kunlik ish haftasidagi ikkinchi dam olish kuni jamoa shartnomasida yoki ichki mehnat tartib qoidalarida yoxud smenalarga boʻlinib ishlash jadvallarida, ular mavjud boʻlmaganda esa mehnat shartnomasida belgilanadi. Uzluksiz ishlaydigan ishlab chiqarishlarda yoki ishlab chiqarish-texnika sharoitlari boʻyicha yoki aholiga doimiy uzluksiz xizmat koʻrsatish zarurati oqibatida dam olish kunlari ishini toʻxtatish mumkin boʻlmagan ishlab chiqarishlarda band boʻlgan, shuningdek vaxta usulida ishlaydigan xodimlarga (xodimlar guruhiga) dam olish kunlari ichki mehnat tartib qoidalariga, smenalarga boʻlinib ishlash jadvallariga binoan haftaning har xil kunlarida navbatma-navbat beriladi.

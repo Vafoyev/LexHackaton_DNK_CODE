@@ -1,0 +1,7 @@
+# MK-2022 259-modda: Bir necha kasbda (lavozimda) ishlaganda, xizmat koʻrsatish doirasi kengayganda va ish hajmi koʻpayganda mehnatga haq toʻlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6264033](https://lex.uz/docs/-6257288#-6264033)
+**Bog'liq havolalar:** 259-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.15.00 Bir yoʻla bir necha kasbda ishlash; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.03.00.00 Mehnatga haq toʻlash / 05.03.04.00 Ustamalar, qoʻshimcha toʻlovlar va koeffitsiyentlar] Bir necha kasbda (lavozimda) ishlaganda, xizmat koʻrsatish doirasi kengayganda, ish hajmi koʻpayganda xodimning asosiy lavozimdagi ish haqiga quyidagilar uchun qoʻshimcha toʻlov belgilanadi va toʻlanadi: budjetdan moliyalashtirilmaydigan tashkilot xodimlari uchun — bir necha kasbda (lavozimda) haqiqatda bajarilgan ishga doir ish haqi miqdorida; budjet tashkilotlari xodimlari uchun — bir necha lavozimda ishlaganlik uchun tarif stavkasining (maoshining) ellik foizidan koʻp boʻlmagan miqdorda. Vaqtincha yoʻq boʻlgan xodimning majburiyatlarini bajarish vazifasi shtatdagi uning oʻrnini bosadigan shaxs zimmasiga asosiy ishdan ozod etilmagan holda yuklatilganda qoʻshimcha toʻlov amalga oshirilmaydi. (259-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2025-yil 13-fevraldagi OʻRQ-1030-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 14.02.2025-y., 03/25/1030/0144-son)

@@ -1,0 +1,7 @@
+# FK-UZ-1 42-modda: Yuridik shaxslarning vujudga kelishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-151334](https://lex.uz/docs/-111189#-151334)
+**Bog'liq havolalar:** 42-modda, 43-modda, 13-modda, 11-modda
+
+## Norma matni:
+Yuridik shaxslar mulkdor yoki u vakil qilgan shaxs tomonidan yoxud vakolatli organning farmoyishi asosida, shuningdek qonunchilikda nazarda tutilgan tartibda tashkil etiladi. (42-moddaning birinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Mulkdorlar yoki operativ boshqarish huquqi subyektlari yoxud ular vakil qilgan shaxslar yuridik shaxslarning muassislari hisoblanadi. (42-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2025-yil 7-fevraldagi OʻRQ-1025-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 07.02.2025-y., 03/25/1025/0116-son. Kuchga kirish sanasi — 2025-yil 8-may) mazkur Kodeksning 39 , 43-moddalari , Oʻzbekiston Respublikasining 06.12.2001-yildagi “Masʼuliyati cheklangan hamda qoʻshimcha masʼuliyatli jamiyatlar toʻgʻrisida”gi Qonunning 10 — 13-moddalari , Oʻzbekiston Respublikasining 11.12.2003-yildagi “Xususiy korxona toʻgʻrisida”gi Qonunining 9 — 11-moddalari . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.03.00.00 Yuridik shaxslar / 03.03.02.00 Yuridik shaxslarni tashkil etish, qayta tashkil etish va tugatish. Yuridik shaxslarni davlat roʻyxatiga olish]

@@ -1,0 +1,7 @@
+# FK-UZ-1 363-modda: Shartnomani sharhlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-155612](https://lex.uz/docs/-111189#-155612)
+**Bog'liq havolalar:** 363-modda
+
+## Norma matni:
+Sud shartnoma shartlarini sharhlashda undagi soʻz va iboralarning asl maʼnosini eʼtiborga oladi. Shartnomaning sharti aniq boʻlmasa, uning asl maʼnosi uni boshqa shartlarga va butun shartnomaning maʼnosiga taqqoslash yoʻli bilan aniqlanadi. Agar ushbu moddaning birinchi qismida bayon etilgan qoidalar shartnomaning mazmunini aniqlash imkonini bermasa, taraflarning haqiqiy umumiy xohish-irodasi shartnomaning maqsadini hisobga olgan holda aniqlanishi kerak. Bunda barcha tegishli holatlar, shu jumladan shartnoma tuzish oldidan olib borilgan muzokaralar va yozishmalar, taraflarning oʻzaro munosabatlarida qaror topgan amaliyot, ish muomalasi odatlari, taraflarning keyinchalik oʻzlarini qanday tutganligi eʼtiborga olinadi. sud amaliyoti. mazkur Kodeksning 6 , 353 — 363-moddalari . Qoʻshimcha maʼlumot uchun Oliy xoʻjalik sudi Plenumining 04.03.2002-yildagi “Oʻzbekiston Respublikasining “Xoʻjalik yurituvchi subyektlar Faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunini iqtisodiy sudlar amaliyotida qoʻllashning ayrim masalalari haqida”gi 103-son qarori 3-bandining uchinchi xatboshisi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] 27-BOB SHARTNOMA TUZISH

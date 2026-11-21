@@ -1,0 +1,7 @@
+# 670-I 11-modda: Xoʻjalik shartnomasining shakli
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-18942#-19777](https://lex.uz/docs/-18942#-19777)
+**Bog'liq havolalar:** 12-modda, 108-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Xoʻjalik shartnomasi bitimlar tuzish uchun nazarda tutilgan yozma shaklda tuziladi. Agar shartnoma tuzish taklifi ushbu Qonunning 12-moddasida nazarda tutilgan tartibda qabul qilingan boʻlsa, shartnomaning yozma shakliga rioya etilgan deb hisoblanadi. [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Yozma shartnoma taraflar imzolagan bitta hujjatni tuzish yoʻli bilan, shuningdek pochta, telegraf, taletayp, telefon, elektron aloqa yoki hujjat shartnomadagi tarafdan chiqqanligini ishonchli suratda aniqlash imkonini beradigan boshqa aloqa yordamida hujjatlar almashish yoʻli bilan tuzilishi mumkin. Oʻzbekiston Respublikasi Fuqarolik kodeksining 107 va 108-moddalari , Oʻzbekiston Respublikasi Oliy Sudi Plenumining “Oʻzbekiston Respublikasining “Xoʻjalik yurituvchi subyektlar Faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunini iqtisodiy sudlar amaliyotida qoʻllashning ayrim masalalari haqida”gi qarorining 3-bandi .

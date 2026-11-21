@@ -1,0 +1,7 @@
+# MK-2022 196-modda: Xizmat safaridagi ish vaqti rejimi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6262537](https://lex.uz/docs/-6257288#-6262537)
+**Bog'liq havolalar:** 185-modda, 42-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.25.00 Ish vaqti / 05.02.25.01 Ish vaqtining muddati; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.31.00 Xizmat safari] Xizmat safariga yuborilgan xodimga nisbatan xizmat safarining maqsadiga qarab ushbu xodim oʻziga xizmat safariga yuborilgan ish beruvchida belgilangan ish vaqti rejimi tatbiq etiladi yoxud xizmat safaridagi ish rejimi xodimni xizmat safariga yuborgan ish beruvchi tomonidan tasdiqlanadigan xizmat safariga oid topshiriq bilan belgilanadi. mazkur Kodeksning 182 – 185-moddalari , Oʻzbekiston Respublikasi “Davlat fuqarolik xizmati toʻgʻrisida”gi Qonunining 41-42-moddalari , Vazirlar Mahkamasining 2022-yil 2-avgustdagi 424-sonli “Oʻzbekiston Respublikasi hududida xizmat safarlari toʻgʻrisidagi nizomni tasdiqlash haqida”gi qarori , Oʻzbekiston Respublikasi moliya vazirining 2015-yil 19-oktabrdagi 92-sonli buyrugʻi bilan tasdiqlangan Vazirliklar, idoralar, korxonalar va tashkilotlar xodimlari Oʻzbekiston Respublikasi tashqarisiga xizmat safariga yuborilganda xizmat safari xarajatlari uchun mablagʻlar berish tartibi toʻgʻrisidagi nizom (roʻyxat raqami 2730, 19.11.2015-y.).

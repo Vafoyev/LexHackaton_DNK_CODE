@@ -1,0 +1,7 @@
+# 221-I 9-modda: Oldi-sotdi shartnomalarining ayrim turlari toʻgʻrisidagi qoidalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-4704#-4789](https://lex.uz/docs/-4704#-4789)
+**Bog'liq havolalar:** 9-modda, 74-modda
+
+## Norma matni:
+[ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.01.00.00 Oʻzbekiston Respublikasi Vazirlar Mahkamasi (shuningdek, 01.11.00.00ga qarang) / 02.01.02.00 Vazirlar Mahkamasi vakolatlari; 2. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Oldi-sotdi shartnomalarining ayrim turlari toʻgʻrisidagi qoidalar, shuningdek, ayrim turdagi tovarlarni (ishlarni, xizmatlarni) realizatsiya qilish qoidalari Oʻzbekiston Respublikasi Hukumati tomonidan tasdiqlanadi. (9-moddaning matni Oʻzbekiston Respublikasining 2002-yil 5-apreldagi 364-II-sonli Qonuni tahririda — Oliy Majlis Axborotnomasi, 2002-y., 4-5-son, 74-modda) Oʻzbekiston Respublikasi Vazirlar Mahkamasining 2004-yil 6-maydagi 213-sonli “Portlovchi moddalar va portlatish vositalarini Oʻzbekiston Respublikasiga olib kirish, transportda tashish, saqlash va ulardan foydalanish tartibini takomillashtirish chora-tadbirlari toʻgʻrisida”gi qarori , Oʻzbekiston Respublikasi Ichki ishlar vazirligi, “Sanoatkontexnazorat” Davlat inspeksiyasining 2005-yil 25-maydagi 3 va 78-sonli qarori bilan tasdiqlangan “Portlovchi moddalarni ishlab chiqarish, sotib olish, saqlash, transportda tashish, ulardan foydalanish va ularni hisobga olish toʻgʻrisidagi yoʻriqnoma ” va boshqalar.

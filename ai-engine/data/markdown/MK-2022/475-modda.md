@@ -1,0 +1,7 @@
+# MK-2022 475-modda: Mehnat faoliyatini noqulay mehnat sharoitlarida va noqulay tabiiy-iqlim sharoitlarida amalga oshiruvchi xodimlarga qoʻshimcha kafolatlar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6267608](https://lex.uz/docs/-6257288#-6267608)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.11.00 Noqulay mehnat sharoitlari va noqulay tabiiy-iqlim sharoitlarida ishlovchi xodimlar uchun kafolatlar va kompensatsiyalar; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.04.00.00 Kafolatlar va kompensatsiyalar / 05.04.12.00 Ayrim toifadagi xodimlar uchun kafolatlar va kompensatsiyalar] Mehnat faoliyatini noqulay mehnat sharoitlarida, noqulay tabiiy-iqlim sharoitlarida amalga oshiruvchi xodimlarga mehnatni muhofaza qilish, ish vaqti, taʼtillar, mehnatga haq toʻlash, shuningdek boshqa mehnat sharoitlari borasida qoʻshimcha kafolatlar beriladi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.05.00 Jamoa shartnomasi. Jamoa kelishuvlari] Ushbu moddaning birinchi qismida koʻrsatilgan xodimlarga kafolatlarning eng past darajasi qonunchilikda belgilanadi. Jamoa kelishuvlarida, jamoa shartnomasida yoki ish beruvchi tomonidan kasaba uyushmasi qoʻmitasi bilan kelishilgan holda qabul qilingan boshqa ichki hujjatlarda mazkur toifadagi xodimlarga qoʻshimcha kafolatlar berish nazarda tutilishi mumkin.

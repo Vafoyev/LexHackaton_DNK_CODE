@@ -1,0 +1,7 @@
+# ORQ-792 10-modda: Xaridorning huquq va majburiyatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/uz/docs/-6213382#-6221150](https://lex.uz/uz/docs/-6213382#-6221150)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 12.00.00.00 Axborot va axborotlashtirish / 12.03.00.00 Axborot resurslari. Axborot resurslaridan foydalanish / 12.03.02.00 Axborotni hujjatlashtirish. Elektron hujjat aylanishi / 12.03.02.02 Elektron tijorat (Кучини йўқотган); 2. 19.00.00.00 Xalqaro munosabatlar. Xalqaro huquq / 19.06.00.00 Xalqaro shartnomalar huquqi / 19.06.02.00 Shartnomalarni tuzish va ularning kuchga kirishi] Xaridor quyidagi huquqlarga ega: shartnomalar tuzish orqali tovarlarni (ishlarni, xizmatlarni) sotib olish; tovarlar (ishlar, xizmatlar), ishlab chiqaruvchi va tovarlarni (ishlarni, xizmatlarni) sotib olishning boshqa shartlari toʻgʻrisida toʻliq axborot olish; elektron tijorat sohasida amalga oshiriladigan operatsiyalarda ishtirok etish uchun shartlarning tengligini talab qilish; oʻz huquqlari va qonuniy manfaatlari himoya qilinishini talab qilish. Xaridor: shartnoma tuzish toʻgʻrisidagi taklif qabul qilinganidan keyin shartnoma tuzish uchun zarur boʻlgan hujjatlarni va maʼlumotlarni taqdim etishi; toʻlov tizimlari operatorlariga toʻlovlarni amalga oshirish uchun zarur boʻlgan axborotni qonunchilikka muvofiq taqdim etishi shart. Xaridor qonunchilikka hamda shartnomaga muvofiq boshqa huquqlarga ega boʻlishi va uning zimmasida oʻzga majburiyatlar ham boʻlishi mumkin. 2026-yil 12-dekabrdan kuchga kiradigan o‘zgarishlarga qarang

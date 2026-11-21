@@ -1,0 +1,7 @@
+# FK-UZ-1 52-modda: Yuridik shaxs qayta tashkil etilganida kreditorlar huquqlarining kafolatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-152056](https://lex.uz/docs/-111189#-152056)
+**Bog'liq havolalar:** 92-modda, 49-modda
+
+## Norma matni:
+Yuridik shaxsni qayta tashkil etish toʻgʻrisida qaror qabul qilgan yuridik shaxs muassislari (ishtirokchilari) yoki organ qayta tashkil etilayotgan yuridik shaxsning kreditorlarini bu haqda yozma ravishda xabardor qilishlari shart. Qayta tashkil etilayotgan yuridik shaxsning kreditori shu yuridik shaxsning qarzdor boʻlishiga olib kelgan majburiyatlarni bekor qilishni yoki muddatidan oldin bajarishni hamda zararni toʻlashni talab qilishga haqli. Agar taqsimlash balansi qayta tashkil etilgan yuridik shaxsning huquqiy vorisini aniqlash imkonini bermasa, yangidan vujudga kelgan yuridik shaxslar qayta tashkil etilgan yuridik shaxsning oʻz kreditorlari oldidagi majburiyatlari boʻyicha solidar javobgar boʻladilar. “Aksiyadorlik jamiyatlari va aksiyadorlarning huquqlarini himoya qilish toʻgʻrisida”gi Qonunning 92-moddasi oltinchi qismi , “Masʼuliyati cheklangan hamda qoʻshimcha masʼuliyatli jamiyatlar toʻgʻrisida”gi Qonunning 49-moddasi oltinchi qismi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.03.00.00 Yuridik shaxslar / 03.03.02.00 Yuridik shaxslarni tashkil etish, qayta tashkil etish va tugatish. Yuridik shaxslarni davlat roʻyxatiga olish]

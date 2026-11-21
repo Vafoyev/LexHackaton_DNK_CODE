@@ -1,0 +1,7 @@
+# ORQ-684 26-modda: Davlat xaridlari jarayoni
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-5382974#-5385342](https://lex.uz/docs/-5382974#-5385342)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.02.00 Davlat ehtiyojlari. Davlat xaridlari] Davlat xaridlari jarayoni quyidagi bosqichlarni oʻz ichiga oladi: davlat xaridlarini rejalashtirish; xarid qilish tartib-taomillarini amalga oshirish; shartnomani tuzish va bajarish; davlat xaridlari monitoringi. [ OKOZ: 1. 02.00.00.00 Davlat boshqaruvi asoslari / 02.08.00.00 Iqtisodiyot, ijtimoiy-madaniy qurilish sohasidagi davlat boshqaruvining umumiy masalalari / 02.08.01.00 Davlat dasturlari, Strategiya, konsepsiyalar va boshqalar; 2. 07.00.00.00 Moliya va kredit toʻgʻrisidagi qonunchilik. Bank faoliyati / 07.28.00.00 Investitsiyalar va xorijdan mablagʻ jalb qilish (shuningdek, 07.05.04.00, 09.12.03.00, 10.01.05.00larga qarang) / 07.28.06.00 Investitsiya dasturlari va loyihalar / 07.28.06.01 Investitsiya dasturlari] Oʻzbekiston Respublikasi Prezidentining farmonlari va qarorlariga muvofiq Oʻzbekiston Respublikasining Investitsiya dasturiga va boshqa davlat dasturlariga kiritilgan loyihalarni “foydalanishga tayyor holda topshirish” shartlari asosida “fast-track” usulida (bir vaqtning oʻzida loyihalashtirish, xarid qilish va qurilish ishlari) amalga oshirishga yoʻl qoʻyiladi.

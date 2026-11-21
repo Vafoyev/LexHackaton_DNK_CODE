@@ -1,0 +1,7 @@
+# FK-UZ-2 1047-modda: Hammualliflik
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-197569](https://lex.uz/docs/-180552#-197569)
+**Bog'liq havolalar:** 12-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Ikki yoki undan ortiq fuqaroning birgalikdagi ijodiy mehnati natijasida yaratilgan asarga boʻlgan mualliflik huquqi, mazkur asar boʻlinmas bir butun yoki har biri ham mustaqil mazmunga ega qismlardan iborat ekanligidan qatʼi nazar, hammualliflarga birgalikda tegishli boʻladi. Basharti asarning muayyan qismidan uning boshqa qismlariga bogʻliq boʻlmagan holda foydalanish mumkin boʻlsa, bu mustaqil mazmunga ega boʻlgan qism deb eʼtirof etiladi. Hammualliflarning har biri, basharti ularning oʻrtasidagi kelishuvda oʻzgacha hol nazarda tutilgan boʻlmasa, asarning oʻzi yaratgan, mustaqil mazmunga ega boʻlgan qismidan oʻz xohishiga koʻra foydalanishga haqlidir. Hammualliflar oʻrtasidagi munosabatlar, qoida tariqasida, kelishuv asosida belgilanadi. Bunday kelishuv boʻlmagan taqdirda asarga boʻlgan mualliflik huquqi barcha mualliflar tomonidan birgalikda amalga oshiriladi, mualliflik haqi esa ular oʻrtasida teng taqsimlanadi. Basharti hammualliflarning asari boʻlinmas bir butunni tashkil etsa, asardan foydalanishni yetarli asoslar boʻlmay turib taqiqlab qoʻyishga hammualliflardan hech biri haqli emas. Oʻzbekiston Respublikasining 2006-yil 20-iyuldagi OʻRQ-42-son “Mualliflik huquqi va turdosh huquqlar toʻgʻrisida”gi Qonunning 12-moddasi .

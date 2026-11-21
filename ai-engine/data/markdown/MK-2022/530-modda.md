@@ -1,0 +1,7 @@
+# MK-2022 530-modda: Mehnat huquqlarini xodim tomonidan himoya qilish tushunchasi va himoya qilishni amalga oshirish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6268467](https://lex.uz/docs/-6257288#-6268467)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ OKOZ: 1. 01.00.00.00 Konstitutsiyaviy tuzum / 01.06.00.00 Inson va fuqaroning huquqlari, erkinliklari va burchlari / 01.06.04.00 Asosiy (Konstitutsiyaviy) iqtisodiy, ijtimoiy, madaniy va ekologik huquqlar / 01.06.04.02 Mehnat qilish, ishni erkin tanlash, adolatli mehnat sharoitlarida ishlash va ishsizlikdan himoyalanish huquqi] Xodim tomonidan mehnat huquqlarini oʻzi himoya qilishi deganda xodimning buzilgan huquqini mehnat toʻgʻrisidagi qonunchilikka rioya etilishi ustidan nazoratni va tekshiruvni amalga oshiruvchi organlarga yoxud yakka tartibdagi mehnat nizolarini koʻrib chiquvchi organlarga murojaat etmasdan yoki murojaat qilgan holda tiklashga va (yoki) ushbu huquqni amalga oshirish borasidagi toʻsiqlarni bartaraf etishga qaratilgan mustaqil ravishdagi qonuniy harakatlari tushuniladi. Xodim oʻz huquqi buzilganligi haqida bilgan yoki bilishi kerak boʻlgan paytdan eʼtiboran mehnat huquqlarini oʻzi himoya qilishni (bundan buyon matnda oʻzini oʻzi himoya qilish deb yuritiladi) amalga oshirishga haqli. Xodim oʻzini oʻzi himoya qilishni toʻxtatish toʻgʻrisida oʻz xohishiga koʻra istalgan paytda qaror qabul qilishga haqli.

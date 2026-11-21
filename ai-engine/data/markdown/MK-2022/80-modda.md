@@ -1,0 +1,7 @@
+# MK-2022 80-modda: Jamoa kelishuvlarining tushunchasi va shakli
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-6257288#-6259020](https://lex.uz/docs/-6257288#-6259020)
+**Bog'liq havolalar:** 53-modda
+
+## Norma matni:
+[ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.05.00 Jamoa shartnomasi. Jamoa kelishuvlari; 2. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.06.00 Ishga qabul qilishda kafolatlar] Jamoa kelishuvi yakka tartibdagi mehnatga oid munosabatlarni va ular bilan bevosita bogʻliq boʻlgan ijtimoiy munosabatlarni tartibga soluvchi, xodimlar uchun hududiy, tarmoq va respublika darajalarida taraflarning mehnat sharoitlarini, bandlikni hamda ijtimoiy kafolatlarni belgilashga doir majburiyatlarini oʻz ichiga olgan, xodimlar va ish beruvchilarning ijtimoiy-iqtisodiy manfaatlarini kelishib olish maqsadida tuziladigan mehnat toʻgʻrisidagi huquqiy hujjatdir. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.05.00 Jamoa shartnomasi. Jamoa kelishuvlari] Jamoa kelishuvini tayyorlash, tuzish yoki oʻzgartirish yuzasidan jamoaviy muzokaralar oʻtkazish uchun ushbu Kodeksning 50 — 53-moddalarida belgilangan tartibda ijtimoiy-mehnat masalalari boʻyicha hududiy, tarmoq va respublika komissiyalari tuziladi. [ OKOZ: 1. 05.00.00.00 Mehnat va aholining bandligi toʻgʻrisidagi qonunchilik / 05.02.00.00 Mehnat / 05.02.05.00 Jamoa shartnomasi. Jamoa kelishuvlari] Jamoa kelishuvlari yozma shaklda tuziladi.

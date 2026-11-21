@@ -1,0 +1,7 @@
+# FK-UZ-2 492-modda: Korxonani sotishda kreditorlarning huquqlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183862](https://lex.uz/docs/-180552#-183862)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Sotiladigan korxona tarkibiga kiritilgan majburiyatlar boʻyicha kreditorlar korxona sotib oluvchiga topshirilgunga qadar sotuvchi tomonidan uning sotilishi toʻgʻrisida yozma ravishda xabardor qilinishlari lozim. Qarzning boshqa shaxsga oʻtkazilishiga roziligini sotuvchiga yozma ravishda bildirmagan kreditor korxona sotilishi toʻgʻrisida bildirish xati olgan kundan boshlab uch oy mobaynida yo majburiyatni bajarishni toʻxtatishni yoki muddatidan oldin bajarishni va sotuvchi tomonidan zarar qoplanishini, yo boʻlmasa korxonani sotish shartnomasini butunlay yoxud uning tegishli qismini haqiqiy emas deb topishni talab qilish huquqiga ega. Korxonaning sotilishi toʻgʻrisida ushbu moddaning birinchi qismida nazarda tutilgan tartibda xabardor qilinmagan kreditor sotuvchi korxonani sotib oluvchiga topshirgani toʻgʻrisida xabar topgan yoki xabar topishi lozim boʻlgan kundan boshlab bir yil mobaynida ushbu moddaning ikkinchi qismida nazarda tutilgan talablarni qondirish haqida daʼvo qoʻzgʻatishi mumkin. Korxona sotib oluvchiga topshirilganidan soʻng sotuvchi va sotib oluvchi topshirilgan korxona tarkibiga kiritilgan, sotib oluvchiga kreditorning roziligisiz oʻtkazilgan qarzlar boʻyicha solidar javobgar boʻladilar.

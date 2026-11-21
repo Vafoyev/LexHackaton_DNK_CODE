@@ -1,0 +1,7 @@
+# FK-UZ-1 198-modda: Mol-mulkni tugatish va hisobdan chiqarish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154082](https://lex.uz/docs/-111189#-154082)
+**Bog'liq havolalar:** 198-modda, 26-modda
+
+## Norma matni:
+Mol-mulkni yoʻq qilish (tugatish) natijasida mulk huquqini bekor qilishga qonunlarga zid boʻlmagan hollarda yoʻl qoʻyiladi. (198-moddaning birinchi qismi Oʻzbekiston Respublikasining 2022-yil 7-noyabrdagi OʻRQ-801-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 08.11.2022-y., 03/22/801/0998-son) Mulkdor tomonidan tarixiy, ilmiy, badiiy qimmatga yoki oʻzga madaniy qimmatga ega boʻlgan mol-mulkning yoʻq qilinishiga yoʻl qoʻyilmaydi. Alohida hollarda sud qarori bilan mazkur mol-mulk musodara qilinishi yoki agar u yoʻq qilingan boʻlsa, uning qiymati undirib olinishi mumkin. (198-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2018-yil 18-apreldagi OʻRQ-476-sonli Qonuni tahririda — Qonun hujjatlari maʼlumotlari milliy bazasi, 19.04.2018-y., 03/18/476/1087-son) Mol-mulkni yuridik shaxsning balans hisobidan chiqarish natijasida mulk huquqining bekor qilinishi qonunchilikda yoki taʼsis hujjatlarida nazarda tutilgan tartibda va shartlarda amalga oshiriladi. (198-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Oʻzbekiston Respublikasining “Madaniy meros obyektlarini muhofaza qilish va ulardan foydalanish toʻgʻrisida”gi Qonuni 26-moddasining ikkinchi qismi .

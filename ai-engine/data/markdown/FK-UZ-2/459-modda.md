@@ -1,0 +1,7 @@
+# FK-UZ-2 459-modda: Davlat kontraktini tuzish asoslari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183545](https://lex.uz/docs/-180552#-183545)
+**Bog'liq havolalar:** 459-modda
+
+## Norma matni:
+Davlat kontrakti davlat buyurtmachisining mahsulot yetkazib beruvchi (ijrochi) qabul qilgan davlat ehtiyojlari uchun tovarlar yetkazib berish toʻgʻrisidagi buyurtmasi asosida tuziladi. Bergan buyurtmasi mahsulot yetkazib beruvchi (ijrochi) tomonidan qabul qilingan davlat buyurtmachisi uchun davlat kontrakti tuzish shart hisoblanadi. Davlat kontraktini tuzish qonunchilikda belgilangan hollardagina va davlat kontraktini bajarish tufayli mahsulot yetkazib beruvchi (ijrochi) koʻrishi mumkin boʻlgan barcha zararni davlat buyurtmachisi qoplagan taqdirdagina mahsulot yetkazib beruvchi (ijrochi) uchun majburiy hisoblanadi. (459-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) (Oʻzbekiston Respublikasining 2025-yil 7-fevraldagi OʻRQ-1025-sonli Qonuniga asosan 459-moddaning toʻrtinchi qismining chiqarilish sanasi 2025-yil 8-may — Qonunchilik maʼlumotlari milliy bazasi, 07.02.2025-y., 03/25/1025/0116-son) Agar davlat ehtiyojlari uchun tovarlar yetkazib berish toʻgʻrisidagi buyurtma tanlov boʻyicha joylashtirilsa, tanlov gʻolibi deb eʼlon qilingan mahsulot yetkazib beruvchi (ijrochi) bilan davlat kontraktini tuzish davlat buyurtmachisi uchun majburiy hisoblanadi.

@@ -1,0 +1,7 @@
+# FK-UZ-2 438-modda: Mahsulot yetkazib berish shartnomasining amal qilish muddati
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183220](https://lex.uz/docs/-180552#-183220)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Mahsulot yetkazib berish shartnomasi bir yilga, bir yildan ortiq muddatga (uzoq muddatli shartnoma) yoki taraflar kelishuvida nazarda tutilgan boshqa muddatga tuzilishi mumkin. Agar mahsulot yetkazib berish shartnomasida uning amal qilish muddati belgilanmagan boʻlsa, shartnoma bir yilga tuzilgan deb hisoblanadi. Agar uzoq muddatli shartnomada yetkazib berilishi lozim boʻlgan tovarlar miqdori yoki shartnomaning boshqa shartlari bir yilga yoki undan ortiq muddatga belgilangan boʻlsa, shartnomada taraflarning bu shartlarni shartnomaning amal qilish muddati tugagunga qadar keyingi davrlar uchun kelishib olish tartibi belgilanishi lozim. Shartnomada bunday tartib boʻlmasa, shartnoma tegishincha bir yilga yoki shartnoma shartlari kelishilgan muddatga tuzilgan hisoblanadi. Uzoq muddatli shartnoma taraflaridan biri yetkazib berilishi lozim boʻlgan tovarlar miqdorini yoki shartnomaning boshqa shartlarini keyingi davrlar uchun shartnomada belgilangan tartibda kelishib olishni rad qilgan yoki undan bosh tortgan taqdirda boshqa taraf tegishli davrlarda tovarlarni yetkazib berish shartlarini belgilash toʻgʻrisidagi yoxud shartnomani bekor qilish toʻgʻrisidagi talab bilan sudga murojaat qilish huquqiga ega.

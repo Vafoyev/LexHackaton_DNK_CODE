@@ -1,0 +1,7 @@
+# FK-UZ-2 431-modda: Tovarni sotib oluvchiga yetkazib berish sharti bilan sotish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-183188](https://lex.uz/docs/-180552#-183188)
+**Bog'liq havolalar:** 431-modda
+
+## Norma matni:
+Chakana oldi-sotdi shartnomasi tovarni sotib oluvchiga yetkazib berish sharti bilan tuzilgan hollarda sotuvchi shartnomada belgilangan muddatda tovarni sotib oluvchi koʻrsatgan joyga, agar sotib oluvchi tovarni yetkazib berish joyini koʻrsatmagan boʻlsa, sotib oluvchi fuqaro istiqomat qiladigan yoki yuridik shaxs joylashgan manzilga yetkazib berishi lozim. Agar qonunchilikda, shartnomada boshqacha tartib nazarda tutilgan boʻlmasa yoki u majburiyatning mohiyatidan kelib chiqmasa, tovar sotib oluvchiga, u boʻlmaganda esa –– shartnoma tuzilganidan yoxud tovarni yetkazib berish rasmiylashtirilganidan guvohlik beradigan kvitansiya yoki boshqa hujjatni taqdim qilgan har qanday shaxsga topshirilgan paytdan boshlab chakana oldi-sotdi shartnomasi sotuvchi tomonidan bajarilgan hisoblanadi. (431-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Chakana oldi-sotdi shartnomasida tovarni sotib oluvchiga topshirish uchun yetkazib berish vaqti belgilanmagan hollarda tovar sotib oluvchidan talab tushganidan keyin oqilona muddatda yetkazib berilishi lozim.

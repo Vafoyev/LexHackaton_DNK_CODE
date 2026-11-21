@@ -1,0 +1,7 @@
+# 670-I 13-modda: Xoʻjalik shartnomasining amal qilishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-18942#-19794](https://lex.uz/docs/-18942#-19794)
+**Bog'liq havolalar:** 13-modda
+
+## Norma matni:
+Xoʻjalik shartnomasi tuzilgan paytidan boshlab kuchga kiradi va taraflar uchun majburiy boʻlib qoladi. Oʻzbekiston Respublikasining Davlat budjeti, davlat maqsadli jamgʻarmalari budjetlari va budjet tashkilotlarining budjetdan tashqari jamgʻarmalaridan ajratiladigan mablagʻlar boʻyicha tovarlarni (ishlarni, xizmatlarni) yetkazib beruvchilar bilan tuzilgan shartnomalar, shuningdek ularga kiritilgan oʻzgartirish va qoʻshimchalar gʻaznachilik organlarida roʻyxatdan oʻtkazilganidan keyin kuchga kiradi. (13-moddaning birinchi qismi Oʻzbekiston Respublikasining 2025-yil 25-dekabrdagi OʻRQ-1107-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 26.12.2025-y., 03/25/1107/1216-son) [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Taraflar oʻzlari tuzgan xoʻjalik shartnomasining shartlarini ularning shartnoma tuzilishidan oldin vujudga kelgan munosabatlariga nisbatan qoʻllaniladi deb belgilab qoʻyishga haqlidirlar. [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.05.00 Shartnoma. Shartnomalarni tuzish, oʻzgartirish va bekor qilish] Xoʻjalik shartnomasining amal qilish muddati tugashi taraflarni uni buzganlik uchun javobgarlikdan ozod etmaydi.

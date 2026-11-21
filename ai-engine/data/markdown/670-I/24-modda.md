@@ -1,0 +1,7 @@
+# 670-I 24-modda: Xoʻjalik shartnomalarini bajarmaganlik yoki lozim darajada bajarmaganlik uchun taraflarning javobgarligi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-18942#-20197](https://lex.uz/docs/-18942#-20197)
+**Bog'liq havolalar:** 24-modda, 32-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.03.00 Majburiyatlarni buzganlik uchun javobgarlik] Taraflardan biri shartnoma majburiyatlarini bajarmagan yoki lozim darajada bajarmagan taqdirda, bu taraf: boshqa tarafga yetkazilgan zararni toʻlaydi; Oʻzbekiston Respublikasi Fuqarolik kodeksida , ushbu Qonunda, oʻzga qonunchilik hujjatlarida va shartnomada nazarda tutilgan tartibda boshqacha tarzda javobgar boʻladi. ( 24-modda birinchi qismining uchinchi xatboshisi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.03.00 Majburiyatlarni buzganlik uchun javobgarlik] Agar qonunchilikda yoki shartnomada boshqa tartib nazarda tutilgan boʻlmasa, xoʻjalik shartnomalarini bajarmaganlik va lozim darajada bajarmaganlik uchun ushbu Qonunning 25 — 32-moddalarida nazarda tutilgan javobgarlik choralari qoʻllaniladi. ( 24-moddaning ikkinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son)

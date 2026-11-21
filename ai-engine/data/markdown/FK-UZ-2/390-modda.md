@@ -1,0 +1,7 @@
+# FK-UZ-2 390-modda: Sotuvchining tovarni topshirish majburiyatini bajarish payti
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-182551](https://lex.uz/docs/-180552#-182551)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Basharti, oldi-sotdi shartnomasida boshqacha hol nazarda tutilgan boʻlmasa, sotuvchining sotib oluvchiga tovarni topshirish vazifasi quyidagi paytlarda bajarilgan hisoblanadi: agar shartnomada sotuvchining tovarni yetkazib berish majburiyati nazarda tutilgan boʻlsa, tovarni sotib oluvchiga yoki u koʻrsatgan shaxsga topshirish paytida; agar tovar sotib oluvchiga tovar turgan yerda berilishi lozim boʻlsa, tovarni sotib oluvchi ixtiyoriga topshirish paytida. Shartnomada nazarda tutilgan muddatda tovar tegishli yerda sotib oluvchiga topshirish uchun tayyor boʻlgan va sotib oluvchi shartnoma shartlariga muvofiq tovar topshirishga tayyor ekanligidan xabardor qilingan vaqtda tovar sotib oluvchi ixtiyoriga topshirilgan deb hisoblanadi. Agar tovarning shartnoma maqsadlariga mosligi tamgʻalash yoki boshqa yoʻl bilan tasdiqlangan boʻlmasa, tovar topshirish uchun tayyor deb hisoblanmaydi. Oldi-sotdi shartnomasidan sotuvchining tovarni sotib oluvchiga yetkazib berish yoki tovarni turgan yerida sotib oluvchiga topshirish majburiyati kelib chiqmaydigan hollarda, agar shartnomada boshqacha tartib nazarda tutilgan boʻlmasa, tovarni sotib oluvchiga yetkazib berish uchun tashuvchiga yoki aloqa tashkilotiga topshirish paytida sotuvchining tovarni sotib oluvchiga topshirish majburiyati bajarilgan hisoblanadi. sud amaliyoti.

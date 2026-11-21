@@ -1,0 +1,7 @@
+# FK-UZ-2 817-modda: Topshiriq shartnomasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195262](https://lex.uz/docs/-180552#-195262)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....; 2. Извините, отсутствует описание.... / Извините, отсутствует описание....; 3. Извините, отсутствует описание.... / Извините, отсутствует описание....] Topshiriq shartnomasi boʻyicha bir taraf (vakil) ikkinchi taraf (topshiriq beruvchi)ning nomidan va uning hisobidan muayyan yuridik harakatlarni sodir etish majburiyatini oladi. Vakil tuzgan bitim boʻyicha huquq va majburiyatlar bevosita topshiriq beruvchida vujudga keladi. Topshiriq vakil tomonidan bir yoki bir necha muayyan yuridik harakatlarni sodir etish haqida yoki topshiriq beruvchining ishlarini uning koʻrsatmalariga muvofiq yuritish haqida berilishi mumkin. Vakil alohida huquqlarga ega boʻladigan topshiriq shartnomasi boʻyicha bir taraf (topshiriq beruvchi) ikkinchi tarafga (alohida huquqlarga ega boʻlgan vakilga) topshiriq beruvchi nomidan va uning hisobidan maʼlum sohada yoki (va) maʼlum hududda topshiriq beruvchi uchun yuridik ahamiyatga ega boʻlgan hamma harakatlarni sodir etishni topshiradi. Topshiriq shartnomasi yozma shaklda tuziladi. Topshiriq shartnomasi vakil topshiriq beruvchining nomidan ish olib borishga haqli boʻladigan muddatni koʻrsatgan yoki bunday muddatni koʻrsatmagan holda tuzilishi mumkin. sud amaliyoti.

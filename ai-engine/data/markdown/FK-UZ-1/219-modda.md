@@ -1,0 +1,7 @@
+# FK-UZ-1 219-modda: Ulushli mulkdagi umumiy mol-mulkka egalik qilish va undan foydalanish
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-1102420](https://lex.uz/docs/-111189#-1102420)
+**Bog'liq havolalar:** 219-modda, 3-modda, 223-modda, 127-modda
+
+## Norma matni:
+Ulushli mulkdagi umumiy mol-mulkka egalik qilish va undan foydalanish uning barcha ishtirokchilari kelishuviga muvofiq amalga oshiriladi. Bunday kelishuvga erishilmagan taqdirda, ulushli mulkdagi umumiy mol-mulkka egalik qilish va undan foydalanish sud tomonidan belgilanadigan tartibda amalga oshiriladi. (219-moddaning nomi va birinchi qismi Oʻzbekiston Respublikasining 2007-yil 8-yanvardagi OʻRQ-77-sonli Qonuni tahririda — OʻR QHT, 2007-y., 1-2-son, 3-modda) Ulushli mulk ishtirokchisi umumiy mol-mulkning ishtirokchi ulushiga teng boʻlgan qismi oʻzining egaligiga va foydalanishiga berilishiga, buning iloji boʻlmagan taqdirda esa — oʻz ulushi boʻlgan mol-mulkka egalik qilayotgan va undan foydalanayotgan boshqa ishtirokchilardan tegishli haq talab qilish huquqiga ega. mazkur Kodeksning 164 , 168, 169 , 216 — 218 , 220 — 223-moddalari , Oʻzbekiston Respublikasining Uy-joy kodeksining 127-moddasi , Oʻzbekiston Respublikasining Fuqarolik protsessual kodeksining II boʻlimi 2-kichik boʻlimi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.08.00.00 Mulk huquqi va boshqa ashyoviy huquqlar / 03.08.06.00 Umumiy mulk / 03.08.06.01 Umumiy ulushli mulk]

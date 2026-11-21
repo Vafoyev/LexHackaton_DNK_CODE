@@ -1,0 +1,7 @@
+# FK-UZ-2 1035-modda: Mutlaq huquqlarning boshqa shaxsga oʻtishi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-197290](https://lex.uz/docs/-180552#-197290)
+**Bog'liq havolalar:** Mavjud emas
+
+## Norma matni:
+Intellektual mulk obyektiga nisbatan mutlaq huquqlar egasiga tegishli mulkiy huquqlar, agar ushbu Kodeksda yoki boshqa qonunda boshqacha tartib nazarda tutilmagan boʻlsa, huquq egasi tomonidan shartnoma boʻyicha boshqa shaxsga toʻliq yoki qisman oʻtkazilishi mumkin, shuningdek bu mutlaq huquqlar meros boʻlib va yuridik shaxs — huquq egasi qayta tashkil etilganda huquqiy vorislik tartibida oʻtadi. Mulkiy huquqlarning shartnoma boʻyicha oʻtkazilishi yoxud ularning universal huquqiy vorislik tartibida oʻtishi mualliflik huquqining va boshqa begonalashtirilmaydigan hamda oʻzgaga oʻtkazilmaydigan mutlaq huquqlarning oʻtkazilishiga yoki cheklanishiga sabab boʻlmaydi. Bunday huquqlarning oʻtkazilishi yoki cheklanishi toʻgʻrisidagi shartnoma shartlari oʻz-oʻzidan haqiqiy emas. Shartnoma boʻyicha oʻtkaziladigan mutlaq huquqlar unda aniqlab qoʻyilishi lozim. Shartnomada boshqa shaxsga oʻtkaziladigan huquq sifatida koʻrsatilmagan huquqlar, agar boshqacha hol isbotlanmagan boʻlsa, oʻtkazilmagan deb hisoblanadi. Mutlaq huquqni uning amal qilish davrida cheklangan vaqtga boshqa shaxsga berishni nazarda tutuvchi shartnomaga nisbatan litsenziya shartnomasi toʻgʻrisidagi qoidalar qoʻllaniladi.

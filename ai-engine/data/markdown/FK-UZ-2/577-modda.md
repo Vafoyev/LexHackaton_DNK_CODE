@@ -1,0 +1,7 @@
+# FK-UZ-2 577-modda: Ijara haqining miqdori
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-186368](https://lex.uz/docs/-180552#-186368)
+**Bog'liq havolalar:** 356-modda
+
+## Norma matni:
+Bino yoki inshootni ijaraga berish shartnomasida ijara haqining miqdori nazarda tutilishi lozim. Ijara haqining miqdori toʻgʻrisida taraflar yozma shaklda kelishgan shartlar boʻlmagan taqdirda, bino yoki inshootni ijaraga berish shartnomasi tuzilmagan hisoblanadi. Bunda ushbu Kodeks 356-moddasining toʻrtinchi qismida nazarda tutilgan narx belgilash qoidalari qoʻllanmaydi. Bino yoki inshootni ijaraga berish shartnomasida belgilangan bino yoki inshootdan foydalanganlik haqiga, agar qonun yoki shartnomada boshqacha tartib nazarda tutilgan boʻlmasa, bino yoki inshoot joylashgan yer uchastkasidan yoxud yer uchastkasining bino yoki inshoot bilan birga topshirilayotgan tegishli qismidan foydalanganlik haqi ham kiradi. Shartnomada bino yoki inshootning ijara haqi bino (inshoot) maydonining birligi yoki uning boshqa oʻlchov koʻrsatkichlari boʻyicha belgilangan boʻlsa, ijara haqi ijaraga oluvchiga topshirilgan bino yoki inshootning haqiqiy oʻlchoviga qarab aniqlanadi. Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy xoʻjalik sudi Plenumining 2011-yil 1-dekabrdagi 234-son “Mulk ijarasi shartnomasiga oid fuqarolik qonun hujjatlari normalarini iqtisodiy sudlar tomonidan qoʻllashning ayrim masalalari toʻgʻrisida”gi Qarorining 19.4 — 19.7-bandlari .

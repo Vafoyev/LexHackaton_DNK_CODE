@@ -1,0 +1,7 @@
+# FK-UZ-1 263-modda: Qonuniy neustoyka
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154453](https://lex.uz/docs/-111189#-154453)
+**Bog'liq havolalar:** 262-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Neustoyka toʻlash taraflarning kelishuvida nazarda tutilgan yoki tutilmaganligidan qatʼi nazar, kreditor qonunda belgilangan neustoyka (qonuniy neustoyka)ni toʻlashni talab qilishga haqli. Qonuniy neustoykaning miqdori, agar qonun taqiqlamasa, taraflarning kelishuvi bilan koʻpaytirilishi mumkin. mazkur Kodeksning 162 , 259 — 262-moddalari . Qoʻshimcha maʼlumot uchun Oʻzbekiston Respublikasi Oliy xoʻjalik sudi Plenumining 04.03.2002-yildagi “Oʻzbekiston Respublikasining “Xoʻjalik yurituvchi subyektlar Faoliyatining shartnomaviy-huquqiy bazasi toʻgʻrisida”gi Qonunini iqtisodiy sudlar amaliyotida qoʻllashning ayrim masalalari haqida”gi Qonunini xoʻjalik sudlari amaliyotida qoʻllashning ayrim masalalari haqida”gi 103-son qarori 11-bandining ikkinchi, uchinchi xatboshilari , 13-bandi , Oʻzbekiston Respublikasi Oliy xoʻjalik sudi Plenumining 15.06.2007-yildagi “Majburiyatlarni bajarmaganlik yoki lozim darajada bajarmaganlik uchun mulkiy javobgarlik toʻgʻrisidagi fuqarolik qonun hujjatlarini qoʻllashning ayrim masalalari haqida”gi 163-son qarorining 4-bandining uchinchi xatboshisi . 2-§. Garov [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.01 (Кучини йўқотган) Umumiy qoidalar / 03.10.99.00 (Кучини йўқотган) Garov]

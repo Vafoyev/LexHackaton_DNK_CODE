@@ -1,0 +1,7 @@
+# FK-UZ-2 804-modda: Inkasso boʻyicha hisob-kitoblar haqida umumiy qoidalar
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195184](https://lex.uz/docs/-180552#-195184)
+**Bog'liq havolalar:** 804-modda
+
+## Norma matni:
+[ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Inkasso boʻyicha hisob-kitob qilinganida mijoz oʻz bankiga (bank-emitentga) pul toʻlovchidan toʻlovni va (yoki) toʻlov akseptini mijoz hisobidan qabul qilish haqida topshiriqnoma yuboradi. Inkasso topshirigʻini olgan bank-emitent uni bajarish uchun boshqa bankni (ijrochi bankni) jalb qilishga haqli. Inkasso boʻyicha hisob-kitoblarni amalga oshirish tartibi qonunchilik bilan va bank amaliyotida qoʻllaniladigan ish muomalasi odatlari bilan boshqariladi. (804-moddaning uchinchi qismi Oʻzbekiston Respublikasining 2021-yil 21-apreldagi OʻRQ-683-sonli Qonuni tahririda — Qonunchilik maʼlumotlari milliy bazasi, 21.04.2021-y., 03/21/683/0375-son) Mijozning topshirigʻi bajarilmagan yoki tegishli suratda bajarilmagan taqdirda, bank-emitent uning oldida ushbu Kodeksning 24-bobida nazarda tutilgan asoslarga koʻra va miqdorda javobgar boʻladi. Agar ijrochi bank tomonidan hisob-kitob operatsiyalarini amalga oshirish qoidalari buzilganligi munosabati bilan mijozning topshirigʻi bajarilmagan yoki tegishli suratda bajarilmagan boʻlsa, mijoz oldidagi javobgarlik ushbu bank zimmasiga yuklatilishi mumkin.

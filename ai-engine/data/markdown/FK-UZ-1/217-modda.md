@@ -1,0 +1,7 @@
+# FK-UZ-1 217-modda: Ulushli mulkdagi ulushlarni aniqlash
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154255](https://lex.uz/docs/-111189#-154255)
+**Bog'liq havolalar:** 223-modda, 25-modda, 125-modda
+
+## Norma matni:
+Agar ulushli mulk ishtirokchilarining ulushlari qonun asosida belgilanishi mumkin boʻlmasa hamda uning barcha ishtirokchilarining kelishuvi bilan belgilab qoʻyilgan boʻlmasa, ulushlar teng deb hisoblanadi. Ulushli mulk barcha ishtirokchilarning kelishuvi bilan ishtirokchilardan har birining ulushini ularning umumiy mol-mulkni vujudga keltirish va koʻpaytirishga qoʻshgan hissasiga qarab aniqlash va oʻzgartirish tartibi belgilanishi mumkin. Umumiy mol-mulkdan foydalanishning belgilab qoʻyilgan tartibiga amal qilgan holda ushbu mol-mulkni oʻz hisobidan ajratib olish mumkin boʻlmaydigan tarzda yaxshilagan ulushli mulk ishtirokchisi umumiy mulk huquqidagi oʻz ulushining tegishli darajada koʻpaytirilishiga haqli boʻladi. Umumiy mol-mulkdagi ajratib olish mumkin boʻladigan yaxshilashlar, agar ulushli mulk ishtirokchilarining kelishuvi bilan boshqacha tartib nazarda tutilgan boʻlmasa, bu yaxshilashlarni amalga oshirgan ishtirokchining mulkiga qoʻshiladi. mazkur Kodeksning 164 , 168, 169 , 216 , 218 — 223-moddalari , Oʻzbekiston Respublikasining Oila kodeksi 23 — 25-moddalari , Oʻzbekiston Respublikasining Uy-joy kodeksining 125-moddasi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.08.00.00 Mulk huquqi va boshqa ashyoviy huquqlar / 03.08.06.00 Umumiy mulk / 03.08.06.01 Umumiy ulushli mulk]

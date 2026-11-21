@@ -1,0 +1,7 @@
+# FK-UZ-2 1046-modda: Asar muallifi. Mualliflik huquqining yuzaga kelishi. Mualliflik prezumpsiyasi
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-1110163](https://lex.uz/docs/-180552#-1110163)
+**Bog'liq havolalar:** 10-modda, 1046-modda, 21-modda
+
+## Norma matni:
+Asar kimning ijodiy mehnati bilan yaratilgan boʻlsa, ana shu fuqaro asar muallifi deb eʼtirof etiladi. Fan, adabiyot va sanʼat asariga mualliflik huquqi uni yaratish fakti boʻyicha yuzaga keladi. Mualliflik huquqining yuzaga kelishi va amalga oshirilishi uchun asarni roʻyxatdan oʻtkazish yoki biron-bir boshqa rasmiyatchilikka rioya etish talab qilinmaydi. Asarning asl nusxasida yoki nusxasida muallif sifatida koʻrsatilgan shaxs, agar boshqacha hol isbotlanmagan boʻlsa, asar muallifi hisoblanadi. Asar imzosiz yoki taxallus ostida chop etilgan taqdirda (muallifning taxallusi uning kim ekanligiga shubha qoldirmaydigan hollar bundan mustasno), asarni chop etgan, asarda ismi yoki nomi koʻrsatilgan noshir, agar boshqa dalillar boʻlmasa, muallifning vakili hisoblanadi hamda muallifning huquqlarini himoya qilish va ularning amalga oshirilishini taʼminlash huquqiga egadir. Bu qoida bunday asar muallifi oʻz shaxsini oshkor etguniga va oʻzining muallif ekanligini maʼlum qilguniga qadar amalda boʻladi. Oʻzbekiston Respublikasining 2006-yil 20-iyuldagi OʻRQ-42-son “Mualliflik huquqi va turdosh huquqlar toʻgʻrisida”gi Qonunning 10-moddasi . (1046-modda Oʻzbekiston Respublikasining 2007-yil 16-yanvardagi OʻRQ-79-sonli Qonuni tahririda — OʻR QHT, 2007-y., 3-son, 21-modda)

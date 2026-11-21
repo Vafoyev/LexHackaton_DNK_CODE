@@ -1,0 +1,7 @@
+# FK-UZ-2 816-modda: Chek boʻyicha pul toʻlamaslik oqibatlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-180552#-195257](https://lex.uz/docs/-180552#-195257)
+**Bog'liq havolalar:** 814-modda, 327-modda
+
+## Norma matni:
+Toʻlovchi chek boʻyicha pul toʻlashdan bosh tortgan va bu hol ushbu Kodeksning 814-moddasiga muvofiq tasdiqlanganida chek saqlovchi oʻz xohishiga koʻra chek boʻyicha majburiyatli boʻlgan bitta, bir necha yoki barcha shaxslarga (chek beruvchi, avalchilar, indossantlarga) nisbatan daʼvo qoʻzgʻatishga haqli boʻlib, ular chek saqlovchi oldida solidar javobgar boʻladilar. Chek saqlovchi mazkur shaxslardan chek summasini, chek boʻyicha pul olishga qilgan oʻz chiqimlarini, shuningdek foizlarni ushbu Kodeks 327-moddasining birinchi va ikkinchi qismlarida nazarda tutilgan miqdorda va tartibda toʻlashni talab qilishga haqli. Xuddi shunday huquqqa chek boʻyicha pul toʻlashi shart boʻlgan shaxs ham chek boʻyicha pul toʻlaganidan keyin ega boʻladi. Chek saqlovchining ushbu moddaning birinchi qismida koʻrsatilgan shaxslarga nisbatan daʼvosi chekni haq toʻlashga taqdim etish muddati tamom boʻlgan kundan eʼtiboran olti oy mobaynida qoʻzgʻatilishi mumkin. Majburiyatli shaxslarning bir-birlariga nisbatan daʼvolari boʻyicha regress talablari tegishli majburiyatli shaxs talabni qondirgan kundan yoki unga daʼvo qoʻzgʻatilgan kundan boshlab olti oy oʻtgach qoplanadi. [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.11.00.00 Majburiyatlarning alohida turlari / 03.11.18.00 Topshiriqnoma] 46-bob. Topshiriq

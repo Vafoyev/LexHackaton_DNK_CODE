@@ -1,0 +1,7 @@
+# FK-UZ-1 265-modda: Garov turlari
+
+**Rasmiy Lex.uz havolasi:** [https://lex.uz/docs/-111189#-154463](https://lex.uz/docs/-111189#-154463)
+**Bog'liq havolalar:** 4-modda, 289-modda
+
+## Norma matni:
+[ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.01 (Кучини йўқотган) Umumiy qoidalar / 03.10.99.00 (Кучини йўқотган) Garov] Garov zakalat, ipoteka, shuningdek huquqlar garovi tarzida amal qilishi mumkin. Oʻzbekiston Respublikasining “Garov toʻgʻrisida”gi Qonunining 4-moddasi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.06 (Кучини йўқотган) Garov (zaklad) / 03.10.99.00 (Кучини йўқотган) Garov] [ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Garovga qoʻyiladigan mulk garovga qoʻyuvchi tomonidan garovga oluvchiga oʻtkazilganda garov zakalat deb hisoblanadi. Oʻzbekiston Respublikasining “Garov toʻgʻrisida”gi Qonunining II boʻlimi . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.02 (Кучини йўқотган) Ipoteka / 03.10.99.00 (Кучини йўқотган) Garov] [ SPiT: 1. Извините, отсутствует описание.... / Извините, отсутствует описание....] Koʻchmas mulkni garovga qoʻyish ipoteka hisoblanadi. mazkur Kodeksning 264 , 266 — 289-moddalari , Oʻzbekiston Respublikasining “Ipoteka toʻgʻrisida”gi Qonuni . [ OKOZ: 1. 03.00.00.00 Fuqarolik qonunchiligi / 03.10.00.00 Majburiyat huquqi / 03.10.04.01 (Кучини йўқотган) Umumiy qoidalar / 03.10.99.00 (Кучини йўқотган) Garov]
