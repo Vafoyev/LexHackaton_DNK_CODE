@@ -65,20 +65,13 @@ function MainApp() {
   return (
     <div className="relative min-h-screen flex flex-col bg-[#F8FAFC] dark:bg-[#030712] text-slate-900 dark:text-slate-100 selection:bg-sky-500 selection:text-white overflow-x-hidden transition-colors duration-300">
       {/* ============================================================
-          AMBIENT LIQUID GLASS LIGHTING BACKDROP (REFRACTION SOURCE)
+          AMBIENT LIQUID GLASS LIGHTING (TOZALANGAN, SOKIN FONI)
           ============================================================ */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-70 dark:opacity-100 transition-opacity duration-300" aria-hidden="true">
-        {/* Sapphire Blue Top Left Orb */}
-        <div className="absolute -top-[10%] left-[10%] w-[580px] h-[580px] rounded-full bg-gradient-to-br from-sky-400/25 dark:from-sky-500/20 via-blue-500/15 dark:via-blue-600/10 to-transparent blur-[110px] liquid-orb-1" />
-        
-        {/* Deep Emerald Bottom Right Orb */}
-        <div className="absolute top-[40%] -right-[5%] w-[620px] h-[620px] rounded-full bg-gradient-to-bl from-emerald-400/20 dark:from-emerald-500/15 via-teal-500/15 dark:via-teal-600/10 to-transparent blur-[120px] liquid-orb-2" />
-        
-        {/* Electric Indigo Center/Bottom Orb */}
-        <div className="absolute -bottom-[15%] left-[25%] w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-indigo-400/20 dark:from-indigo-500/15 via-violet-500/10 dark:via-violet-600/08 to-transparent blur-[130px] liquid-orb-3" />
-        
-        {/* Cyan Ambient Accent Spot */}
-        <div className="absolute top-[20%] right-[30%] w-[380px] h-[380px] rounded-full bg-cyan-400/15 dark:bg-cyan-400/10 blur-[90px] liquid-orb-1" />
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-20 dark:opacity-30 transition-opacity duration-300" aria-hidden="true">
+        {/* Soft Blue Top Left Accent */}
+        <div className="absolute -top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-sky-500/10 blur-[140px]" />
+        {/* Soft Teal Bottom Right Accent */}
+        <div className="absolute top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[140px]" />
       </div>
 
       {/* Floating Stadium Capsule Navbar (Minimalist Single-Word Labels: Fuqaro, Biznes, Xulosa, 3D, Diff, Kirish) */}

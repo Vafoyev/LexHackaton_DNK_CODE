@@ -89,59 +89,46 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <div className="flex items-center gap-1.5">
-              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
+              <span className="text-base sm:text-xl font-black tracking-tight text-slate-900 dark:text-white">
                 LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
               </span>
             </div>
-
-            {/* Dinamik xavfsizlik bali (agar shartnoma yuklangan bo'lsa) */}
-            {hasAnalysis && (
-              <span className={`hidden xl:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
-                score >= 80 
-                  ? 'bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 border-emerald-500/30'
-                  : score >= 50
-                  ? 'bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30'
-                  : 'bg-rose-500/15 text-rose-500 dark:text-rose-400 border-rose-500/30'
-              }`}>
-                {score}% Xavfsiz
-              </span>
-            )}
           </div>
 
-          {/* 2. Center Glass Capsule Menu — 6 ta Minimalist Yagona So'zli Tugma */}
-          <nav className="flex items-center gap-1 p-1 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
+          {/* 2. Center Glass Capsule Menu — Katta va Aniq Navigatsiya */}
+          <nav className="flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
             {/* Fuqaro (B2C Mode) */}
             <button
               onClick={() => switchEntityType('INDIVIDUAL')}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 isIndividual
                   ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Fuqaro (B2C) — Jismoniy shaxs shartnomalari"
             >
-              <User className="w-3.5 h-3.5" />
+              <User className="w-4 h-4" />
               <span>Fuqaro</span>
             </button>
 
             {/* Biznes (B2B Mode) */}
             <button
               onClick={() => switchEntityType('LEGAL_ENTITY')}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 !isIndividual
                   ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Biznes (B2B) — Korporativ shartnomalar"
             >
-              <Building2 className="w-3.5 h-3.5" />
+              <Building2 className="w-4 h-4" />
               <span>Biznes</span>
             </button>
 
             {/* Xulosa */}
             <button
               onClick={() => handleSelectView('xulosa')}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
                   ? isIndividual
                     ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
@@ -150,14 +137,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
               title="Shartnoma Huquqiy Xulosasi"
             >
-              <FileText className="w-3.5 h-3.5" />
+              <FileText className="w-4 h-4" />
               <span>Xulosa</span>
             </button>
 
             {/* Diff */}
             <button
               onClick={() => handleSelectView('diff')}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
                 activeView === 'diff'
                   ? isIndividual
                     ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
@@ -166,17 +153,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
               title="Yonma-yon Qizil / Yashil Redline Diff"
             >
-              <GitCompare className="w-3.5 h-3.5" />
+              <GitCompare className="w-4 h-4" />
               <span>Diff</span>
             </button>
-
             {/* 3D */}
             <button
               onClick={() => handleSelectView('3D')}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-sky-500 dark:text-sky-300 hover:text-sky-600 dark:hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
+              className={`px-3.5 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-1.5 sm:gap-2 ${
+                activeView === '3D'
+                  ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
+              }`}
               title="Three.js 3D Risk Xaritasi"
             >
-              <Box className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <Box className="w-4 h-4 text-cyan-400" />
               <span>3D</span>
             </button>
           </nav>
@@ -273,10 +263,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onOpenAuth}
-                className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-300 dark:border-white/15 transition-all cursor-pointer hover:scale-105"
+                className="flex items-center gap-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-300 dark:bg-white/10 dark:hover:bg-white/20 border border-slate-300 dark:border-white/20 transition-all cursor-pointer hover:scale-105 shadow-sm"
                 title="Tizimga kirish yoki ro'yxatdan o'tish"
               >
-                <LogIn className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
+                <LogIn className="w-4 h-4 text-sky-500 dark:text-sky-400" />
                 <span>Kirish</span>
               </button>
             )}

@@ -73,16 +73,6 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             </div>
           </div>
 
-          {/* Dinamik Xavfsizlik ko'rsatkichi */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <span className={`text-xs font-black font-mono ${
-              dynamicScore >= 80 ? 'text-emerald-500 dark:text-emerald-400' : dynamicScore >= 50 ? 'text-amber-500 dark:text-amber-400' : 'text-rose-500 dark:text-rose-400'
-            }`}>
-              {dynamicScore}%
-            </span>
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono">Xavfsiz</span>
-          </div>
-
           {/* Lex.uz Moslik nishoni */}
           <a
             href="https://lex.uz"

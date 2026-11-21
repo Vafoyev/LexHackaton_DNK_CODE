@@ -74,19 +74,22 @@ async function testFrontend() {
   await studioThemeToggle.click();
   await page.waitForTimeout(600);
 
-  // 7. "3D" WebGL fazosini sinash
-  console.log('\n⚡ "3D" tugmasi bosilmoqda...');
-  await page.click('nav button:has-text("3D")');
-  await page.waitForTimeout(1000);
-  const threeDScreenshot = path.join(screenshotDir, '04_3d_modal.png');
-  await page.screenshot({ path: threeDScreenshot });
-  console.log(`📸 Three.js 3D modal saqlandi: ${threeDScreenshot}`);
+  // 7. Diff "Huquqiy tahlil" modalini sinash
+  console.log('\n⚡ "Huquqiy tahlil" modalini ochish...');
+  const tahlilBtn = page.locator('button:has-text("Huquqiy tahlil")').first();
+  if (await tahlilBtn.count() > 0) {
+    await tahlilBtn.click();
+    await page.waitForTimeout(800);
+    const modalScreenshot = path.join(screenshotDir, '04_legal_modal.png');
+    await page.screenshot({ path: modalScreenshot });
+    console.log(`📸 Huquqiy tahlil modali saqlandi: ${modalScreenshot}`);
 
-  // 3D modalni yopish
-  const close3DBtn = page.locator('.fixed.inset-0 button:has(svg.lucide-x)').first();
-  if (await close3DBtn.count() > 0) {
-    await close3DBtn.click();
-    await page.waitForTimeout(500);
+    // Modalni yopish
+    const closeModal = page.locator('.fixed.inset-0 button:has-text("Yopish")').first();
+    if (await closeModal.count() > 0) {
+      await closeModal.click();
+      await page.waitForTimeout(400);
+    }
   }
 
   // 8. "Kirish" modali

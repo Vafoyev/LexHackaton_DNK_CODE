@@ -127,7 +127,7 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
                   : 'bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 dark:from-emerald-300 dark:via-teal-200 dark:to-green-400'
               }`}>
                 Imzolashdan Oldin
-              </span> 3D Tekshiring
+              </span> Huquqiy Auditdan O‘tkazing
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
@@ -152,19 +152,15 @@ export const ContractUploader: React.FC<ContractUploaderProps> = ({
             </div>
           </div>
 
-          {/* 3D Interaktiv Lex.uz WebGL Viewer */}
+          {/* 3D Lex.uz Dizayn Elementi */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
             <div className="w-full h-56 sm:h-64 rounded-2xl relative overflow-hidden flex items-center justify-center">
               {/* Soft radial glow behind 3D emblem */}
-              <div className={`absolute inset-0 rounded-full blur-2xl opacity-40 pointer-events-none ${
+              <div className={`absolute inset-0 rounded-full blur-2xl opacity-30 pointer-events-none ${
                 isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
               }`} />
-              <LexUz3DLogo size="md" className="w-full h-full relative z-10" autoRotate={true} interactive={true} />
+              <LexUz3DLogo size="md" className="w-full h-full relative z-10" autoRotate={true} interactive={false} />
             </div>
-            <span className="text-[10px] text-slate-400 font-mono mt-1 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-cyan-300" />
-              <span>Lex.uz Rasmiy 3D Metallik Modeli (Three.js WebGL)</span>
-            </span>
           </div>
         </div>
       </div>

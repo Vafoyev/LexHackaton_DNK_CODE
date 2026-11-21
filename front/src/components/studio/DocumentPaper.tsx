@@ -29,6 +29,23 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
   onRejectFix,
 }) => {
   const { document, clauses, findings } = analysis;
+  const [showSafeClauses, setShowSafeClauses] = React.useState(false);
+
+  // Xavfli bandlar (Qizil va Sariq)
+  const riskyClauses = clauses.filter((clause) => {
+    const finding = findings.find(
+      (f) => f.clause_number === clause.clause_number || f.clause_id === clause.id
+    );
+    return finding || clause.risk_level === 'RED' || clause.risk_level === 'YELLOW';
+  });
+
+  // Muvozanatli xavfsiz bandlar (Yashil)
+  const safeClauses = clauses.filter((clause) => {
+    const finding = findings.find(
+      (f) => f.clause_number === clause.clause_number || f.clause_id === clause.id
+    );
+    return !finding && clause.risk_level !== 'RED' && clause.risk_level !== 'YELLOW';
+  });
 
   return (
     <div className="max-w-4xl mx-auto liquid-glass rounded-3xl border border-slate-200 dark:border-white/10 shadow-2xl p-6 sm:p-10 font-sans text-slate-800 dark:text-slate-200 relative">
@@ -50,16 +67,15 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
         </p>
       </div>
 
-      {/* Bandlar Ro'yxati (Boy va To'liq Qizil/Yashil Natija Ko'rinishi) */}
+      {/* 1. XAVFLI BANDLAR RO'YXATI (Diqqat markazida) */}
       <div className="py-6 space-y-6">
-        {clauses.map((clause) => {
+        {riskyClauses.map((clause) => {
           const isSelected = selectedClauseId === clause.id;
           const isFixed = !!appliedFixes[clause.id];
           const finding = findings.find(
             (f) => f.clause_number === clause.clause_number || f.clause_id === clause.id
           );
 
-          const hasRisk = finding || clause.risk_level === 'RED' || clause.risk_level === 'YELLOW';
           const isRed = clause.risk_level === 'RED';
           const isYellow = clause.risk_level === 'YELLOW';
 
@@ -70,10 +86,10 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
               className={`p-5 rounded-2xl border transition-all cursor-pointer relative group ${
                 isSelected
                   ? 'liquid-glass-accent ring-2 ring-sky-500 shadow-xl shadow-sky-500/10'
-                  : hasRisk && !isFixed
-                  ? isRed
-                    ? 'liquid-glass-danger border-rose-300 dark:border-rose-500/40 hover:border-rose-500'
-                    : 'liquid-glass-warning border-amber-300 dark:border-amber-500/40 hover:border-amber-500'
+                  : isRed && !isFixed
+                  ? 'liquid-glass-danger border-rose-300 dark:border-rose-500/40 hover:border-rose-500'
+                  : isYellow && !isFixed
+                  ? 'liquid-glass-warning border-amber-300 dark:border-amber-500/40 hover:border-amber-500'
                   : isFixed
                   ? 'liquid-glass-success border-emerald-300 dark:border-emerald-500/40'
                   : 'liquid-glass-subtle border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20'
@@ -97,7 +113,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                     </span>
                   ) : isRed ? (
                     <span className="px-2.5 py-1 rounded-full bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-400 border border-rose-300 dark:border-rose-500/30 text-[11px] font-mono font-bold flex items-center gap-1 animate-pulse">
-                      <ShieldAlert className="w-3.5 h-3.5" /> 🔴 QONUNGA ZID (FK 707)
+                      <ShieldAlert className="w-3.5 h-3.5" /> 🔴 QONUNGA ZID
                     </span>
                   ) : isYellow ? (
                     <span className="px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400 border border-amber-300 dark:border-amber-500/30 text-[11px] font-mono font-bold flex items-center gap-1">
@@ -112,7 +128,7 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
               </div>
 
               {/* BOY NATIJA KO'RINISHI: QIZIL (Asl band) va YASHIL (To'g'ri tahrir) */}
-              {hasRisk && finding ? (
+              {finding && (
                 <div className="space-y-3 mt-2">
                   {/* 1. QIZIL BLOK (Asl xavfli band) */}
                   <div className={`p-3.5 rounded-xl border transition-all ${
@@ -214,22 +230,67 @@ export const DocumentPaper: React.FC<DocumentPaperProps> = ({
                     </div>
                   </div>
                 </div>
-              ) : (
-                /* Muvozanatli xavfsiz band */
-                <p className="text-xs sm:text-[13px] leading-relaxed text-slate-700 dark:text-slate-300">
-                  {clause.original_text}
-                </p>
-              )}
-
-              {/* Tanlanmagan bandlar uchun interaktivlik maslahati */}
-              {!isSelected && (
-                <div className="mt-2 text-[10px] font-mono text-slate-500 group-hover:text-sky-600 dark:group-hover:text-sky-400 flex items-center gap-1 transition-colors">
-                  <span>→ Inspektor panelida batafsil ko‘rish uchun bosing</span>
-                </div>
               )}
             </div>
           );
         })}
+
+        {/* 2. XAVFSIZ BANDLARNI YAGONA KONSOLIDATSIYA KARTASIDA KO'RSATISH */}
+        {safeClauses.length > 0 && (
+          <div className="rounded-2xl liquid-glass-subtle border border-emerald-500/25 overflow-hidden transition-all shadow-md">
+            <div 
+              onClick={() => setShowSafeClauses(!showSafeClauses)}
+              className="p-4 sm:p-5 flex items-center justify-between cursor-pointer hover:bg-emerald-500/5 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex flex-wrap items-center gap-2">
+                    <span>Qolgan {safeClauses.length} ta band xavfsiz va qonuniy</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                      O‘zbekiston FK normalariga muvofiq
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    Ushbu bandlarda asimmetriya, noqonuniy jarima yoki yashirin moddiy xavflar aniqlanmadi.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:text-sky-500 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 hover:bg-white/10 transition-colors shrink-0"
+              >
+                {showSafeClauses ? "Yashirish" : `${safeClauses.length} ta bandni ko‘rish`}
+              </button>
+            </div>
+
+            {showSafeClauses && (
+              <div className="p-4 pt-2 border-t border-slate-200 dark:border-white/10 space-y-2.5">
+                {safeClauses.map((clause) => (
+                  <div 
+                    key={clause.id}
+                    onClick={() => onSelectClause(clause.id)}
+                    className="p-3 rounded-xl bg-slate-100/60 dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                        {clause.clause_number}
+                      </span>
+                      <h5 className="text-xs font-semibold text-slate-900 dark:text-white">{clause.title}</h5>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 ml-auto flex items-center gap-1 font-mono font-bold">
+                        <CheckCircle2 className="w-3 h-3" /> Xavfsiz
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{clause.original_text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Hujjatning Imzo Qismi */}

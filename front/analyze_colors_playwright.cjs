@@ -148,8 +148,7 @@ async function runAnalysis() {
     printItem(await inspect(page, 'header div[title="Bosh sahifaga qaytish"]', null, '3. Navbar Lex.uz & LexGuard Brend Bloki', mode));
     printItem(await inspect(page, 'header button', 'Xulosa', '4. Navbar "Xulosa" Studiya Ko‘rinishi Tab', mode));
     printItem(await inspect(page, 'header button', 'Diff', '5. Navbar "Diff" Yonma-yon Ko‘rinishi Tab', mode));
-    printItem(await inspect(page, 'header button', '3D', '6. Navbar "3D" Lex.uz Modeli Tugmasi', mode));
-    printItem(await inspect(page, '.max-w-4xl.liquid-glass', null, '7. Shartnoma Varaqi (DocumentPaper A4)', mode));
+    printItem(await inspect(page, '.max-w-4xl.liquid-glass', null, '6. Shartnoma Varaqi (DocumentPaper A4)', mode));
     printItem(await inspect(page, '.max-w-4xl.liquid-glass h1', null, '8. Shartnoma Bosh Sarlavhasi (Document Title)', mode));
     printItem(await inspect(page, 'div.liquid-glass-danger', null, '9. Qizil Xavfli Band Kartasi (FK 707 ziddiyat)', mode));
     printItem(await inspect(page, 'div.liquid-glass-danger p', 'Buyurtmachi istalgan vaqtda', '10. Qizil Asl Matn Qutisi (Hujjatdagi asl tahrir)', mode));
