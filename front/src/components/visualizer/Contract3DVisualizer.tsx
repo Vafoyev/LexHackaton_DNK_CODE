@@ -46,6 +46,9 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
   const animationFrameIdRef = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
   const prevMousePosRef = useRef({ x: 0, y: 0 });
+  const targetCameraPosRef = useRef<THREE.Vector3 | null>(null);
+  const targetLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+  const currentLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
 
   // Ranglar matritsasi
   const getColorForRisk = (risk: RiskLevel): number => {
@@ -343,11 +346,19 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
         const nodeMeshes = nodesGroupRef.current.children.filter(c => c instanceof THREE.Mesh);
         const intersects = raycaster.intersectObjects(nodeMeshes, false);
         if (intersects.length > 0) {
-          const hit = intersects[0].object;
+          const hit = intersects[0].object as THREE.Mesh;
           const clause = hit.userData.clause as ContractClause;
           if (clause) {
             setFocusedClause(clause);
             onSelectClause(clause.id);
+
+            // Smooth Lerp: Kamera ushbu tugun tomon mayin yaqinlashadi
+            const worldPos = new THREE.Vector3();
+            hit.getWorldPosition(worldPos);
+            targetLookAtRef.current.copy(worldPos);
+            // Kamera tugundan biroz uzoqlikda, lekin yaqin fokusda turadi
+            const offset = worldPos.clone().normalize().multiplyScalar(18);
+            targetCameraPosRef.current = worldPos.clone().add(offset.length() > 0 ? offset : new THREE.Vector3(0, 5, 20));
           }
         }
       }
@@ -379,8 +390,20 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
       ringMesh1.rotation.z = elapsed * 0.18;
       ringMesh2.rotation.x = elapsed * 0.15;
 
-      // Tugunlar guruhi avtomatik aylanishi
-      if (nodesGroupRef.current && autoRotate && !isDraggingRef.current) {
+      // Smooth Camera Lerp Harakati
+      if (targetCameraPosRef.current && cameraRef.current) {
+        cameraRef.current.position.lerp(targetCameraPosRef.current, 0.05);
+        currentLookAtRef.current.lerp(targetLookAtRef.current, 0.05);
+        cameraRef.current.lookAt(currentLookAtRef.current);
+
+        // Agar yetib borgan bo'lsa lerpni to'xtatamiz
+        if (cameraRef.current.position.distanceTo(targetCameraPosRef.current) < 0.2) {
+          targetCameraPosRef.current = null;
+        }
+      }
+
+      // Tugunlar guruhi avtomatik aylanishi (agar fokuslanmagan bo'lsa)
+      if (nodesGroupRef.current && autoRotate && !isDraggingRef.current && !targetCameraPosRef.current) {
         nodesGroupRef.current.rotation.y += 0.0025;
       }
 
@@ -450,11 +473,11 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
     });
   }, [filterRisk]);
 
-  // Reset kamera pozitsiyasi
+  // Reset kamera pozitsiyasi (Smooth qaytish)
   const handleResetCamera = () => {
-    if (cameraRef.current && nodesGroupRef.current) {
-      cameraRef.current.position.set(0, 30, 85);
-      cameraRef.current.lookAt(0, 0, 0);
+    targetCameraPosRef.current = new THREE.Vector3(0, 30, 85);
+    targetLookAtRef.current = new THREE.Vector3(0, 0, 0);
+    if (nodesGroupRef.current) {
       nodesGroupRef.current.rotation.set(0, 0, 0);
     }
   };
@@ -522,7 +545,7 @@ export const Contract3DVisualizer: React.FC<Contract3DVisualizerProps> = ({
           title="Shartnoma DNK spirali"
         >
           <Sparkles className="w-3.5 h-3.5" />
-          <span>DNK螺旋</span>
+          <span>DNK Spiral</span>
         </button>
       </div>
 
