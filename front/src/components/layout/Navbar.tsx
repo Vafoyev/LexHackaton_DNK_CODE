@@ -8,9 +8,12 @@ import {
   FileText,
   GitCompare,
   User,
-  Building2
+  Building2,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 
 export interface NavbarProps {
   onReset: () => void;
@@ -32,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLoadDemo,
 }) => {
   const { user, isAuthenticated, activeEntityType, switchEntityType, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const isIndividual = (user?.entity_type || activeEntityType) === 'INDIVIDUAL';
@@ -71,21 +75,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-base sm:text-lg font-black tracking-tight text-white">
-                LexGuard<span className={isIndividual ? "text-sky-400" : "text-emerald-400"}>.AI</span>
+              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white">
+                LexGuard<span className={isIndividual ? "text-sky-500" : "text-emerald-500"}>.AI</span>
               </span>
             </div>
           </div>
 
           {/* 2. Center Glass Capsule Menu — Minimalist Single-Word Labels */}
-          <nav className="flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+          <nav className="flex items-center gap-1 p-1 rounded-full bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-xl">
             {/* Fuqaro (B2C Mode) */}
             <button
               onClick={() => switchEntityType('INDIVIDUAL')}
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 isIndividual
                   ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Fuqaro (B2C) — Jismoniy shaxs shartnomalari"
             >
@@ -99,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 !isIndividual
                   ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Biznes (B2B) — Korporativ shartnomalar"
             >
@@ -113,9 +117,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeView === 'xulosa' || (activeView === 'dashboard' && hasAnalysis)
                   ? isIndividual
-                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Shartnoma Huquqiy Xulosasi"
             >
@@ -129,9 +133,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeView === 'diff'
                   ? isIndividual
-                    ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                    ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30'
+                    : 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10'
               }`}
               title="Yonma-yon Qizil / Yashil Redline Diff"
             >
@@ -142,21 +146,35 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* 3D */}
             <button
               onClick={() => handleSelectView('3D')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-300 hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-sky-500 dark:text-sky-300 hover:text-sky-600 dark:hover:text-white bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 transition-all cursor-pointer shadow-sm shadow-sky-500/15"
               title="Three.js 3D Risk Xaritasi"
             >
-              <Box className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+              <Box className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
               <span>3D</span>
             </button>
           </nav>
 
-          {/* 3. Right Action: Kirish (Single Word Minimalist) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* 3. Right Action: Tungi/Kunduzgi Rejim & Kirish */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            {/* Tungi / Kunduzgi Rejim Tugmasi */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full transition-all cursor-pointer hover:scale-105 border bg-slate-200/60 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border-slate-300 dark:border-white/15 text-slate-700 dark:text-amber-400 shadow-sm"
+              title={isDark ? "Kunduzgi rejimga o'tish (Light Mode)" : "Tungi rejimga o'tish (Dark Mode)"}
+            >
+              {isDark ? (
+                <Sun className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-indigo-600" />
+              )}
+            </button>
+
+            {/* User Profile / Kirish */}
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 py-1 pl-2.5 pr-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-white transition-all cursor-pointer"
+                  className="flex items-center gap-2 py-1 pl-2.5 pr-2 rounded-full bg-slate-200/60 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 border border-slate-300 dark:border-white/10 text-xs text-slate-800 dark:text-white transition-all cursor-pointer"
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] text-white ${
                     isIndividual ? 'bg-sky-500' : 'bg-emerald-500'
@@ -171,10 +189,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {showDropdown && (
                   <div className="absolute right-0 mt-2 w-64 liquid-glass-card rounded-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                    <div className="p-3 border-b border-white/10 mb-1">
-                      <p className="text-xs font-bold text-white truncate">{user?.full_name}</p>
-                      <p className="text-[11px] text-slate-400 truncate mt-0.5">{user?.email || 'Foydalanuvchi'}</p>
-                      <div className="flex items-center gap-1.5 mt-2 text-[10px] font-mono text-emerald-400">
+                    <div className="p-3 border-b border-slate-200 dark:border-white/10 mb-1">
+                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user?.full_name}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{user?.email || 'Foydalanuvchi'}</p>
+                      <div className="flex items-center gap-1.5 mt-2 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">
                         <ShieldCheck className="w-3 h-3" />
                         <span>OneID / E-IMZO tasdiqlangan</span>
                       </div>
@@ -185,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         logout();
                         setShowDropdown(false);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Chiqish</span>
@@ -196,10 +214,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-white bg-white/10 hover:bg-white/15 border border-white/15 transition-all cursor-pointer hover:scale-105"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold text-slate-800 dark:text-white bg-slate-200/80 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/15 border border-slate-300 dark:border-white/15 transition-all cursor-pointer hover:scale-105"
                 title="Tizimga kirish yoki ro'yxatdan o'tish"
               >
-                <LogIn className="w-3.5 h-3.5 text-sky-400" />
+                <LogIn className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                 <span>Kirish</span>
               </button>
             )}

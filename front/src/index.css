@@ -3,72 +3,155 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-slate-950 text-slate-100 font-sans selection:bg-sky-500 selection:text-white;
-    overflow-x: hidden;
+  html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Default Dark Mode */
+  html.dark body {
     background-color: #030712;
+    color: #F8FAFC;
+  }
+
+  /* Kunduzgi / Light Mode */
+  html.light body {
+    background-color: #F8FAFC;
+    color: #0F172A;
+  }
+
+  body {
+    @apply font-sans selection:bg-sky-500 selection:text-white;
+    overflow-x: hidden;
+    min-height: 100vh;
   }
 }
 
 /* ============================================================
-   AUTHENTIC LIQUID GLASS & iOS VISION GLASSMORPHISM UTILITIES
+   AUTHENTIC LIQUID GLASS & DUAL-THEME GLASSMORPHISM UTILITIES
    ============================================================ */
 @layer components {
-  /* 1. Asosiy Liquid Glass Karta */
+  /* 1. Asosiy Liquid Glass Karta (Dark & Light) */
+  .liquid-glass,
   .liquid-glass-card {
     position: relative;
-    backdrop-filter: blur(32px) saturate(210%);
-    -webkit-backdrop-filter: blur(32px) saturate(210%);
-    background: rgba(15, 23, 42, 0.48);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  html.dark .liquid-glass,
+  html.dark .liquid-glass-card {
+    background: rgba(15, 23, 42, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: 
       0 24px 60px -12px rgba(0, 0, 0, 0.65),
-      inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
       inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  html.light .liquid-glass,
+  html.light .liquid-glass-card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(203, 213, 225, 0.7);
+    color: #0F172A;
+    box-shadow: 
+      0 16px 40px -8px rgba(15, 23, 42, 0.08),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 1px 0 rgba(226, 232, 240, 0.5);
   }
 
   /* 2. Nozik (Subtle) Liquid Glass */
   .liquid-glass-subtle {
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    background: rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  html.dark .liquid-glass-subtle {
+    background: rgba(15, 23, 42, 0.38);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 
       0 12px 32px -8px rgba(0, 0, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
+  html.light .liquid-glass-subtle {
+    background: rgba(241, 245, 249, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    color: #1E293B;
+    box-shadow: 
+      0 8px 24px -4px rgba(15, 23, 42, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
   /* 3. Floating Stadium Pill (Navigatsiya va Tugmalar uchun) */
   .liquid-glass-pill {
     backdrop-filter: blur(28px) saturate(200%);
     -webkit-backdrop-filter: blur(28px) saturate(200%);
-    background: rgba(15, 23, 42, 0.62);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  html.dark .liquid-glass-pill {
+    background: rgba(15, 23, 42, 0.65);
     border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 
       0 16px 40px -10px rgba(0, 0, 0, 0.55),
       inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.28);
   }
 
-  /* 4. Sapphire Blue Accent Glass (Jismoniy Shaxs Rejimi) */
+  html.light .liquid-glass-pill {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    color: #0F172A;
+    box-shadow: 
+      0 12px 32px -6px rgba(15, 23, 42, 0.1),
+      inset 0 1px 1.5px 0 rgba(255, 255, 255, 1);
+  }
+
+  /* 4. Sapphire Blue Accent Glass (Fuqaro / B2C Rejimi) */
   .liquid-glass-sapphire {
-    backdrop-filter: blur(32px) saturate(220%);
-    -webkit-backdrop-filter: blur(32px) saturate(220%);
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(15, 23, 42, 0.5) 100%);
+    backdrop-filter: blur(28px) saturate(210%);
+    -webkit-backdrop-filter: blur(28px) saturate(210%);
+  }
+
+  html.dark .liquid-glass-sapphire {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.14) 0%, rgba(15, 23, 42, 0.55) 100%);
     border: 1px solid rgba(56, 189, 248, 0.3);
     box-shadow: 
       0 20px 50px -10px rgba(2, 132, 199, 0.25),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  /* 5. Deep Emerald Accent Glass (Yuridik Shaxs / B2B Rejimi) */
+  html.light .liquid-glass-sapphire {
+    background: linear-gradient(135deg, rgba(224, 242, 254, 0.85) 0%, rgba(240, 249, 255, 0.95) 100%);
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    color: #0369A1;
+    box-shadow: 
+      0 16px 36px -8px rgba(14, 165, 233, 0.15),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  /* 5. Deep Emerald Accent Glass (Biznes / B2B Rejimi) */
   .liquid-glass-emerald {
-    backdrop-filter: blur(32px) saturate(220%);
-    -webkit-backdrop-filter: blur(32px) saturate(220%);
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.5) 100%);
+    backdrop-filter: blur(28px) saturate(210%);
+    -webkit-backdrop-filter: blur(28px) saturate(210%);
+  }
+
+  html.dark .liquid-glass-emerald {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.55) 100%);
     border: 1px solid rgba(52, 211, 153, 0.3);
     box-shadow: 
       0 20px 50px -10px rgba(5, 150, 105, 0.25),
       inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  html.light .liquid-glass-emerald {
+    background: linear-gradient(135deg, rgba(209, 250, 229, 0.85) 0%, rgba(236, 253, 245, 0.95) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #047857;
+    box-shadow: 
+      0 16px 36px -8px rgba(16, 185, 129, 0.15),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
   }
 
   /* 6. Active Glass Glow Hover */
@@ -77,10 +160,14 @@
   }
   .liquid-hover-glow:hover {
     transform: translateY(-2px);
+  }
+  html.dark .liquid-hover-glow:hover {
     border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 
-      0 28px 60px -12px rgba(0, 0, 0, 0.7),
-      inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
+    box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.7);
+  }
+  html.light .liquid-hover-glow:hover {
+    border-color: rgba(148, 163, 184, 0.6);
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.12);
   }
 }
 
@@ -131,16 +218,24 @@
   height: 6px;
 }
 
-::-webkit-scrollbar-track {
+html.dark ::-webkit-scrollbar-track {
   background: rgba(3, 7, 18, 0.6);
 }
+html.light ::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+}
 
-::-webkit-scrollbar-thumb {
+html.dark ::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+  backdrop-filter: blur(10px);
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
   border-radius: 9999px;
   backdrop-filter: blur(10px);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.6);
 }

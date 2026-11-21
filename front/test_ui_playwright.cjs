@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 async function testFrontend() {
-  console.log('🚀 Playwright test boshlandi: http://localhost:3000');
+  console.log('🚀 Playwright to\'liq test boshlandi: http://localhost:3000');
   
   const browser = await chromium.launch({
     channel: 'chrome',
@@ -35,98 +35,84 @@ async function testFrontend() {
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
   console.log('✓ 1. Bosh sahifa muvaffaqiyatli ochildi.');
 
-  // 2. CSS tekshiruvi: body computed background-color
-  const bodyStyles = await page.evaluate(() => {
-    const el = document.body;
-    const computed = window.getComputedStyle(el);
-    return {
-      backgroundColor: computed.backgroundColor,
-      color: computed.color,
-      fontFamily: computed.fontFamily,
-    };
-  });
-
-  console.log('\n📊 BODY COMPUTED STYLES:');
-  console.log('  Background:', bodyStyles.backgroundColor);
-  console.log('  Color:', bodyStyles.color);
-  console.log('  Font Family:', bodyStyles.fontFamily);
-
-  // 3. Navbar 6 ta minimalist yagona so'zli tugmalari tekshiruvi
-  const navText = await page.textContent('nav');
-  console.log('\n🧭 NAVBAR TUGMALARI (Kelishilgan 6 ta yagona so\'zli minimalist nomlar):');
-  console.log(' ', navText?.replace(/\s+/g, ' ').trim());
+  // 2. Dastlabki Tungi Rejim (Dark Mode) tekshiruvi
+  const darkBg = await page.evaluate(() => window.getComputedStyle(document.body).backgroundColor);
+  console.log('🌙 Tungi rejim fon rangi:', darkBg);
 
   const landingScreenshot = path.join(screenshotDir, '01_landing.png');
   await page.screenshot({ path: landingScreenshot, fullPage: true });
-  console.log(`📸 [1/5] Landing page saqlandi: ${landingScreenshot}`);
 
-  // 4. "Fuqaro" va "Biznes" o'rtasida almashish
-  console.log('\n⚡ "Fuqaro" (B2C) rejimiga o\'tish...');
-  await page.click('nav button:has-text("Fuqaro")');
-  await page.waitForTimeout(500);
-  console.log('✓ Fuqaro rejimi faol.');
+  // 3. Kunduzgi rejimga o'tish (Sun / Moon tugmasi)
+  console.log('\n☀️ Kunduzgi rejimga o\'tish (Sun / Moon toggle)...');
+  const themeToggle = page.locator('button[title*="rejim"]').first();
+  await themeToggle.click();
+  await page.waitForTimeout(600);
 
-  console.log('⚡ "Biznes" (B2B) rejimiga o\'tish...');
-  await page.click('nav button:has-text("Biznes")');
-  await page.waitForTimeout(500);
-  console.log('✓ Biznes rejimi faol.');
+  const lightBg = await page.evaluate(() => window.getComputedStyle(document.body).backgroundColor);
+  console.log('☀️ Kunduzgi rejim fon rangi:', lightBg);
 
-  // 5. "Xulosa" tugmasini bosish (Shartnoma studiyasiga o'tish)
-  console.log('\n⚡ "Xulosa" tugmasi bosilmoqda...');
+  const lightLandingScreenshot = path.join(screenshotDir, '06_light_mode_landing.png');
+  await page.screenshot({ path: lightLandingScreenshot, fullPage: true });
+  console.log(`📸 Kunduzgi landing saqlandi: ${lightLandingScreenshot}`);
+
+  // 4. "Xulosa" studiyasi (Kunduzgi rejimda)
   await page.click('nav button:has-text("Xulosa")');
   await page.waitForTimeout(1000);
-  const studioScreenshot = path.join(screenshotDir, '02_studio_diff.png');
-  await page.screenshot({ path: studioScreenshot, fullPage: true });
-  console.log(`📸 [2/5] Shartnoma xulosa studiyasi saqlandi: ${studioScreenshot}`);
+  const lightStudioScreenshot = path.join(screenshotDir, '07_light_mode_studio.png');
+  await page.screenshot({ path: lightStudioScreenshot, fullPage: true });
+  console.log(`📸 Kunduzgi studiya saqlandi: ${lightStudioScreenshot}`);
 
-  // 6. "Diff" tugmasini bosish (Yonma-yon qizil/yashil tahrir ko'rinishi)
-  console.log('\n⚡ "Diff" tugmasi bosilmoqda...');
+  // 5. "Diff" ko'rinishi (Kunduzgi rejimda)
   await page.click('nav button:has-text("Diff")');
   await page.waitForTimeout(1000);
-  const diffScreenshot = path.join(screenshotDir, '03_sample_contract_analysis.png');
-  await page.screenshot({ path: diffScreenshot, fullPage: true });
-  console.log(`📸 [3/5] Side-by-side diff saqlandi: ${diffScreenshot}`);
+  const lightDiffScreenshot = path.join(screenshotDir, '08_light_mode_diff.png');
+  await page.screenshot({ path: lightDiffScreenshot, fullPage: true });
+  console.log(`📸 Kunduzgi diff saqlandi: ${lightDiffScreenshot}`);
 
-  // 7. "3D" tugmasini bosish (Three.js WebGL fazosi)
+  // 6. Qayta Tungi rejimga qaytish
+  const studioThemeToggle = page.locator('button[title*="rejim"]').first();
+  await studioThemeToggle.click();
+  await page.waitForTimeout(600);
+
+  // 7. "3D" WebGL fazosini sinash
   console.log('\n⚡ "3D" tugmasi bosilmoqda...');
   await page.click('nav button:has-text("3D")');
   await page.waitForTimeout(1000);
   const threeDScreenshot = path.join(screenshotDir, '04_3d_modal.png');
   await page.screenshot({ path: threeDScreenshot });
-  console.log(`📸 [4/5] Three.js 3D modal saqlandi: ${threeDScreenshot}`);
+  console.log(`📸 Three.js 3D modal saqlandi: ${threeDScreenshot}`);
 
-  // 3D modalni yopish (X tugmasi orqali)
+  // 3D modalni yopish
   const close3DBtn = page.locator('.fixed.inset-0 button:has(svg.lucide-x)').first();
   if (await close3DBtn.count() > 0) {
     await close3DBtn.click();
     await page.waitForTimeout(500);
-    console.log('✓ 3D modal yopildi.');
   }
 
-  // 8. "Kirish" tugmasini bosish (OneID / E-IMZO / Login)
+  // 8. "Kirish" modali
   console.log('\n⚡ "Kirish" tugmasi bosilmoqda...');
   await page.click('button:has-text("Kirish")');
   await page.waitForTimeout(500);
   const authScreenshot = path.join(screenshotDir, '05_auth_modal.png');
   await page.screenshot({ path: authScreenshot });
-  console.log(`📸 [5/5] Kirish / Auth modali saqlandi: ${authScreenshot}`);
 
-  // Auth modalni yopish
   const closeAuthBtn = page.locator('.fixed.inset-0 button:has(svg.lucide-x)').first();
   if (await closeAuthBtn.count() > 0) {
     await closeAuthBtn.click();
     await page.waitForTimeout(500);
-    console.log('✓ Kirish modali yopildi.');
   }
 
-  // 9. Konsol hisoboti
+  // 9. "Fuqaro" va "Biznes" rejimlari
+  await page.click('nav button:has-text("Fuqaro")');
+  await page.waitForTimeout(400);
+  await page.click('nav button:has-text("Biznes")');
+  await page.waitForTimeout(400);
+
+  // 10. Konsol hisoboti
   console.log('\n📋 KONSOL VA XATOLAR HISOBOTI:');
   const severeErrors = consoleMessages.filter(m => m.type === 'error');
   console.log(`  Jami konsol xabarlari: ${consoleMessages.length}`);
   console.log(`  Jiddiy xatolar (Console Errors): ${severeErrors.length}`);
-  if (severeErrors.length > 0) {
-    severeErrors.forEach(e => console.log('   ⚠️', e.text));
-  }
   console.log(`  Sahifa xatoliklari (Page Errors): ${errors.length}`);
 
   await browser.close();
@@ -135,7 +121,7 @@ async function testFrontend() {
     throw new Error('Test davomida xatoliklar qayd etildi!');
   }
 
-  console.log('\n✅ BARCHA KELISHILGAN 6 TA MODUL VA PLAYWRIGHT TESTLARI 100% MUVAFFAQIYATLI O\'TDI!');
+  console.log('\n✅ TUNGI / KUNDUZGI REJIM VA BARCHA MODULLAR 100% MUVAFFAQIYATLI O\'TDI!');
 }
 
 testFrontend().catch(err => {
