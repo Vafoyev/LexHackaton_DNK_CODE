@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/security/file_integrity.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/widgets/glass_surface.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../contracts/presentation/cubit/contracts_cubit.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
@@ -49,9 +53,7 @@ class _ScanUploadSheetState extends State<ScanUploadSheet> {
     final fileLen = file.lengthSync() ?? await file.length() ?? 0;
     if (fileLen > FileIntegrity.maxBytes) {
       messenger.showSnackBar(
-        const SnackBar(
-          content: Text('Fayl hajmi 10 MB limitidan katta.'),
-        ),
+        const SnackBar(content: Text('Fayl hajmi 10 MB limitidan katta.')),
       );
       return;
     }
@@ -110,205 +112,226 @@ class _ScanUploadSheetState extends State<ScanUploadSheet> {
     final session = context.watch<SessionCubit>().state;
     final contracts = context.watch<ContractsCubit>().state;
     final lang = session.lang;
-    final surface = Theme.of(context).colorScheme.surface;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      padding: EdgeInsets.fromLTRB(
-        20,
-        12,
-        20,
-        20 + MediaQuery.viewInsetsOf(context).bottom,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Container(
-                width: 44,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: c.grayBorder,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+        child: Container(
+          decoration: BoxDecoration(
+            color: c.glassFillStrong,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+            border: Border(top: BorderSide(color: c.glassBorder)),
+          ),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            12,
+            20,
+            22 + MediaQuery.viewInsetsOf(context).bottom,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [c.brandDeepBlue, c.brandCyan],
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: c.textSecondary.withValues(alpha: 0.35),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Icon(
-                    Icons.document_scanner_rounded,
-                    color: Colors.white,
-                    size: 24,
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [c.roleGradientStart, c.roleGradientEnd],
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        CupertinoIcons.viewfinder,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppStrings.t(lang, 'scan_title'),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w800,
+                              color: c.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Maks 10 MB · Lokal PII maskalash avtomatik',
+                            style:
+                                TextStyle(fontSize: 12, color: c.textSecondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (_running) ...[
+                  _LiveProgressCard(stage: contracts.stage),
+                  const SizedBox(height: 12),
+                ] else ...[
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
                     children: [
-                      Text(
-                        AppStrings.t(lang, 'scan_title'),
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
+                      _TypePill(
+                        label: 'Xizmat (B2B)',
+                        selected: _selectedType == ContractType.service,
+                        onTap: () => setState(
+                          () => _selectedType = ContractType.service,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Maks 10 MB · Lokal PII maskalash avtomatik ishlaydi',
-                        style: TextStyle(fontSize: 12, color: c.grayText),
+                      _TypePill(
+                        label: 'Yetkazib berish',
+                        selected: _selectedType == ContractType.supply,
+                        onTap: () => setState(
+                          () => _selectedType = ContractType.supply,
+                        ),
+                      ),
+                      _TypePill(
+                        label: 'Noturar ijara',
+                        selected:
+                            _selectedType == ContractType.nonResidentialLease,
+                        onTap: () => setState(
+                          () =>
+                              _selectedType = ContractType.nonResidentialLease,
+                        ),
+                      ),
+                      _TypePill(
+                        label: 'Ko‘chmas mulk (R6)',
+                        selected: _selectedType == ContractType.realEstateSale,
+                        onTap: () => setState(
+                          () => _selectedType = ContractType.realEstateSale,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _ActionTile(
+                          icon: CupertinoIcons.doc_on_doc_fill,
+                          title: 'Fayl tanlash',
+                          subtitle: 'DOCX, PDF, TXT',
+                          highlighted: !widget.initialFocusCamera,
+                          onTap: () => _pickAndAnalyze(isCamera: false),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _ActionTile(
+                          icon: CupertinoIcons.camera_fill,
+                          title: 'Kamera / Rasm',
+                          subtitle: 'EXIF tozalanadi',
+                          highlighted: widget.initialFocusCamera,
+                          onTap: () => _pickAndAnalyze(isCamera: true),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  GlassCard(
+                    radius: 16,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppStrings.t(lang, 'external_ai_consent'),
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: c.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                session.externalAiConsent
+                                    ? 'Gibrid AI + Go Verifier (PII maskalanadi)'
+                                    : 'Faqat lokal Go qoidalari (tashqariga chiqmaydi)',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: c.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        CupertinoSwitch(
+                          activeTrackColor: c.rolePrimary,
+                          value: session.externalAiConsent,
+                          onChanged: (v) => context
+                              .read<SessionCubit>()
+                              .setExternalAiConsent(v),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    AppStrings.t(lang, 'demo_samples'),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      color: c.rolePrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _DemoSampleTile(
+                    key: const Key('demo_sample_service'),
+                    title: 'B2B Xizmat ko‘rsatish shartnomasi (UZ-Lotin)',
+                    subtitle: 'R1–R5 qoidalari · 4 rang + PII maskalash',
+                    badge: 'DOCX',
+                    onTap: () => _runSample('sample_b2b_service'),
+                  ),
+                  const SizedBox(height: 8),
+                  _DemoSampleTile(
+                    key: const Key('demo_sample_notarial'),
+                    title: 'Bino oldi-sotdi loyihasi (Notarial R6)',
+                    subtitle: 'FK 110–112 majburiy notarial tasdiq signali',
+                    badge: 'R6',
+                    onTap: () => _runSample('sample_notarial_r6'),
+                  ),
+                  const SizedBox(height: 8),
+                  _DemoSampleTile(
+                    key: const Key('demo_sample_supply_ru'),
+                    title: 'Договор поставки оборудования №19 (RU)',
+                    subtitle: 'Ko‘p tilli tahlil + Neytral balans + Mediatsiya',
+                    badge: 'PDF · RU',
+                    onTap: () => _runSample('sample_supply_ru'),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 16),
-            if (_running) ...[
-              _LiveProgressCard(stage: contracts.stage),
-              const SizedBox(height: 12),
-            ] else ...[
-              // Contract type hint selector
-              Wrap(
-                spacing: 8,
-                runSpacing: 6,
-                children: [
-                  _TypeChip(
-                    label: 'Xizmat (B2B)',
-                    selected: _selectedType == ContractType.service,
-                    onTap: () =>
-                        setState(() => _selectedType = ContractType.service),
-                  ),
-                  _TypeChip(
-                    label: 'Yetkazib berish',
-                    selected: _selectedType == ContractType.supply,
-                    onTap: () =>
-                        setState(() => _selectedType = ContractType.supply),
-                  ),
-                  _TypeChip(
-                    label: 'Noturar ijara',
-                    selected: _selectedType == ContractType.nonResidentialLease,
-                    onTap: () => setState(
-                      () => _selectedType = ContractType.nonResidentialLease,
-                    ),
-                  ),
-                  _TypeChip(
-                    label: 'Ko‘chmas mulk (R6)',
-                    selected: _selectedType == ContractType.realEstateSale,
-                    onTap: () => setState(
-                      () => _selectedType = ContractType.realEstateSale,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 14),
-              // Primary Soliq-style Action Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: _ActionTile(
-                      icon: Icons.upload_file_rounded,
-                      title: 'Fayl tanlash',
-                      subtitle: 'DOCX, PDF, TXT',
-                      highlighted: !widget.initialFocusCamera,
-                      onTap: () => _pickAndAnalyze(isCamera: false),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _ActionTile(
-                      icon: Icons.camera_alt_rounded,
-                      title: 'Kamera / Rasm',
-                      subtitle: 'EXIF tozalanadi',
-                      highlighted: widget.initialFocusCamera,
-                      onTap: () => _pickAndAnalyze(isCamera: true),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              // External AI Consent toggle
-              Material(
-                color: c.grayBg,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  side: BorderSide(color: c.cardBorder),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: SwitchListTile.adaptive(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    value: session.externalAiConsent,
-                    onChanged: (v) =>
-                        context.read<SessionCubit>().setExternalAiConsent(v),
-                    title: Text(
-                      AppStrings.t(lang, 'external_ai_consent'),
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      session.externalAiConsent
-                          ? 'Rejim: Gibrid AI + Go Verifier (JSHSHIR/Pasport maskalanadi)'
-                          : 'Rejim: Faqat lokal Go qoidalari (tashqariga matn chiqmaydi)',
-                      style: TextStyle(fontSize: 11, color: c.grayText),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                AppStrings.t(lang, 'demo_samples'),
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: c.brandDeepBlue,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _DemoSampleTile(
-                key: const Key('demo_sample_service'),
-                title: 'B2B Xizmat ko‘rsatish shartnomasi (UZ-Lotin)',
-                subtitle: 'R1–R5 qoidalari · Qizil/Sariq/Kulrang/Yashil + PII',
-                badge: 'DOCX',
-                onTap: () => _runSample('sample_b2b_service'),
-              ),
-              const SizedBox(height: 8),
-              _DemoSampleTile(
-                key: const Key('demo_sample_notarial'),
-                title: 'Bino oldi-sotdi loyihasi (Notarial R6)',
-                subtitle: 'FK 110–112 majburiy notarial tasdiq signali',
-                badge: 'R6',
-                onTap: () => _runSample('sample_notarial_r6'),
-              ),
-              const SizedBox(height: 8),
-              _DemoSampleTile(
-                key: const Key('demo_sample_supply_ru'),
-                title: 'Договор поставки оборудования №19 (RU)',
-                subtitle: 'Ko‘p tilli tahlil + Neytral balans + Mediatsiya',
-                badge: 'PDF · RU',
-                onTap: () => _runSample('sample_supply_ru'),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
@@ -325,35 +348,37 @@ class _LiveProgressCard extends StatelessWidget {
     final c = context.lexColors;
     final steps = [
       (AnalysisStage.reading, '1. Hujjat matni va bandlar ajratilmoqda'),
-      (AnalysisStage.redactingPii, '2. Shaxsiy ma’lumotlar (PII) lokal maskalanmoqda'),
-      (AnalysisStage.checkingRules, '3. Deterministik R1–R6 qoidalar tekshirilmoqda'),
-      (AnalysisStage.verifyingSources, '4. Go Verifier modda va sanalarni tasdiqlamoqda'),
+      (
+        AnalysisStage.redactingPii,
+        '2. Shaxsiy ma’lumotlar (PII) lokal maskalanmoqda',
+      ),
+      (
+        AnalysisStage.checkingRules,
+        '3. Deterministik R1–R6 qoidalar tekshirilmoqda',
+      ),
+      (
+        AnalysisStage.verifyingSources,
+        '4. Go Verifier modda va sanalarni tasdiqlamoqda',
+      ),
     ];
 
-    return Container(
+    return GlassCard(
+      radius: 20,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: c.brandDeepBlue.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: c.brandPrimaryBlue.withValues(alpha: 0.25)),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: c.brandPrimaryBlue,
-                ),
-              ),
+              CupertinoActivityIndicator(color: c.rolePrimary),
               const SizedBox(width: 10),
-              const Text(
+              Text(
                 'Tahlil bajarilmoqda...',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                  color: c.textPrimary,
+                ),
               ),
             ],
           ),
@@ -365,14 +390,14 @@ class _LiveProgressCard extends StatelessWidget {
                 children: [
                   Icon(
                     stage.index > step.$1.index
-                        ? Icons.check_circle_rounded
+                        ? CupertinoIcons.checkmark_circle_fill
                         : stage == step.$1
-                            ? Icons.sync_rounded
-                            : Icons.radio_button_unchecked_rounded,
+                            ? CupertinoIcons.arrow_2_circlepath
+                            : CupertinoIcons.circle,
                     size: 16,
                     color: stage.index >= step.$1.index
-                        ? c.brandPrimaryBlue
-                        : c.grayText,
+                        ? c.rolePrimary
+                        : c.textSecondary,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -383,6 +408,7 @@ class _LiveProgressCard extends StatelessWidget {
                         fontWeight: stage == step.$1
                             ? FontWeight.w700
                             : FontWeight.w500,
+                        color: c.textPrimary,
                       ),
                     ),
                   ),
@@ -395,8 +421,8 @@ class _LiveProgressCard extends StatelessWidget {
   }
 }
 
-class _TypeChip extends StatelessWidget {
-  const _TypeChip({
+class _TypePill extends StatelessWidget {
+  const _TypePill({
     required this.label,
     required this.selected,
     required this.onTap,
@@ -409,14 +435,17 @@ class _TypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
-    return ChoiceChip(
-      label: Text(label, style: const TextStyle(fontSize: 12)),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      selectedColor: c.brandPrimaryBlue.withValues(alpha: 0.14),
-      labelStyle: TextStyle(
-        fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-        color: selected ? c.brandDeepBlue : null,
+    return GlassPill(
+      onTap: onTap,
+      tintColor: selected ? c.rolePrimary : c.grayBg,
+      borderColor: selected ? c.rolePrimary : c.glassBorder,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: selected ? Colors.white : c.textPrimary,
+        ),
       ),
     );
   }
@@ -442,17 +471,19 @@ class _ActionTile extends StatelessWidget {
     final c = context.lexColors;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(18),
       child: Ink(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           gradient: highlighted
-              ? LinearGradient(colors: [c.brandDeepBlue, c.brandPrimaryBlue])
+              ? LinearGradient(
+                  colors: [c.roleGradientStart, c.roleGradientEnd],
+                )
               : null,
           color: highlighted ? null : c.grayBg,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: highlighted ? c.brandPrimaryBlue : c.cardBorder,
+            color: highlighted ? c.rolePrimary : c.glassBorder,
           ),
         ),
         child: Column(
@@ -460,8 +491,8 @@ class _ActionTile extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 26,
-              color: highlighted ? Colors.white : c.brandPrimaryBlue,
+              size: 24,
+              color: highlighted ? Colors.white : c.rolePrimary,
             ),
             const SizedBox(height: 10),
             Text(
@@ -469,7 +500,7 @@ class _ActionTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w700,
-                color: highlighted ? Colors.white : null,
+                color: highlighted ? Colors.white : c.textPrimary,
               ),
             ),
             const SizedBox(height: 2),
@@ -477,7 +508,7 @@ class _ActionTile extends StatelessWidget {
               subtitle,
               style: TextStyle(
                 fontSize: 11,
-                color: highlighted ? Colors.white70 : c.grayText,
+                color: highlighted ? Colors.white70 : c.textSecondary,
               ),
             ),
           ],
@@ -504,55 +535,54 @@ class _DemoSampleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
-    return InkWell(
+    return GlassCard(
+      radius: 16,
+      padding: const EdgeInsets.all(12),
       onTap: onTap,
-      borderRadius: BorderRadius.circular(14),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: c.cardBorder),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                color: c.brandPrimaryBlue.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: BoxDecoration(
+              color: c.rolePrimary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              badge,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                color: c.rolePrimary,
               ),
-              child: Text(
-                badge,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800,
-                  color: c.brandPrimaryBlue,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 11.5, color: c.textSecondary),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 11.5, color: c.grayText),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.play_arrow_rounded, color: c.brandPrimaryBlue),
-          ],
-        ),
+          ),
+          Icon(
+            CupertinoIcons.play_circle_fill,
+            color: c.rolePrimary,
+            size: 22,
+          ),
+        ],
       ),
     );
   }

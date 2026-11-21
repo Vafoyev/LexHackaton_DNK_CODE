@@ -11,6 +11,7 @@ class SessionState extends Equatable {
     this.lang = AppLang.uz,
     this.themeMode = ThemeMode.light,
     this.segment = AccountSegment.business,
+    this.hasSelectedRole = false,
     this.quota = const QuotaState(
       planName: 'Sinov (14 kun)',
       trialDaysRemaining: 14,
@@ -21,7 +22,7 @@ class SessionState extends Equatable {
     ),
     this.organizationName = 'DNK Tech MChJ',
     this.userName = 'Vafoyev Isobek',
-    this.authProviderLabel = 'Demo Sessiya',
+    this.authProviderLabel = 'E-IMZO (Demo · Yuridik)',
     this.flagSecureEnabled = true,
     this.privacyCurtainEnabled = true,
     this.biometricLockEnabled = false,
@@ -32,6 +33,7 @@ class SessionState extends Equatable {
   final AppLang lang;
   final ThemeMode themeMode;
   final AccountSegment segment;
+  final bool hasSelectedRole;
   final QuotaState quota;
   final String organizationName;
   final String userName;
@@ -46,6 +48,7 @@ class SessionState extends Equatable {
     AppLang? lang,
     ThemeMode? themeMode,
     AccountSegment? segment,
+    bool? hasSelectedRole,
     QuotaState? quota,
     String? organizationName,
     String? userName,
@@ -60,6 +63,7 @@ class SessionState extends Equatable {
       lang: lang ?? this.lang,
       themeMode: themeMode ?? this.themeMode,
       segment: segment ?? this.segment,
+      hasSelectedRole: hasSelectedRole ?? this.hasSelectedRole,
       quota: quota ?? this.quota,
       organizationName: organizationName ?? this.organizationName,
       userName: userName ?? this.userName,
@@ -78,6 +82,7 @@ class SessionState extends Equatable {
         lang,
         themeMode,
         segment,
+        hasSelectedRole,
         quota,
         organizationName,
         userName,
@@ -118,15 +123,37 @@ class SessionCubit extends Cubit<SessionState> {
     );
   }
 
+  void enterRole(AccountSegment segment) {
+    emit(
+      state.copyWith(
+        segment: segment,
+        hasSelectedRole: true,
+        organizationName: segment == AccountSegment.business
+            ? 'DNK Tech MChJ'
+            : 'Vafoyev Isobek · Shaxsiy',
+        authProviderLabel: segment == AccountSegment.business
+            ? 'E-IMZO (Mock · Yuridik)'
+            : 'OneID (Mock · Jismoniy)',
+      ),
+    );
+  }
+
   void setSegment(AccountSegment segment) {
     emit(
       state.copyWith(
         segment: segment,
         organizationName: segment == AccountSegment.business
             ? 'DNK Tech MChJ'
-            : 'Jismoniy shaxs (Sinov)',
+            : 'Vafoyev Isobek · Shaxsiy',
+        authProviderLabel: segment == AccountSegment.business
+            ? 'E-IMZO (Mock · Yuridik)'
+            : 'OneID (Mock · Jismoniy)',
       ),
     );
+  }
+
+  void returnToRoleSelect() {
+    emit(state.copyWith(hasSelectedRole: false));
   }
 
   void consumeQuota() {

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lexguard_mobile/app/app.dart';
+import 'package:lexguard_mobile/core/theme/app_theme.dart';
 
 void main() {
   testWidgets(
-      'Soliq-style LexGuard mobile UI renders 4 tabs, Center Scan FAB and runs demo analysis',
+      'Dual-role iOS Glassmorphism UI: Sapphire Individual & Emerald Business + Floating Navbar + Demo Analysis',
       (tester) async {
     tester.view.physicalSize = const Size(412, 892);
     tester.view.devicePixelRatio = 1.0;
@@ -14,19 +15,35 @@ void main() {
     await tester.pumpWidget(const LexGuardApp());
     await tester.pumpAndSettle();
 
-    // Soliq Home structure checks
-    expect(find.text('DNK Tech MChJ'), findsOneWidget);
-    expect(find.text('Tezkor xizmatlar'), findsOneWidget);
-    expect(find.text('Oxirgi tekshiruvlar'), findsOneWidget);
-    expect(find.byKey(const Key('center_scan_fab')), findsOneWidget);
+    // 1. Role Select entry screen renders both roles cleanly
+    expect(find.byKey(const Key('role_card_individual')), findsOneWidget);
+    expect(find.byKey(const Key('role_card_business')), findsOneWidget);
 
-    // 4 Bottom Bar tabs present
+    // 2. Tap Yuridik shaxs -> Executive Emerald (#047857)
+    await tester.tap(find.byKey(const Key('role_card_business')));
+    await tester.pumpAndSettle();
+
+    final ctxBusiness = tester.element(find.text('DNK Tech MChJ'));
+    expect(ctxBusiness.lexColors.rolePrimary, const Color(0xFF047857));
+
+    // iPhone Floating Glass Navbar & 4 tabs
+    expect(find.byKey(const Key('center_scan_fab')), findsOneWidget);
     expect(find.text('Asosiy'), findsOneWidget);
     expect(find.text('Hujjatlar'), findsOneWidget);
     expect(find.text('Qonunlar'), findsOneWidget);
     expect(find.text('Profil'), findsOneWidget);
 
-    // Open Center Scan BottomSheet and launch B2B Service demo
+    // 3. Switch role to Jismoniy shaxs via quick role pill -> Sapphire (#0066FF)
+    await tester.tap(find.byKey(const Key('role_switch_pill')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Jismoniy shaxs (Sapphire Ko‘k)'));
+    await tester.pumpAndSettle();
+
+    final ctxIndividual =
+        tester.element(find.text('Vafoyev Isobek · Shaxsiy'));
+    expect(ctxIndividual.lexColors.rolePrimary, const Color(0xFF0066FF));
+
+    // 4. Open iPhone Floating Glass Scan button & run B2B Service demo
     await tester.tap(find.byKey(const Key('center_scan_fab')));
     await tester.pumpAndSettle();
 
@@ -35,7 +52,7 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
-    // Verify Analysis Detail screen per 3.2 (4 colors + Neutrality, NO fake % score)
+    // 5. Verify Analysis Detail per 3.2 (4 colors + Neutrality, NO fake % score)
     expect(find.textContaining('Taraf balansi'), findsOneWidget);
     expect(find.textContaining('Eng muhim 3 ta muammo'), findsOneWidget);
     expect(find.textContaining('Xavf indeksi:'), findsNothing);

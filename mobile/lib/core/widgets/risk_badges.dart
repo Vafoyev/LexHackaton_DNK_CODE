@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../features/contracts/domain/entities/lex_models.dart';
 import '../theme/app_theme.dart';
@@ -26,28 +26,28 @@ RiskStyle styleForRisk(BuildContext context, RiskColor risk) {
         fg: c.redText,
         bg: c.redBg,
         border: c.redBorder,
-        icon: Icons.gpp_bad_rounded,
+        icon: CupertinoIcons.exclamationmark_shield_fill,
         label: 'Qizil · Qonun xavfi',
       ),
     RiskColor.yellow => RiskStyle(
         fg: c.yellowText,
         bg: c.yellowBg,
         border: c.yellowBorder,
-        icon: Icons.warning_amber_rounded,
+        icon: CupertinoIcons.exclamationmark_triangle_fill,
         label: 'Sariq · Tijoriy risk',
       ),
     RiskColor.gray => RiskStyle(
         fg: c.grayText,
         bg: c.grayBg,
         border: c.grayBorder,
-        icon: Icons.help_outline_rounded,
+        icon: CupertinoIcons.question_circle_fill,
         label: 'Kulrang · Unknown',
       ),
     RiskColor.green => RiskStyle(
         fg: c.greenText,
         bg: c.greenBg,
         border: c.greenBorder,
-        icon: Icons.verified_outlined,
+        icon: CupertinoIcons.checkmark_seal_fill,
         label: 'Yashil · Topilma yo‘q',
       ),
   };
@@ -71,7 +71,7 @@ class RiskColorSummaryRow extends StatelessWidget {
           fg: c.redText,
           bg: c.redBg,
           border: c.redBorder,
-          icon: Icons.gpp_bad_rounded,
+          icon: CupertinoIcons.exclamationmark_shield_fill,
         ),
         _CountPill(
           count: analysis.countByColor(RiskColor.yellow),
@@ -79,7 +79,7 @@ class RiskColorSummaryRow extends StatelessWidget {
           fg: c.yellowText,
           bg: c.yellowBg,
           border: c.yellowBorder,
-          icon: Icons.warning_amber_rounded,
+          icon: CupertinoIcons.exclamationmark_triangle_fill,
         ),
         _CountPill(
           count: analysis.countByColor(RiskColor.gray),
@@ -87,7 +87,7 @@ class RiskColorSummaryRow extends StatelessWidget {
           fg: c.grayText,
           bg: c.grayBg,
           border: c.grayBorder,
-          icon: Icons.help_outline_rounded,
+          icon: CupertinoIcons.question_circle_fill,
         ),
         _CountPill(
           count: analysis.countByColor(RiskColor.green),
@@ -95,7 +95,7 @@ class RiskColorSummaryRow extends StatelessWidget {
           fg: c.greenText,
           bg: c.greenBg,
           border: c.greenBorder,
-          icon: Icons.check_circle_outline_rounded,
+          icon: CupertinoIcons.checkmark_seal_fill,
         ),
       ],
     );
@@ -122,22 +122,22 @@ class _CountPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(999),
         border: Border.all(color: border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: fg),
+          Icon(icon, size: 12, color: fg),
           const SizedBox(width: 4),
           Text(
             '$count $label',
             style: TextStyle(
               color: fg,
-              fontSize: 11.5,
+              fontSize: 11,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -160,25 +160,25 @@ class VerificationBadge extends StatelessWidget {
           'Manba tasdiqlangan',
           c.greenText,
           c.greenBg,
-          Icons.verified_rounded,
+          CupertinoIcons.checkmark_seal_fill,
         ),
       VerificationStatus.unverified => (
           'Tasdiqlanmagan',
           c.yellowText,
           c.yellowBg,
-          Icons.error_outline_rounded,
+          CupertinoIcons.exclamationmark_circle_fill,
         ),
       VerificationStatus.reviewRequired => (
           'Hamkor advokat ko‘rigiga',
           c.grayText,
           c.grayBg,
-          Icons.support_agent_rounded,
+          CupertinoIcons.person_2_fill,
         ),
       VerificationStatus.unknown => (
           'Manba topilmadi (0)',
           c.grayText,
           c.grayBg,
-          Icons.help_outline_rounded,
+          CupertinoIcons.question_circle_fill,
         ),
     };
 
@@ -186,12 +186,12 @@ class VerificationBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: fg),
+          Icon(icon, size: 12, color: fg),
           const SizedBox(width: 4),
           Text(
             label,

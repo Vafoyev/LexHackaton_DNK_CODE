@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/app_shell.dart';
 import '../../features/analysis/presentation/analysis_detail_page.dart';
+import '../../features/auth/presentation/role_select_page.dart';
 import '../../features/documents/presentation/documents_page.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/legal_corpus/presentation/legal_corpus_page.dart';
@@ -9,8 +10,12 @@ import '../../features/profile/presentation/profile_page.dart';
 
 GoRouter createAppRouter() {
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/role-select',
     routes: [
+      GoRoute(
+        path: '/role-select',
+        builder: (_, _) => const RoleSelectPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(navigationShell: navigationShell);
