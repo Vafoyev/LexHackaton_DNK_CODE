@@ -355,10 +355,21 @@ cmd_reset() {
 # ── TESTLAR ──────────────────────────────────────────────────
 cmd_test() {
     require_cmd go "https://go.dev/dl/"
-    cd "${BACKEND_DIR}"
-    step "1/1" "Go Unit testlar va Anti-Gallyutsinatsiya testlari ishga tushirilmoqda..."
-    go test -v -race -count=1 -timeout=120s ./...
-    log "Barcha testlar muvaffaqiyatli o'tdi!"
+    step "1/3" "Go Unit & Anti-Hallucination testlari ishga tushirilmoqda..."
+    (cd "${BACKEND_DIR}" && go test -v -race -count=1 -timeout=120s ./...)
+    log "Go backend testlari muvaffaqiyatli o'tdi!"
+
+    if command -v npm >/dev/null 2>&1 && [ -d "${FRONT_DIR}" ]; then
+        step "2/3" "Web Frontend tahlili va TypeScript tekshiruvi..."
+        (cd "${FRONT_DIR}" && npx tsc --noEmit)
+        log "Web Frontend TypeScript tekshiruvi muvaffaqiyatli o'tdi!"
+    fi
+
+    if command -v flutter >/dev/null 2>&1 && [ -d "${ROOT_DIR}/mobile" ]; then
+        step "3/3" "Flutter Mobile testlari ishga tushirilmoqda..."
+        (cd "${ROOT_DIR}/mobile" && flutter test)
+        log "Flutter mobil testlari muvaffaqiyatli o'tdi!"
+    fi
 }
 
 # ── Asosiy komanda dispatcher ────────────────────────────────

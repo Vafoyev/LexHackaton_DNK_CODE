@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
 	"runtime/debug"
 	"strings"
@@ -50,8 +51,17 @@ func LoggerMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(rw, r)
 		duration := time.Since(start)
 
-		log.Printf("[HTTP] %s %s | status: %d | duration: %v | ip: %s | req_id: %s",
-			r.Method, r.URL.Path, rw.status, duration, r.RemoteAddr, GetRequestID(r))
+		reqID := GetRequestID(r)
+		slog.Info("http_request",
+			slog.String("method", r.Method),
+			slog.String("path", r.URL.Path),
+			slog.Int("status", rw.status),
+			slog.Duration("duration", duration),
+			slog.Float64("duration_ms", float64(duration.Microseconds())/1000.0),
+			slog.String("ip", r.RemoteAddr),
+			slog.String("req_id", reqID),
+			slog.String("user_agent", r.UserAgent()),
+		)
 	})
 }
 
@@ -69,7 +79,15 @@ func RecovererMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if rec := recover(); rec != nil {
-				log.Printf("[PANIC RECOVER] %v\nStack: %s", rec, string(debug.Stack()))
+				reqID := GetRequestID(r)
+				stack := string(debug.Stack())
+				slog.Error("panic_recovered",
+					slog.Any("error", rec),
+					slog.String("stack", stack),
+					slog.String("path", r.URL.Path),
+					slog.String("req_id", reqID),
+				)
+				log.Printf("[PANIC RECOVER] %v\nStack: %s", rec, stack)
 				WriteError(w, r, http.StatusInternalServerError, "INTERNAL_ERROR", "Kutilmagan server xatoligi yuz berdi", fmt.Sprintf("%v", rec))
 			}
 		}()

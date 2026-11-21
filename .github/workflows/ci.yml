@@ -215,12 +215,57 @@ jobs:
           fi
 
   # ════════════════════════════════════════════════════════════
-  #  JOB 4: Docker Multi-Stage Build
+  #  JOB 4: Flutter Mobile — Lint, Test & Web Build (D-10)
+  # ════════════════════════════════════════════════════════════
+  flutter-ci:
+    name: "📱 Flutter Mobile — Lint, Test & Web Build"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: "📥 Kodni yuklab olish"
+        uses: actions/checkout@v4
+
+      - name: "🔧 Java 17 o'rnatish"
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "💙 Flutter SDK o'rnatish"
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: "📦 Bog'liqliklarni yuklash (pub get)"
+        run: flutter pub get
+
+      - name: "🔍 Statik Tahlil (flutter analyze)"
+        run: flutter analyze
+
+      - name: "🧪 Unit & Widget Testlar (flutter test)"
+        run: flutter test
+
+      - name: "🏗️ Flutter Web Release Build"
+        run: flutter build web --release --no-tree-shake-icons
+
+      - name: "📤 Flutter Web build artefakti"
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-web-dist
+          path: mobile/build/web/
+          retention-days: 3
+
+  # ════════════════════════════════════════════════════════════
+  #  JOB 5: Docker Multi-Stage Build
   # ════════════════════════════════════════════════════════════
   docker-build:
     name: "🐳 Docker — Multi-Stage Build"
     runs-on: ubuntu-latest
-    needs: [go-lint-test, web-build]
+    needs: [go-lint-test, web-build, flutter-ci]
     if: ${{ github.event.inputs.skip_docker != 'true' }}
 
     steps:
@@ -417,12 +462,12 @@ jobs:
           category: "trivy-fs-scan"
 
   # ════════════════════════════════════════════════════════════
-  #  JOB 7: CI Summary (barcha joblar tugagach)
+  #  JOB 8: CI Summary (barcha joblar tugagach)
   # ════════════════════════════════════════════════════════════
   ci-summary:
     name: "📋 CI Summary"
     runs-on: ubuntu-latest
-    needs: [go-lint-test, web-build, admin-build, integration]
+    needs: [go-lint-test, web-build, flutter-ci, admin-build, integration]
     if: always()
 
     steps:
@@ -434,6 +479,7 @@ jobs:
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| ⚙️ Go Backend Lint & Test | ${{ needs.go-lint-test.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🌐 Web Frontend Build | ${{ needs.web-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📱 Flutter Mobile Test & Build | ${{ needs.flutter-ci.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🏛️ Admin Portal Build | ${{ needs.admin-build.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🔬 Integration Tests | ${{ needs.integration.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -445,6 +491,7 @@ jobs:
         run: |
           if [[ "${{ needs.go-lint-test.result }}" != "success" ]] || \
              [[ "${{ needs.web-build.result }}" != "success" ]] || \
+             [[ "${{ needs.flutter-ci.result }}" != "success" ]] || \
              [[ "${{ needs.integration.result }}" != "success" ]]; then
             echo "❌ CI MUVAFFAQIYATSIZ — Kamida bitta asosiy job bajarilmadi!"
             exit 1
