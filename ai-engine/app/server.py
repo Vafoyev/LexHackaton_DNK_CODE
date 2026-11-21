@@ -1,5 +1,5 @@
 """
-LexGuard AI — Hybrid Server (Zero-Dependency Standard Library HTTP + FastAPI + Knowledge Graph)
+LexGuard AI — Hybrid Server (Zero-Dependency Standard Library HTTP + FastAPI + Knowledge Graph + gRPC)
 Vazifasi: Go backend va frontend so'rovlariga Lex.uz ning 2,058 ta qonunlari va
 Knowledge Graph multi-hop zanjirlari orqali 100% aniqlik bilan xizmat ko'rsatish.
 Tashqi kutubxonalarsiz (Zero-Dependency) ham, Docker (FastAPI) da ham birdek ishlaydi.
@@ -7,15 +7,21 @@ Tashqi kutubxonalarsiz (Zero-Dependency) ham, Docker (FastAPI) da ham birdek ish
 
 import os
 import sys
+
+# Ensure ai-engine root is in sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import json
+import base64
 import urllib.parse
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from typing import Dict, Any
 
 from app.knowledge_graph import legal_graph
 from app.vector_store import legal_vector_store
+from app.ocr import ocr_processor
 
-PORT = 8000
+PORT = int(os.getenv("HTTP_PORT", "8000"))
 
 class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
     def _set_headers(self, status_code=200, content_type="application/json"):
@@ -153,29 +159,74 @@ class LexGuardHTTPRequestHandler(BaseHTTPRequestHandler):
 
         elif path == "/api/v1/self-correct":
             clause_text = req_data.get("clause_text", "")
-            eval_res = legal_graph.evaluate_clause_text(clause_text)
-            if eval_res and eval_res.get("found"):
-                resp = {
-                    "resolved": True,
-                    "corrected_article": eval_res.get("root_article"),
-                    "explanation": eval_res.get("combined_explanation"),
-                    "suggested_redline": eval_res.get("suggested_redline")
-                }
-            else:
-                hits = legal_vector_store.search(clause_text, top_k=1)
-                if hits:
-                    hit = hits[0]
-                    resp = {
+            candidates = req_data.get("candidate_articles", [])
+
+            # 1. Candidate moddalar tekshiruvi
+            resolved_finding = None
+            for cand in candidates:
+                res = legal_graph.resolve_chain(cand)
+                if res.get("found"):
+                    resolved_finding = {
                         "resolved": True,
-                        "corrected_article": f"{hit['source_code']} {hit['article_number']}",
-                        "explanation": f"Leksik tahlil asosida muqobil norma topildi: {hit['title']}. {hit['snippet']}",
-                        "suggested_redline": "Band matnini ushbu norma talablariga moslashtirish tavsiya etiladi."
+                        "corrected_article": res.get("root_article", cand),
+                        "explanation": f"Nomzod zanjiri bo'yicha tuzatildi: {res.get('combined_explanation')}",
+                        "suggested_redline": res.get("suggested_redline")
+                    }
+                    break
+
+            if not resolved_finding:
+                eval_res = legal_graph.evaluate_clause_text(clause_text)
+                if eval_res and eval_res.get("found"):
+                    resolved_finding = {
+                        "resolved": True,
+                        "corrected_article": eval_res.get("root_article"),
+                        "explanation": eval_res.get("combined_explanation"),
+                        "suggested_redline": eval_res.get("suggested_redline")
                     }
                 else:
-                    resp = {
-                        "resolved": False,
-                        "message": "Bog'langan qonun topilmadi, huquqshunos ko'rigi talab etiladi."
-                    }
+                    hits = legal_vector_store.search(clause_text, top_k=1)
+                    if hits:
+                        hit = hits[0]
+                        resolved_finding = {
+                            "resolved": True,
+                            "corrected_article": f"{hit['source_code']} {hit['article_number']}",
+                            "explanation": f"Leksik tahlil asosida muqobil norma topildi: {hit['title']}. {hit['snippet']}",
+                            "suggested_redline": "Band matnini ushbu norma talablariga moslashtirish tavsiya etiladi."
+                        }
+                    else:
+                        resolved_finding = {
+                            "resolved": False,
+                            "message": "Bog'langan qonun topilmadi, huquqshunos ko'rigi talab etiladi."
+                        }
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps(resolved_finding, ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/ocr":
+            # Handles text or base64 file
+            file_base64 = req_data.get("file_base64", "")
+            mime_type = req_data.get("mime_type", "application/pdf")
+            if file_base64:
+                file_bytes = base64.b64decode(file_base64)
+            else:
+                raw_text = req_data.get("raw_text", "")
+                file_bytes = raw_text.encode("utf-8")
+                mime_type = "text/plain"
+
+            res = ocr_processor.process_document(file_bytes, mime_type)
+            self._set_headers(200)
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode("utf-8"))
+            return
+
+        elif path == "/api/v1/voice-brief":
+            top_risks = req_data.get("top_risks", [])
+            script = f"Assalomu alaykum! LexGuard AI tahlil xulosasi tayyor. Shartnomada jami {len(top_risks)} ta huquqiy xavf aniqlandi."
+            resp = {
+                "audio_script_uz": script,
+                "ssml": f"<speak><prosody rate=\"medium\"><s>{script}</s></prosody></speak>",
+                "duration_sec": max(8, len(script.split()) * 60 // 130)
+            }
             self._set_headers(200)
             self.wfile.write(json.dumps(resp, ensure_ascii=False).encode("utf-8"))
             return
