@@ -140,8 +140,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2048M
-          cpus: "2.0"
+          memory: 1024M
+          cpus: "1.0"
 
   # ──────────────────────────────────────────────
   #  5. Go Backend — Modular Monolith
