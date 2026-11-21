@@ -166,7 +166,7 @@ services:
       dockerfile: ../deploy/Dockerfile.backend
       target: production
       args:
-        GO_VERSION: "1.23"
+        GO_VERSION: "1.24"
         APP_VERSION: "${APP_VERSION:-1.0.0}"
     image: lexguard/backend:${APP_VERSION:-latest}
     container_name: lexguard_backend
