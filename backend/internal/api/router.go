@@ -1,20 +1,29 @@
 package api
 
 import (
+	_ "embed"
 	"context"
+	"crypto/subtle"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"log/slog"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/lexguard/backend/internal/admin"
+	"github.com/lexguard/backend/internal/ai"
 	"github.com/lexguard/backend/internal/analysis"
 	"github.com/lexguard/backend/internal/audit"
 	"github.com/lexguard/backend/internal/billing"
@@ -27,6 +36,9 @@ import (
 	"github.com/lexguard/backend/internal/rules"
 	"github.com/lexguard/backend/internal/signing"
 )
+
+// lawSourceRe: korpus manba kodlari (FK-UZ-1, MK-2022, 670-I, ORQ-547 ...).
+var lawSourceRe = regexp.MustCompile(`^[A-Za-z0-9-]{1,16}$`)
 
 type RouterServices struct {
 	DB          *pgxpool.Pool
@@ -43,6 +55,7 @@ type RouterServices struct {
 	AuditSvc    *audit.Service
 	AdminSvc    *admin.Service
 	Redactor    *privacy.Redactor
+	AIEngine    *ai.EngineClient
 }
 
 func BuildRouter(s *RouterServices) http.Handler {
@@ -52,7 +65,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 	r.Use(platform.RequestIDMiddleware)
 	r.Use(platform.LoggerMiddleware)
 	r.Use(platform.RecovererMiddleware)
-	r.Use(platform.CORSMiddleware)
+	r.Use(platform.CORSMiddleware(s.Config.CORSOrigins, !s.Config.IsProduction()))
 	r.Use(platform.BodyLimitMiddleware(15 * 1024 * 1024)) // 15MB max
 
 	// System Endpoints (No Auth)
@@ -68,7 +81,8 @@ func BuildRouter(s *RouterServices) http.Handler {
 		ctx, cancel := context.WithTimeout(req.Context(), 2*time.Second)
 		defer cancel()
 		if err := s.DB.Ping(ctx); err != nil {
-			platform.WriteError(w, req, http.StatusServiceUnavailable, "DB_UNAVAILABLE", "Baza bilan aloqa yo'q", err.Error())
+			slog.Warn("readyz_db_ping_failed", slog.String("error", err.Error()))
+			platform.WriteError(w, req, http.StatusServiceUnavailable, "DB_UNAVAILABLE", "Baza bilan aloqa yo'q", nil)
 			return
 		}
 		platform.WriteJSON(w, req, http.StatusOK, map[string]interface{}{
@@ -79,7 +93,12 @@ func BuildRouter(s *RouterServices) http.Handler {
 		})
 	})
 
+	// /metrics: METRICS_TOKEN bo'lsa Bearer talab qilinadi; bo'lmasa faqat lokal (to'g'ridan-to'g'ri loopback) so'rovlarga ochiq.
 	r.Get("/metrics", func(w http.ResponseWriter, req *http.Request) {
+		if !metricsAllowed(s.Config.MetricsToken, req) {
+			platform.WriteError(w, req, http.StatusForbidden, "FORBIDDEN", "Ruxsat yo'q", nil)
+			return
+		}
 		w.Header().Set("Content-Type", "text/plain")
 		fmt.Fprintf(w, "# HELP lexguard_requests_total Total number of HTTP requests\n")
 		fmt.Fprintf(w, "lexguard_requests_total{status=\"200\"} 1\n")
@@ -104,7 +123,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 		api.Get("/integrations/status", func(w http.ResponseWriter, req *http.Request) {
 			rows, err := s.DB.Query(req.Context(), `SELECT name, mode, is_healthy, last_checked_at FROM integrations`)
 			if err != nil {
-				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
+				platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil) // 500: matn mijozga chiqmaydi (WriteError)
 				return
 			}
 			defer rows.Close()
@@ -126,8 +145,8 @@ func BuildRouter(s *RouterServices) http.Handler {
 			platform.WriteJSON(w, req, http.StatusOK, list)
 		})
 
-		// Monitoring (System-wide health & risk metrics)
-		api.Get("/monitoring", func(w http.ResponseWriter, req *http.Request) {
+		// Monitoring (tizim bo'yicha ko'rsatkichlar): faqat admin/reviewer roli
+		api.With(platform.AuthMiddleware(s.JWTManager), platform.RequireRole("lawyer_reviewer", "admin")).Get("/monitoring", func(w http.ResponseWriter, req *http.Request) {
 			ov, err := s.AdminSvc.GetOverview(req.Context())
 			if err != nil {
 				platform.WriteError(w, req, http.StatusInternalServerError, "OVERVIEW_ERROR", err.Error(), nil)
@@ -138,6 +157,51 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 		// Public Rules & Legal Sources
 		api.HandleFunc("/ws/voice", HandleVoiceWebSocket(s.AnalysisSvc))
+
+		// O'zgargan normalar (Lex.uz tahrir izohlari asosida). Ommaviy: shaxsiy ma'lumot yo'q.
+		api.Get("/laws/changes", func(w http.ResponseWriter, req *http.Request) {
+			q := req.URL.Query()
+			out := url.Values{}
+			limit := 10
+			if v := q.Get("limit"); v != "" {
+				n, err := strconv.Atoi(v)
+				if err != nil || n < 1 || n > 50 {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "limit 1 dan 50 gacha bo'lishi kerak", nil)
+					return
+				}
+				limit = n
+			}
+			out.Set("limit", strconv.Itoa(limit))
+			if v := q.Get("source"); v != "" {
+				if !lawSourceRe.MatchString(v) {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "source noto'g'ri", nil)
+					return
+				}
+				out.Set("source", v)
+			}
+			if v := q.Get("since"); v != "" {
+				if _, err := time.Parse("2006-01-02", v); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "since YYYY-MM-DD formatida bo'lishi kerak", nil)
+					return
+				}
+				out.Set("since", v)
+			}
+			if q.Get("only_used") == "true" {
+				out.Set("only_used", "true")
+			}
+			if s.AIEngine == nil {
+				platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "AI xizmati sozlanmagan", nil)
+				return
+			}
+			report, err := s.AIEngine.LawChanges(req.Context(), out)
+			if err != nil {
+				slog.Warn("law_changes_failed", slog.String("error", err.Error()), slog.String("req_id", platform.GetRequestID(req)))
+				platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "O'zgargan normalar vaqtincha mavjud emas", nil)
+				return
+			}
+			w.Header().Set("Cache-Control", "public, max-age=3600")
+			platform.WriteJSON(w, req, http.StatusOK, report)
+		})
 
 		api.Get("/rules", func(w http.ResponseWriter, req *http.Request) {
 			activeRules := s.RulesEngine.GetActiveRules()
@@ -171,77 +235,14 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 		// Mock sample analysis for Frontend & Mobile teams (CONTRACTS.md section 6)
 		api.Get("/mock/analysis-sample", func(w http.ResponseWriter, req *http.Request) {
-			sample := map[string]interface{}{
-				"id": "01934f2a-7b3c-7000-8000-000000000200",
-				"document": map[string]interface{}{
-					"id":            "01934f2a-7b3c-7000-8000-000000000100",
-					"filename":      "IT_Xizmat_Shartnomasi.docx",
-					"sha256":        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-					"contract_date": "2026-05-15",
-					"document_type": "B2B_SERVICE",
-				},
-				"summary": map[string]interface{}{
-					"total_clauses": 18,
-					"red_count":     2,
-					"yellow_count":  4,
-					"green_count":   11,
-					"gray_count":    1,
-					"balance_label": "Buyurtmachiga og'ir",
-					"top_risks": []string{
-						"Buyurtmachi shartnomani 0 kunlik ogohlantirishsiz bekor qilishi mumkin (FK 707)",
-						"Ijrochi zimmasiga cheksiz moddiy javobgarlik yuklangan (FK 324)",
-						"Qabul qilish dalolatnomasi bo'yicha e'tiroz muddati belgilanmagan",
-					},
-				},
-				"findings": []map[string]interface{}{
-					{
-						"id":                  "01934f2a-7b3c-7000-8000-000000000301",
-						"clause_number":       "7.3",
-						"original_quote":      "Buyurtmachi istalgan vaqtda Ijrochini oldindan ogohlantirmasdan va sarflangan xarajatlarni qoplamasdan shartnomani bir tomonlama bekor qilish huquqiga ega.",
-						"risk_level":          "RED",
-						"category":            "LEGAL",
-						"verification_status": "VERIFIED",
-						"rule_id":             "SVC_UNILATERAL_TERMINATION",
-						"issue_title":         "Asossiz bir tomonlama bekor qilish huquqi",
-						"issue_explanation":   "O‘zbekiston Respublikasi Fuqarolik Kodeksining 707-moddasiga ko‘ra, xizmat ko‘rsatish shartnomasidan bir tomonlama voz kechilganda, Buyurtmachi Ijrochiga u qilgan haqiqiy xarajatlarni to‘lashi shart.",
-						"legal_basis": map[string]interface{}{
-							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
-							"article":        "707-modda (Haq evaziga xizmat ko‘rsatish shartnomasini bajarishdan bosh tortish)",
-							"lex_uz_url":     "https://lex.uz/docs/111181#111905",
-							"norm_nature":    "IMPERATIVE",
-							"effective_from": "1997-03-01",
-						},
-						"suggested_redline": "Buyurtmachi shartnomani bekor qilishdan kamida 15 kun oldin Ijrochini yozma xabardor qiladi hamda Ijrochi tomonidan amalda bajarilgan xizmatlar haqini va asoslangan xarajatlarini to‘liq qoplaydi.",
-						"redline_reasoning": "Ijrochining kutilmagan moliyaviy yo'qotishlarini oldini oladi va FK 707-moddasiga to'liq mos keladi.",
-					},
-					{
-						"id":                  "01934f2a-7b3c-7000-8000-000000000302",
-						"clause_number":       "9.1",
-						"original_quote":      "Ijrochi har bir kechiktirilgan kun uchun shartnoma umumiy summasining 1% miqdorida penya to'laydi.",
-						"risk_level":          "YELLOW",
-						"category":            "COMMERCIAL",
-						"verification_status": "VERIFIED",
-						"rule_id":             "SVC_PENALTY_FORM_RISK",
-						"issue_title":         "Nomutanosib yuqori penya miqdori",
-						"issue_explanation":   "Bozor amaliyotida penya sutkasiga 0.1% - 0.2% dan oshmasligi tavsiya etiladi. Shuningdek, FK 326-moddasi asossiz yuqori neustoykani sud orqali kamaytirish huquqini beradi.",
-						"legal_basis": map[string]interface{}{
-							"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
-							"article":        "326-modda (Neustoykani kamaytirish)",
-							"lex_uz_url":     "https://lex.uz/docs/111181#111520",
-							"norm_nature":    "DISPOSITIVE",
-							"effective_from": "1997-03-01",
-						},
-						"suggested_redline": "Ijrochi har bir kechiktirilgan kun uchun bajarilmagan majburiyat summasining 0.1% miqdorida, lekin umumiy shartnoma summasining 10% idan oshmagan miqdorda penya to'laydi.",
-						"redline_reasoning": "Tijoriy xavfni cheklaydi va ikki tomonlama adolatli limit o'rnatadi.",
-					},
-				},
-				"disclaimer": "Axborot-tahliliy xulosa. Rasmiy yuridik maslahat emas (O'RQ-1115).",
-			}
+			sample := getSampleAnalysisMap()
 			platform.WriteJSON(w, req, http.StatusOK, sample)
 		})
 
 		// ---------------- AUTH ROUTES (Public) ----------------
 		api.Route("/auth", func(auth chi.Router) {
+			// Brute-force / spamga qarshi: IP bo'yicha daqiqasiga 20 ta so'rov
+			auth.Use(platform.RateLimitByIP(platform.NewRateLimiter(20, time.Minute)))
 			auth.Post("/register", func(w http.ResponseWriter, req *http.Request) {
 				var body struct {
 					Email      string `json:"email"`
@@ -250,17 +251,27 @@ func BuildRouter(s *RouterServices) http.Handler {
 					OrgName    string `json:"org_name"`
 					Phone      string `json:"phone"`
 					ClientType string `json:"client_type"`
+					// Rozilik: ma'lumotlarni qayta ishlash majburiy, tashqi AI ixtiyoriy
+					DataProcessingConsent bool `json:"data_processing_consent"`
+					ExternalAIConsent     bool `json:"external_ai_consent"`
 				}
-				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
+				if err := json.NewDecoder(io.LimitReader(req.Body, 1<<20)).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
 					return
 				}
-				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType)
+				res, err := s.IdentitySvc.Register(req.Context(), body.Email, body.Password, body.FullName, body.OrgName, body.Phone, body.ClientType, body.DataProcessingConsent, body.ExternalAIConsent)
 				if err != nil {
-					platform.WriteError(w, req, http.StatusBadRequest, "REGISTRATION_FAILED", err.Error(), nil)
+					switch {
+					case errors.Is(err, identity.ErrInvalidInput):
+						platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", err.Error(), nil)
+					case errors.Is(err, identity.ErrAccountExists):
+						platform.WriteError(w, req, http.StatusConflict, "REGISTRATION_FAILED", "Ro'yxatdan o'tib bo'lmadi: bu ma'lumotlar bilan hisob mavjud bo'lishi mumkin", nil)
+					default:
+						platform.WriteError(w, req, http.StatusInternalServerError, "REGISTRATION_ERROR", err.Error(), nil)
+					}
 					return
 				}
-				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_REGISTER", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_REGISTER", "USER", res.User.ID, platform.ClientIP(req), req.UserAgent(), nil)
 				platform.WriteJSON(w, req, http.StatusCreated, res)
 			})
 
@@ -274,16 +285,30 @@ func BuildRouter(s *RouterServices) http.Handler {
 					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", err.Error())
 					return
 				}
-				res, err := s.IdentitySvc.Login(req.Context(), body.Email, body.Password, body.ClientType, req.UserAgent(), req.RemoteAddr)
+				res, err := s.IdentitySvc.Login(req.Context(), body.Email, body.Password, body.ClientType, req.UserAgent(), platform.ClientIP(req))
 				if err != nil {
-					platform.WriteError(w, req, http.StatusUnauthorized, "LOGIN_FAILED", err.Error(), nil)
+					if errors.Is(err, identity.ErrBadCredentials) {
+						platform.WriteError(w, req, http.StatusUnauthorized, "LOGIN_FAILED", "Email yoki parol noto'g'ri", nil)
+					} else {
+						platform.WriteError(w, req, http.StatusInternalServerError, "LOGIN_ERROR", err.Error(), nil)
+					}
 					return
 				}
-				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), nil)
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "USER_LOGIN", "USER", res.User.ID, platform.ClientIP(req), req.UserAgent(), nil)
 				platform.WriteJSON(w, req, http.StatusOK, res)
 			})
 
-			auth.Post("/demo-session", func(w http.ResponseWriter, req *http.Request) {
+			demoOnly := func(next http.HandlerFunc) http.HandlerFunc {
+				return func(w http.ResponseWriter, req *http.Request) {
+					if !s.Config.AllowDemoLogin {
+						platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", "Mavjud emas", nil)
+						return
+					}
+					next(w, req)
+				}
+			}
+
+			auth.Post("/demo-session", demoOnly(func(w http.ResponseWriter, req *http.Request) {
 				var body struct {
 					Role       string `json:"role"` // lawyer | client
 					ClientType string `json:"client_type"`
@@ -297,9 +322,9 @@ func BuildRouter(s *RouterServices) http.Handler {
 					platform.WriteError(w, req, http.StatusInternalServerError, "DEMO_SESSION_ERROR", err.Error(), nil)
 					return
 				}
-				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "DEMO_LOGIN", "USER", res.User.ID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{"role": body.Role})
+				s.AuditSvc.Log(req.Context(), res.User.OrganizationID, res.User.ID, "DEMO_LOGIN", "USER", res.User.ID, platform.ClientIP(req), req.UserAgent(), map[string]interface{}{"role": body.Role})
 				platform.WriteJSON(w, req, http.StatusOK, res)
-			})
+			}))
 
 			auth.Post("/refresh", func(w http.ResponseWriter, req *http.Request) {
 				var body struct {
@@ -330,7 +355,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 			})
 
 			// OneID Mock Endpoints
-			auth.Get("/oneid/authorize", func(w http.ResponseWriter, req *http.Request) {
+			auth.Get("/oneid/authorize", demoOnly(func(w http.ResponseWriter, req *http.Request) {
 				callbackURL := req.URL.Query().Get("callback")
 				if callbackURL == "" {
 					callbackURL = "http://localhost:8080/api/v1/auth/oneid/callback"
@@ -341,9 +366,9 @@ func BuildRouter(s *RouterServices) http.Handler {
 					"authorization_url": fmt.Sprintf("%s?code=%s&state=mock_state", callbackURL, code),
 					"message":           "VM-679 OneID Sandbox Mock rejimida",
 				})
-			})
+			}))
 
-			auth.Get("/oneid/callback", func(w http.ResponseWriter, req *http.Request) {
+			auth.Get("/oneid/callback", demoOnly(func(w http.ResponseWriter, req *http.Request) {
 				code := req.URL.Query().Get("code")
 				if code == "" {
 					code = "mock_code"
@@ -354,7 +379,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 				platform.WriteJSON(w, req, http.StatusOK, res)
-			})
+			}))
 		})
 
 		// ---------------- PROTECTED ROUTES ----------------
@@ -385,7 +410,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 				}
 				userID := platform.GetUserID(req.Context())
 				orgID := platform.GetOrgID(req.Context())
-				err := s.IdentitySvc.RecordConsent(req.Context(), userID, orgID, body.ConsentType, body.Granted, req.RemoteAddr)
+				err := s.IdentitySvc.RecordConsent(req.Context(), userID, orgID, body.ConsentType, body.Granted, platform.ClientIP(req))
 				if err != nil {
 					platform.WriteError(w, req, http.StatusInternalServerError, "DB_ERROR", err.Error(), nil)
 					return
@@ -405,6 +430,108 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 				platform.WriteJSON(w, req, http.StatusOK, q)
+			})
+
+			// ---------------- AI CHAT (matn va ovozli rejim uchun) ----------------
+			aiLimit := platform.RateLimitByUser(platform.NewRateLimiter(30, time.Minute))
+			pr.With(aiLimit).Post("/ai/chat", func(w http.ResponseWriter, req *http.Request) {
+				req.Body = http.MaxBytesReader(w, req.Body, 32*1024)
+				var body struct {
+					Message string `json:"message"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
+					return
+				}
+				msg := strings.TrimSpace(body.Message)
+				if msg == "" {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "message bo'sh bo'lmasligi kerak", nil)
+					return
+				}
+				if utf8.RuneCountInString(msg) > 2000 {
+					platform.WriteError(w, req, http.StatusRequestEntityTooLarge, "MESSAGE_TOO_LONG", "Xabar 2000 belgidan oshmasligi kerak", nil)
+					return
+				}
+				if s.AIEngine == nil {
+					platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "AI xizmati sozlanmagan", nil)
+					return
+				}
+				// Xabar mazmuni (shartnoma bandi bo'lishi mumkin) logga yozilmaydi.
+				res, err := s.AIEngine.Chat(req.Context(), msg)
+				if err != nil {
+					slog.Warn("ai_chat_failed", slog.String("error", err.Error()), slog.String("req_id", platform.GetRequestID(req)))
+					platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "AI xizmati vaqtincha mavjud emas, birozdan so'ng urinib ko'ring", nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, res)
+			})
+
+			// ---------------- TOMONLAR BALANSI (band matnlari bo'yicha, hujjat ID siz ham ishlaydi) ----------------
+			pr.With(aiLimit).Post("/ai/balance", func(w http.ResponseWriter, req *http.Request) {
+				const maxClauses, maxClauseRunes, maxTotalRunes = 300, 5000, 200000
+				req.Body = http.MaxBytesReader(w, req.Body, 1<<20)
+				var body struct {
+					DocumentType string `json:"document_type"`
+					PartyRole    string `json:"party_role"`
+					Clauses      []struct {
+						ClauseNumber string `json:"clause_number"`
+						Text         string `json:"text"`
+					} `json:"clauses"`
+				}
+				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON yoki hajm 1MB dan oshdi", nil)
+					return
+				}
+				switch strings.ToUpper(body.PartyRole) {
+				case "", "EXECUTOR", "CUSTOMER", "NEUTRAL":
+				default:
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "party_role: EXECUTOR, CUSTOMER yoki NEUTRAL bo'lishi kerak", nil)
+					return
+				}
+				if len(body.DocumentType) > 64 {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "document_type juda uzun", nil)
+					return
+				}
+				if len(body.Clauses) == 0 {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Kamida bitta band kerak", nil)
+					return
+				}
+				if len(body.Clauses) > maxClauses {
+					platform.WriteError(w, req, http.StatusRequestEntityTooLarge, "TOO_MANY_CLAUSES", "Bandlar soni 300 dan oshmasligi kerak", nil)
+					return
+				}
+				engineReq := ai.BalanceRequest{DocumentType: body.DocumentType, PartyRole: strings.ToUpper(body.PartyRole)}
+				total := 0
+				for i, c := range body.Clauses {
+					n := utf8.RuneCountInString(c.Text)
+					total += n
+					if n > maxClauseRunes || total > maxTotalRunes {
+						platform.WriteError(w, req, http.StatusRequestEntityTooLarge, "TEXT_TOO_LONG", "Band yoki umumiy matn hajmi chegaradan oshdi", nil)
+						return
+					}
+					if strings.TrimSpace(c.Text) == "" {
+						continue
+					}
+					engineReq.Clauses = append(engineReq.Clauses, ai.BalanceClause{
+						ClauseID: strconv.Itoa(i + 1), ClauseNumber: c.ClauseNumber, Text: c.Text,
+					})
+				}
+				if len(engineReq.Clauses) == 0 {
+					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Bandlar matni bo'sh", nil)
+					return
+				}
+				if s.AIEngine == nil {
+					platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "AI xizmati sozlanmagan", nil)
+					return
+				}
+				// Shartnoma matni logga yozilmaydi.
+				report, err := s.AIEngine.Balance(req.Context(), engineReq)
+				if err != nil {
+					slog.Warn("ai_balance_failed", slog.String("error", err.Error()), slog.String("req_id", platform.GetRequestID(req)))
+					platform.WriteError(w, req, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "Balans tahlili vaqtincha mavjud emas, birozdan so'ng urinib ko'ring", nil)
+					return
+				}
+				platform.WriteJSON(w, req, http.StatusOK, report)
 			})
 
 			// ---------------- DOCUMENTS & CONTRACTS ----------------
@@ -502,7 +629,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 
-				s.AuditSvc.Log(req.Context(), orgID, userID, "DOCUMENT_UPLOAD", "DOCUMENT", docID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
+				s.AuditSvc.Log(req.Context(), orgID, userID, "DOCUMENT_UPLOAD", "DOCUMENT", docID, platform.ClientIP(req), req.UserAgent(), map[string]interface{}{
 					"filename": filename,
 					"sha256":   shaHex,
 					"clauses":  len(clauses),
@@ -544,7 +671,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 					platform.WriteError(w, req, http.StatusNotFound, "NOT_FOUND", err.Error(), nil)
 					return
 				}
-				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "DOCUMENT_DELETE", "DOCUMENT", id, req.RemoteAddr, req.UserAgent(), nil)
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "DOCUMENT_DELETE", "DOCUMENT", id, platform.ClientIP(req), req.UserAgent(), nil)
 				platform.WriteJSON(w, req, http.StatusOK, map[string]bool{"deleted": true})
 			}
 
@@ -563,19 +690,29 @@ func BuildRouter(s *RouterServices) http.Handler {
 			handleCreateAnalysis := func(w http.ResponseWriter, req *http.Request) {
 				orgID := platform.GetOrgID(req.Context())
 				var body struct {
-					DocumentID    string `json:"document_id"`
-					ContractID    string `json:"contract_id"` // alias
-					ContractDate  string `json:"contract_date"`
-					DocType       string `json:"doc_type"`
-					ExecutionMode string `json:"execution_mode"`
+					DocumentID        string `json:"document_id"`
+					ContractID        string `json:"contract_id"` // alias
+					DocumentVersionID string `json:"document_version_id"` // mobile alias
+					SampleID          string `json:"sample_id"` // demo alias
+					ContractDate      string `json:"contract_date"`
+					DocType           string `json:"doc_type"`
+					ExecutionMode     string `json:"execution_mode"`
 				}
 				if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
 					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "Noto'g'ri JSON", nil)
 					return
 				}
+				if body.SampleID != "" {
+					sample := getSampleAnalysisMap()
+					platform.WriteJSON(w, req, http.StatusOK, sample)
+					return
+				}
 				docID := body.DocumentID
 				if docID == "" {
 					docID = body.ContractID
+				}
+				if docID == "" {
+					docID = body.DocumentVersionID
 				}
 				if docID == "" {
 					platform.WriteError(w, req, http.StatusBadRequest, "VALIDATION_ERROR", "document_id yoki contract_id talab qilinadi", nil)
@@ -588,7 +725,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 					return
 				}
 
-				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "ANALYSIS_TRIGGERED", "ANALYSIS", analysisID, req.RemoteAddr, req.UserAgent(), map[string]interface{}{
+				s.AuditSvc.Log(req.Context(), orgID, platform.GetUserID(req.Context()), "ANALYSIS_TRIGGERED", "ANALYSIS", analysisID, platform.ClientIP(req), req.UserAgent(), map[string]interface{}{
 					"document_id": docID,
 					"doc_type":    body.DocType,
 				})
@@ -626,10 +763,12 @@ func BuildRouter(s *RouterServices) http.Handler {
 			pr.Post("/analyses", handleCreateAnalysis)
 			pr.Get("/analyses", handleListAnalyses)
 			pr.Get("/analyses/{id}", handleGetAnalysis)
+			pr.Delete("/analyses/{id}", handleDocumentDelete)
 
 			pr.Post("/analysis", handleCreateAnalysis)
 			pr.Get("/analysis", handleListAnalyses)
 			pr.Get("/analysis/{id}", handleGetAnalysis)
+			pr.Delete("/analysis/{id}", handleDocumentDelete)
 
 			// SSE Real-Time Events
 			pr.Get("/analyses/{id}/events", func(w http.ResponseWriter, req *http.Request) {
@@ -910,7 +1049,7 @@ func BuildRouter(s *RouterServices) http.Handler {
 
 			// ---------------- ADMIN ROUTES ----------------
 			pr.Route("/admin", func(adm chi.Router) {
-				adm.Use(platform.RequireRole("lawyer_reviewer", "admin", "owner", "platform_admin"))
+				adm.Use(platform.RequireRole("lawyer_reviewer", "admin"))
 
 				adm.Get("/overview", func(w http.ResponseWriter, req *http.Request) {
 					ov, err := s.AdminSvc.GetOverview(req.Context())
@@ -952,7 +1091,8 @@ func BuildRouter(s *RouterServices) http.Handler {
 					})
 				})
 
-				adm.Patch("/organizations/{id}/quota", func(w http.ResponseWriter, req *http.Request) {
+				// Tashkilot kvotasi: faqat platform_admin (RequireRole() ro'yxatsiz — faqat platform_admin o'tadi)
+				adm.With(platform.RequireRole()).Patch("/organizations/{id}/quota", func(w http.ResponseWriter, req *http.Request) {
 					targetOrgID := chi.URLParam(req, "id")
 					var body struct {
 						AnalysesLimit int `json:"analyses_limit"`
@@ -1135,6 +1275,9 @@ const backendSwaggerUIHTML = `<!DOCTYPE html>
 </body>
 </html>`
 
+//go:embed openapi.yaml
+var embeddedOpenAPIYAML []byte
+
 func serveSwaggerUIDocs(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -1142,6 +1285,14 @@ func serveSwaggerUIDocs(w http.ResponseWriter, req *http.Request) {
 }
 
 func serveOpenAPIYAML(w http.ResponseWriter, req *http.Request) {
+	if len(embeddedOpenAPIYAML) > 0 {
+		w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(embeddedOpenAPIYAML)
+		return
+	}
+
 	candidates := []string{
 		"api/openapi.yaml",
 		"backend/api/openapi.yaml",
@@ -1167,4 +1318,104 @@ func serveOpenAPIYAML(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(data)
+}
+
+func getSampleAnalysisMap() map[string]interface{} {
+	return map[string]interface{}{
+		"id":          "01934f2a-7b3c-7000-8000-000000000200",
+		"analysis_id": "01934f2a-7b3c-7000-8000-000000000200",
+		"filename":    "IT_Xizmat_Shartnomasi.docx",
+		"title":       "IT Autsorsing va Dasturiy Ta'minot Shartnomasi",
+		"document": map[string]interface{}{
+			"id":            "01934f2a-7b3c-7000-8000-000000000100",
+			"filename":      "IT_Xizmat_Shartnomasi.docx",
+			"sha256":        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+			"contract_date": "2026-05-15",
+			"document_type": "B2B_SERVICE",
+		},
+		"summary": map[string]interface{}{
+			"total_clauses": 18,
+			"red_count":     2,
+			"yellow_count":  4,
+			"green_count":   11,
+			"gray_count":    1,
+			"balance_label": "Buyurtmachiga og'ir",
+			"top_risks": []string{
+				"Buyurtmachi shartnomani 0 kunlik ogohlantirishsiz bekor qilishi mumkin (FK 707)",
+				"Ijrochi zimmasiga cheksiz moddiy javobgarlik yuklangan (FK 324)",
+				"Qabul qilish dalolatnomasi bo'yicha e'tiroz muddati belgilanmagan",
+			},
+		},
+		"findings": []map[string]interface{}{
+			{
+				"id":                  "01934f2a-7b3c-7000-8000-000000000301",
+				"clause_number":       "7.3",
+				"original_quote":      "Buyurtmachi istalgan vaqtda Ijrochini oldindan ogohlantirmasdan va sarflangan xarajatlarni qoplamasdan shartnomani bir tomonlama bekor qilish huquqiga ega.",
+				"risk_level":          "RED",
+				"severity":            "RED",
+				"category":            "LEGAL",
+				"risk_category":       "LEGAL",
+				"verification_status": "VERIFIED",
+				"rule_id":             "SVC_UNILATERAL_TERMINATION",
+				"rule_code":           "SVC_UNILATERAL_TERMINATION",
+				"issue_title":         "Asossiz bir tomonlama bekor qilish huquqi",
+				"title":               "Asossiz bir tomonlama bekor qilish huquqi",
+				"explanation":         "O‘zbekiston Respublikasi Fuqarolik Kodeksining 707-moddasiga ko‘ra, xizmat ko‘rsatish shartnomasidan bir tomonlama voz kechilganda, Buyurtmachi Ijrochiga u qilgan haqiqiy xarajatlarni to‘lashi shart.",
+				"legal_basis": map[string]interface{}{
+					"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+					"article":        "707-modda (Haq evaziga xizmat ko‘rsatish shartnomasini bajarishdan bosh tortish)",
+					"lex_uz_url":     "https://lex.uz/docs/111181#111905",
+					"norm_nature":    "IMPERATIVE",
+					"effective_from": "1997-03-01",
+				},
+				"suggested_redline":  "Buyurtmachi shartnomani bekor qilishdan kamida 15 kun oldin Ijrochini yozma xabardor qiladi hamda Ijrochi tomonidan amalda bajarilgan xizmatlar haqini va asoslangan xarajatlarini to‘liq qoplaydi.",
+				"suggested_revision": "Buyurtmachi shartnomani bekor qilishdan kamida 15 kun oldin Ijrochini yozma xabardor qiladi hamda Ijrochi tomonidan amalda bajarilgan xizmatlar haqini va asoslangan xarajatlarini to‘liq qoplaydi.",
+				"redline_reasoning":  "Ijrochining kutilmagan moliyaviy yo'qotishlarini oldini oladi va FK 707-moddasiga to'liq mos keladi.",
+			},
+			{
+				"id":                  "01934f2a-7b3c-7000-8000-000000000302",
+				"clause_number":       "9.1",
+				"original_quote":      "Ijrochi har bir kechiktirilgan kun uchun shartnoma umumiy summasining 1% miqdorida penya to'laydi.",
+				"risk_level":          "YELLOW",
+				"severity":            "YELLOW",
+				"category":            "COMMERCIAL",
+				"risk_category":       "COMMERCIAL",
+				"verification_status": "VERIFIED",
+				"rule_id":             "SVC_PENALTY_FORM_RISK",
+				"rule_code":           "SVC_PENALTY_FORM_RISK",
+				"issue_title":         "Nomutanosib yuqori penya miqdori",
+				"title":               "Nomutanosib yuqori penya miqdori",
+				"explanation":         "Bozor amaliyotida penya sutkasiga 0.1% - 0.2% dan oshmasligi tavsiya etiladi. Shuningdek, FK 326-moddasi asossiz yuqori neustoykani sud orqali kamaytirish huquqini beradi.",
+				"legal_basis": map[string]interface{}{
+					"source_title":   "O‘zbekiston Respublikasi Fuqarolik Kodeksi",
+					"article":        "326-modda (Neustoykani kamaytirish)",
+					"lex_uz_url":     "https://lex.uz/docs/111181#111520",
+					"norm_nature":    "DISPOSITIVE",
+					"effective_from": "1997-03-01",
+				},
+				"suggested_redline":  "Ijrochi har bir kechiktirilgan kun uchun bajarilmagan majburiyat summasining 0.1% miqdorida, lekin umumiy shartnoma summasining 10% idan oshmagan miqdorda penya to'laydi.",
+				"suggested_revision": "Ijrochi har bir kechiktirilgan kun uchun bajarilmagan majburiyat summasining 0.1% miqdorida, lekin umumiy shartnoma summasining 10% idan oshmagan miqdorda penya to'laydi.",
+				"redline_reasoning":  "Tijoriy xavfni cheklaydi va ikki tomonlama adolatli limit o'rnatadi.",
+			},
+		},
+		"disclaimer": "Axborot-tahliliy xulosa. Rasmiy yuridik maslahat emas (O'RQ-1115).",
+	}
+}
+
+// metricsAllowed /metrics ga kirishni tekshiradi: token berilgan bo'lsa Bearer shart,
+// aks holda faqat to'g'ridan-to'g'ri loopback ulanishlar (proksi orqali kelganlar emas).
+func metricsAllowed(token string, req *http.Request) bool {
+	if token != "" {
+		got := strings.TrimPrefix(req.Header.Get("Authorization"), "Bearer ")
+		return subtle.ConstantTimeCompare([]byte(got), []byte(token)) == 1
+	}
+	if req.Header.Get("X-Forwarded-For") != "" || req.Header.Get("X-Real-IP") != "" {
+		return false
+	}
+	host, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err != nil {
+		return false
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
 }

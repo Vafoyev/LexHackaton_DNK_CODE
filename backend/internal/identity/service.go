@@ -4,7 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
+	"net/mail"
+	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/lexguard/backend/internal/platform"
@@ -37,9 +41,48 @@ func NewService(db *pgxpool.Pool, jwtManager *platform.JWTManager) *Service {
 	return &Service{db: db, jwtManager: jwtManager}
 }
 
-func (s *Service) Register(ctx context.Context, email, password, fullName, orgName, phone, clientType string) (*AuthResult, error) {
-	if email == "" || password == "" || fullName == "" {
-		return nil, errors.New("email, parol va to'liq ism kiritilishi shart")
+var (
+	// ErrInvalidInput foydalanuvchiga ko'rsatiladigan validatsiya xatosi (matni xavfsiz).
+	ErrInvalidInput = errors.New("kiritilgan ma'lumotlar noto'g'ri")
+	// ErrAccountExists email band bo'lganda ham, boshqa DB xatolarida ham bir xil xabar (tafsilot oshkor etilmaydi).
+	ErrAccountExists = errors.New("hisob yaratib bo'lmadi: bu email bilan hisob mavjud bo'lishi mumkin")
+	ErrBadCredentials = errors.New("email yoki parol noto'g'ri")
+)
+
+const (
+	minPasswordLen = 8
+	maxPasswordLen = 72 // bcrypt chegarasi
+)
+
+// dummyHash mavjud bo'lmagan foydalanuvchi uchun ham bcrypt solishtirishni bajarish uchun (vaqt farqi orqali email aniqlashning oldini oladi).
+var dummyHash, _ = bcrypt.GenerateFromPassword([]byte("lexguard-dummy-password"), bcrypt.DefaultCost)
+
+// ValidateRegistration kirish ma'lumotlarini tekshiradi; xato matni foydalanuvchiga ko'rsatilishi mumkin.
+func ValidateRegistration(email, password, fullName string) error {
+	if _, err := mail.ParseAddress(email); err != nil || strings.ContainsAny(email, " <>") || len(email) > 254 {
+		return fmt.Errorf("%w: email formati noto'g'ri", ErrInvalidInput)
+	}
+	if n := utf8.RuneCountInString(password); n < minPasswordLen {
+		return fmt.Errorf("%w: parol kamida %d belgi bo'lishi kerak", ErrInvalidInput, minPasswordLen)
+	}
+	if len(password) > maxPasswordLen {
+		return fmt.Errorf("%w: parol %d bayt dan oshmasligi kerak", ErrInvalidInput, maxPasswordLen)
+	}
+	if n := utf8.RuneCountInString(strings.TrimSpace(fullName)); n < 2 || n > 120 {
+		return fmt.Errorf("%w: F.I.Sh. 2 dan 120 belgigacha bo'lishi kerak", ErrInvalidInput)
+	}
+	return nil
+}
+
+// Register yangi hisob yaratadi. EXTERNAL_AI roziligi AVTOMATIK BERILMAYDI: faqat foydalanuvchi aniq ruxsat bergan bo'lsa (externalAI=true).
+// DATA_PROCESSING roziligi (O'RQ-547) ro'yxatdan o'tish shartidir (dataProcessing=true bo'lishi kerak).
+func (s *Service) Register(ctx context.Context, email, password, fullName, orgName, phone, clientType string, dataProcessing, externalAI bool) (*AuthResult, error) {
+	email = strings.ToLower(strings.TrimSpace(email))
+	if err := ValidateRegistration(email, password, fullName); err != nil {
+		return nil, err
+	}
+	if !dataProcessing {
+		return nil, fmt.Errorf("%w: shaxsiy ma'lumotlarni qayta ishlashga rozilik shart (O'RQ-547)", ErrInvalidInput)
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -77,7 +120,8 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 		RETURNING id
 	`, email, string(hash), fullName, phone).Scan(&userID)
 	if err != nil {
-		return nil, fmt.Errorf("foydalanuvchi yaratishda xatolik (balki ushbu email allaqachon mavjud): %w", err)
+		slog.Warn("register_user_insert_failed", slog.String("error", err.Error()))
+		return nil, ErrAccountExists
 	}
 
 	// 3. Create membership
@@ -102,8 +146,8 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 	_, err = tx.Exec(ctx, `
 		INSERT INTO consents (user_id, organization_id, consent_type, version, granted)
 		VALUES ($1, $2, 'DATA_PROCESSING', '1.0', TRUE),
-		       ($1, $2, 'EXTERNAL_AI', '1.0', TRUE)
-	`, userID, orgID)
+		       ($1, $2, 'EXTERNAL_AI', '1.0', $3)
+	`, userID, orgID, externalAI)
 	if err != nil {
 		return nil, err
 	}
@@ -116,6 +160,7 @@ func (s *Service) Register(ctx context.Context, email, password, fullName, orgNa
 }
 
 func (s *Service) Login(ctx context.Context, email, password, clientType, userAgent, ip string) (*AuthResult, error) {
+	email = strings.ToLower(strings.TrimSpace(email))
 	sql := `
 		SELECT u.id, u.email, u.password_hash, u.full_name, COALESCE(u.phone, ''), COALESCE(u.jshshir, ''),
 		       m.organization_id, m.role, o.name
@@ -132,15 +177,13 @@ func (s *Service) Login(ctx context.Context, email, password, clientType, userAg
 		&u.OrganizationID, &u.Role, &u.OrgName,
 	)
 	if err != nil {
-		return nil, errors.New("email yoki parol noto'g'ri")
+		// Foydalanuvchi yo'q: baribir bcrypt bajariladi, shunda javob vaqti email mavjudligini oshkor qilmaydi.
+		_ = bcrypt.CompareHashAndPassword(dummyHash, []byte(password))
+		return nil, ErrBadCredentials
 	}
 
-	// Compare bcrypt password
 	if err := bcrypt.CompareHashAndPassword([]byte(pwdHash), []byte(password)); err != nil {
-		// Also allow hackathon demo bypass with Password123!
-		if password != "Password123!" {
-			return nil, errors.New("email yoki parol noto'g'ri")
-		}
+		return nil, ErrBadCredentials
 	}
 
 	return s.createSessionAndTokens(ctx, u.ID, u.OrganizationID, u.OrgName, u.Email, u.FullName, u.Phone, u.JSHSHIR, u.Role, clientType, userAgent)
@@ -236,7 +279,11 @@ func (s *Service) GetMe(ctx context.Context, userID, orgID string) (*UserProfile
 	}
 
 	// Load consents
-	rows, err := s.db.Query(ctx, `SELECT consent_type FROM consents WHERE user_id = $1 AND granted = TRUE`, userID)
+	rows, err := s.db.Query(ctx, `SELECT consent_type FROM (
+			SELECT DISTINCT ON (consent_type) consent_type, granted
+			FROM consents WHERE user_id = $1
+			ORDER BY consent_type, granted_at DESC
+		) latest WHERE granted = TRUE`, userID)
 	if err == nil {
 		defer rows.Close()
 		for rows.Next() {
@@ -297,8 +344,29 @@ func (s *Service) createSessionAndTokens(
 			OrganizationID: orgID,
 			OrgName:        orgName,
 			Role:           role,
-			Consents:       []string{"DATA_PROCESSING", "EXTERNAL_AI"},
+			Consents:       s.grantedConsents(ctx, userID),
 		},
 		Tokens: tokens,
 	}, nil
+}
+
+// grantedConsents foydalanuvchining HAQIQIY (berilgan) rozilik turlarini qaytaradi.
+func (s *Service) grantedConsents(ctx context.Context, userID string) []string {
+	out := []string{}
+	rows, err := s.db.Query(ctx, `SELECT consent_type FROM (
+			SELECT DISTINCT ON (consent_type) consent_type, granted
+			FROM consents WHERE user_id = $1
+			ORDER BY consent_type, granted_at DESC
+		) latest WHERE granted = TRUE`, userID)
+	if err != nil {
+		return out
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var ct string
+		if rows.Scan(&ct) == nil {
+			out = append(out, ct)
+		}
+	}
+	return out
 }

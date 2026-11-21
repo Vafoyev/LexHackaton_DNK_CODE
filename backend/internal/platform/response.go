@@ -2,6 +2,7 @@ package platform
 
 import (
 	"encoding/json"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -47,10 +48,19 @@ func WriteJSON(w http.ResponseWriter, r *http.Request, statusCode int, data inte
 	_ = json.NewEncoder(w).Encode(resp)
 }
 
+// internalErrorMessage 500 javoblarida mijozga ko'rsatiladigan umumiy matn.
+const internalErrorMessage = "Ichki server xatosi. Keyinroq urinib ko'ring"
+
 func WriteError(w http.ResponseWriter, r *http.Request, statusCode int, errCode string, message string, details interface{}) {
 	reqID := GetRequestID(r)
 	if reqID == "" {
 		reqID = uuid.NewString()
+	}
+	// 500: ichki xato matni (DB, fayl yo'li, SQL) mijozga chiqmaydi — faqat logga yoziladi.
+	if statusCode == http.StatusInternalServerError {
+		slog.Error("internal_error", slog.String("code", errCode), slog.String("detail", message), slog.String("req_id", reqID))
+		message = internalErrorMessage
+		details = nil
 	}
 
 	resp := APIResponse{

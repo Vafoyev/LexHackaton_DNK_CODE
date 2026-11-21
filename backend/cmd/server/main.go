@@ -57,6 +57,11 @@ func main() {
 		slog.Bool("external_ai_enabled", cfg.ExternalAIEnabled),
 	)
 
+	if err := cfg.Validate(); err != nil {
+		slog.Error("config_invalid", slog.String("error", err.Error()))
+		log.Fatalf("[FATAL] Noto'g'ri sozlama: %v", err)
+	}
+
 	// 2. Initialize Database Pool
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -67,7 +72,7 @@ func main() {
 		log.Fatalf("[FATAL] PostgreSQL ulanishida xatolik: %v", err)
 	}
 	defer dbPool.Close()
-	slog.Info("postgres_connected", slog.String("db_url", cfg.DatabaseURL))
+	slog.Info("postgres_connected", slog.String("db_url", cfg.RedactedDatabaseURL()))
 
 	// 3. Instantiate Domain Kernels
 	jwtManager := platform.NewJWTManager(cfg.JWTSecret)
@@ -116,6 +121,7 @@ func main() {
 		AuditSvc:    auditSvc,
 		AdminSvc:    adminSvc,
 		Redactor:    redactor,
+		AIEngine:    aiEngineClient,
 	}
 	handler := api.BuildRouter(routerServices)
 

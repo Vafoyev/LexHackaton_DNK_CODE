@@ -88,7 +88,11 @@ func (m *JWTManager) ValidateToken(tokenString string) (*JWTClaims, error) {
 			return nil, errors.New("unexpected signing method")
 		}
 		return m.secretKey, nil
-	})
+	},
+		jwt.WithValidMethods([]string{"HS256"}),
+		jwt.WithIssuer("lexguard-api"),
+		jwt.WithExpirationRequired(),
+	)
 	if err != nil {
 		return nil, err
 	}

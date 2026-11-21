@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -67,6 +68,50 @@ type SelfCorrectionResponse struct {
 	Explanation      string `json:"explanation,omitempty"`
 	SuggestedRedline string `json:"suggested_redline,omitempty"`
 	Message          string `json:"message,omitempty"`
+}
+
+// ChatSource is a law article the chat answer is grounded in.
+type ChatSource struct {
+	ID    string `json:"id"`
+	Code  string `json:"code"`
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
+// ChatFinding is a clause-level risk returned when the user pastes a contract clause into the chat.
+type ChatFinding struct {
+	RiskLevel        string `json:"risk_level"`
+	IssueTitle       string `json:"issue_title"`
+	ProblematicQuote string `json:"problematic_quote"`
+	SuggestedRedline string `json:"suggested_redline"`
+	CitedArticle     string `json:"cited_article"`
+	LexUzURL         string `json:"lex_uz_url"`
+	BalanceLabel     string `json:"balance_label"`
+}
+
+// ChatResponse is the AI Engine answer for /api/v1/chat. Speech is a short, TTS-friendly version of Answer.
+type ChatResponse struct {
+	Intent      string        `json:"intent"`
+	Answer      string        `json:"answer"`
+	Speech      string        `json:"speech"`
+	Sources     []ChatSource  `json:"sources"`
+	Findings    []ChatFinding `json:"findings"`
+	Suggestions []string      `json:"suggestions"`
+	Disclaimer  string        `json:"disclaimer"`
+}
+
+// BalanceClause is a single clause sent for contract-level party-balance analysis.
+type BalanceClause struct {
+	ClauseID     string `json:"clause_id"`
+	ClauseNumber string `json:"clause_number"`
+	Text         string `json:"text"`
+}
+
+// BalanceRequest is the payload for /api/v1/balance.
+type BalanceRequest struct {
+	DocumentType string          `json:"document_type"`
+	PartyRole    string          `json:"party_role"`
+	Clauses      []BalanceClause `json:"clauses"`
 }
 
 // EngineClient handles HTTP / gRPC communication with the Python AI Engine
@@ -177,6 +222,100 @@ func (c *EngineClient) SelfCorrect(ctx context.Context, req SelfCorrectionReques
 	}
 
 	return &res, nil
+}
+
+// Chat calls /api/v1/chat on the AI Engine (law Q&A, article lookup, clause analysis).
+func (c *EngineClient) Chat(ctx context.Context, message string) (*ChatResponse, error) {
+	bodyBytes, err := json.Marshal(map[string]string{"message": message})
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal chat request: %w", err)
+	}
+
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/api/v1/chat", bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("ai engine chat unreachable: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		respBody, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+		return nil, fmt.Errorf("ai engine chat returned status %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	var res ChatResponse
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return nil, fmt.Errorf("failed to decode chat response: %w", err)
+	}
+	return &res, nil
+}
+
+// Balance calls /api/v1/balance. The report shape is owned by the AI Engine, so it is passed through as raw JSON.
+func (c *EngineClient) Balance(ctx context.Context, req BalanceRequest) (json.RawMessage, error) {
+	bodyBytes, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal balance request: %w", err)
+	}
+
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/api/v1/balance", bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("ai engine balance unreachable: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		respBody, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+		return nil, fmt.Errorf("ai engine balance returned status %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	raw, err := io.ReadAll(io.LimitReader(resp.Body, 4<<20))
+	if err != nil {
+		return nil, fmt.Errorf("failed to read balance response: %w", err)
+	}
+	if !json.Valid(raw) {
+		return nil, fmt.Errorf("ai engine balance returned invalid json")
+	}
+	return json.RawMessage(raw), nil
+}
+
+// LawChanges calls GET /api/v1/law-changes (recently amended articles, derived from Lex.uz amendment notes in the corpus).
+// Only the explicitly built query is sent; the report is passed through as raw JSON.
+func (c *EngineClient) LawChanges(ctx context.Context, query url.Values) (json.RawMessage, error) {
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL+"/api/v1/law-changes?"+query.Encode(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http request: %w", err)
+	}
+
+	resp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("ai engine law-changes unreachable: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		respBody, _ := io.ReadAll(io.LimitReader(resp.Body, 1024))
+		return nil, fmt.Errorf("ai engine law-changes returned status %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	raw, err := io.ReadAll(io.LimitReader(resp.Body, 2<<20))
+	if err != nil {
+		return nil, fmt.Errorf("failed to read law-changes response: %w", err)
+	}
+	if !json.Valid(raw) {
+		return nil, fmt.Errorf("ai engine law-changes returned invalid json")
+	}
+	return json.RawMessage(raw), nil
 }
 
 // Name implements ai.Provider interface

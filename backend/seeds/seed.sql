@@ -282,8 +282,8 @@ ON CONFLICT (slug) DO NOTHING;
 -- 5. Demo Users (Password: Password123!)
 -- bcrypt hash of 'Password123!' is $2a$10$wE9O2eWp3u0P6.4G4s7Rse8G33y8FhRzYp1p68oO2zH9YFp/nB.6y (or standard generated)
 INSERT INTO users (id, email, phone, password_hash, full_name, jshshir, is_active) VALUES
-('55555555-0000-0000-0000-000000000001', 'lawyer@lexguard.uz', '+998901234567', '$2a$10$eO0VjB9R5h9T5wP9v0/V9eq.hE6Z9sW8oBq5M9/X5uP2F9qM9/e1e', 'Alisher Qodirov (Yurist)', '30101901234567', TRUE),
-('55555555-0000-0000-0000-000000000002', 'client@lexguard.uz', '+998939876543', '$2a$10$eO0VjB9R5h9T5wP9v0/V9eq.hE6Z9sW8oBq5M9/X5uP2F9qM9/e1e', 'Bobur Mirzayev (Biznesmen)', '30202951234568', TRUE)
+('55555555-0000-0000-0000-000000000001', 'lawyer@lexguard.uz', '+998901234567', '$2a$10$eO0VjB9R5h9T5wP9v0/V9eq.hE6Z9sW8oBq5M9/X5uP2F9qM9/e1e', 'Alisher Qodirov', '30101901234567', TRUE),
+('55555555-0000-0000-0000-000000000002', 'client@lexguard.uz', '+998939876543', '$2a$10$eO0VjB9R5h9T5wP9v0/V9eq.hE6Z9sW8oBq5M9/X5uP2F9qM9/e1e', 'Bobur Mirzayev', '30202951234568', TRUE)
 ON CONFLICT (email) DO NOTHING;
 
 -- 6. Memberships
