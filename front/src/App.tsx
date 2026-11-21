@@ -5,7 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { Navbar, MainNavTab } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
-import { ContractUploader } from './components/upload/ContractUploader';
+import { LandingView } from './components/landing/LandingView';
 import { ContractStudio } from './components/studio/ContractStudio';
 import { ThreeDModal } from './components/studio/ThreeDModal';
 import { DocumentsView } from './components/documents/DocumentsView';
@@ -17,7 +17,7 @@ import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
 function MainApp() {
-  const [analysis, setAnalysis] = useState<AnalysisResult | null>(SAMPLE_IT_SERVICE_CONTRACT);
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [activeTab, setActiveTab] = useState<MainNavTab>('home');
   const [studioSubView, setStudioSubView] = useState<'xulosa' | 'diff'>('xulosa');
   const [segment, setSegment] = useState<'b2c' | 'b2b'>('b2b');
@@ -71,7 +71,7 @@ function MainApp() {
         <div className="absolute top-[40%] -right-[5%] w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[140px]" />
       </div>
 
-      {/* Floating Shadcn Navbar (Mobildagidek: Asosiy, Hujjatlar, Qonunlar, Profil, Skanerlash) */}
+      {/* Floating Shadcn Navbar (Mehmon holatida Landing links + Kirish; Kirilganda Asosiy, Hujjatlar, Qonunlar, Profil) */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -79,6 +79,7 @@ function MainApp() {
         onOpenAuth={() => setIsAuthModalOpen(true)}
         segment={segment}
         onSegmentChange={setSegment}
+        hasAnalysis={!!analysis}
       />
 
       {/* Main Content Area */}
@@ -95,11 +96,14 @@ function MainApp() {
             </div>
           ) : (
             <div className="flex-1 flex flex-col">
-              <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-center">
-                <ContractUploader
+              <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 flex flex-col justify-center">
+                <LandingView
                   onAnalyze={handleAnalyze}
                   isLoading={isLoading}
                   progress={progress}
+                  onOpenAuth={() => setIsAuthModalOpen(true)}
+                  segment={segment}
+                  onSegmentChange={setSegment}
                 />
               </main>
               <Footer />
