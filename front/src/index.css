@@ -6,75 +6,141 @@
   body {
     @apply bg-slate-950 text-slate-100 font-sans selection:bg-sky-500 selection:text-white;
     overflow-x: hidden;
-    background-image: 
-      radial-gradient(ellipse at 15% 10%, rgba(14, 165, 233, 0.08) 0%, transparent 45%),
-      radial-gradient(ellipse at 85% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 45%),
-      radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 60%);
-    background-attachment: fixed;
+    background-color: #030712;
   }
 }
 
 /* ============================================================
-   LIQUID GLASS & ULTRA-MODERN FROSTED GLASS UTILITIES
+   AUTHENTIC LIQUID GLASS & iOS VISION GLASSMORPHISM UTILITIES
    ============================================================ */
 @layer components {
-  .liquid-glass {
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    background: rgba(15, 23, 42, 0.65);
+  /* 1. Asosiy Liquid Glass Karta */
+  .liquid-glass-card {
+    position: relative;
+    backdrop-filter: blur(32px) saturate(210%);
+    -webkit-backdrop-filter: blur(32px) saturate(210%);
+    background: rgba(15, 23, 42, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+      0 24px 60px -12px rgba(0, 0, 0, 0.65),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* 2. Nozik (Subtle) Liquid Glass */
+  .liquid-glass-subtle {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(15, 23, 42, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 
-      0 20px 50px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      0 12px 32px -8px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
-  .liquid-glass-subtle {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    background: rgba(15, 23, 42, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .liquid-glass-accent {
-    backdrop-filter: blur(28px) saturate(190%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(14, 165, 233, 0.1) 100%);
-    border: 1px solid rgba(56, 189, 248, 0.25);
+  /* 3. Floating Stadium Pill (Navigatsiya va Tugmalar uchun) */
+  .liquid-glass-pill {
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    background: rgba(15, 23, 42, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: 
-      0 12px 36px rgba(14, 165, 233, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      0 16px 40px -10px rgba(0, 0, 0, 0.55),
+      inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.28);
   }
 
-  .liquid-glass-danger {
-    backdrop-filter: blur(16px);
-    background: rgba(225, 29, 72, 0.08);
-    border: 1px solid rgba(244, 63, 94, 0.3);
-    box-shadow: 0 8px 24px rgba(225, 29, 72, 0.12);
+  /* 4. Sapphire Blue Accent Glass (Jismoniy Shaxs Rejimi) */
+  .liquid-glass-sapphire {
+    backdrop-filter: blur(32px) saturate(220%);
+    -webkit-backdrop-filter: blur(32px) saturate(220%);
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(15, 23, 42, 0.5) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: 
+      0 20px 50px -10px rgba(2, 132, 199, 0.25),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  .liquid-glass-success {
-    backdrop-filter: blur(16px);
-    background: rgba(16, 185, 129, 0.08);
+  /* 5. Deep Emerald Accent Glass (Yuridik Shaxs / B2B Rejimi) */
+  .liquid-glass-emerald {
+    backdrop-filter: blur(32px) saturate(220%);
+    -webkit-backdrop-filter: blur(32px) saturate(220%);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.5) 100%);
     border: 1px solid rgba(52, 211, 153, 0.3);
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
+    box-shadow: 
+      0 20px 50px -10px rgba(5, 150, 105, 0.25),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* 6. Active Glass Glow Hover */
+  .liquid-hover-glow {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .liquid-hover-glow:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 28px 60px -12px rgba(0, 0, 0, 0.7),
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
   }
 }
 
-/* Custom Scrollbar */
+/* ============================================================
+   AMBIENT BACKGROUND LIGHTING ORBS (DYNAMIK REFRAKSIYA)
+   ============================================================ */
+@keyframes liquidFloat1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(60px, 40px) scale(1.12); }
+  100% { transform: translate(-40px, 70px) scale(0.95); }
+}
+
+@keyframes liquidFloat2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-70px, -50px) scale(1.08); }
+  100% { transform: translate(50px, -30px) scale(1.02); }
+}
+
+@keyframes liquidFloat3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(40px, -60px) scale(1.15); }
+  100% { transform: translate(-50px, 30px) scale(0.92); }
+}
+
+.liquid-orb-1 {
+  animation: liquidFloat1 24s ease-in-out infinite alternate;
+}
+.liquid-orb-2 {
+  animation: liquidFloat2 28s ease-in-out infinite alternate;
+}
+.liquid-orb-3 {
+  animation: liquidFloat3 32s ease-in-out infinite alternate;
+}
+
+/* Shimmer Highlight Effect */
+@keyframes glassShimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-shimmer {
+  animation: glassShimmer 3.5s infinite;
+}
+
+/* Custom Minimalist Glass Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(11, 19, 43, 0.5);
+  background: rgba(3, 7, 18, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.6);
+  background: rgba(148, 163, 184, 0.25);
   border-radius: 9999px;
+  backdrop-filter: blur(10px);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 165, 233, 0.5);
+  background: rgba(56, 189, 248, 0.5);
 }

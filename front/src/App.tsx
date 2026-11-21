@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import confetti from 'canvas-confetti';
-import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { AuthModal } from './components/auth/AuthModal';
@@ -11,7 +10,7 @@ import { AnalysisResult, ProgressEvent } from './types/contract';
 import { ApiService } from './services/api';
 import { SAMPLE_IT_SERVICE_CONTRACT } from './data/mockContract';
 
-function MainApp() {
+export function MainApp() {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState<ProgressEvent | null>(null);
@@ -51,16 +50,36 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+    <div className="relative min-h-screen flex flex-col bg-[#030712] text-slate-100 selection:bg-sky-500 selection:text-white overflow-x-hidden">
+      {/* ============================================================
+          AMBIENT LIQUID GLASS LIGHTING BACKDROP (REFRACTION SOURCE)
+          ============================================================ */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+        {/* Sapphire Blue Top Left Orb */}
+        <div className="absolute -top-[10%] left-[10%] w-[580px] h-[580px] rounded-full bg-gradient-to-br from-sky-500/20 via-blue-600/10 to-transparent blur-[110px] liquid-orb-1" />
+        
+        {/* Deep Emerald Bottom Right Orb */}
+        <div className="absolute top-[40%] -right-[5%] w-[620px] h-[620px] rounded-full bg-gradient-to-bl from-emerald-500/15 via-teal-600/10 to-transparent blur-[120px] liquid-orb-2" />
+        
+        {/* Electric Indigo Center/Bottom Orb */}
+        <div className="absolute -bottom-[15%] left-[25%] w-[700px] h-[700px] rounded-full bg-gradient-to-tr from-indigo-500/15 via-violet-600/08 to-transparent blur-[130px] liquid-orb-3" />
+        
+        {/* Cyan Ambient Accent Spot */}
+        <div className="absolute top-[20%] right-[30%] w-[380px] h-[380px] rounded-full bg-cyan-400/10 blur-[90px] liquid-orb-1" />
+      </div>
+
       {analysis ? (
         /* 1. KONTRAKT STUDIYASI (Robin AI / Google Docs uslubidagi haqiqiy ish maydoni) */
-        <ContractStudio
-          analysis={analysis}
-          onReset={handleReset}
-        />
+        <div className="relative z-10 flex-1 flex flex-col">
+          <ContractStudio
+            analysis={analysis}
+            onReset={handleReset}
+          />
+        </div>
       ) : (
-        /* 2. BOSHLANG'ICH TOPQIR YUKLASH SAHIFASI (Clean & Minimalist Home) */
-        <>
+        /* 2. BOSHLANG'ICH TOPQIR YUKLASH SAHIFASI (Liquid Glass Home) */
+        <div className="relative z-10 flex-1 flex flex-col">
+          {/* Floating Stadium Capsule Navbar */}
           <Navbar
             onReset={handleReset}
             activeView="dashboard"
@@ -70,7 +89,7 @@ function MainApp() {
             onOpen3D={() => setIs3DModalOpen(true)}
           />
 
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col justify-center">
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 flex flex-col justify-center">
             <ContractUploader
               onAnalyze={handleAnalyze}
               isLoading={isLoading}
@@ -79,7 +98,7 @@ function MainApp() {
           </main>
 
           <Footer />
-        </>
+        </div>
       )}
 
       {/* Auth Modal (Kirish / Ro'yxatdan o'tish) */}
@@ -99,10 +118,4 @@ function MainApp() {
   );
 }
 
-export default function App() {
-  return (
-    <AuthProvider>
-      <MainApp />
-    </AuthProvider>
-  );
-}
+export default MainApp;
