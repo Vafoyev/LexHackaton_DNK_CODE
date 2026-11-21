@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
+import '../../../core/widgets/language_picker_sheet.dart';
 import '../../contracts/domain/entities/lex_models.dart';
 import '../../session/presentation/cubit/session_cubit.dart';
 
@@ -17,8 +18,10 @@ class RoleSelectPage extends StatelessWidget {
     final c = context.lexColors;
     final session = context.watch<SessionCubit>().state;
     final lang = session.lang;
+    final script = session.uzbekScript;
 
     return Scaffold(
+      key: const Key('role_select_screen'),
       backgroundColor: Colors.transparent,
       body: AmbientGlassBackdrop(
         child: SafeArea(
@@ -36,24 +39,65 @@ class RoleSelectPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Top minimal iOS bar (Lang + Theme pills)
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GlassPill(
-                                onTap: () =>
-                                    context.read<SessionCubit>().cycleLang(),
-                                child: Text(
-                                  lang.code,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: c.textPrimary,
-                                  ),
+                                onTap: () => context.go('/onboarding'),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 7,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.chevron_back,
+                                      size: 14,
+                                      color: c.textPrimary,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      AppStrings.t(
+                                        lang,
+                                        'back',
+                                        script: script,
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: c.textPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              GlassPill(
+                                key: const Key('lang_picker_pill'),
+                                onTap: () => LanguagePickerSheet.show(context),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      lang.code,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: c.textPrimary,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      CupertinoIcons.chevron_down,
+                                      size: 12,
+                                      color: c.textSecondary,
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(width: 8),
                               GlassPill(
+                                key: const Key('theme_toggle_pill'),
                                 onTap: () => context
                                     .read<SessionCubit>()
                                     .toggleThemeMode(),
@@ -68,16 +112,15 @@ class RoleSelectPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 22),
-                          // Minimal Apple Emblem + Large Title
+                          const SizedBox(height: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: 58,
-                                height: 58,
+                                width: 54,
+                                height: 54,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(18),
+                                  borderRadius: BorderRadius.circular(16),
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
@@ -89,46 +132,57 @@ class RoleSelectPage extends StatelessWidget {
                                   boxShadow: [
                                     BoxShadow(
                                       color: c.roleGlow,
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
+                                      blurRadius: 18,
+                                      offset: const Offset(0, 7),
                                     ),
                                   ],
                                 ),
                                 child: const Icon(
                                   CupertinoIcons.shield_lefthalf_fill,
                                   color: Colors.white,
-                                  size: 30,
+                                  size: 28,
                                 ),
                               ),
-                              const SizedBox(height: 18),
+                              const SizedBox(height: 16),
                               Text(
-                                'LexGuard AI',
+                                AppStrings.t(
+                                  lang,
+                                  'role_question',
+                                  script: script,
+                                ),
                                 style: TextStyle(
-                                  fontSize: 32,
+                                  fontSize: 27,
                                   fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.9,
+                                  letterSpacing: -0.7,
+                                  height: 1.15,
                                   color: c.textPrimary,
                                 ),
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 8),
                               Text(
-                                'Shartnomani imzolashdan oldin tekshiring. O‘zingizga mos kirish rolini tanlang — har bir rol o‘z muhiti va rang tizimida ishlaydi.',
+                                AppStrings.t(lang, 'role_sub', script: script),
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 13.5,
                                   height: 1.4,
                                   color: c.textSecondary,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 26),
-                          // Role 1: Jismoniy shaxs — Sapphire Ice (#0066FF)
+                          const SizedBox(height: 24),
                           _ExecutiveRoleCard(
                             key: const Key('role_card_individual'),
-                            title: 'Jismoniy shaxs',
-                            badgeText: 'SAPPHIRE · ONEID (MOCK)',
-                            subtitle:
-                                'Shaxsiy shartnomalar, uy/avto oldi-sotdi notarial tekshiruvi (R6), 14 kun sinov rejimi.',
+                            title: AppStrings.t(
+                              lang,
+                              'role_individual_title',
+                              script: script,
+                            ),
+                            badgeText: 'OneID · Mock',
+                            subtitle: AppStrings.t(
+                              lang,
+                              'role_individual_sub',
+                              script: script,
+                            ),
                             icon: CupertinoIcons.person_crop_circle_fill,
                             primaryColor: const Color(0xFF0066FF),
                             gradientColors: const [
@@ -138,35 +192,44 @@ class RoleSelectPage extends StatelessWidget {
                             onTap: () {
                               context
                                   .read<SessionCubit>()
-                                  .enterRole(AccountSegment.individual);
-                              context.go('/home');
+                                  .selectRole(AccountSegment.individual);
+                              context.go('/login');
                             },
                           ),
-                          const SizedBox(height: 16),
-                          // Role 2: Yuridik shaxs (B2B) — Deep Executive Emerald (#047857)
+                          const SizedBox(height: 14),
                           _ExecutiveRoleCard(
                             key: const Key('role_card_business'),
-                            title: 'Yuridik shaxs (B2B)',
-                            badgeText: 'EMERALD · E-IMZO (MOCK)',
-                            subtitle:
-                                'Xizmat ko‘rsatish va yetkazib berish shartnomalari, pretenziya bayonnomasi va jamoaviy tarix.',
+                            title: AppStrings.t(
+                              lang,
+                              'role_business_title',
+                              script: script,
+                            ),
+                            badgeText: 'E-IMZO · Mock',
+                            subtitle: AppStrings.t(
+                              lang,
+                              'role_business_sub',
+                              script: script,
+                            ),
                             icon: CupertinoIcons.building_2_fill,
                             primaryColor: const Color(0xFF047857),
                             gradientColors: const [
                               Color(0xFF064E3B),
                               Color(0xFF059669),
                             ],
-                            accentTagColor: const Color(0xFFD4AF37),
                             onTap: () {
                               context
                                   .read<SessionCubit>()
-                                  .enterRole(AccountSegment.business);
-                              context.go('/home');
+                                  .selectRole(AccountSegment.business);
+                              context.go('/login');
                             },
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 22),
                           Text(
-                            AppStrings.t(lang, 'orq_1115_banner'),
+                            AppStrings.t(
+                              lang,
+                              'orq_1115_banner',
+                              script: script,
+                            ),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 11.5,
@@ -198,7 +261,6 @@ class _ExecutiveRoleCard extends StatelessWidget {
     required this.primaryColor,
     required this.gradientColors,
     required this.onTap,
-    this.accentTagColor,
   });
 
   final String title;
@@ -207,13 +269,11 @@ class _ExecutiveRoleCard extends StatelessWidget {
   final IconData icon;
   final Color primaryColor;
   final List<Color> gradientColors;
-  final Color? accentTagColor;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final c = context.lexColors;
-    final tagColor = accentTagColor ?? primaryColor;
     return GlassCard(
       onTap: onTap,
       radius: 26,
@@ -234,7 +294,7 @@ class _ExecutiveRoleCard extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: primaryColor.withValues(alpha: 0.30),
+                  color: primaryColor.withValues(alpha: 0.26),
                   blurRadius: 14,
                   offset: const Offset(0, 6),
                 ),
@@ -251,7 +311,7 @@ class _ExecutiveRoleCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: tagColor.withValues(alpha: 0.12),
+                    color: primaryColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -259,10 +319,8 @@ class _ExecutiveRoleCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 0.3,
-                      color: accentTagColor != null
-                          ? const Color(0xFF92400E)
-                          : primaryColor,
+                      letterSpacing: 0.2,
+                      color: primaryColor,
                     ),
                   ),
                 ),

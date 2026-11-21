@@ -299,6 +299,34 @@ class ProfilePage extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(height: 14),
+          GlassCard(
+            radius: 18,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            onTap: () {
+              cubit.logout();
+              context.go('/role-select');
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  CupertinoIcons.square_arrow_left,
+                  size: 18,
+                  color: c.redText,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Chiqish / Kirish ekraniga qaytish',
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: c.redText,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

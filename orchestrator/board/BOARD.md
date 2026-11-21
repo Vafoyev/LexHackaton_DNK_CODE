@@ -4,40 +4,29 @@ Ushbu taxta 8 ta ixtisoslashgan agent o'rtasidagi asosiy sinxronizatsiya nuqtasi
 
 ---
 
-## 📌 Jamoa Maqsadi va Asosiy Qarorlar (D-01 .. D-10)
+## 📌 Jamoa Maqsadi va Asosiy Qarorlar (Kelishilgan Standart)
 LexHackathon 2026 (1-trek: Huquqiy xizmatlar) doirasida **LexGuard AI** mahsulotini noldan to'liq ishga tushirish:
-1. **D-01 (B2B First)**: Shtat yuristi bo'lmagan kichik biznesning xizmat ko'rsatish shartnomalarini tekshirish asosiy e'tibor markazida.
-2. **D-02 (Platformalar)**: React + TypeScript Web (Asosiy tahlil) + Flutter Android/iOS (Mobil klient) + Admin Portal (B2B nazorat).
-3. **D-03 (Backend)**: Go 1.23+ Hexagonal Modular Monolith (12 bounded context) + PostgreSQL 16 (pgvector) + Redis.
-4. **D-04 (MVP Qoidalari)**: B2B xizmat ko'rsatish shartnomasi uchun 10 ta deterministik Go qoidasi.
-5. **D-05 (4 Rangli Risk)**: Qizil (LEGAL), Sariq (COMMERCIAL), Yashil (BALANCED), Kulrang (UNKNOWN/REVIEW_REQUIRED).
-6. **D-06 (Davlat Integratsiyalari)**: Lex.uz, OneID va E-IMZO MVPda Anti-Corruption Mock/Sandbox qatlami ortida ishlaydi (yolg'on va'dalar taqiqlangan).
-7. **D-07 (Hisobotlar)**: Redline takliflar bilan DOCX va rasmiy audit bayonnomasi PDF.
-8. **D-08 (Anti-Gallyutsinatsiya)**: 10 ta xavf vektoriga qarshi yopiq dunyo (Closed-World) qoidalari va tarmoqdan uzilgan Go Verifier.
-9. **D-09 (Bitta Skript)**: Idempotent `./scripts/run_dev.sh` orqali butun tizim ko'tarilishi shart.
-10. **D-10 (Pro Glanceable UI/UX, 3D Immersion & Live Voice)**:
-    - **Glanceable Metrikalar**: Uzun matnlar blokidan qochish! 0-100 radial speedometer gauge, moliyaviy asimmetriya barometri, shartnoma moddalari DNA barcode lentasi.
-    - **3D Immersion**: WebGL Three.js interaktiv 3D sferasi va neyron to'r, mobil ilovada 3D-styled radial gauge va glassmorphism vizualizatsiyasi.
-    - **AI Live Voice Assistant**: 30 soniyalik audio brifing (O'zbek tilida tabiiy sintez), real-time sinusoidal audio to'lqin visualizatsiyasi (Waveform Canvas) hamda ovozli savol-javob (`/voice-brief`, `/voice-query`).
+1. **Auditoriya**: Shtat yuristi bo'lmagan kichik/o'rta bizneslar (startuplar, YaTT, MChJ) hamda oddiy fuqarolar (B2C).
+2. **Onboarding**: Welcome Landing sahifasi → Login/Register (B2B/B2C profil) → Bepul sinov kvotasi (Free trial).
+3. **Platformalar**: 
+   - Web (React 18+ TypeScript): Robin AI / Harvey uslubidagi LegalTech Studio (Document Paper + Inline Highlights + Clause Inspector + Redline diff + 3D + Live Voice).
+   - Mobile (Flutter 3.38+): Soliq ilovasi uslubidagi Premium Glassmorphism UI (Sapphire/Emerald) + FAB skaner + Draggable BottomSheet + Voice Radar + Biometriya.
+   - Admin Portal: Platforma Operatori Nazorat Paneli (System Health, AI telemetriya, Lex.uz boshqaruvi, Human-in-the-loop).
+4. **Backend & AI Engine**:
+   - Go 1.23+ Modular Monolith (Gateway, Auth, Rules, SSE, WebSockets, MinIO).
+   - Python 3.11+ AI Engine: gRPC Protobuf shartnomasi (`proto/legal_ai.proto`), Lex.uz korpusi (pgvector BM25+HNSW), lokal Legal SLM (Llama-3/Qwen-2.5) va OCR pipeline.
+5. **Anti-Hallucination & Active Self-Correction**:
+   - 0% soxta modda; agar AI keltirgan norma Lex.uz bazasida tasdiqlanmasa, Verifier RAG dan qayta qidirib, AI ga xatoni ko'rsatib qayta tahlil qildiradi (Self-Correction Loop).
+6. **Real-Time Aloqa**:
+   - SSE — Hujjat tahlili va bosqichlar oqimi uchun.
+   - WebSockets — AI Live Voice Assistant interaktiv savol-javobi uchun.
+7. **Natija va Eksport**:
+   - 4 rangli xavf matritsasi (Qizil, Sariq, Yashil, Kulrang), balans yorlig'i, izohli DOCX + Protokol raznoglasiy, toza "LOYIHA" tahriri DOCX va PDF audit bayonnomasi.
 
 ---
 
 ## 🕒 Muhim E'lonlar va Buyruqlar
-* `[03:20] ORCHESTRATOR`: **DIQQAT BARCHA AGENTLARGA!**
-  - `orchestrator/board/CONTRACTS.md` to'liq tasdiqlandi va qat'iy standart sifatida qabul qilindi.
-  - `orchestrator/board/TASKS.md` ga har bir agent uchun aniq P0/P1/P2 topshiriqlari va Definition of Done kiritildi.
-* `[05:35] ORCHESTRATOR`: **YANGI ARXITEKTURA VA PRO UI/UX / 3D / LIVE VOICE DIREKTIVASI!**
-  - **3-Web Front**: `ContractHealthGauge.tsx` (0-100 radial gauge, DNA heatmap bar), `LiveVoiceAssistant.tsx` (waveform + audio debrief + voice Q&A), `Mini3DVisualizer.tsx` ishlab chiqildi va muvaffaqiyatli build qilindi!
-  - **2-Mobile Flutter**: `GlanceableRiskGauge` va `MobileVoiceAssistantBar` integratsiya qilindi. Barcha 6 ta unit/widget testlar yashil o'tdi!
-  - **1-Backend Go**: `/api/v1/analyses/{id}/voice-brief` va `/api/v1/analyses/{id}/voice-query` API endpointlari ulandi va testlandi!
-  - **Klaster buyrug'i**: Orchestrator butun ish to'liq 100% bo'lmaguncha jarayonni to'xtatmaydi!
-* `[05:47] DEVOPS (agy8)`: **D-10 INFRA 100% BAJARILDI! ✅**
-  - `deploy/docker-compose.yml` → 6 xizmat (Postgres+pgvector, Redis, MinIO, Backend, Frontend, Admin), subnet 172.28.0.0/24, to'liq healthcheck
-  - `deploy/Dockerfile.backend` → Go distroless multi-stage (builder → tester → production:nonroot)
-  - `deploy/Dockerfile.frontend` → Node20 builder → nginx:1.27-alpine, SSE proxy, Web Speech API headers
-  - `deploy/Dockerfile.admin` → Flexible (npm yoki static HTML)
-  - `deploy/nginx.frontend.conf` → Three.js CSP, SSE buffering off, SPA fallback
-  - `scripts/run_dev.sh` → 7 rejimli idempotent skript, D-10 ASCII banner, barcha URL'lar
-  - `.github/workflows/ci.yml` → 7 jobli CI: lint+test+coverage(60%), TS+Vite build, docker multi-stage, integration smoke, Trivy scan, CI Summary
-  - `.env.example` → To'liq muhit shabloni
-  - **TASK-701, TASK-702, TASK-703** → `[x] DONE` ✅
+* `[11:38] ORCHESTRATOR & LOYIHA EGASI`: **YANGI BOSHQARUV ARXITEKTURA SPETSIFIKATSIYASI (BLUEPRINT 4.0) TO'LIQ TASDIQLANDI! 🚀**
+  - Barcha talablar: Loyiha maqsadi, papkalar tuzilishi, gRPC protokoli, Lex.uz RAG & Legal SLM, Active Self-Correction, SSE va WebSockets real-time aloqa, Robin AI va Soliq UI/UX standartlari rasmiylashtirildi.
+  - To'liq hujjat: `orchestrator/board/ARCHITECTURE_BLUEPRINT.md`.
+  - Barcha 8 ta profil shu spetsifikatsiya asosida yangi fazalarga o'tadi!

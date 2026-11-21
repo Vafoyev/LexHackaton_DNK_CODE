@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/l10n/app_strings.dart';
+import '../../../core/l10n/uzbek_alphabet.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/glass_surface.dart';
+import '../../../core/widgets/language_picker_sheet.dart';
 import '../../../core/widgets/risk_badges.dart';
 import '../../analysis/presentation/clause_detail_sheet.dart';
 import '../../contracts/domain/entities/lex_models.dart';
@@ -22,6 +24,7 @@ class HomePage extends StatelessWidget {
     final session = context.watch<SessionCubit>().state;
     final contracts = context.watch<ContractsCubit>().state;
     final lang = session.lang;
+    final script = session.uzbekScript;
     final isBusiness = session.segment == AccountSegment.business;
 
     return SafeArea(
@@ -37,7 +40,12 @@ class HomePage extends StatelessWidget {
                   Flexible(
                     child: GlassPill(
                       key: const Key('role_switch_pill'),
-                      onTap: () => _showRoleQuickSwitch(context, session.segment),
+                      onTap: () => _showRoleQuickSwitch(
+                        context,
+                        session.segment,
+                        lang,
+                        script,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -53,8 +61,16 @@ class HomePage extends StatelessWidget {
                           Flexible(
                             child: Text(
                               isBusiness
-                                  ? AppStrings.t(lang, 'business_b2b')
-                                  : AppStrings.t(lang, 'individual_b2c'),
+                                  ? AppStrings.t(
+                                      lang,
+                                      'business_b2b',
+                                      script: script,
+                                    )
+                                  : AppStrings.t(
+                                      lang,
+                                      'individual_b2c',
+                                      script: script,
+                                    ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -74,20 +90,33 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const Spacer(),
                   GlassPill(
-                    onTap: () => context.read<SessionCubit>().cycleLang(),
-                    child: Text(
-                      lang.code,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: c.textPrimary,
-                      ),
+                    key: const Key('lang_picker_pill'),
+                    onTap: () => LanguagePickerSheet.show(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          lang.code,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: c.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          CupertinoIcons.chevron_down,
+                          size: 12,
+                          color: c.textSecondary,
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 6),
                   GlassPill(
+                    key: const Key('theme_toggle_pill'),
                     padding: const EdgeInsets.all(8),
                     onTap: () =>
                         context.read<SessionCubit>().toggleThemeMode(),
@@ -112,7 +141,7 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    session.organizationName,
+                    AppStrings.adaptUz(session.organizationName, lang, script),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -124,7 +153,9 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    session.authProviderLabel,
+                    AppStrings.adaptUz(session.authProviderLabel, lang, script),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w500,
@@ -180,7 +211,11 @@ class HomePage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Text(
-                                AppStrings.t(lang, 'trial_badge'),
+                                AppStrings.t(
+                                  lang,
+                                  'trial_badge',
+                                  script: script,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -193,7 +228,7 @@ class HomePage extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${AppStrings.t(lang, 'today_limit')}: ${session.quota.todayUsed}/${session.quota.todayLimit}',
+                            '${AppStrings.t(lang, 'today_limit', script: script)}: ${session.quota.todayUsed}/${session.quota.todayLimit}',
                             style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 12,
@@ -219,7 +254,11 @@ class HomePage extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              AppStrings.t(lang, 'remaining_analyses'),
+                              AppStrings.t(
+                                lang,
+                                'remaining_analyses',
+                                script: script,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -270,7 +309,11 @@ class HomePage extends StatelessWidget {
                                     const SizedBox(width: 6),
                                     Flexible(
                                       child: Text(
-                                        AppStrings.t(lang, 'scan'),
+                                        AppStrings.t(
+                                          lang,
+                                          'scan',
+                                          script: script,
+                                        ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -313,7 +356,11 @@ class HomePage extends StatelessWidget {
                                     const SizedBox(width: 6),
                                     Flexible(
                                       child: Text(
-                                        AppStrings.t(lang, 'plans'),
+                                        AppStrings.t(
+                                          lang,
+                                          'plans',
+                                          script: script,
+                                        ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -337,12 +384,12 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Control Center Glass Services Grid (Monochrome Role-Tinted Icons!)
+          // Control Center Glass Services Grid
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
             sliver: SliverToBoxAdapter(
               child: Text(
-                AppStrings.t(lang, 'quick_services'),
+                AppStrings.t(lang, 'quick_services', script: script),
                 style: TextStyle(
                   fontSize: 16.5,
                   fontWeight: FontWeight.w800,
@@ -365,43 +412,53 @@ class HomePage extends StatelessWidget {
                 children: [
                   _GlassServiceTile(
                     icon: CupertinoIcons.doc_on_doc_fill,
-                    label: AppStrings.t(lang, 'svc_upload'),
+                    label: AppStrings.t(lang, 'svc_upload', script: script),
                     onTap: () => ScanUploadSheet.show(context),
                   ),
                   _GlassServiceTile(
                     icon: CupertinoIcons.camera_fill,
-                    label: AppStrings.t(lang, 'svc_camera'),
+                    label: AppStrings.t(lang, 'svc_camera', script: script),
                     onTap: () =>
                         ScanUploadSheet.show(context, focusCamera: true),
                   ),
                   _GlassServiceTile(
                     icon: CupertinoIcons.checkmark_shield_fill,
-                    label: AppStrings.t(lang, 'svc_notarial'),
+                    label: AppStrings.t(lang, 'svc_notarial', script: script),
                     onTap: () => _launchNotarialQuick(context),
                   ),
                   _GlassServiceTile(
                     icon: CupertinoIcons.envelope_fill,
-                    label: AppStrings.t(lang, 'svc_claim'),
+                    label: AppStrings.t(lang, 'svc_claim', script: script),
                     onTap: () => _openLatestProtocol(context, contracts),
                   ),
                   _GlassServiceTile(
                     icon: CupertinoIcons.chat_bubble_2_fill,
-                    label: AppStrings.t(lang, 'svc_mediation'),
+                    label: AppStrings.t(lang, 'svc_mediation', script: script),
                     onTap: () => _showInfoSheet(
                       context,
-                      title: 'Mediatsiya bandi va reestr (1-trek)',
-                      body:
-                          'LexGuard R5 qoidasi har bir shartnomada 10 kunlik pretenziya va professional mediatsiya bosqichini qo‘shishni taklif qiladi (Mediatsiya qonuni, 16-modda).',
+                      lang: lang,
+                      script: script,
+                      title: AppStrings.t(
+                        lang,
+                        'mediation_title',
+                        script: script,
+                      ),
+                      body: AppStrings.t(
+                        lang,
+                        'mediation_body',
+                        script: script,
+                      ),
                     ),
                   ),
                   _GlassServiceTile(
                     icon: CupertinoIcons.person_2_fill,
-                    label: AppStrings.t(lang, 'svc_lawyer'),
+                    label: AppStrings.t(lang, 'svc_lawyer', script: script),
                     onTap: () => _showInfoSheet(
                       context,
-                      title: 'Hamkor advokat ko‘rigi (3.2 modeli)',
-                      body:
-                          'Kulrang (Unknown) yoki tasdiqlanmagan bandlar hamkor advokatga yo‘naltiriladi. Pullik ko‘rik faqat reyestrdagi advokat orqali amalga oshiriladi (VM 675).',
+                      lang: lang,
+                      script: script,
+                      title: AppStrings.t(lang, 'lawyer_title', script: script),
+                      body: AppStrings.t(lang, 'lawyer_body', script: script),
                     ),
                   ),
                 ],
@@ -417,7 +474,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      AppStrings.t(lang, 'recent_checks'),
+                      AppStrings.t(lang, 'recent_checks', script: script),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -431,7 +488,7 @@ class HomePage extends StatelessWidget {
                   TextButton(
                     onPressed: () => context.go('/documents'),
                     child: Text(
-                      AppStrings.t(lang, 'see_all'),
+                      AppStrings.t(lang, 'see_all', script: script),
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         color: c.rolePrimary,
@@ -479,7 +536,11 @@ class HomePage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.title,
+                                    AppStrings.adaptUz(
+                                      item.title,
+                                      lang,
+                                      script,
+                                    ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -490,7 +551,7 @@ class HomePage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    '${item.formatLabel} · ${item.overallBalanceLabel}',
+                                    '${item.formatLabel} · ${AppStrings.adaptUz(item.overallBalanceLabel, lang, script)}',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -509,7 +570,7 @@ class HomePage extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        RiskColorSummaryRow(analysis: item),
+                        RiskColorSummaryRow(analysis: item, compact: true),
                       ],
                     ),
                   ),
@@ -518,16 +579,17 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          // Subtle O'RQ-1115 Footer + Floating Navbar Clearance
+          // Quiet O'RQ-1115 Footnote + Floating Navbar Clearance
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 112),
+            padding: const EdgeInsets.fromLTRB(20, 6, 20, 114),
             sliver: SliverToBoxAdapter(
-              child: GlassCard(
-                radius: 18,
-                padding: const EdgeInsets.all(12),
-                child: Text(
-                  AppStrings.t(lang, 'orq_1115_banner'),
-                  style: TextStyle(fontSize: 11.5, color: c.textSecondary),
+              child: Text(
+                AppStrings.t(lang, 'orq_1115_banner', script: script),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  height: 1.35,
+                  color: c.textSecondary,
                 ),
               ),
             ),
@@ -537,7 +599,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _showRoleQuickSwitch(BuildContext context, AccountSegment current) {
+  void _showRoleQuickSwitch(
+    BuildContext context,
+    AccountSegment current,
+    AppLang lang,
+    UzbekScript script,
+  ) {
     final c = context.lexColors;
     showModalBottomSheet<void>(
       context: context,
@@ -554,15 +621,16 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Rolni tanlang (rang va muhit darhol o‘zgaradi)',
+                AppStrings.t(lang, 'role_switch_title', script: script),
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.w800,
                   color: c.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
               ListTile(
+                key: const Key('quick_switch_individual'),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -574,13 +642,18 @@ class HomePage extends StatelessWidget {
                     size: 18,
                   ),
                 ),
-                title: const Text(
-                  'Jismoniy shaxs (Sapphire Ko‘k)',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                title: Text(
+                  AppStrings.t(lang, 'role_individual_title', script: script),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
                 ),
                 trailing: current == AccountSegment.individual
-                    ? const Icon(CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF0066FF))
+                    ? const Icon(
+                        CupertinoIcons.checkmark_circle_fill,
+                        color: Color(0xFF0066FF),
+                      )
                     : null,
                 onTap: () {
                   context
@@ -591,6 +664,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               ListTile(
+                key: const Key('quick_switch_business'),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -602,13 +676,18 @@ class HomePage extends StatelessWidget {
                     size: 18,
                   ),
                 ),
-                title: const Text(
-                  'Yuridik shaxs B2B (Executive Zumrad)',
-                  style: TextStyle(fontWeight: FontWeight.w700),
+                title: Text(
+                  AppStrings.t(lang, 'role_business_title', script: script),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
+                  ),
                 ),
                 trailing: current == AccountSegment.business
-                    ? const Icon(CupertinoIcons.checkmark_circle_fill,
-                        color: Color(0xFF047857))
+                    ? const Icon(
+                        CupertinoIcons.checkmark_circle_fill,
+                        color: Color(0xFF047857),
+                      )
                     : null,
                 onTap: () {
                   context
@@ -624,7 +703,9 @@ class HomePage extends StatelessWidget {
                   context.read<SessionCubit>().returnToRoleSelect();
                   context.go('/role-select');
                 },
-                child: const Text('Kirish ekraniga qaytish'),
+                child: Text(
+                  AppStrings.t(lang, 'switch_role_screen', script: script),
+                ),
               ),
             ],
           ),
@@ -659,6 +740,8 @@ class HomePage extends StatelessWidget {
 
   void _showInfoSheet(
     BuildContext context, {
+    required AppLang lang,
+    required UzbekScript script,
     required String title,
     required String body,
   }) {
@@ -696,7 +779,7 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Tushunarli'),
+                child: Text(AppStrings.t(lang, 'ok_btn', script: script)),
               ),
             ],
           ),

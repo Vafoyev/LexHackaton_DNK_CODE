@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_strings.dart';
+import '../../../../core/l10n/uzbek_alphabet.dart';
 import '../../../../core/security/screen_security.dart';
 import '../../../contracts/domain/entities/lex_models.dart';
 
 class SessionState extends Equatable {
   const SessionState({
     this.lang = AppLang.uz,
+    this.uzbekScript = UzbekScript.standard,
     this.themeMode = ThemeMode.light,
     this.segment = AccountSegment.business,
+    this.hasCompletedOnboarding = false,
     this.hasSelectedRole = false,
+    this.isAuthenticated = false,
     this.quota = const QuotaState(
       planName: 'Sinov (14 kun)',
       trialDaysRemaining: 14,
@@ -22,7 +26,7 @@ class SessionState extends Equatable {
     ),
     this.organizationName = 'DNK Tech MChJ',
     this.userName = 'Vafoyev Isobek',
-    this.authProviderLabel = 'E-IMZO (Demo · Yuridik)',
+    this.authProviderLabel = 'E-IMZO (Mock · Yuridik)',
     this.flagSecureEnabled = true,
     this.privacyCurtainEnabled = true,
     this.biometricLockEnabled = false,
@@ -31,9 +35,12 @@ class SessionState extends Equatable {
   });
 
   final AppLang lang;
+  final UzbekScript uzbekScript;
   final ThemeMode themeMode;
   final AccountSegment segment;
+  final bool hasCompletedOnboarding;
   final bool hasSelectedRole;
+  final bool isAuthenticated;
   final QuotaState quota;
   final String organizationName;
   final String userName;
@@ -46,9 +53,12 @@ class SessionState extends Equatable {
 
   SessionState copyWith({
     AppLang? lang,
+    UzbekScript? uzbekScript,
     ThemeMode? themeMode,
     AccountSegment? segment,
+    bool? hasCompletedOnboarding,
     bool? hasSelectedRole,
+    bool? isAuthenticated,
     QuotaState? quota,
     String? organizationName,
     String? userName,
@@ -61,9 +71,13 @@ class SessionState extends Equatable {
   }) {
     return SessionState(
       lang: lang ?? this.lang,
+      uzbekScript: uzbekScript ?? this.uzbekScript,
       themeMode: themeMode ?? this.themeMode,
       segment: segment ?? this.segment,
+      hasCompletedOnboarding:
+          hasCompletedOnboarding ?? this.hasCompletedOnboarding,
       hasSelectedRole: hasSelectedRole ?? this.hasSelectedRole,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       quota: quota ?? this.quota,
       organizationName: organizationName ?? this.organizationName,
       userName: userName ?? this.userName,
@@ -80,9 +94,12 @@ class SessionState extends Equatable {
   @override
   List<Object?> get props => [
         lang,
+        uzbekScript,
         themeMode,
         segment,
+        hasCompletedOnboarding,
         hasSelectedRole,
+        isAuthenticated,
         quota,
         organizationName,
         userName,
@@ -104,6 +121,18 @@ class SessionCubit extends Cubit<SessionState> {
 
   void setLang(AppLang lang) => emit(state.copyWith(lang: lang));
 
+  void setUzbekScript(UzbekScript script) =>
+      emit(state.copyWith(uzbekScript: script));
+
+  void setLanguageConfig(AppLang lang, {UzbekScript? uzbekScript}) {
+    emit(
+      state.copyWith(
+        lang: lang,
+        uzbekScript: uzbekScript ?? state.uzbekScript,
+      ),
+    );
+  }
+
   void cycleLang() {
     final next = switch (state.lang) {
       AppLang.uz => AppLang.ru,
@@ -123,7 +152,11 @@ class SessionCubit extends Cubit<SessionState> {
     );
   }
 
-  void enterRole(AccountSegment segment) {
+  void completeOnboarding() {
+    emit(state.copyWith(hasCompletedOnboarding: true));
+  }
+
+  void selectRole(AccountSegment segment) {
     emit(
       state.copyWith(
         segment: segment,
@@ -138,22 +171,42 @@ class SessionCubit extends Cubit<SessionState> {
     );
   }
 
-  void setSegment(AccountSegment segment) {
+  void completeLogin({
+    required String providerLabel,
+    String? userName,
+    String? organizationName,
+  }) {
     emit(
       state.copyWith(
-        segment: segment,
-        organizationName: segment == AccountSegment.business
-            ? 'DNK Tech MChJ'
-            : 'Vafoyev Isobek · Shaxsiy',
-        authProviderLabel: segment == AccountSegment.business
-            ? 'E-IMZO (Mock · Yuridik)'
-            : 'OneID (Mock · Jismoniy)',
+        isAuthenticated: true,
+        hasSelectedRole: true,
+        authProviderLabel: providerLabel,
+        userName: (userName != null && userName.trim().isNotEmpty)
+            ? userName.trim()
+            : state.userName,
+        organizationName:
+            (organizationName != null && organizationName.trim().isNotEmpty)
+                ? organizationName.trim()
+                : state.organizationName,
       ),
     );
   }
 
+  void enterRole(AccountSegment segment) {
+    selectRole(segment);
+    emit(state.copyWith(isAuthenticated: true));
+  }
+
+  void setSegment(AccountSegment segment) {
+    selectRole(segment);
+  }
+
   void returnToRoleSelect() {
     emit(state.copyWith(hasSelectedRole: false));
+  }
+
+  void logout() {
+    emit(state.copyWith(isAuthenticated: false, hasSelectedRole: false));
   }
 
   void consumeQuota() {

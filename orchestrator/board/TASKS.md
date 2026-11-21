@@ -1,107 +1,94 @@
-# 📋 Sprint Topshiriqlar Taxtasi & Definition of Done (TASKS.md)
+# 📋 LexGuard AI 3.0 — Yangilangan Sprint Topshiriqlar Taxtasi & DoD (TASKS.md)
+
 **Loyiha**: LexGuard AI (LexHackathon 2026, 1-trek: Huquqiy xizmatlar)  
 **Tizim**: 8-Profil Avtonom Ko'p Agentli Klaster  
-**Holati**: Sprint 1 (MVP Ishga Tushirish)  
+**Boshqaruv Hujjati**: `orchestrator/board/ARCHITECTURE_BLUEPRINT.md` (v4.0.0)  
 **Belgilar**: `[ ] TODO` | `[~] IN_PROGRESS` | `[?] REVIEW` | `[x] DONE`
 
 ---
 
-## 🎯 Global Definition of Done (DoD) — Qabul Qilishning Qat'iy Shartlari
-
-Har qanday modul yoki vazifa faqat quyidagi 6 ta filtrdan o'tgandagina `DONE` deb hisoblanadi:
-1. **Arxitektura va Bog'liqlik Invariantlari**: `LexGuard_AI_Backend_Architecture.docx` (D-01..D-10) va Clean Architecture qoidalariga 100% muvofiqlik. Domendan tashqariga qaramaslik.
-2. **API Shartnomasiga To'liq Moslik**: Barcha DTO va endpointlar `orchestrator/board/CONTRACTS.md` spetsifikatsiyasi bilan 100% bir xil bo'lishi.
-3. **10-Vektorli Anti-Gallyutsinatsiya Himoyasi**: Soxta moddalar, uydirma URL yoki xato tahrirlar 0% bo'lishi. Barcha iqtiboslar Verifier orqali `VERIFIED` maqomini olishi.
-4. **Chuqur Xavfsizlik va Maxfiylik**: O‘RQ-547 va O‘RQ-1125 bo'yicha PII maskalash, OWASP MASVS-L2 mobil talablari va magic-byte MIME tekshiruvi.
-5. **Avtomatlashtirilgan Testlar**: Unit testlar (kamida 80% qamrov), integratsion testlar va CI pipeline ning yashil o'tishi.
-6. **Bitta Bash Skript Bilan Ishga Tushish**: `./scripts/run_dev.sh` orqali butun tizim bir martada sozlanib, to'xtovsiz ko'tarilishi.
+## 🎯 Global Definition of Done (DoD)
+1. **Arxitektura Invariantlari**: `ARCHITECTURE_BLUEPRINT.md` (v4.0.0) talablariga 100% muvofiqlik.
+2. **gRPC va API Kontrakti**: `proto/legal_ai.proto` va `CONTRACTS.md` spetsifikatsiyalari bo'yicha qat'iy tiplash.
+3. **Anti-Gallyutsinatsiya & Active Self-Correction**: Lex.uz bazasi bilan tasdiqlanmagan moddalar 0%; AI xato qilsa verifikator qayta qidiruv bilan AI ga tuzatish berishi shart.
+4. **Chuqur Xavfsizlik**: O'RQ-547 PII maskalash, OWASP MASVS-L2 mobil xavfsizlik, FLAG_SECURE.
+5. **UI/UX Standarti**: Webda Robin AI / Harvey uslubidagi Studio (Inline highlights + Inspector + 1-click diff); Mobilda Soliq Glassmorphism (Dual-theme Sapphire/Emerald + FAB skaner + Draggable BottomSheet).
+6. **Bitta Skript Bilan Ishga Tushish**: `./scripts/run_dev.sh` orqali butun stack (Go + Python AI + Web + Mobile + Admin + DB + Redis + MinIO) bir martada ko'tarilishi.
 
 ---
 
 ## 👑 0. Orchestrator & Boshqaruv (`agy1` — 0-ORCHESTRATOR)
-*Tizim Bosh Arxitektori, sinxronizatsiya va sifat darvozalari boshqaruvchisi.*
-
-- [x] **TASK-001 [P0]**: 8 ta mustaqil agent profillari va tmux arxitekturasini sozlash (`orchestrator/bin/`).
-- [x] **TASK-002 [P0]**: Tizimlararo API va Data shartnomasini tasdiqlash (`orchestrator/board/CONTRACTS.md`).
-- [x] **TASK-003 [P0]**: Detallashtirilgan sprint topshiriqlari va DoD talablarini ishlab chiqish (`orchestrator/board/TASKS.md`).
-- [x] **TASK-004 [P0]**: Agentlararo bog'liqliklarni boshqarish va blokerlarni yo'q qilish (Doimiy).
-- [x] **TASK-005 [P0]**: Pro Glanceable UI/UX, 3D Visualizer va Live Voice Assistant spetsifikatsiyasini tasdiqlash (D-10).
-- [~] **TASK-006 [P1]**: Yakuniy integratsion auditi va MVP qabul qilish komissiyasi tekshiruvi.
+- [x] **TASK-001**: 8 ta mustaqil agent profillari va koordinatsiyani sozlash.
+- [x] **TASK-002**: To'liq Bosh Arxitektura Spetsifikatsiyasini tasdiqlash (`ARCHITECTURE_BLUEPRINT.md` v4.0.0).
+- [x] **TASK-003**: gRPC Protobuf shartnomasini kiritish (`proto/legal_ai.proto`).
+- [~] **TASK-004**: Faza 1 va Faza 2 agentlararo bog'liqliklarini boshqarish va blokerlarni yo'q qilish.
+- [ ] **TASK-005**: Yakuniy integratsion audit va MVP qabul qilish komissiyasi tekshiruvi.
 
 ---
 
 ## ⚙️ 1. Go Backend Modular Monolith (`agy2` — 1-BACKEND-GO)
-*Go 1.23+, chi/v5, pgx/v5, PostgreSQL 16 + pgvector, Modular Monolith (12 bounded context).*
+- [x] **TASK-101**: Go Modular Monolith poydevori, PostgreSQL 16 migratsiyalari va MinIO integratsiyasi.
+- [x] **TASK-102**: PII Redactor (O'RQ-547) va 10 ta deterministik Go qoidalari.
+- [~] **TASK-103**: `proto/legal_ai.proto` bo'yicha gRPC Client integratsiyasi (Go → Python `ai-engine`).
+- [~] **TASK-104**: Active Self-Correction Verifier Loop (modda mos kelmasa RAG qayta qidiruvi va AI qayta tahlil so'rovi).
+- [x] **TASK-105**: Server-Sent Events (SSE) hujjat tahlili streaming endpointlari (`/api/v1/analyses/{id}/events`).
+- [~] **TASK-106**: WebSockets server Live Voice Assistant interaktiv savol-javobi uchun (`/api/v1/ws/voice`).
+- [x] **TASK-107**: DOCX va PDF hisobot eksporti (Izohli takliflar + "LOYIHA" to'liq tahrir).
 
-- [x] **TASK-101 [P0]**: Go loyihasi strukturasi (`cmd/server`, `internal/api`, `internal/identity`, `internal/documents`, `internal/rules`, `internal/verification`, `internal/analysis`) va `go.mod` ni yaratish.
-- [x] **TASK-102 [P0]**: PostgreSQL 16 sxemasi va migratsiyalari (`migrations/0001_init.sql` — 19 ta jadval: users, orgs, documents, clauses, legal_sources, analyses, findings, quotas, audit_events va hk).
-- [x] **TASK-103 [P0]**: 10 ta Deterministik Go B2B qoidalar dvigateli (`internal/rules/service.go`).
-- [x] **TASK-104 [P0]**: REST API endpointlari va RFC 7807 xatolar qatlami (`internal/api/`): `/healthz`, `/readyz`, `/api/v1/integrations/status`, `/api/v1/documents`, `/api/v1/analyses`.
-- [x] **TASK-105 [P0]**: SSE Real-Time hodisalar oqimi (`/api/v1/analyses/{id}/events`).
-- [x] **TASK-106 [P0]**: AI Live Voice Assistant API endpointlari (`/api/v1/analyses/{id}/voice-brief` va `/api/v1/analyses/{id}/voice-query`).
-- [x] **TASK-107 [P1]**: Verifikatsiya va Gallyutsinatsiyalarga qarshi qatlam (`internal/verification/`).
-- [x] **TASK-108 [P1]**: DOCX va PDF hisobot eksporti generatori (`internal/report/`).
+---
+
+## ⚖️ 5. Legal AI, Lex.uz RAG & Python Engine (`agy6` — 5-LEGAL-RAG-AI)
+- [x] **TASK-501**: O'zbekiston Qonunchilik Korpusi (`seeds/seed.sql` — FK 364, 707, 326, O'RQ-547).
+- [~] **TASK-502**: `ai-engine/` Python mikro-servisini qurish (FastAPI + gRPC Server `proto/legal_ai.proto` implementatsiyasi).
+- [~] **TASK-503**: Lex.uz Ingestion & pgvector HNSW + BM25 gibrid qidiruv qatlami.
+- [~] **TASK-504**: Legal SLM (Llama-3 / Qwen-2.5) uchun O'zbek yuridik dataset pipeline va lokal inferens adapteri.
+- [~] **TASK-505**: Skaner qilingan PDF va rasmlar uchun OCR / Vision tahlil moduli.
+
+---
+
+## 🌐 3. Web Frontend & LegalTech Studio (`agy4` — 3-WEB-FRONT)
+- [x] **TASK-301**: React 18+ TypeScript + Tailwind poydevori.
+- [~] **TASK-302**: Yangi Welcome / Onboarding Landing sahifasi (Qiymat taklifi, B2B/B2C tanlovi, Free trial ro'yxatdan o'tish).
+- [~] **TASK-303**: Robin AI / Harvey uslubidagi Contract Studio:
+  - Chap panel: Document Paper (4-rangli inline xavf belgilari va sharhlar).
+  - O'ng panel: Clause Inspector (Lex.uz iqtibos, 1 tugmali Accept/Reject Redline diff).
+- [x] **TASK-304**: Glanceable Health Gauge (0-100 radial speedometer + DNA Barcode heatmap).
+- [x] **TASK-305**: Three.js WebGL 3D Risk Visualizer sferasi.
+- [~] **TASK-306**: WebSockets orqali jonli sinusoidal to'lqinli Live Voice Assistant.
+- [x] **TASK-307**: 2 ta DOCX (izohli takliflar va LOYIHA tahrir) hamda PDF eksporti.
 
 ---
 
 ## 📱 2. Flutter Mobile Client (`agy3` — 2-MOBILE-FLUTTER)
-*Flutter 3.38+, Dart 3.10+, Impeller 60/120 FPS, Feature-First Clean Architecture, Soliq-Style iOS Glassmorphism UI.*
-
-- [x] **TASK-201 [P0]**: Flutter loyihasi va 6-platformali Feature-First Clean Architecture poydevorini qurish.
-- [x] **TASK-202 [P0]**: Soliq App uslubidagi Dual-Role Mavzulari (Sapphire Individual & Emerald Business) va Glassmorphism.
-- [x] **TASK-203 [P0]**: Hujjat tanlash va yuklash oqimi (`features/scanner_upload`): MIME tekshiruvi, PII maskalash.
-- [x] **TASK-204 [P0]**: 3D Effect Radial Health Gauge (`GlanceableRiskGauge`): 0-100 xavfsizlik o'lchagichi va DNA Barcode Heatmap lentasi.
-- [x] **TASK-205 [P0]**: Mobile AI Live Voice Assistant Bar (`MobileVoiceAssistantBar`): 30s Audio brifing pleyeri va jonli animatsiyali audio to'lqinlar (waveform).
-- [x] **TASK-206 [P0]**: Avtotestlar: Barcha 6 ta unit/widget testlar (PII redaction, Soliq UI, ContractsCubit) yashil o'tishi.
-- [~] **TASK-207 [P1]**: Shifrlangan Offline Kesh (`local_demo_lexguard_repository.dart`).
+- [x] **TASK-201**: Flutter 3.38+ Feature-First Clean Architecture poydevori.
+- [~] **TASK-202**: Soliq-Style Dual Themes: Sapphire B2C Fuqaro va Emerald B2B Tadbirkor to'liq glassmorphism bilan.
+- [~] **TASK-203**: Suzuvchi markaziy FAB skaner/yuklash tugmasi va rasm olish oqimi.
+- [~] **TASK-204**: Shartnoma o'quvchi va pastdan ochiluvchi Draggable BottomSheet (yonma-yon redline diff).
+- [x] **TASK-205**: Glanceable Risk Gauge va real-time audio waveform Voice Radar.
+- [x] **TASK-206**: Biometriya, FLAG_SECURE (skrinshotdan himoya) va Privacy Blur Curtain.
+- [~] **TASK-207**: Shifrlangan offline kesh (Drift + SQLCipher).
 
 ---
 
-## 🌐 3. Web Frontend & Visualizer (`agy4` — 3-WEB-FRONT)
-*React 18+, TypeScript, Vite, Tailwind CSS, Three.js 3D Risk Visualizer, Live Voice Assistant.*
-
-- [x] **TASK-301 [P0]**: React + Vite + Tailwind CSS poydevorini ko'tarish (`npm run build` muvaffaqiyatli).
-- [x] **TASK-302 [P0]**: Hujjat yuklash maydoni (Drag & Drop + Demo sinov tugmasi, SHA256 hisoblash).
-- [x] **TASK-303 [P0]**: Yonma-yon Taqqoslash (Side-by-Side Legal Diff Viewer): 4 rangli xavflar va Lex.uz havolalari.
-- [x] **TASK-304 [P0]**: Glanceable Visual Health Gauge (`ContractHealthGauge.tsx`): 0-100 radial speedometer, DNA barcode lentasi, moliyaviy asimmetriya ko'rsatkichi.
-- [x] **TASK-305 [P0]**: Three.js WebGL 3D Risk Visualizer (`Contract3DVisualizer.tsx` va `Mini3DVisualizer.tsx`): interaktiv sferik neyron to'r, orbita zarrachalari va klaster tugunlari.
-- [x] **TASK-306 [P0]**: Live AI Voice Assistant (`LiveVoiceAssistant.tsx`): Web Speech API audio sintezi, jonli sinusoidal to'lqin kanvasi, real-time ovozli savol-javob.
-- [x] **TASK-307 [P1]**: Redline DOCX va Audit PDF eksporti (`front/src/utils/export.ts`).
-
----
-
-## 📊 4. Admin & B2B Analytics Portal (`agy5` — 4-ADMIN-PORTAL)
-*B2B korporativ kabinet, shartnomalar monitoringi, kvota va bo'limlar xavf xaritasi.*
-
-- [x] **TASK-401 [P0]**: Enterprise Admin Portal poydevori va Dashboard shabloni.
-- [x] **TASK-402 [P0]**: Korxona Shartnomalari Reestri va Xavflar Xaritasi (Bo'limlar kesimida).
-- [~] **TASK-403 [P1]**: Kvotalar, Tariflar va Audit Tarixi (Audit Trail): oylik limitlar va xodimlar harakati jurnali.
-
----
-
-## ⚖️ 5. Legal AI & Temporal RAG Specialist (`agy6` — 5-LEGAL-RAG-AI)
-*O'zbekiston Qonunchiligi (Lex.uz), Temporal RAG, 10-bosqichli Anti-Hallucination bilimlari.*
-
-- [x] **TASK-501 [P0]**: O'zbekiston B2B qonunlari korpusini tayyorlash (`seeds/seed.sql` — FK 364, 707, 326, O‘RQ-547, O‘RQ-1115).
-- [x] **TASK-502 [P0]**: Qat'iy Yopiq Dunyo (Closed-World) Yuridik Prompt Shablonlari (0 ta uydirma modda).
-- [x] **TASK-503 [P0]**: Shaxsiy Ma'lumotlarni Lokal Anonimizatsiya Qilish (PII Masking O'RQ-547).
-- [~] **TASK-504 [P1]**: Temporal Qidiruv Qoidasi (FK 4-modda bo'yicha tarixiy normani tekshirish).
+## 📊 4. Admin Platform Operator Portal (`agy5` — 4-ADMIN-PORTAL)
+- [~] **TASK-401**: React + TypeScript Platform Operator Dashboard poydevori (`admin/`).
+- [~] **TASK-402**: Tizim Salomatligi (System Health: Go, Python AI, Postgres, Redis, MinIO) jonli monitoringi.
+- [~] **TASK-403**: AI Telemetriya: tahlillar soni, gRPC latency, tokenlar sarfi.
+- [~] **TASK-404**: Lex.uz Qonunchilik Korpusi boshqaruvi va yangi moddalarni yuklash.
+- [~] **TASK-405**: Human-in-the-Loop Review: AI ishonchsiz deb topgan (`REVIEW_REQUIRED`) bandlar nazorati.
 
 ---
 
 ## 🛡️ 6. QA & Security Lead (`agy7` — 6-QA-SECURITY)
-*OWASP Top 10, OWASP MASVS-L2, yuklama testlari, ma'lumotlar xavfsizligi auditi.*
-
-- [x] **TASK-601 [P0]**: Fayl Xavfsizligi va Sandbox Sanitization Auditi: Magic-byte sniffing, makros xavfsizligi.
-- [x] **TASK-602 [P0]**: OWASP MASVS-L2 Mobil Xavfsizlik Tekshiruvi: Skrinshot bloklash, PII himoyasi.
-- [x] **TASK-603 [P0]**: Web Speech API va 3D WebGL xotira auditlari (Memory leak 0%).
-- [~] **TASK-604 [P1]**: Stress va Pentest ssenariylari (Fuzzing).
+- [x] **TASK-601**: Magic-byte MIME sniffing va fayl xavfsizligi auditi.
+- [x] **TASK-602**: OWASP MASVS-L2 mobil xavfsizlik tekshiruvlari.
+- [~] **TASK-603**: Active Self-Correction siklining aniqlik testi (100% to'g'ri moddalar).
+- [~] **TASK-604**: Go va Python gRPC aloqasi stress va fuzzing testlari.
 
 ---
 
 ## 🚀 7. DevOps, SRE & CI/CD Lead (`agy8` — 7-DEVOPS-INFRA)
-*Docker, docker-compose, CI/CD konveyeri, yagona idempotent ishga tushirish skripti.*
-
-- [x] **TASK-701 [P0]**: `deploy/docker-compose.yml` (PostgreSQL 16+pgvector, Redis 7, Go Backend, MinIO, Web Frontend, Admin Portal — 6 xizmat, to'liq healthcheck va 172.28.0.0/24 tarmoq).
-- [x] **TASK-702 [P0]**: Idempotent `./scripts/run_dev.sh` — 7 rejimli (up/local/down/logs/health/reset/test), renkli banner, D-10 URL'lar chiqishi, Admin placeholder yaratish.
-- [x] **TASK-703 [P1]**: `.github/workflows/ci.yml` — 7 jobli pipeline: Go lint+test+coverage(60%), TS+Vite build, Admin build, Docker multi-stage, Integration smoke test (healthz+demo-session), Trivy security scan, CI Summary.
+- [x] **TASK-701**: `deploy/docker-compose.yml` va tarmoq infratuzilmasi.
+- [~] **TASK-702**: Docker Compose ga `ai-engine` (Python gRPC servisi) konteynerini qo'shish va GPU/CPU sozlamalari.
+- [~] **TASK-703**: `./scripts/run_dev.sh` ni barcha yangi xizmatlar bilan sinxronlashtirish.
+- [x] **TASK-704**: GitHub Actions 7-jobli CI pipeline.
