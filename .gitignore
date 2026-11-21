@@ -54,6 +54,9 @@ dist/
 build/
 .next/
 .cache/
+.vite/
+front/.vite/
+admin/.vite/
 
 # Python (if used for AI/RAG scripts)
 __pycache__/
